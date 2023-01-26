@@ -19,14 +19,29 @@ class SignUpSerializer(serializers.ModelSerializer):
             validators=[UniqueValidator(queryset=User.objects.all())]
             )
 
-    new_password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    password_confirmation = serializers.CharField(write_only=True, required=True)
+    new_password = serializers.CharField(
+        label='Password',
+        write_only=True,
+        required=True,
+        validators=[
+            validate_password,
+            RegexValidator(
+                regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$&+,:;=?@#|<>.^*()%!-]).*$',
+                message='Password must contain an uppercase character, a lowercase character, a number and a special character.')
+            ]
+        )
+    password_confirmation = serializers.CharField(
+        label='Confirm password',
+        write_only=True,
+        required=True
+        )
 
     class Meta:
         """Serializer options."""
 
         model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'new_password', 'password_confirmation']
+
 
     def validate(self, attrs):
         """Validate the data and generate messages for any errors."""
@@ -49,6 +64,6 @@ class SignUpSerializer(serializers.ModelSerializer):
         )
         user.set_password(self.validated_data['password'])
         user.save()
-        
+
         return user
         

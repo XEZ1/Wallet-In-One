@@ -88,6 +88,7 @@ class UserModelTestCase(TestCase):
         self.user.last_name = 'x' * 16
         self._assert_user_is_invalid()
 
+
     def _assert_user_is_valid(self):
         try:
             self.user.full_clean()
