@@ -1,4 +1,4 @@
-"""Models in the website app"""
+"""Models in the accounts app"""
 
 from django.db import models
 from django.core.validators import RegexValidator

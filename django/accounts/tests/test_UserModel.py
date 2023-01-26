@@ -8,7 +8,7 @@ class UserModelTestCase(TestCase):
     """Tests of the user model."""
 
     fixtures = [
-        'website/fixtures/user.json',
+        'accounts/fixtures/user.json',
     ]
 
     def setUp(self):
