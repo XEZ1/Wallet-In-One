@@ -55,15 +55,13 @@ class SignUpSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create a new user."""
 
-        super().save(commit=False)
         user = User.objects.create(
             username=validated_data['username'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name']
         )
-        user.set_password(self.validated_data['password'])
+        user.set_password(self.validated_data['new_password'])
         user.save()
 
         return user
-        
