@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Bitcoin",
+    "symbol": "BTC",
+    "value": 19.2
+  },
+  {
+    "id": 2,
+    "name": "Ethereum",
+    "symbol": "ETH",
+    "value": 122
+  },
+  {
+    "id": 3,
+    "name": "Tether",
+    "symbol": "USDT",
+    "value": 6730
+  },
+  {
+    "id": 4,
+    "name": "Binance Coin",
+    "symbol": "BNB",
+    "value": 1.57
+  },
+  {
+    "id": 5,
+    "name": "USD Coin",
+    "symbol": "USDC",
+    "value": 430
+  },
+  {
+    "id": 6,
+    "name": "Ripple",
+    "symbol": "XRP",
+    "value": 15632
+  },
+  {
+    "id": 7,
+    "name": "Cardano",
+    "symbol": "ADA",
+    "value": 345
+  },
+  {
+    "id": 8,
+    "name": "Dogecoin",
+    "symbol": "DOGE",
+    "value": 13267
+  }
+]
