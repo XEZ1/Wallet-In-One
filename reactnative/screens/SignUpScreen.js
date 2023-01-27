@@ -58,7 +58,13 @@ export default function SignUpScreen({ navigation }) {
 
   function ErrorMessage(props){
     if (props.name in errors){
-      return <Text style={styles.errorText}>{errors[props.name]}</Text>
+      return (
+        <>
+          {errors[props.name].map((value, index) => {
+            return <Text key={index} style={styles.errorText}>{value}</Text>
+          })}
+        </>
+      )
     }
     return null;
   }
