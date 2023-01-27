@@ -15,6 +15,9 @@ export default function SignUpScreen({ navigation }) {
   const [ password, setPassword ] = useState()
   const [ passwordConfirmation, setPasswordConfirmation ] = useState()
 
+  const [ errors, setErrors ] = useState({})
+  
+
   const signUpHandler = () => {
     fetch('http://10.0.2.2:8000/sign_up/', {
       method: 'POST',
@@ -30,37 +33,64 @@ export default function SignUpScreen({ navigation }) {
         new_password: password,
         password_confirmation: passwordConfirmation 
     }),
-    }).then(res => res.json())
+    }).then(res => res.json().then(data => ({status: res.status, body: data})) )
     .then((data) => {
           console.log('Response:', data);
-          Alert.alert('Response', JSON.stringify(data))
+          if (data['status'] == 400){
+            setErrors(data['body'])
+            Alert.alert('Error', 'There were some errors');
+          }
+          else if (data['status'] == 201){
+            Alert.alert('Success', 'Account created successfully');
+          }
     })
     .catch((error) => {
           console.error('Error:', error);
     });
   };
+
+  const inputStyle = (name) => {
+    if (name in errors){
+      return [styles.input, styles.error]
+    }
+    return [styles.input]
+  }
+
+  function ErrorMessage(props){
+    if (props.name in errors){
+      return <Text style={styles.errorText}>{errors[props.name]}</Text>
+    }
+    return null;
+  }
   
   return (
     <ScrollView style={styles.container}>
         <StatusBar style="auto" />
 
+      
         <Text style={styles.text} >Username:</Text>
-        <TextInput style={styles.input} onChangeText={setUsername}/>
+        <TextInput style={inputStyle('username')} onChangeText={setUsername}/>
+        <ErrorMessage name='username'></ErrorMessage>
 
         <Text style={styles.text} >Email:</Text>
-        <TextInput style={styles.input} onChangeText={setEmail}/>
+        <TextInput style={inputStyle('email')} onChangeText={setEmail}/>
+        <ErrorMessage name='email'></ErrorMessage>
 
         <Text style={styles.text} >First Name:</Text>
-        <TextInput style={styles.input} onChangeText={setFirstName}/>
+        <TextInput style={inputStyle('first_name')} onChangeText={setFirstName}/>
+        <ErrorMessage name='first_name'></ErrorMessage>
 
         <Text style={styles.text} >Last Name:</Text>
-        <TextInput style={styles.input} onChangeText={setLastName}/>
+        <TextInput style={inputStyle('first_name')} onChangeText={setLastName}/>
+        <ErrorMessage name='first_name'></ErrorMessage>
 
         <Text style={styles.text} >Password:</Text>
-        <TextInput style={styles.input} onChangeText={setPassword}  secureTextEntry={true}/>
+        <TextInput style={inputStyle('new_password')} onChangeText={setPassword}  secureTextEntry={true}/>
+        <ErrorMessage name='new_password'></ErrorMessage>
 
         <Text style={styles.text} >Password Confirmation:</Text>
-        <TextInput style={styles.input} onChangeText={setPasswordConfirmation} secureTextEntry={true}/>
+        <TextInput style={inputStyle('password_confirmation')} onChangeText={setPasswordConfirmation} secureTextEntry={true}/>
+        <ErrorMessage name='password_confirmation'></ErrorMessage>
 
         <View style={styles.parent}>
           <Button style={styles.button} title="Sign Up" onPress={signUpHandler}/>
@@ -77,23 +107,30 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   parent:{
+    marginTop: 20,
     flex: 1,
     width: "100%",
     alignSelf:'flex-start',
   },
   text:{
-    flexDirection: 'row', justifyContent: 'flex-start'
+    marginTop: 10,
+    marginBottom: 10,
   },
   input: {
     height: 40,
     width: '100%',
-    marginTop: 10,
-    marginBottom: 10,
     borderWidth: 0.5,
     padding: 10,
     borderColor: 'gray',
     borderRadius: 5,
   },
   button:{
+  },
+  error:{
+    borderColor: 'red',
+  },
+  errorText:{
+    marginLeft: 10,
+    color: 'red',
   }
 });
