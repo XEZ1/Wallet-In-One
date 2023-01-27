@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Button, TextInput } from 'react-native';
 
 import { useContext, useState } from 'react';
 import { userContext } from '../data';
@@ -16,7 +16,7 @@ export default function SignUpScreen({ navigation }) {
   const [ passwordConfirmation, setPasswordConfirmation ] = useState()
   
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
         <StatusBar style="auto" />
 
         <Text style={styles.text} >Username:</Text>
@@ -32,31 +32,36 @@ export default function SignUpScreen({ navigation }) {
         <TextInput style={styles.input} onChangeText={setLastName}/>
 
         <Text style={styles.text} >Password:</Text>
-        <TextInput style={styles.input} onChangeText={setPassword}/>
+        <TextInput style={styles.input} onChangeText={setPassword}  secureTextEntry={true}/>
 
         <Text style={styles.text} >Password Confirmation:</Text>
-        <TextInput style={styles.input} onChangeText={setPasswordConfirmation}/>
+        <TextInput style={styles.input} onChangeText={setPasswordConfirmation} secureTextEntry={true}/>
 
-        <Button style={styles.button} title="Login" onPress={() => setUser({...user, 'signedIn': true})} />
-    </View>
+        <View style={styles.parent}>
+          <Button style={styles.button} title="Sign Up" />
+          {/* <Button style={styles.button} title="Login" onPress={() => setUser({...user, 'signedIn': true})} /> */}
+        </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
     width: '100%',
-    paddingLeft: 30
+    padding: 30,
+  },
+  parent:{
+    flex: 1,
+    width: "100%",
+    alignSelf:'flex-start',
   },
   text:{
     flexDirection: 'row', justifyContent: 'flex-start'
   },
   input: {
     height: 40,
-    width: '80%',
+    width: '100%',
     marginTop: 10,
     marginBottom: 10,
     borderWidth: 0.5,
