@@ -12,8 +12,6 @@ export default function App() {
     'signedIn': false
   });
 
-  // const [ signedIn, setsignedIn ] = useState(false)
-
   return (
     <userContext.Provider value={user}>
       <Navigation></Navigation>
