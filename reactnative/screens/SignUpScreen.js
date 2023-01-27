@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Button, TextInput, Alert } from 'react-native';
 
 import { useContext, useState } from 'react';
 import { userContext } from '../data';
@@ -11,9 +11,34 @@ export default function SignUpScreen({ navigation }) {
   const [ username, setUsername ] = useState()
   const [ email, setEmail ] = useState()
   const [ firstName, setFirstName ] = useState()
-  const [ LastName, setLastName ] = useState()
+  const [ lastName, setLastName ] = useState()
   const [ password, setPassword ] = useState()
   const [ passwordConfirmation, setPasswordConfirmation ] = useState()
+
+  const signUpHandler = () => {
+    fetch('http://10.0.2.2:8000/sign_up/', {
+      method: 'POST',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        first_name: firstName ,
+        last_name: lastName ,
+        username: username ,
+        email: email,
+        new_password: password,
+        password_confirmation: passwordConfirmation 
+    }),
+    }).then(res => res.json())
+    .then((data) => {
+          console.log('Response:', data);
+          Alert.alert('Response', JSON.stringify(data))
+    })
+    .catch((error) => {
+          console.error('Error:', error);
+    });
+  };
   
   return (
     <ScrollView style={styles.container}>
@@ -38,7 +63,7 @@ export default function SignUpScreen({ navigation }) {
         <TextInput style={styles.input} onChangeText={setPasswordConfirmation} secureTextEntry={true}/>
 
         <View style={styles.parent}>
-          <Button style={styles.button} title="Sign Up" />
+          <Button style={styles.button} title="Sign Up" onPress={signUpHandler}/>
           {/* <Button style={styles.button} title="Login" onPress={() => setUser({...user, 'signedIn': true})} /> */}
         </View>
     </ScrollView>
