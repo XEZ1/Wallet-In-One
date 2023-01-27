@@ -42,6 +42,7 @@ export default function SignUpScreen({ navigation }) {
           }
           else if (data['status'] == 201){
             Alert.alert('Success', 'Account created successfully');
+            setUser({...user, 'signedIn': true});
           }
     })
     .catch((error) => {
