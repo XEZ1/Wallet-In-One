@@ -17,6 +17,37 @@ class UserModelTestCase(TestCase):
     def test_valid_user(self):
         self._assert_user_is_valid()
 
+
+    def test_username_cannot_be_blank(self):
+        self.user.username = ''
+        self._assert_user_is_invalid()
+
+    def test_username_can_be_15_characters_long(self):
+        self.user.username = 'x' * 15
+        self._assert_user_is_valid()
+
+    def test_username_cannot_be_over_15_characters_long(self):
+        self.user.username = 'x' * 16
+        self._assert_user_is_invalid()
+
+    def test_username_must_be_unique(self):
+        second_user = User.objects.get(username='@Jdoe')
+        self.user.username = second_user.username
+        self._assert_user_is_invalid()
+
+    def test_username_must_contain_at_least_3_alphabeticals(self):
+        self.user.username = '@joe'
+        self._assert_user_is_invalid()
+
+    def test_username_may_contain_numbers(self):
+        self.user.username = '@j0hndoe2'
+        self._assert_user_is_valid()
+
+    def test_username_may_contain_other_characters(self):
+        self.user.username = ':@>john$%^&*'
+        self._assert_user_is_valid()
+
+
     def test_email_cannot_be_blank(self): 
         self.user.email = ''
         self._assert_user_is_invalid()
