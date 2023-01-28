@@ -1,6 +1,6 @@
 from django.test import TestCase
 from rest_framework import serializers
-from ..serializers import SignUpSerializer
+from ...serializers import SignUpSerializer
 
 class SignUpSerializerTestCase(TestCase):
     """Sign up serializer unit tests"""
