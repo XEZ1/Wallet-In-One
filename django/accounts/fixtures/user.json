@@ -25,7 +25,7 @@
       "model": "accounts.user",
       "pk": 3,
       "fields": {
-        "username": "@doe",
+        "username": "@Jdoe",
         "password": "pbkdf2_sha256$390000$PvUz5BSpCoZBwC6ZzMQZSp$i7xaJh3P4OK9yLcokXmm8vJGmgpKBi3s7E1PO52jxps=",
         "first_name": "Jane",
         "last_name": "Doe",
