@@ -10,7 +10,7 @@ export default function StartScreen({ navigation }) {
         <Button title="Sign Up" onPress={() => navigation.navigate('Sign Up')} />
       </TouchableHighlight>
       <TouchableHighlight style={styles.button}> 
-        <Button title="Login" />
+        <Button title="Login" onPress={() => navigation.navigate('Login')} />
       </TouchableHighlight>
     </View>
   );

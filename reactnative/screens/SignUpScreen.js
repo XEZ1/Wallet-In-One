@@ -17,7 +17,7 @@ export default function SignUpScreen({ navigation }) {
 
   const [ errors, setErrors ] = useState({})
   
-
+  //192.168.1.81,10.0.2.2
   const signUpHandler = () => {
     fetch('http://10.0.2.2:8000/sign_up/', {
       method: 'POST',

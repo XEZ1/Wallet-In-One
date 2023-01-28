@@ -8,6 +8,7 @@ import { userContext } from './data';
 import StartScreen from './screens/StartScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import LoggedInScreen from './screens/LoggedInScreen';
+import LoginScreen from './screens/LoginScreen';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ export default function Navigation() {
             <>
               <Stack.Screen name='Start' component={StartScreen} />
               <Stack.Screen name='Sign Up' component={SignUpScreen} />
+              <Stack.Screen name='Login' component={LoginScreen} />
             </>
           )}
         </Stack.Navigator>
