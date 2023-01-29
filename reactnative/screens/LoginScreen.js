@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, ScrollView, Button, TextInput, Alert } from 're
 import { useContext, useState } from 'react';
 import { userContext } from '../data';
 
+import { login } from '../authentication';
+
 export default function SignUpScreen({ navigation }) {
 
   const [ user, setUser] = useContext(userContext)
@@ -13,10 +15,19 @@ export default function SignUpScreen({ navigation }) {
 
   const [ errors, setErrors ] = useState({})
   
-  const loginHandler = () => {}
+  const loginHandler = async () => {
+    var response = await login(username,password,user,setUser);
+    if (response.status = 400 && response.body){
+      setErrors(response.body)
+
+      if (response.body['non_field_errors']){
+        Alert.alert('Error', 'Login Error')
+      }
+    }
+  }
 
   const inputStyle = (name) => {
-    if (name in errors){
+    if (name in errors || 'non_field_errors' in errors){
       return [styles.input, styles.error]
     }
     return [styles.input]
@@ -45,8 +56,9 @@ export default function SignUpScreen({ navigation }) {
         <ErrorMessage name='username'></ErrorMessage>
 
         <Text style={styles.text} >Password:</Text>
-        <TextInput style={inputStyle('new_password')} onChangeText={setPassword}  secureTextEntry={true}/>
-        <ErrorMessage name='new_password'></ErrorMessage>
+        <TextInput style={inputStyle('password')} onChangeText={setPassword}  secureTextEntry={true}/>
+        <ErrorMessage name='password'></ErrorMessage>
+        <ErrorMessage name='non_field_errors'></ErrorMessage>
 
         <View style={styles.parent}>
           <Button style={styles.button} title="Log In" onPress={loginHandler} />

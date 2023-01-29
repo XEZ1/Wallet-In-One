@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, ScrollView, Button, TextInput, Alert } from 're
 import { useContext, useState } from 'react';
 import { userContext } from '../data';
 
+import { api_url, login } from '../authentication';
+
 export default function SignUpScreen({ navigation }) {
 
   const [ user, setUser] = useContext(userContext)
@@ -19,7 +21,7 @@ export default function SignUpScreen({ navigation }) {
   
   //192.168.1.81,10.0.2.2
   const signUpHandler = () => {
-    fetch('http://10.0.2.2:8000/sign_up/', {
+    fetch(api_url + '/sign_up/', {
       method: 'POST',
       headers: {
           'Accept': 'application/json',
@@ -42,7 +44,7 @@ export default function SignUpScreen({ navigation }) {
           }
           else if (data['status'] == 201){
             Alert.alert('Success', 'Account created successfully');
-            setUser({...user, 'signedIn': true});
+            login(username, password, user, setUser)
           }
     })
     .catch((error) => {

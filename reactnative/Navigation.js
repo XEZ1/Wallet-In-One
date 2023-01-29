@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { userContext } from './data';
 
 // Screens
@@ -10,11 +10,15 @@ import SignUpScreen from './screens/SignUpScreen';
 import LoggedInScreen from './screens/LoggedInScreen';
 import LoginScreen from './screens/LoginScreen';
 
+import { initAuthState } from './authentication';
+
 const Stack = createStackNavigator();
 
 export default function Navigation() {
 
     const [user, setUser] = useContext(userContext)
+
+    useEffect(()=>{initAuthState(user, setUser);}, []);
 
     return (
     <NavigationContainer>
