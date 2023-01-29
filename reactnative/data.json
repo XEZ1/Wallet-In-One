@@ -1,0 +1,30 @@
+[
+    {
+      "name": "Credit Card",
+      "amount": 200,
+      "color": "rgba(131, 167, 234, 1)",
+      "legendFontColor": "#7F7F7F",
+      "legendFontSize": 15
+    },
+    {
+      "name": "Cryptocurrency",
+      "amount": 50,
+      "color": "#F00",
+      "legendFontColor": "#7F7F7F",
+      "legendFontSize": 15
+    },
+    {
+      "name": "Stocks",
+      "amount": 75,
+      "color": "black",
+      "legendFontColor": "#7F7F7F",
+      "legendFontSize": 15
+    },
+    {
+      "name": "Debit Card",
+      "amount": 20,
+      "color": "rgb(0, 0, 255)",
+      "legendFontColor": "#7F7F7F",
+      "legendFontSize": 15
+    }
+]
