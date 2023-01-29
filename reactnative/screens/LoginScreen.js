@@ -52,11 +52,11 @@ export default function SignUpScreen({ navigation }) {
 
       
         <Text style={styles.text} >Username:</Text>
-        <TextInput style={inputStyle('username')} onChangeText={setUsername}/>
+        <TextInput style={inputStyle('username')} onChangeText={setUsername} testID='username'/>
         <ErrorMessage name='username'></ErrorMessage>
 
         <Text style={styles.text} >Password:</Text>
-        <TextInput style={inputStyle('password')} onChangeText={setPassword}  secureTextEntry={true}/>
+        <TextInput style={inputStyle('password')} onChangeText={setPassword} secureTextEntry={true} testID='password' />
         <ErrorMessage name='password'></ErrorMessage>
         <ErrorMessage name='non_field_errors'></ErrorMessage>
 
