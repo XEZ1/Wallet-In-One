@@ -31,7 +31,7 @@ export const fetchAPI = async (url, body=null, headers={}, method = "POST") => {
 export const validateToken = async (token) => {
     response = await fetchAPI('/validate_token',{}, {'Authorization': 'Token '+ token }, "GET");
 
-    console.log('resp',response);
+    //console.log('resp',response);
     
     if (response['body']['token_valid']){
         return true;
@@ -43,7 +43,8 @@ export const validateToken = async (token) => {
 export const initAuthState = async (user, setUser) => {
     let token = await SecureStore.getItemAsync('token')
     if (token){
-        if (validateToken(token)){
+        tokenValid = await validateToken(token);
+        if (tokenValid){
             setUser({...user, 'signedIn': true})
         }
     }
@@ -51,7 +52,7 @@ export const initAuthState = async (user, setUser) => {
 
 export const login = async (username, password, user, setUser) => {
     var response = await fetchAPI('/login/', {'username': username, 'password': password}, {}, "POST")
-    console.log('login resp',response)
+    //console.log('login resp',response)
     if (response["body"]['token']){
         await SecureStore.setItemAsync('token', response["body"]['token'])
         setUser({...user, 'signedIn': true})
@@ -60,7 +61,7 @@ export const login = async (username, password, user, setUser) => {
 };
 
 export const logout = async (user, setUser) => {
-    console.log('logged out')
+    //console.log('logged out')
     await SecureStore.deleteItemAsync('token')
     setUser({...user, 'signedIn': false})
 };
