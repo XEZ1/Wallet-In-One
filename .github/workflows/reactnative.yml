@@ -2,9 +2,9 @@ name: React CI
 
 on:
   push:
-    branches: [ 16-add-sign-up-frontend ]
+    branches: [ 6-add-sign-up-frontend ]
   pull_request:
-    branches: [ 16-add-sign-up-frontend ]
+    branches: [ 6-add-sign-up-frontend ]
 
 jobs:
   build:
