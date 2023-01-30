@@ -26,10 +26,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - uses: borales/actions-yarn@v4
-        with:
-          cmd: install
+      - name: Install Dependencies
+        run: yarn install
 
-      - uses: borales/actions-yarn@v4
-        with:
-          cmd: test
+      - name: Run Tests
+        run: yarn test
