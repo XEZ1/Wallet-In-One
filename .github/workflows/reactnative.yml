@@ -15,6 +15,10 @@ jobs:
       matrix:
         node-version: [18]
 
+    defaults:
+      run:
+        working-directory: reactnative
+
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
