@@ -1,21 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import { useState, createContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import 'react-native-gesture-handler';
+import Navigation from './Navigation';
+
+import { userContext } from './data';
+
 export default function App() {
+  
+  const user = useState({
+    'signedIn': false
+  });
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <userContext.Provider value={user}>
+      <Navigation></Navigation>
+    </userContext.Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

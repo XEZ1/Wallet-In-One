@@ -1,0 +1,33 @@
+name: React CI
+
+on:
+  push:
+    branches: [ 6-add-sign-up-frontend ]
+  pull_request:
+    branches: [ 6-add-sign-up-frontend ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18]
+
+    defaults:
+      run:
+        working-directory: reactnative
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Run Tests
+        run: yarn test
