@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, Modal, Pressable, StyleSheet, Text, TextInput, View} from "react-native";
 
+
 export default function WalletModal(props) {
   return (
     <Modal
@@ -21,6 +22,10 @@ export default function WalletModal(props) {
         <TextInput
           style={styles.input}
           placeholder="Wallet Address" />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Cryptocurrency" />
 
         <Button title="Submit" />
 

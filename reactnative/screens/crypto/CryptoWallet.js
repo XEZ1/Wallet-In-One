@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
+import { LineChart } from "react-native-chart-kit";
 import {
   Button,
   FlatList,
@@ -10,7 +11,7 @@ import {
   View,
   Image,
   Pressable,
-  Modal
+  Modal, Dimensions
 } from 'react-native';
 
 import data from './wallet_data.json' // Test Data
@@ -27,7 +28,7 @@ export default function CryptoWallet() {
 
         <StatusBar style="auto" />
 
-        <View style={{ flexDirection:'row', alignItems: 'center', backgroundColor: 'black' }}>
+        <View style={{ flexDirection:'row', alignItems: 'center' }}>
           <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
             <Text style={styles.backArrow}>←</Text>
             <Text style={styles.cryptoWalletTitle}>Crypto Wallets</Text>
@@ -55,15 +56,85 @@ function WalletAsset(props) {
 
   return (
     <View style={styles.walletAsset}>
-      <View style={{ flex: 1, flexDirection:'row', alignItems: 'center' }}>
-        <View style={{  padding: 5, borderRadius: 10, marginRight: 10}}>
-          <Image style={styles.walletAssetImage} source={{ uri: `https://cryptoicons.org/api/color/${props.item.symbol.toLowerCase()}/200` }} />
+      <View style={{ alignItems: 'center', justifyContent: 'center', paddingRight: 10}}>
+        <Image style={styles.walletAssetImage} source={{ uri: `https://cryptoicons.org/api/color/${props.item.symbol.toLowerCase()}/200` }} />
+      </View>
+
+      <View style={{flex:1, flexDirection:'row', justifyContent:'space-between' }}>
+
+        <View style={{  }}>
+          <Text style={{ fontSize: 25, fontWeight: '700' }}>{props.item.name}</Text>
+          <Text style={styles.walletAssetTitle}>£100.00 ▲ 1.00%</Text>
+          <Text style={styles.walletAssetTitle}>{props.item.value} {props.item.symbol}</Text>
         </View>
-        <Text style={styles.walletAssetTitle}>{props.item.name}</Text>
+
+        <View style={{ }}>
+          <LineChart
+            data={{
+              datasets: [
+                {
+                  data: [
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                  ]
+                }
+              ]
+            }}
+            width={200} // Dimensions.get("window").width
+            height={60}
+            style={{ paddingRight: 0, paddingBottom: 3 }}
+            chartConfig={{
+              fillShadowGradientFrom: "#525252",
+              fillShadowGradientTo: "#e5e5e5",
+              fillShadowGradientOpacity: 1,
+              backgroundGradientFromOpacity: 0,
+              backgroundGradientToOpacity: 0,
+              color: (opacity = 1) => `rgb(82, 82, 82)`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              propsForDots: {
+                r: "0",
+              },
+
+            }}
+            withInnerLines={false}
+            withHorizontalLabels={false}
+            withOuterLines={false}
+
+            bezier
+          />
+
+        </View>
+
+
       </View>
-      <View style={{ flexDirection:'row', alignItems: 'center' }}>
-        <Text style={styles.walletAssetTitle}>{props.item.value} {props.item.symbol}</Text>
-      </View>
+
+
+
+
+
     </View>
   )
 }
@@ -77,37 +148,31 @@ const styles = StyleSheet.create({
     fontSize: 40,
     alignSelf: 'center',
     paddingVertical: 10,
-    color: 'white',
   },
   backArrow: {
     fontWeight: '900',
     fontSize: 30,
     position: 'absolute',
     marginLeft: 10,
-    color: 'white',
   },
   walletList: {
     //borderRadius: 15,
     marginHorizontal: 10,
     marginVertical: 30,
-
   },
   walletAsset: {
     backgroundColor: '#e5e5e5',
     padding: 10,
     marginVertical: 5,
-    borderRadius: 15,
-    //borderBottomColor: '#a3a3a3',
-    //borderBottomWidth: 1,
+    borderRadius: 10,
     flexDirection:'row',
-    justifyContent:'space-between',
-
   },
   walletAssetTitle: {
     fontWeight: '700',
+    flex:1,
   },
   walletAssetImage: {
-    width: 50,
-    height: 50,
+    width: 30,
+    height: 30,
   }
 });
