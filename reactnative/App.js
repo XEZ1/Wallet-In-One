@@ -15,14 +15,13 @@ import data from "./data.json"
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
       <StatusBar style="auto" />
 
       <View>
       <PieChart
   data={data}
   width={Dimensions.get("window").width}
-  height={500}
+  height={250}
   chartConfig={{
     backgroundColor: "#e26a00",
     backgroundGradientFrom: "#fb8c00",
