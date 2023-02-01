@@ -3,7 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { useContext, useEffect } from 'react';
-import { userContext } from './data';
 import { Text } from 'react-native';
 
 // Screens
@@ -13,6 +12,7 @@ import LoggedInScreen from './screens/LoggedInScreen';
 import LoginScreen from './screens/LoginScreen';
 
 import { initAuthState } from './authentication';
+import { userContext } from './data';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
