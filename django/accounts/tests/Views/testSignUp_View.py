@@ -1,8 +1,11 @@
+"""Tests for the sign up view"""
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 class SignUpViewTestCase(TestCase):
+    """Tests for the sign up view"""
+
     def setUp(self):
         self.client = Client()
         self.url = reverse('sign_up')

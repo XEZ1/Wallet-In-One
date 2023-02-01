@@ -1,10 +1,10 @@
+"""Sign up serializer unit tests"""
 from django.test import TestCase
 from rest_framework import serializers
 from ...serializers import SignUpSerializer
 
 class SignUpSerializerTestCase(TestCase):
     """Sign up serializer unit tests"""
-
 
     def setUp(self):
         self.serializer_input = {
