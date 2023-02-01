@@ -12,7 +12,7 @@ import {
 
 import data1 from './data.json'
 
-export default function BarChartWallet() {
+export default function BarChartWallet({ navigation }) {
   const data = {
     labels: ["crypto", "cards", "stocks"],
     datasets: [{
@@ -25,7 +25,7 @@ export default function BarChartWallet() {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <TouchableHighlight style={styles.button}> 
-        <Button title="Switch Chart" onPress={() => navigation.navigate('Sign Up')} />
+        <Button title="Switch Chart" onPress={() => navigation.navigate('Pie Chart')} />
       </TouchableHighlight>
       <View>
       <BarChart
