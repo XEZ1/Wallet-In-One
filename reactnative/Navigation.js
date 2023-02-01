@@ -1,8 +1,10 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { useContext, useEffect } from 'react';
 import { userContext } from './data';
+import { Text } from 'react-native';
 
 // Screens
 import StartScreen from './screens/StartScreen';
@@ -12,6 +14,7 @@ import LoginScreen from './screens/LoginScreen';
 
 import { initAuthState } from './authentication';
 
+const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function Navigation() {
@@ -20,20 +23,20 @@ export default function Navigation() {
 
     useEffect(()=>{initAuthState(user, setUser);}, []);
 
-    return (
+  return (
     <NavigationContainer>
+      {user.signedIn ? (
+        <Tab.Navigator>
+          <Tab.Screen name="1" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 1', tabBarIcon: ({ color, size }) => (<Text>A</Text>) }}/>
+          <Tab.Screen name="2" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 2', tabBarIcon: ({ color, size }) => (<Text>B</Text>) }}/>
+          <Tab.Screen name="3" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 3', tabBarIcon: ({ color, size }) => (<Text>C</Text>) }}/>
+        </Tab.Navigator>
+      ) : (
         <Stack.Navigator>
-            {user.signedIn ? (
-            <>
-              <Stack.Screen name='Logged In' component={LoggedInScreen} />
-            </>
-          ) : (
-            <>
-              <Stack.Screen name='Start' component={StartScreen} />
-              <Stack.Screen name='Sign Up' component={SignUpScreen} />
-              <Stack.Screen name='Login' component={LoginScreen} />
-            </>
-          )}
+          <Stack.Screen name='Start' component={StartScreen} />
+          <Stack.Screen name='Sign Up' component={SignUpScreen} />
+          <Stack.Screen name='Login' component={LoginScreen} />
         </Stack.Navigator>
+      )}
     </NavigationContainer>)
 }
