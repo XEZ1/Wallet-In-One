@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight } from 'react-native';
 import {
   LineChart,
   BarChart,
@@ -16,7 +16,9 @@ export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-
+      <TouchableHighlight style={styles.button}> 
+        <Button title="Switch Chart" onPress={() => navigation.navigate('Sign Up')} />
+      </TouchableHighlight>
       <View>
       <PieChart
   data={data}
