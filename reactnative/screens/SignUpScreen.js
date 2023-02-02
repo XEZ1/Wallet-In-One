@@ -37,7 +37,7 @@ export default function SignUpScreen({ navigation }) {
     }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
     .then((data) => {
-          console.log('Response:', data);
+          // console.log('Response:', data);
           if (data['status'] == 400){
             setErrors(data['body'])
             Alert.alert('Error', 'There were some errors');
