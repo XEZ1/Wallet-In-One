@@ -78,27 +78,27 @@ export default function SignUpScreen({ navigation }) {
 
       
         <Text style={styles.text} >Username:</Text>
-        <TextInput style={inputStyle('username')} onChangeText={setUsername}/>
+        <TextInput style={inputStyle('username')} onChangeText={setUsername} testID='username'/>
         <ErrorMessage name='username'></ErrorMessage>
 
         <Text style={styles.text} >Email:</Text>
-        <TextInput style={inputStyle('email')} onChangeText={setEmail}/>
+        <TextInput style={inputStyle('email')} onChangeText={setEmail} testID='email'/>
         <ErrorMessage name='email'></ErrorMessage>
 
         <Text style={styles.text} >First Name:</Text>
-        <TextInput style={inputStyle('first_name')} onChangeText={setFirstName}/>
+        <TextInput style={inputStyle('first_name')} onChangeText={setFirstName} testID='first_name'/>
         <ErrorMessage name='first_name'></ErrorMessage>
 
         <Text style={styles.text} >Last Name:</Text>
-        <TextInput style={inputStyle('first_name')} onChangeText={setLastName}/>
-        <ErrorMessage name='first_name'></ErrorMessage>
+        <TextInput style={inputStyle('last_name')} onChangeText={setLastName} testID='last_name'/>
+        <ErrorMessage name='last_name'></ErrorMessage>
 
         <Text style={styles.text} >Password:</Text>
-        <TextInput style={inputStyle('new_password')} onChangeText={setPassword}  secureTextEntry={true}/>
+        <TextInput style={inputStyle('new_password')} onChangeText={setPassword}  secureTextEntry={true} testID='new_password'/>
         <ErrorMessage name='new_password'></ErrorMessage>
 
         <Text style={styles.text} >Password Confirmation:</Text>
-        <TextInput style={inputStyle('password_confirmation')} onChangeText={setPasswordConfirmation} secureTextEntry={true}/>
+        <TextInput style={inputStyle('password_confirmation')} onChangeText={setPasswordConfirmation} secureTextEntry={true} testID='password_confirmation'/>
         <ErrorMessage name='password_confirmation'></ErrorMessage>
 
         <View style={styles.parent}>
