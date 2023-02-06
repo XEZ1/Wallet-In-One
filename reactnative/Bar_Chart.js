@@ -37,6 +37,7 @@ export default function BarChartWallet({ navigation }) {
           onPressIn: handlePressIn
         }
       }]}
+      style={{ data: { fill: "blue"}}}
       />
       </VictoryChart>
     </View>
