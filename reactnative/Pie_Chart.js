@@ -1,52 +1,45 @@
+import { elements } from 'chart.js';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, TouchableOpacity, Alert } from 'react-native';
 import {
   LineChart,
   BarChart,
   PieChart,
   ProgressChart,
   ContributionGraph,
-  StackedBarChart
+  StackedBarChart,
+  Sector
 } from "react-native-chart-kit";
+
+import { VictoryPie, VictoryTheme } from "victory-native";
 
 import data from "./data.json"
 
-export default function PieChartWallet({ navigation }) {
+
+export default function PieChartWallet({ navigation, onDataPointClick }) {
+
+
+  const handlePressIn = (event, datapoint) => {
+    const dataPoint = data[datapoint.index];
+    Alert.alert(dataPoint.x);
+  };
+
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
       <TouchableHighlight style={styles.button}> 
         <Button title="Switch Chart" onPress={() => navigation.navigate('Bar Chart')} />
       </TouchableHighlight>
-      <View>
-      <PieChart
-  data={data}
-  width={Dimensions.get("window").width}
-  height={250}
-  chartConfig={{
-    backgroundColor: "#e26a00",
-    backgroundGradientFrom: "#fb8c00",
-    backgroundGradientTo: "#ffa726",
-    decimalPlaces: 2, // optional, defaults to 2dp
-    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    style: {
-      borderRadius: 16
-    },
-    propsForDots: {
-      r: "6",
-      strokeWidth: "2",
-      stroke: "#ffa726"
-    }
-  }}
-  accessor={"amount"}
-  backgroundColor={"transparent"}
-  paddingLeft={"15"}
-  center={[10, 50]}
-  absolute
-/>
-</View>
+      <VictoryPie
+        data={data}
+        events={[{
+          target: "data",
+          eventHandlers: {
+            onPressIn: handlePressIn
+          }
+        }]}
+        colorScale="cool"
+      />
     </View>
   );
 }
@@ -59,3 +52,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
