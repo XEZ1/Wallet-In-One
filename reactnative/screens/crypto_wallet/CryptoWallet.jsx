@@ -7,13 +7,12 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
 } from "react-native";
 import useCryptoWallet from "./useCryptoWallet";
 import WalletModal from "./WalletModal";
 import WalletAsset from "./WalletAsset";
 
-export default function CryptoWallet() {
+export default function CryptoWallet(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const { wallets, fetchWallets, connectWallet } = useCryptoWallet();
 
@@ -22,7 +21,7 @@ export default function CryptoWallet() {
   }, []);
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <ScrollView>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View
@@ -49,7 +48,9 @@ export default function CryptoWallet() {
         <FlatList
           style={styles.walletList}
           data={wallets}
-          renderItem={({ item }) => <WalletAsset item={item} />}
+          renderItem={({ item }) => (
+            <WalletAsset item={item} navigation={props.navigation} />
+          )}
         />
       </ScrollView>
     </SafeAreaView>

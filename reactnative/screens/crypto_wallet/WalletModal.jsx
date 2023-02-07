@@ -8,15 +8,9 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { authorize } from "react-native-app-auth";
-
-import { CLIENT_ID, CLIENT_SECRET } from "@env";
-import * as SecureStore from "expo-secure-store";
-import useCryptoWallet from "./useCryptoWallet";
 
 export default function WalletModal(props) {
   const [address, setAddress] = useState("");
-  //const { wallets, fetchWallets, setWallets, connect } = useCryptoWallet();
 
   return (
     <Modal

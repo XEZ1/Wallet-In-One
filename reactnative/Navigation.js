@@ -14,6 +14,7 @@ import CryptoWallet from "./screens/crypto_wallet/CryptoWallet";
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';
+import CryptoWalletStackNavigator from "./screens/crypto_wallet/CryptoWalletStackNavigator";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -29,7 +30,7 @@ export default function Navigation() {
       {user.signedIn ? (
         <Tab.Navigator>
           {/* vvvvv Temporary (will be moved to account screen) vvvvv */}
-          <Tab.Screen name="Crypto Wallets" component={CryptoWallet} options={{ tabBarLabel: 'Crypto Wallet', tabBarIcon: ({ color, size }) => (<Text>₿</Text>) }}/>
+          <Tab.Screen name="Crypto Wallets" component={CryptoWalletStackNavigator} options={{ tabBarLabel: 'Crypto Wallet', tabBarIcon: ({ color, size }) => (<Text>₿</Text>) }}/>
 
           <Tab.Screen name="1" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 1', tabBarIcon: ({ color, size }) => (<Text>A</Text>) }}/>
           <Tab.Screen name="2" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 2', tabBarIcon: ({ color, size }) => (<Text>B</Text>) }}/>

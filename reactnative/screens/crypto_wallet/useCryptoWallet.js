@@ -39,5 +39,5 @@ export default function useCryptoWallet() {
       .catch((err) => console.log(err));
   };
 
-  return { wallets, fetchWallets, connectWallet: connectWallet };
+  return { wallets, fetchWallets, connectWallet };
 }
