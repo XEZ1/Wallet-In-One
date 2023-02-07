@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React, {useEffect, useState} from 'react';
 import { LineChart } from "react-native-chart-kit";
 import {
@@ -10,38 +9,21 @@ import {
   Text,
   View,
   Image,
-  Pressable,
-  Modal, Dimensions
 } from 'react-native';
-
-import data from './wallet_data.json' // Test Data
-import WalletModal from "./WalletModal";
 import * as SecureStore from "expo-secure-store";
+import WalletModal from "./WalletModal";
+import useCryptoWallet from "./useCryptoWallet"
 
 
 export default function CryptoWallet() {
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [wallets, setWallets] = useState([]);
-
-  const fetchWallets = async () => {
-    await fetch('http://192.168.1.17:8000/crypto_wallets/', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Token ${await SecureStore.getItemAsync('token')}`
-      }
-    })
-      .then(res => res.json())
-      .then(res => setWallets(res))
-      .catch(err => console.log(err))
-  }
-
-  // Refresh button
+  const { wallets, fetchWallets, connectWallet } = useCryptoWallet();
 
   useEffect(() => {
     fetchWallets();
   }, [])
+
 
   return (
     <SafeAreaView style={styles.cryptoWallet}>
@@ -55,7 +37,7 @@ export default function CryptoWallet() {
           </View>
         </View>
 
-        <WalletModal wallets={wallets} setWallets={setWallets} visible={modalVisible} setVisible={setModalVisible} />
+        <WalletModal wallets={wallets} connect={connectWallet} visible={modalVisible} setVisible={setModalVisible} />
 
         <Button title="Add Wallet" onPress={() => setModalVisible(true)} />
 
@@ -183,6 +165,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 10,
     flexDirection:'row',
+    borderColor: '#525252',
+    borderWidth: 1
   },
   walletAssetTitle: {
     fontWeight: '700',

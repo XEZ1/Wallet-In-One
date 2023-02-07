@@ -10,7 +10,7 @@ import StartScreen from './screens/StartScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import LoggedInScreen from './screens/LoggedInScreen';
 import LoginScreen from './screens/LoginScreen';
-import CryptoWallet from "./screens/crypto/CryptoWallet";
+import CryptoWallet from "./screens/crypto_wallet/CryptoWallet";
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';
