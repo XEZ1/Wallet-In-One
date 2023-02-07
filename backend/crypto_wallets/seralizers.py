@@ -6,10 +6,6 @@ from rest_framework.fields import CurrentUserDefault
 from crypto_wallets.services import fetch_balance
 
 
-# Address and blockchain automatically provided
-# Use validators
-
-
 class WalletSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 

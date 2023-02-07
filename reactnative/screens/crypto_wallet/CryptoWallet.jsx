@@ -14,7 +14,7 @@ import WalletAsset from "./WalletAsset";
 
 export default function CryptoWallet(props) {
   const [modalVisible, setModalVisible] = useState(false);
-  const { wallets, fetchWallets, connectWallet } = useCryptoWallet();
+  const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
 
   useEffect(() => {
     fetchWallets();
@@ -49,7 +49,7 @@ export default function CryptoWallet(props) {
           style={styles.walletList}
           data={wallets}
           renderItem={({ item }) => (
-            <WalletAsset item={item} navigation={props.navigation} />
+            <WalletAsset item={item} removeWallet={removeWallet} navigation={props.navigation} />
           )}
         />
       </ScrollView>

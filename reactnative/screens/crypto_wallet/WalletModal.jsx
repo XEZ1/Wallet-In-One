@@ -38,7 +38,8 @@ export default function WalletModal(props) {
         <Button
           title="Connect Bitcoin Wallet"
           onPress={() =>
-            props.connect(address).then(() => props.setVisible(false))
+            props.connect(address)
+              .then(() => props.setVisible(false))
           }
         />
       </View>

@@ -48,7 +48,8 @@ export default function WalletAsset(props) {
   return (
     <TouchableWithoutFeedback
       onPress={() =>
-        props.navigation.navigate("WalletAssetDetail", { item: props.item, })
+        props.navigation.navigate("WalletAssetDetail",
+          { item: props.item, removeWallet: props.removeWallet })
       }
     >
       <View style={styles.walletAsset}>
@@ -61,9 +62,7 @@ export default function WalletAsset(props) {
         >
           <Image
             style={styles.walletAssetImage}
-            source={{
-              uri: `https://cryptoicons.org/api/color/${props.item.symbol.toLowerCase()}/200`,
-            }}
+            source={require(`./icons/BTC.png`)}
           />
         </View>
 

@@ -39,5 +39,21 @@ export default function useCryptoWallet() {
       .catch((err) => console.log(err));
   };
 
-  return { wallets, fetchWallets, connectWallet };
+  const removeWallet = async (id) => {
+    await fetch("http://localhost:8000/crypto_wallets/", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+      body: JSON.stringify({
+        id: id
+      }),
+    })
+      .then(() => setWallets(wallets.filter(wallet => wallet.id !== id)))
+      .catch((err) => console.log(err));
+
+    }
+
+  return { wallets, fetchWallets, connectWallet, removeWallet };
 }

@@ -1,11 +1,11 @@
-import {Dimensions, Image, StyleSheet, Text, TouchableWithoutFeedback, View} from "react-native";
+import {Button, Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, View} from "react-native";
 import { useRoute } from "@react-navigation/native";
 import React from "react";
 import {LineChart} from "react-native-chart-kit";
 
 export default function WalletAssetDetail(props) {
   const route = useRoute();
-  const { item } = props.route.params;
+  const { item, removeWallet } = props.route.params;
   const data = {
     datasets: [
       {
@@ -95,8 +95,16 @@ export default function WalletAssetDetail(props) {
 
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10}}>Transactions</Text>
       <View style={styles.walletAsset}>
-        <Text>⚠ Transaction history unavailable.</Text>
+        <Text>⚠ Transaction history not implemented.</Text>
       </View>
+
+        <Pressable
+          onPress={() => removeWallet(item.id).then(() => props.navigation.goBack())}
+          style={{alignItems: "center", justifyContent: "center"}}>
+          <View style={styles.deleteButton}>
+            <Text style={{color: "#fee2e2", fontWeight: "800"}}>Remove</Text>
+          </View>
+        </Pressable>
 
     </View>
   );
@@ -122,4 +130,11 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
   },
+  deleteButton: {
+    marginTop: 10,
+    padding: 10,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+    backgroundColor: '#dc2626',
+  }
 });

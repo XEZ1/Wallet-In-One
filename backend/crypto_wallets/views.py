@@ -12,15 +12,9 @@ from crypto_wallets.seralizers import WalletSerializer
 
 
 class ListCryptoWallets(APIView):
-    """
-    Read wallet address and blockchain
-    Use bitcoin api to read current value
-    Save address, blockchain and current value
-    Return data
-    """
 
     def get(self, request):
-        crypto_wallets = CryptoWallet.objects.all()  # get current user only.
+        crypto_wallets = CryptoWallet.objects.filter(user=self.request.user)
         serializer = WalletSerializer(crypto_wallets, many=True)
         return Response(serializer.data)
 
@@ -29,6 +23,12 @@ class ListCryptoWallets(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request):
+        crypto_wallet = CryptoWallet.objects.get(id=request.data['id'])
+        if crypto_wallet.user != self.request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        serializer = WalletSerializer(crypto_wallet)
+        crypto_wallet.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
