@@ -85,7 +85,7 @@ function WalletAsset(props) {
         <View style={{  }}>
           <Text style={{ fontSize: 25, fontWeight: '700' }}>{props.item.cryptocurrency}</Text>
           <Text style={styles.walletAssetTitle}>£000.00 ▲ 0.00%</Text>
-          <Text style={styles.walletAssetTitle}>XYZ{props.item.value} {props.item.symbol}</Text>
+          <Text style={styles.walletAssetTitle}>{props.item.value} {props.item.symbol}</Text>
         </View>
 
         <View style={{ }}>

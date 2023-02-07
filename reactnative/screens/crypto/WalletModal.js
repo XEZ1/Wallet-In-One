@@ -78,6 +78,7 @@ export default function WalletModal(props) {
     })
       .then(res => res.json())
       .then(res => props.setWallets([...props.wallets, res])) // Handle 400
+      .then(() => props.setVisible(false))
       .catch(err => console.log(err))
 
   }

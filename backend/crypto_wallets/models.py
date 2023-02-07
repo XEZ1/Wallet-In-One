@@ -12,8 +12,8 @@ class CryptoWallet(models.Model):
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    cryptocurrency = models.CharField(max_length=32)
-    symbol = models.CharField(max_length=32)
-    address = models.CharField(max_length=32)
-    value = models.CharField(max_length=32)
+    cryptocurrency = models.CharField(max_length=255)
+    symbol = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)  # Change to FloatField / DecimalField
 
