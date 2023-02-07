@@ -28,11 +28,12 @@ export default function Navigation() {
     <NavigationContainer>
       {user.signedIn ? (
         <Tab.Navigator>
+          {/* vvvvv Temporary (will be moved to account screen) vvvvv */}
+          <Tab.Screen name="Crypto Wallets" component={CryptoWallet} options={{ tabBarLabel: 'Crypto Wallet', tabBarIcon: ({ color, size }) => (<Text>₿</Text>) }}/>
+
           <Tab.Screen name="1" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 1', tabBarIcon: ({ color, size }) => (<Text>A</Text>) }}/>
           <Tab.Screen name="2" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 2', tabBarIcon: ({ color, size }) => (<Text>B</Text>) }}/>
           <Tab.Screen name="3" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 3', tabBarIcon: ({ color, size }) => (<Text>C</Text>) }}/>
-          {/* vvvvv Temporary (will be moved to account screen) vvvvv */}
-          <Tab.Screen name="4" component={CryptoWallet} options={{ tabBarLabel: 'Crypto Wallet', tabBarIcon: ({ color, size }) => (<Text>₿</Text>) }}/>
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
@@ -43,5 +44,3 @@ export default function Navigation() {
       )}
     </NavigationContainer>)
 }
-
-//

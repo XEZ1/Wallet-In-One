@@ -1,13 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, Modal, Pressable, StyleSheet, Text, TextInput, View} from "react-native";
 import { authorize } from 'react-native-app-auth';
 
 import {CLIENT_ID, CLIENT_SECRET} from "@env"
+import * as SecureStore from "expo-secure-store";
 
 export default function WalletModal(props) {
 
-  // 1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71 <-- Test BTC address
 
+  // Deprecated
   async function login() {
     const USER_TOKEN = await fetch('https://api.vezgo.com/v1/auth/token', {
       method: 'POST',
@@ -60,6 +61,30 @@ export default function WalletModal(props) {
   }
 
 
+  // 1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71 <-- Test BTC address
+
+  async function connect() {
+    var test = await fetch('http://localhost:8000/crypto_wallets/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${await SecureStore.getItemAsync('token')}`
+      },
+      body: JSON.stringify({
+        'cryptocurrency': 'Bitcoin',
+        'symbol': 'BTC',
+        'address': address,
+      })
+    })
+      .then(res => res.json())
+      .then(res => props.setWallets([...props.wallets, res])) // Handle 400
+      .catch(err => console.log(err))
+
+  }
+
+  const [address, setAddress] = useState("");
+
+
   return (
     <Modal
       animationType='slide'
@@ -72,19 +97,19 @@ export default function WalletModal(props) {
             <Pressable onPress={() => props.setVisible(false)}>
               <Text style={styles.backArrow}>←</Text>
             </Pressable>
-            <Text style={styles.title}>Add Wallet</Text>
+            <Text style={styles.title}>Connect Wallet</Text>
+            <Text style={{alignSelf: 'center'}}>(Bitcoin Wallet)</Text>
           </View>
         </View>
 
         <TextInput
           style={styles.input}
+          onChangeText={(text) => setAddress(text)}
           placeholder="Wallet Address" />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Cryptocurrency" />
+        <Button title="Connect Bitcoin Wallet" onPress={() => connect()} />
 
-        <Button title="Submit" onPress={() => login()} />
+        <Button title="Connect Using Vezgo (Unused)" onPress={() => login()} />
 
       </View>
     </Modal>

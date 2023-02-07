@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { LineChart } from "react-native-chart-kit";
 import {
   Button,
@@ -16,17 +16,37 @@ import {
 
 import data from './wallet_data.json' // Test Data
 import WalletModal from "./WalletModal";
+import * as SecureStore from "expo-secure-store";
 
 
 export default function CryptoWallet() {
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [wallets, setWallets] = useState([]);
+
+  const fetchWallets = async () => {
+    await fetch('http://192.168.1.17:8000/crypto_wallets/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${await SecureStore.getItemAsync('token')}`
+      }
+    })
+      .then(res => res.json())
+      .then(res => setWallets(res))
+      .catch(err => console.log(err))
+  }
+
+  // Refresh button
+
+  useEffect(() => {
+    fetchWallets();
+  }, [])
 
   return (
     <SafeAreaView style={styles.cryptoWallet}>
       <ScrollView >
 
-        <StatusBar style="auto" />
 
         <View style={{ flexDirection:'row', alignItems: 'center' }}>
           <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
@@ -35,14 +55,14 @@ export default function CryptoWallet() {
           </View>
         </View>
 
-        <WalletModal visible={modalVisible} setVisible={setModalVisible} />
+        <WalletModal wallets={wallets} setWallets={setWallets} visible={modalVisible} setVisible={setModalVisible} />
 
         <Button title="Add Wallet" onPress={() => setModalVisible(true)} />
 
 
         <FlatList
           style={styles.walletList}
-          data={data}
+          data={wallets}
           renderItem={({item}) => <WalletAsset item={item} />}
         />
 
@@ -63,9 +83,9 @@ function WalletAsset(props) {
       <View style={{flex:1, flexDirection:'row', justifyContent:'space-between' }}>
 
         <View style={{  }}>
-          <Text style={{ fontSize: 25, fontWeight: '700' }}>{props.item.name}</Text>
-          <Text style={styles.walletAssetTitle}>£100.00 ▲ 1.00%</Text>
-          <Text style={styles.walletAssetTitle}>{props.item.value} {props.item.symbol}</Text>
+          <Text style={{ fontSize: 25, fontWeight: '700' }}>{props.item.cryptocurrency}</Text>
+          <Text style={styles.walletAssetTitle}>£000.00 ▲ 0.00%</Text>
+          <Text style={styles.walletAssetTitle}>XYZ{props.item.value} {props.item.symbol}</Text>
         </View>
 
         <View style={{ }}>
@@ -131,10 +151,6 @@ function WalletAsset(props) {
 
       </View>
 
-
-
-
-
     </View>
   )
 }
@@ -142,6 +158,7 @@ function WalletAsset(props) {
 const styles = StyleSheet.create({
   cryptoWallet: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   cryptoWalletTitle: {
     fontWeight: '900',
