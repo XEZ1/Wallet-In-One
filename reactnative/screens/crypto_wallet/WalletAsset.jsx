@@ -8,10 +8,25 @@ import {
   View,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import getCryptoIcon from "./icons/icon";
 
 export default function WalletAsset(props) {
+
+  const [cryptoValue, setCryptoValue] = useState(0);
+
+  const getCryptoValue = async () => {
+    await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${props.item.symbol}&tsyms=GBP`)
+      .then((res) => res.json())
+      .then((res) => res.GBP)
+      .then((res) => setCryptoValue(res))
+      .catch((err) => console.log(err))
+  }
+
+  useEffect(() => {
+    getCryptoValue();
+  }, []);
+
   const data = {
     datasets: [
       {
@@ -81,7 +96,7 @@ export default function WalletAsset(props) {
             <Text style={styles.walletAssetTitle}>
               {props.item.value} {props.item.symbol}
             </Text>
-            <Text style={styles.walletAssetTitle}>£0.00 ▲ 0.00%</Text>
+            <Text style={styles.walletAssetTitle}>{new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(cryptoValue * props.item.value)} ▲ 0.00%</Text>
           </View>
 
           <View style={{}}>
