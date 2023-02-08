@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 
-export const api_url = 'http://192.168.1.17:8000/' // http://10.0.2.2:8000
+export const api_url = 'http://localhost:8000/' // http://10.0.2.2:8000
 
 export const fetchAPI = async (url, body=null, headers={}, method = "POST") => {
     try{
