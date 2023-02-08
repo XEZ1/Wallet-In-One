@@ -21,8 +21,15 @@ export default function BarChartWallet({ navigation }) {
     Alert.alert(dataPoint.x);
   };
 
+  let value = 0;
+  data.forEach(jsonObj => {
+    value += jsonObj.y;
+  });
+
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Wallet-In-One</Text>
+      <Text style={styles.amountText}>Amount: £{value}</Text>
       <TouchableHighlight style={styles.button}> 
         <Button title="Switch Chart" onPress={() => navigation.navigate('Pie Chart')} />
       </TouchableHighlight>
@@ -47,8 +54,19 @@ export default function BarChartWallet({ navigation }) {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: 'red',
+      backgroundColor: '#FFFF00',
       alignItems: 'center',
       justifyContent: 'center',
     },
+    title: {
+      fontWeight: '900',
+      fontSize: 50,
+      alignSelf: 'center',
+      paddingVertical: 10,
+    },
+    amountText:{
+      fontWeight: '900',
+      fontSize: 25,
+      textAlign: 'left',
+    }
   });
