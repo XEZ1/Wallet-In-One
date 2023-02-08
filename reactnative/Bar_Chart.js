@@ -1,14 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Alert } from 'react-native';
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart
-} from "react-native-chart-kit";
 
 import { VictoryBar, VictoryChart, VictoryTheme } from "victory-native"
 

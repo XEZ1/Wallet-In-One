@@ -1,16 +1,8 @@
-import { elements } from 'chart.js';
+
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, TouchableOpacity, Alert } from 'react-native';
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-  Sector
-} from "react-native-chart-kit";
+
 
 import { VictoryPie, VictoryTheme } from "victory-native";
 
