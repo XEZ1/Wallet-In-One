@@ -98,13 +98,13 @@ export default function WalletAssetDetail(props) {
         <Text>⚠ Transaction history not implemented.</Text>
       </View>
 
-        <Pressable
-          onPress={() => removeWallet(item.id).then(() => props.navigation.goBack())}
-          style={{alignItems: "center", justifyContent: "center"}}>
-          <View style={styles.deleteButton}>
-            <Text style={{color: "#fee2e2", fontWeight: "800"}}>Remove</Text>
-          </View>
-        </Pressable>
+      <Pressable
+        onPress={() => removeWallet(item.id).then(() => props.navigation.goBack())}
+        style={{alignItems: "center", justifyContent: "center"}}>
+        <View style={styles.deleteButton}>
+          <Text style={{color: "#fee2e2", fontWeight: "800"}}>Remove</Text>
+        </View>
+      </Pressable>
 
     </View>
   );

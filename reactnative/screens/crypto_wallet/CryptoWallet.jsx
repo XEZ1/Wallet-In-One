@@ -9,11 +9,9 @@ import {
   View,
 } from "react-native";
 import useCryptoWallet from "./useCryptoWallet";
-import WalletModal from "./WalletModal";
 import WalletAsset from "./WalletAsset";
 
 export default function CryptoWallet(props) {
-  const [modalVisible, setModalVisible] = useState(false);
   const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
 
   useEffect(() => {
@@ -36,14 +34,9 @@ export default function CryptoWallet(props) {
           </View>
         </View>
 
-        <WalletModal
-          wallets={wallets}
-          connect={connectWallet}
-          visible={modalVisible}
-          setVisible={setModalVisible}
-        />
 
-        <Button title="Add Wallet" onPress={() => setModalVisible(true)} />
+
+        <Button title="Add Wallet" onPress={() => props.navigation.navigate("WalletSelector", {connectWallet: connectWallet})} />
 
         <FlatList
           style={styles.walletList}
