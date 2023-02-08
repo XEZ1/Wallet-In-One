@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import React from "react";
+import getCryptoIcon from "./icons/icon";
 
 export default function WalletAsset(props) {
   const data = {
@@ -62,7 +63,7 @@ export default function WalletAsset(props) {
         >
           <Image
             style={styles.walletAssetImage}
-            source={require(`./icons/BTC.png`)}
+            source={getCryptoIcon(props.item.symbol)}
           />
         </View>
 

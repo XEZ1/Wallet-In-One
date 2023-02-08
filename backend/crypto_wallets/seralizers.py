@@ -17,7 +17,7 @@ class WalletSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         crypto_wallet = CryptoWallet.objects.create(
             **validated_data,
-            value=fetch_balance(validated_data['address'])
+            value=fetch_balance(validated_data['address'], validated_data['cryptocurrency'])
         )
         crypto_wallet.save()
         return crypto_wallet

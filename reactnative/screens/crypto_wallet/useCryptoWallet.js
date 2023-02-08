@@ -21,7 +21,7 @@ export default function useCryptoWallet() {
       .catch((err) => console.log(err));
   };
 
-  const connectWallet = async (address) => {
+  const connectWallet = async (cryptocurrency, symbol, address) => {
     await fetch("http://localhost:8000/crypto_wallets/", {
       method: "POST",
       headers: {
@@ -29,8 +29,8 @@ export default function useCryptoWallet() {
         Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
       },
       body: JSON.stringify({
-        cryptocurrency: "Bitcoin",
-        symbol: "BTC",
+        cryptocurrency: cryptocurrency,
+        symbol: symbol,
         address: address,
       }),
     })

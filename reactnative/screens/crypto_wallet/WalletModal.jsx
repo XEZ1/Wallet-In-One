@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import {createStackNavigator} from "@react-navigation/stack";
+import getCryptoIcon from "./icons/icon";
 
 const Stack = createStackNavigator();
 
@@ -29,7 +30,8 @@ export function WalletSelector(props) {
 
       <View style={styles.container}>
 
-        <TouchableWithoutFeedback onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet})} >
+        <TouchableWithoutFeedback onPress={() =>
+          props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Bitcoin', symbol: 'BTC'})} >
           <View style={styles.cryptoItem}>
             <Image
               style={{width: 64, height: 64}}
@@ -39,13 +41,14 @@ export function WalletSelector(props) {
           </View>
         </TouchableWithoutFeedback>
 
-        <TouchableWithoutFeedback onPress={() => props.navigation.navigate("WalletConnector")}>
+        <TouchableWithoutFeedback onPress={() =>
+          props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Dogecoin', symbol: 'DOGE'})}>
           <View style={styles.cryptoItem}>
             <Image
               style={{width: 64, height: 64}}
-              source={require(`./icons/BTC.png`)}
+              source={require(`./icons/DOGE.png`)}
             />
-            <Text style={{fontWeight: "700", fontSize: 20}}>Bitcoin</Text>
+            <Text style={{fontWeight: "700", fontSize: 20}}>Dogecoin</Text>
           </View>
         </TouchableWithoutFeedback>
 
@@ -60,7 +63,7 @@ export function WalletSelector(props) {
 
 export function WalletConnector(props) {
   const [address, setAddress] = useState("");
-  const { connectWallet } = props.route.params;
+  const { connectWallet, cryptocurrency, symbol } = props.route.params;
 
   return (
     <View style={{flex:1, backgroundColor: 'white'}}>
@@ -77,9 +80,9 @@ export function WalletConnector(props) {
         <View style={{alignItems: "center", justifyContent: "center", paddingTop: 30}}>
           <Image
             style={{width: 100, height: 100}}
-            source={require(`./icons/BTC.png`)}
+            source={getCryptoIcon(symbol)}
           />
-          <Text style={{fontWeight: "800", fontSize: 30, alignSelf: "center"}}>Bitcoin</Text>
+          <Text style={{fontWeight: "800", fontSize: 30, alignSelf: "center"}}>{cryptocurrency}</Text>
 
         </View>
 
@@ -92,7 +95,7 @@ export function WalletConnector(props) {
         <Button
           title="Connect Wallet"
           onPress={() =>
-            connectWallet(address)
+            connectWallet(cryptocurrency, symbol, address)
               .then(() => props.navigation.navigate("Wallets"))
           }
         />

@@ -34,8 +34,6 @@ export default function CryptoWallet(props) {
           </View>
         </View>
 
-
-
         <Button title="Add Wallet" onPress={() => props.navigation.navigate("WalletSelector", {connectWallet: connectWallet})} />
 
         <FlatList

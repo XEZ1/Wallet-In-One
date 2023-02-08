@@ -2,6 +2,7 @@ import {Button, Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithout
 import { useRoute } from "@react-navigation/native";
 import React from "react";
 import {LineChart} from "react-native-chart-kit";
+import getCryptoIcon from "./icons/icon";
 
 export default function WalletAssetDetail(props) {
   const route = useRoute();
@@ -50,7 +51,7 @@ export default function WalletAssetDetail(props) {
       <View style={styles.walletAsset}>
         <Image
           style={styles.walletAssetImage}
-          source={require(`./icons/BTC.png`)}
+          source={getCryptoIcon(item.symbol)}
         />
         <Text style={{fontWeight: "800", fontSize: 40}}>{item.cryptocurrency} Wallet</Text>
         <Text />
@@ -64,7 +65,7 @@ export default function WalletAssetDetail(props) {
         <Text />
 
         <Text style={{fontWeight: "700"}}>Value</Text>
-        <Text>£0.00 ▲ 0.00%</Text>
+        <Text>£0.00 ▲ 0.00% (Not Implemented)</Text>
 
       </View>
 
