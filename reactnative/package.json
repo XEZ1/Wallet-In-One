@@ -35,7 +35,6 @@
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
-    "react-native-dotenv": "^3.4.7",
     "@testing-library/react-native": "^11.5.1",
     "babel-core": "^7.0.0-bridge.0"
   },
