@@ -2,8 +2,6 @@ import * as SecureStore from 'expo-secure-store';
 
 import {BACKEND_URL} from "@env"
 
-export const api_url = BACKEND_URL
-
 export const fetchAPI = async (url, body=null, headers={}, method = "POST") => {
     try{
         var payload =  {
@@ -19,7 +17,7 @@ export const fetchAPI = async (url, body=null, headers={}, method = "POST") => {
             payload = {...payload, body: JSON.stringify(body)}
         }
 
-        var res = await fetch(api_url + url, payload)
+        var res = await fetch(BACKEND_URL + url, payload)
         
         var data = await res.json();
 
