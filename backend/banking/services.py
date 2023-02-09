@@ -18,6 +18,10 @@ def post(endpoint, headers = {}, body = {}):
 def get(endpoint, headers = {}, body = {}):
     return requests.get(f'{base_url}{endpoint}', headers=base_headers|headers, json=body).json()
 
+def delete(endpoint, headers = {}, body = {}):
+    return requests.delete(f'{base_url}{endpoint}', headers=base_headers|headers, json=body).json()
+
+# Authentication Logic
 def generate_tokens():
     return post('/token/new/', body = credentials)
 
@@ -70,16 +74,52 @@ def auth_request(method, endpoint, headers = {}, body = {}):
     
     if isinstance(r,dict) and r.get('status_code') == 401 and r.get("detail") == "Token is invalid or expired":
         token = get_access_token(force_regenerate=True)
-        r = method(endpoint, headers, body)
+        r = method(endpoint, headers  | {'Authorization': f'Bearer {token}'}, body)
     return r
 
 def auth_get(endpoint, headers = {}, body = {}):
-    return auth_request(get, endpoint, headers = {}, body = {})
+    return auth_request(get, endpoint, headers = headers, body = body)
 
 def auth_post(endpoint, headers = {}, body = {}):
-    return auth_request(post, endpoint, headers = {}, body = {})
+    return auth_request(post, endpoint, headers = headers, body = body)
 
-# Main Methods
+def auth_delete(endpoint, headers = {}, body = {}):
+    return auth_request(delete, endpoint, headers = headers, body = body)
 
+# Main Routes
 def get_institutions():
     return auth_get('/institutions/?country=gb')
+
+def get_institution(id):
+    return auth_get(f'/institutions/{id}')
+
+# Requestions
+
+def create_requisition(institution_id):
+    # institution_id, redirect, agreement, reference,
+    # user_language, ssn, account_selection, redirect_immediate
+    body = {
+        'institution_id': institution_id,
+        'redirect': 'https://example.org',
+        'user_language': 'EN',
+    }
+    return auth_post('/requisitions/', body=body)
+
+def get_requisitions(id=''):
+    return auth_get(f'/requisitions/{id}')
+
+def delete_requisition(id):
+    return auth_delete(f'/requisitions/{id}')
+
+# Account
+def get_account_data(id):
+    return auth_get(f'/accounts/{id}')
+
+def get_account_balances(account_id):
+    return auth_get(f'/accounts/{account_id}/balances/')
+
+def get_account_transactions(account_id):
+    return auth_get(f'/accounts/{account_id}/transactions/')
+
+def get_account_details(account_id):
+    return auth_get(f'/accounts/{account_id}/details/')
