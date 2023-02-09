@@ -1,6 +1,13 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Image, View, Button, Text, ImageBackground, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Image,
+  View,
+  Text,
+  ImageBackground,
+  TouchableOpacity
+} from 'react-native';
 
 export default function StartScreen ({ navigation }) {
 
@@ -17,6 +24,12 @@ export default function StartScreen ({ navigation }) {
           >
           </Image>
           {/* <StatusBar style="auto" /> */}
+          <TouchableOpacity
+            onPress={() => navigation.navigate('About Us')}
+          >
+            <Text style={styles.login}>About Us</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity
             onPress={() => navigation.navigate('Sign Up')}
           >
@@ -46,7 +59,7 @@ const styles = StyleSheet.create({
     width: 280,
     height: 280,
     marginLeft: '15%',
-    marginTop: '0%',
+    marginTop: '-15%',
   },
   signup: {
     backgroundColor: 'white',
@@ -58,7 +71,7 @@ const styles = StyleSheet.create({
     marginLeft: '11%',
     padding: "2%",
     fontSize:  27,
-    marginTop: '35%'
+    marginTop: '45%'
   },
   login: {
     backgroundColor: 'red',
