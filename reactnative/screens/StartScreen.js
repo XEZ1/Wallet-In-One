@@ -16,7 +16,7 @@ export default function StartScreen ({ navigation }) {
             resizeMode="contain"
           >
           </Image>
-          <StatusBar style="auto" />
+          {/* <StatusBar style="auto" /> */}
           <TouchableOpacity
             onPress={() => navigation.navigate('Sign Up')}
           >
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     width: 280,
     height: 280,
     marginLeft: '15%',
-    marginTop: '5%',
+    marginTop: '0%',
   },
   signup: {
     backgroundColor: 'white',
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     marginLeft: '11%',
     padding: "2%",
     fontSize:  27,
+    marginTop: '35%'
   },
   login: {
     backgroundColor: 'red',

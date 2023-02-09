@@ -33,7 +33,7 @@ export default function Navigation() {
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
-          <Stack.Screen name='Start' component={StartScreen} />
+          <Stack.Screen options={{headerShown: false}} name='Start' component={StartScreen} />
           <Stack.Screen name='Sign Up' component={SignUpScreen} />
           <Stack.Screen name='Login' component={LoginScreen} />
         </Stack.Navigator>
