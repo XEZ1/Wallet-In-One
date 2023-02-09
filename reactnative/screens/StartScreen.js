@@ -9,6 +9,12 @@ import {
   TouchableOpacity
 } from 'react-native';
 
+import { useIsFocused } from '@react-navigation/native';
+function FocusAwareStatusBar(props) {
+  const isFocused = useIsFocused();
+  return isFocused ? <StatusBar {...props} /> : null;
+}
+
 export default function StartScreen ({ navigation }) {
 
     return (
@@ -17,6 +23,7 @@ export default function StartScreen ({ navigation }) {
           style={styles.background}
       >
         <View>
+          <FocusAwareStatusBar />
           <Image
             source={require('reactnative/assets/logo.png')}
             style={styles.logo}
