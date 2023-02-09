@@ -1,5 +1,4 @@
 import {
-    Linking,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -37,7 +36,13 @@ export default function AboutUsScreen ({ navigation }) {
           />
         </View>
   
-        <View style={styles.aboutLayout}>
+        <View
+        contentContainerStyle={{
+            paddingBottom: 30,
+            }}
+        style={styles.aboutLayout}
+        
+        >
           <Text style={styles.aboutSubHeader}> About us </Text>
           <Text style={[styles.paraStyle, styles.aboutPara]}>
             {/* Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
@@ -52,6 +57,11 @@ export default function AboutUsScreen ({ navigation }) {
             Engineering Group Project' for a client. All IP belongs to the client
             and further development is to be continued by said client.
           </Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Developer Info')}
+          >
+             <Text style={styles.developers}>Meet the devs!</Text>
+          </TouchableOpacity>
         </View>
         
         <TouchableOpacity
@@ -68,7 +78,6 @@ export default function AboutUsScreen ({ navigation }) {
   const styles = StyleSheet.create({
     aboutContainer: {
       display: "flex",
-      //backgroundColor: "black",
       flex: 1
     },
     background: {
@@ -97,6 +106,7 @@ export default function AboutUsScreen ({ navigation }) {
       backgroundColor: "red",
       paddingHorizontal: 30,
       marginVertical: 30,
+      paddingBottom: 10
     },
     aboutSubHeader: {
       fontSize: 18,
@@ -121,4 +131,16 @@ export default function AboutUsScreen ({ navigation }) {
       fontSize:  27,
       marginTop: '-2%'
     },
+    developers: {
+        backgroundColor: 'black',
+        color: 'red',
+        width: "40%",
+        borderRadius: 25,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        padding: "2%",
+        fontSize:  17,
+        marginTop: '-4%',
+        alignSelf: 'center',
+      },
   });

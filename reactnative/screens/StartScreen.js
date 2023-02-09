@@ -27,7 +27,7 @@ export default function StartScreen ({ navigation }) {
           <TouchableOpacity
             onPress={() => navigation.navigate('About Us')}
           >
-            <Text style={styles.login}>About Us</Text>
+            <Text style={styles.aboutUs}>About Us</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -62,18 +62,6 @@ const styles = StyleSheet.create({
     marginTop: '-15%',
   },
   signup: {
-    backgroundColor: 'white',
-    color: 'red',
-    width: "75%",
-    borderRadius: 25,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    marginLeft: '11%',
-    padding: "2%",
-    fontSize:  27,
-    marginTop: '45%'
-  },
-  login: {
     backgroundColor: 'red',
     color: 'white',
     width: "75%",
@@ -83,6 +71,30 @@ const styles = StyleSheet.create({
     marginLeft: '11%',
     padding: "2%",
     fontSize:  27,
+    marginTop: '65%'
+  },
+  login: {
+    backgroundColor: 'white',
+    color: 'red',
+    width: "75%",
+    borderRadius: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginLeft: '11%',
+    padding: "2%",
+    fontSize:  27,
     marginTop: '5%'
+  },
+  aboutUs: {
+    backgroundColor: 'black',
+    color: 'red',
+    width: "30%",
+    borderRadius: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    padding: "2%",
+    fontSize:  17,
+    marginTop: '-10%',
+    alignSelf: 'center'
   }
 });

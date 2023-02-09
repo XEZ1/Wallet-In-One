@@ -11,6 +11,7 @@ import SignUpScreen from './screens/SignUpScreen';
 import LoggedInScreen from './screens/LoggedInScreen';
 import LoginScreen from './screens/LoginScreen';
 import AboutUsScreen from './screens/AboutUsScreen';
+import DeveloperInfoScreen from './screens/DeveloperInfoScreen';
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';
@@ -38,6 +39,7 @@ export default function Navigation() {
           <Stack.Screen name='Sign Up' component={SignUpScreen} />
           <Stack.Screen name='Login' component={LoginScreen} />
           <Stack.Screen options={{headerShown: false}}  name='About Us' component={AboutUsScreen} />
+          <Stack.Screen options={{headerShown: false}} name='Developer Info' component={DeveloperInfoScreen} />
         </Stack.Navigator>
       )}
     </NavigationContainer>)
