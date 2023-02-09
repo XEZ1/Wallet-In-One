@@ -55,11 +55,9 @@ def get_access_token(force_regenerate=False):
     if (token.refresh_expired()):
         return new_refresh_token()
     
-    print(token.refresh_token)
     r = refresh_access_token(token.refresh_token)
 
     if r.get('status_code') == 401 and r.get('detail') == "Token is invalid or expired":
-        print('invalid')
         return new_refresh_token()
     
     token.access_token = r['access']
