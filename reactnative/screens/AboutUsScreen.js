@@ -60,7 +60,7 @@ export default function AboutUsScreen ({ navigation }) {
           <TouchableOpacity
             onPress={() => navigation.navigate('Developer Info')}
           >
-             <Text style={styles.developers}>Meet the devs!</Text>
+             <Text style={styles.developers}>Meet the team!</Text>
           </TouchableOpacity>
         </View>
         
