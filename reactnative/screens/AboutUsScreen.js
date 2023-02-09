@@ -17,7 +17,11 @@ export default function AboutUsScreen ({ navigation }) {
         style={styles.background}
       >
       <ScrollView
-      contentContainerStyle={{flexGrow : 1, justifyContent : 'center'}}
+      contentContainerStyle={{
+        flexGrow : 1,
+        justifyContent : 'center',
+        paddingBottom: 20
+        }}
       style={styles.aboutContainer}
       >
         <Image
@@ -36,9 +40,17 @@ export default function AboutUsScreen ({ navigation }) {
         <View style={styles.aboutLayout}>
           <Text style={styles.aboutSubHeader}> About us </Text>
           <Text style={[styles.paraStyle, styles.aboutPara]}>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
+            {/* Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
             commodo ligula eget dolor. Lorem ipsum dolor sit amet, consectetuer
-            adipiscing elit. Aenean commodo ligula eget dolor.
+            adipiscing elit. Aenean commodo ligula eget dolor. */}
+            Welcome to Wallet-In-One! We are an all in one central finance
+            app where you can access your credit cards, debit cards, stocks and
+            crytocurrency. Simply connect your respective accounts and view
+            the latest changes in your finances. {"\n"}
+            This app was developed by second year students from King's College 
+            London on the Computer Science course for the module 'Software
+            Engineering Group Project' for a client. All IP belongs to the client
+            and further development is to be continued by said client.
           </Text>
         </View>
         
@@ -107,6 +119,6 @@ export default function AboutUsScreen ({ navigation }) {
       marginLeft: '11%',
       padding: "2%",
       fontSize:  27,
-      marginTop: '0%'
+      marginTop: '-2%'
     },
   });
