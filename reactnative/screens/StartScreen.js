@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Image, View, Button, TouchableHighlight, ImageBackground } from 'react-native';
+import { StyleSheet, Image, View, Button, Text, ImageBackground, TouchableOpacity } from 'react-native';
 
 export default function StartScreen ({ navigation }) {
 
@@ -17,12 +17,17 @@ export default function StartScreen ({ navigation }) {
           >
           </Image>
           <StatusBar style="auto" />
-          <TouchableHighlight style={styles.button}> 
-            <Button title="Sign Up" onPress={() => navigation.navigate('Sign Up')} />
-          </TouchableHighlight>
-          <TouchableHighlight style={styles.button}> 
-            <Button title="Login" onPress={() => navigation.navigate('Login')} />
-          </TouchableHighlight>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Sign Up')}
+          >
+            <Text style={styles.signup}>Sign Up</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Login')}
+          >
+            <Text style={styles.login}>Log In</Text>
+          </TouchableOpacity>
         </View>
       </ImageBackground>
     );
@@ -41,6 +46,29 @@ const styles = StyleSheet.create({
     width: 280,
     height: 280,
     marginLeft: '15%',
-    marginTop: '10%'
+    marginTop: '5%',
+  },
+  signup: {
+    backgroundColor: 'white',
+    color: 'red',
+    width: "75%",
+    borderRadius: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginLeft: '11%',
+    padding: "2%",
+    fontSize:  27,
+  },
+  login: {
+    backgroundColor: 'red',
+    color: 'white',
+    width: "75%",
+    borderRadius: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginLeft: '11%',
+    padding: "2%",
+    fontSize:  27,
+    marginTop: '5%'
   }
 });
