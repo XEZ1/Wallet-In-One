@@ -3,10 +3,10 @@ import requests
 
 class BinanceFetcher:
     @staticmethod
-    def fetch_tokens(token):
+    def fetch_tokens(access_token):
         endpoint = "https://api.binance.com/api/v3/account"
         headers = {
-            "X-MBX-APIKEY": token
+            "X-MBX-APIKEY": access_token
         }
 
         response = requests.get(endpoint, headers=headers)
