@@ -1,15 +1,14 @@
 
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Alert } from 'react-native';
 
 
-import { VictoryPie, VictoryTheme } from "victory-native";
+import { VictoryPie } from "victory-native";
 
 import data from "./chartData.json"
 
 
-export default function PieChartWallet({ navigation, onDataPointClick }) {
+export default function PieChartWallet({ navigation }) {
 
 
   const handlePressIn = (event, datapoint) => {
