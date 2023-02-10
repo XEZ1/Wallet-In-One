@@ -6,7 +6,7 @@ import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Touchab
 
 import { VictoryPie, VictoryTheme } from "victory-native";
 
-import data from "./data.json"
+import data from "../data.json"
 
 
 export default function PieChartWallet({ navigation, onDataPointClick }) {
@@ -23,6 +23,7 @@ export default function PieChartWallet({ navigation, onDataPointClick }) {
     value += jsonObj.y;
   });
 
+  
 
 
   return (
@@ -34,13 +35,14 @@ export default function PieChartWallet({ navigation, onDataPointClick }) {
       </TouchableHighlight>
       <VictoryPie
         data={data}
+        padding={{left: 50, right: 85}}
         events={[{
           target: "data",
           eventHandlers: {
             onPressIn: handlePressIn
           }
         }]}
-        colorScale="cool"
+        colorScale={["red", "blue", "green", "white"]}
       />
     </View>
   );

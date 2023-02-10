@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Alert }
 
 import { VictoryBar, VictoryChart, VictoryTheme } from "victory-native"
 
-import data from './data.json'
+import data from '../data.json'
 
 export default function BarChartWallet({ navigation }) {
 

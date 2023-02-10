@@ -5,8 +5,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useContext, useEffect } from 'react';
 import { Text } from 'react-native';
 
-import PieChartWallet from './Pie_Chart';
-import BarChartWallet from './Bar_Chart';
+import PieChartWallet from './screens/Pie_Chart';
+import BarChartWallet from './screens/Bar_Chart';
 
 // Screens
 import StartScreen from './screens/StartScreen';
