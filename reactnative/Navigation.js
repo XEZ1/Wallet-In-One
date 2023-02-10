@@ -11,6 +11,9 @@ import SignUpScreen from './screens/SignUpScreen';
 import LoggedInScreen from './screens/LoggedInScreen';
 import LoginScreen from './screens/LoginScreen';
 import SettingsPage from './screens/SettingsPage';
+import AboutUsScreen from './screens/AboutUsScreen';
+import DeveloperInfoScreen from './screens/DeveloperInfoScreen';
+
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';
@@ -35,10 +38,12 @@ export default function Navigation() {
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
-          <Stack.Screen name='Start' component={StartScreen} />
+          <Stack.Screen options={{headerShown: false}} name='Start' component={StartScreen} />
           <Stack.Screen name='Sign Up' component={SignUpScreen} />
           <Stack.Screen name='Login' component={LoginScreen} />
           <Stack.Screen name='Settings' component={SettingsPage} />
+          <Stack.Screen options={{headerShown: false}}  name='About Us' component={AboutUsScreen} />
+          <Stack.Screen options={{headerShown: false}} name='Developer Info' component={DeveloperInfoScreen} />
         </Stack.Navigator>
       )}
     </NavigationContainer>)
