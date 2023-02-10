@@ -6,7 +6,7 @@ import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Touchab
 
 import { VictoryPie, VictoryTheme } from "victory-native";
 
-import data from "../data.json"
+import data from "./chartData.json"
 
 
 export default function PieChartWallet({ navigation, onDataPointClick }) {
