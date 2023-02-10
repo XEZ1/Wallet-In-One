@@ -5,6 +5,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useContext, useEffect } from 'react';
 import { Text } from 'react-native';
 
+import PieChartWallet from './screens/charts/PieChart';
+import BarChartWallet from './screens/charts/BarChart';
+
 // Screens
 import StartScreen from './screens/StartScreen';
 import SignUpScreen from './screens/SignUpScreen';
@@ -31,6 +34,8 @@ export default function Navigation() {
     <NavigationContainer>
       {user.signedIn ? (
         <Tab.Navigator>
+          <Stack.Screen name='Pie Chart' component={PieChartWallet} />
+          <Stack.Screen name='Bar Chart' component={BarChartWallet} />
           <Tab.Screen name="1" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 1', tabBarIcon: ({ color, size }) => (<Text>A</Text>) }}/>
           <Tab.Screen name="2" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 2', tabBarIcon: ({ color, size }) => (<Text>B</Text>) }}/>
           <Tab.Screen name="3" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 3', tabBarIcon: ({ color, size }) => (<Text>C</Text>) }}/>
