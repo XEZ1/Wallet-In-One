@@ -1,4 +1,4 @@
-from .models import Token
+from crypto_exchanges.models import Token
 import requests
 
 class BinanceFetcher:

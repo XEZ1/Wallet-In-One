@@ -5,10 +5,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Token
-from .serializers import TokenSerializer
-from .services import BinanceFetcher
-from .models import BinanceAccount
+from crypto_exchanges.models import Token
+from crypto_exchanges.serializers import TokenSerializer
+from crypto_exchanges.services import BinanceFetcher
+from crypto_exchanges.models import BinanceAccount
 
 
 # Create your views here.
