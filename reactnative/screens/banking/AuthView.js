@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, View, Button } from 'react-native';
 import { WebView } from 'react-native-webview'
 import Loading from './Loading'
 
-export default function AuthWebView({ url }) {
+export default function AuthWebView({ url, onCancel, stateChange}) {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
@@ -11,14 +11,11 @@ export default function AuthWebView({ url }) {
       {isLoading ? (
         <Loading/>
       ) : null}
+      <Button title="Cancel" onPress={onCancel}/>
       <WebView
         source={{ uri: url }}
         onLoad={() => setIsLoading(false)}
-        onNavigationStateChange={(event) => {
-          if (event.url.startsWith('http://www.example.com/')) {
-            console.log('redirect')
-          }
-        }}
+        onNavigationStateChange={stateChange}
       />
     </View>
   );

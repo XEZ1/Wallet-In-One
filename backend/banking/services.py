@@ -93,12 +93,12 @@ def get_institution(id):
 
 # Requestions
 
-def create_requisition(institution_id,user_id=''):
+def create_requisition(institution_id,redirect,user_id=''):
     # institution_id, redirect, agreement, reference,
     # user_language, ssn, account_selection, redirect_immediate
     body = {
         'institution_id': institution_id,
-        'redirect': 'https://example.org',
+        'redirect': redirect,
         'user_language': 'EN',
         'reference': user_id
     }
@@ -109,6 +109,11 @@ def get_requisitions(id=''):
 
 def delete_requisition(id):
     return auth_delete(f'/requisitions/{id}')
+
+def delete_all_requisitions():
+    r = get_requisitions()
+    for i in r['results']:
+        delete_requisition(i['id'])
 
 # Account
 def get_account_data(id):

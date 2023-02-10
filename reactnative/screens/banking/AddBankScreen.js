@@ -6,12 +6,13 @@ import { auth_get } from '../../authentication'
 import Loading from './Loading'
 
 export default function AddBankScreen({ navigation }) {
-    const [ web, setWeb ] = useState(true)
-    const [ info, setInfo ] = useState()
+    const [ added, setAdded ] = useState(false)
+    const [ info, setInfo ] = useState(null)
     const [ search, setSearch ] = useState('')
     const [ data, setData ] = useState([])
     const [ bankData, setbankData ] = useState([])
     const [ isLoading, setIsLoading ] = useState(true)
+    const [ bankAuthURL, setbankAuthURL ] = useState(null)
     
     useEffect(() =>{
         const fetchData = async () => {
@@ -25,23 +26,49 @@ export default function AddBankScreen({ navigation }) {
         }
         fetchData()
     }, [])
+    
     const selectItem = (item) => {
         setInfo(item)
-        setWeb(false)
+
+        const getAuthURL = async (id) => {
+            console.log('fetching url')
+            const response = await auth_get(`/banking/auth_page/${id}`)
+            if (response.status == 200){
+                setbankAuthURL(response.body.url)
+            }
+            else{
+                console.log('error', response)
+            }
+        }
+        console.log(item.id)
+        getAuthURL(item.id)
     }
+
     const updateSearch = (string) => {
         setSearch(string)
         const searchString = string.toLowerCase()
         setbankData(data.filter(item => item.name.toLowerCase().includes(searchString)))
     }
 
+    const detectFinish = (event) => {
+        console.log('navigateURL',event.url)
+        if (event.url.includes('example.com')) {
+            setAdded(true)
+            setbankAuthURL(null)
+        }
+    }
+
     if (isLoading){
         return <Loading/>
+    }
+
+    if (bankAuthURL){
+        return <AuthWebView url={bankAuthURL} onCancel={()=>{setbankAuthURL(null)}} stateChange={detectFinish} />
     }
     
     return (
         <>  
-            {web ? (
+            {!added ? (
                 <View style={{flex:1, margin: 4, marginBottom: 54}}>
                         <TextInput style={styles.input} placeholder='Search' value={search} onChangeText={updateSearch}/>
                         <View style={styles.container}>
@@ -53,17 +80,16 @@ export default function AddBankScreen({ navigation }) {
                                             style={{ width: 50, height: 50, marginRight: 10, resizeMode: 'contain'}}
                                         />
                                         <Text key={index}>{item.name}</Text>
-                                    </TouchableOpacity>
-                                )
+                                    </TouchableOpacity>)
                                 }}
                                 ListEmptyComponent={<Text>{'\nNo banks found\n'}</Text>}
-                                />
+                            />
                         </View>
                 </View>
             ): (
-                // <AuthWebView url="https://ob.nordigen.com/psd2/start/17271bad-1901-4c33-8168-961dee968a4f/BARCLAYS_BUKBGB22" />
-                <TouchableOpacity onPress={()=>setWeb(true)} style={styles.item}>
-                <Text>{JSON.stringify(info)}</Text>
+                <TouchableOpacity onPress={()=>setAdded(false)}>
+                    <Text>Bank successfully linked</Text>
+                    <Text>Tap here to go back</Text>
                 </TouchableOpacity>
             )}
         </>
