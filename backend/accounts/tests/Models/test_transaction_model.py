@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from accounts.models import Transaction, Location
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 class TransactionModelTestCase(TestCase):
     """Tests for transaction model."""
@@ -116,27 +117,14 @@ class TransactionModelTestCase(TestCase):
 
     # category field tests
     
-    # def test_unofficial_currency_code_is_valid(self):
-    #     field = Transaction._meta.get_field('unofficial_currency_code')
-    #     self.assertEqual(field.max_length, 100)
-    #     self.assertIsInstance(field, models.CharField)
-    #     self.assertFalse(field.blank)
+    def test_category_is_valid(self):
+        field = Transaction._meta.get_field('category')
+        self.assertIsInstance(field, models.JSONField)
 
-    # def test_unofficial_currency_code_blank_not_allowed(self):
-    #     self.transaction.unofficial_currency_code = ''
-    #     self._assert_transaction_is_invalid()
+    def test_category_blank_allowed(self):
+        self.transaction.category = ''
+        self.assertEqual(self.transaction.category, '')
 
-    # def test_unofficial_currency_code_more_than_max_length_not_allowed(self):
-    #     self.transaction.unofficial_currency_code ='a' * 101
-    #     self._assert_transaction_is_invalid()
-
-    # def test_unofficial_currency_code_less_than_max_length_is_allowed(self):
-    #     self.transaction.unofficial_currency_code ='a' * 30
-    #     self.assertIsInstance(self.transaction.unofficial_currency_code, str)
-
-    # def test_unofficial_currency_code_null_allowed(self):
-    #     self.transaction.unofficial_currency_code = None
-    #     self.assertIsNone(self.transaction.unofficial_currency_code)
 
     # category_id field tests
 
@@ -147,10 +135,6 @@ class TransactionModelTestCase(TestCase):
         self.assertFalse(field.blank)
         self.assertFalse(field.null)
 
-    def test_category_id_blank_not_allowed(self):
-        self.transaction.category_id = ''
-        self._assert_transaction_is_invalid()
-
     def test_category_id_more_than_max_length_not_allowed(self):
         self.transaction.category_id ='a' * 51
         self._assert_transaction_is_invalid()
@@ -159,9 +143,6 @@ class TransactionModelTestCase(TestCase):
         self.transaction.category_id ='a' * 30
         self.assertIsInstance(self.transaction.category_id, str)
 
-    def test_category_id_null_not_allowed(self):
-        self.transaction.category_id = None
-        self._assert_transaction_is_invalid()
 
     # date field tests
 

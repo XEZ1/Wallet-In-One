@@ -3,7 +3,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
-from django.contrib.postgres.fields import ArrayField
+# from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
 class User(AbstractUser):
@@ -51,14 +51,7 @@ class Transaction(models.Model):
     # Always null if iso_currency_code is non-null.
     # Unofficial currency codes are used for currencies that do not have official ISO currency codes,
     # such as cryptocurrencies and the currencies of certain countries.
-    category = ArrayField(
-        ArrayField(
-            models.CharField(max_length=100, blank=True),
-            size=1,
-        ),
-        blank=True, 
-        null=True
-    )
+    category = models.JSONField(encoder=None)
     category_id = models.CharField(max_length=50, blank=False, null=False)
     date = models.DateField(blank=False, null=False)
     datetime = models.DateTimeField(blank=True, null=True)
