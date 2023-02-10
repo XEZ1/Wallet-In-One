@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from accounts.models import User
-from crypto_exchanges.models import Token
+from ..accounts.models import User
+from .models import Token
 from rest_framework.fields import CurrentUserDefault
-from crypto_exchanges.services import fetch_data
+from .services import BinanceFetcher
 
 class TokenSerializer(serializers.ModelSerializer):
     class Meta:
