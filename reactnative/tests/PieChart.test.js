@@ -1,13 +1,13 @@
 // PieChart.test.js
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import PieChartWallet from '../screens/charts/PieChart';
 import renderer from 'react-test-renderer';
 
 describe('<PieChartWallet />', () => {
-    it('renders correctly', () => {
-        const tree = renderer.create(<PieChartWallet />).toJSON();
-        expect(tree).toMatchSnapshot();
+    it('snapshot test', () => {
+        const snapshot = renderer.create(<PieChartWallet />).toJSON();
+        expect(snapshot).toMatchSnapshot();
       });
 
       it('displays the text "Wallet-In-One"', () => {
@@ -17,4 +17,11 @@ describe('<PieChartWallet />', () => {
         expect(walletInOne).toBeDefined();
         expect(walletInOne.props.children).toEqual('Wallet-In-One');
       });
+
+      it('switch chart button test', () => {
+        const navigate = jest.fn();
+        const { getByText } = render(<PieChartWallet navigation={{ navigate }} />);
+        fireEvent.press(getByText('Switch Chart'));
+        expect(navigate).toHaveBeenCalledWith('Bar Chart');
+      })
   });
