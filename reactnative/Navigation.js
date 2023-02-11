@@ -33,7 +33,6 @@ export default function Navigation() {
         <Tab.Navigator>
           <Tab.Screen name="1" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 1', tabBarIcon: ({ color, size }) => (<Text>A</Text>) }}/>
           <Tab.Screen name="2" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 2', tabBarIcon: ({ color, size }) => (<Text>B</Text>) }}/>
-          <Tab.Screen name="3" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 3', tabBarIcon: ({ color, size }) => (<Text>C</Text>) }}/>
           <Tab.Screen name="Settings" component={SettingsPage} options={{ tabBarLabel: 'Settings', tabBarIcon: ({ color, size }) => (<Text>C</Text>) }}/>
         </Tab.Navigator>
       ) : (
@@ -46,5 +45,6 @@ export default function Navigation() {
           <Stack.Screen options={{headerShown: false}} name='Developer Info' component={DeveloperInfoScreen} />
         </Stack.Navigator>
       )}
-    </NavigationContainer>)
+    </NavigationContainer>
+  )
 }

@@ -45,9 +45,6 @@ export default function AboutUsScreen ({ navigation }) {
         >
           <Text style={styles.aboutSubHeader}> About us </Text>
           <Text style={[styles.paraStyle, styles.aboutPara]}>
-            {/* Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-            commodo ligula eget dolor. Lorem ipsum dolor sit amet, consectetuer
-            adipiscing elit. Aenean commodo ligula eget dolor. */}
             Welcome to Wallet-In-One! We are an all in one central finance
             app where you can access your credit cards, debit cards, stocks and
             crytocurrency. Simply connect your respective accounts and view
@@ -132,15 +129,15 @@ export default function AboutUsScreen ({ navigation }) {
       marginTop: '-2%'
     },
     developers: {
-        backgroundColor: 'black',
-        color: 'red',
-        width: "40%",
-        borderRadius: 25,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        padding: "2%",
-        fontSize:  17,
-        marginTop: '-4%',
-        alignSelf: 'center',
-      },
+      backgroundColor: 'black',
+      color: 'red',
+      width: "40%",
+      borderRadius: 25,
+      textAlign: 'center',
+      fontWeight: 'bold',
+      padding: "2%",
+      fontSize:  17,
+      marginTop: '-4%',
+      alignSelf: 'center',
+    },
   });
