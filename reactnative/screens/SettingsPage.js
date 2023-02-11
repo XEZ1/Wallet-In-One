@@ -4,7 +4,6 @@ import {
   Text,
   Switch,
   StyleSheet,
-  Button,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
@@ -31,7 +30,7 @@ export default function SettingsPage ({ navigation }) {
         justifyContent: 'center',
         alignItems: 'center',
         paddingBottom: 20,
-        backgroundColor: colors.primary,
+        backgroundColor: colors.background,
         }}
       style={styles.container}
     >
@@ -57,7 +56,11 @@ export default function SettingsPage ({ navigation }) {
         />
       </View>
 
-      <Button title="Log out" onPress={()=>{logout(user, setUser)}} style={styles.logoutButton}/>
+      <TouchableOpacity
+        onPress={()=>{logout(user, setUser)}}
+      >
+        <Text style={[{backgroundColor: colors.primary}, {color: colors.text}, styles.button]}>Logout</Text>
+      </TouchableOpacity>
 
       {/* <TouchableOpacity
         onPress={() => navigation.navigate('About Us')}
@@ -115,5 +118,15 @@ const styles = StyleSheet.create({
     fontSize:  17,
     marginTop: '10%',
     alignSelf: 'center',
+  },
+  button: {
+    width: "75%",
+    borderRadius: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginTop: '4%',
+    paddingHorizontal: "12%",
+    paddingVertical: "2%",
+    fontSize:  20,
   },
 });

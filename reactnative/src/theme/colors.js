@@ -1,11 +1,13 @@
 export const lightColors = {
-    primary: 'white',
+    background: 'white',
     text: 'black',
-    focused: 'red',
+    primary: 'red',
+    secondary: 'white',
 };
 
 export const darkColors = {
-    primary: 'black',
+    background: 'black',
     text: 'white',
-    focused: 'red',
+    primary: 'red',
+    secondary: 'white',
 };

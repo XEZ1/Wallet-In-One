@@ -34,40 +34,65 @@ export default function Navigation() {
       {user.signedIn ? (
         <Tab.Navigator
           screenOptions={{
-            headerStyle: {backgroundColor: colors.primary},
+            headerStyle: {backgroundColor: colors.background},
             headerTitleStyle: {color: colors.text},
-            tabBarStyle: {backgroundColor: colors.primary}
-          }}>
+            tabBarStyle: {backgroundColor: colors.background}
+          }}
+        >
           <Tab.Screen
             name="1"
             component={LoggedInScreen}
             options={{
-              tabBarLabel: ({ focused })=>(<Text style={{color: focused ? colors.focused : colors.text}}>Screen 1</Text>),
-              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.focused : colors.text}}>A</Text>)
-            }}/>
+              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Screen 1</Text>),
+              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>A</Text>)
+            }}
+          />
           <Tab.Screen
             name="2"
             component={LoggedInScreen}
             options={{
-              tabBarLabel: ({ focused })=>(<Text style={{color: focused ? colors.focused : colors.text}}>Screen 2</Text>),
-              tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.focused : colors.text}}>B</Text>)
-            }}/>
+              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Screen 2</Text>),
+              tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>B</Text>)
+            }}
+          />
           <Tab.Screen
             name="Settings"
             component={SettingsPage}
             options={{
-              tabBarLabel: ({ focused })=>(<Text style={{color: focused ? colors.focused : colors.text}}>Settings</Text>),
-              tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.focused : colors.text}}>C</Text>)
-            }}/>
+              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Settings</Text>),
+              tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>C</Text>)
+            }}
+          />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
-          <Stack.Screen options={{headerShown: false}} name='Start' component={StartScreen} />
-          <Stack.Screen name='Sign Up' component={SignUpScreen} />
-          <Stack.Screen name='Login' component={LoginScreen} />
-          <Stack.Screen name='Settings' component={SettingsPage} />
-          <Stack.Screen options={{headerShown: false}}  name='About Us' component={AboutUsScreen} />
-          <Stack.Screen options={{headerShown: false}} name='Developer Info' component={DeveloperInfoScreen} />
+          <Stack.Screen
+            name='Start'
+            component={StartScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name='Sign Up'
+            component={SignUpScreen}
+          />
+          <Stack.Screen
+            name='Login'
+            component={LoginScreen}
+          />
+          <Stack.Screen
+            name='Settings'
+            component={SettingsPage}
+          />
+          <Stack.Screen
+            name='About Us'
+            component={AboutUsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name='Developer Info'
+            component={DeveloperInfoScreen}
+            options={{headerShown: false}}
+          />
         </Stack.Navigator>
       )}
     </NavigationContainer>
