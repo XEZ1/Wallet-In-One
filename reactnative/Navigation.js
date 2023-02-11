@@ -17,20 +17,23 @@ import DeveloperInfoScreen from './screens/DeveloperInfoScreen';
 import { initAuthState } from './authentication';
 import { userContext } from './data';
 
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function Navigation() {
 
     const [user, setUser] = useContext(userContext)
+    const {dark, colors, setScheme} = useTheme();
 
     useEffect(()=>{initAuthState(user, setUser);}, []);
 
   return (
     <NavigationContainer>
       {user.signedIn ? (
-        <Tab.Navigator>
-          <Tab.Screen name="1" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 1', tabBarIcon: ({ color, size }) => (<Text>A</Text>) }}/>
+        <Tab.Navigator screenOptions={{headerStyle: {backgroundColor: colors.primary}, headerTitleStyle: {color: colors.text}}}>
+          <Tab.Screen name="1" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 1', tabBarIcon: ({ color, size }) => (<Text>A</Text>)  }}/>
           <Tab.Screen name="2" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 2', tabBarIcon: ({ color, size }) => (<Text>B</Text>) }}/>
           <Tab.Screen name="Settings" component={SettingsPage} options={{ tabBarLabel: 'Settings', tabBarIcon: ({ color, size }) => (<Text>C</Text>) }}/>
         </Tab.Navigator>
