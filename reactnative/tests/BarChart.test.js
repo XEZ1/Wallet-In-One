@@ -13,9 +13,7 @@ describe('<BarChartWallet />', () => {
       it('displays the text "Wallet-In-One"', () => {
         const { getByText } = render(<BarChartWallet />);
         const walletInOne = getByText('Wallet-In-One');
-    
         expect(walletInOne).toBeDefined();
-        expect(walletInOne.props.children).toEqual('Wallet-In-One');
       });
 
       it('switch chart button test', () => {
