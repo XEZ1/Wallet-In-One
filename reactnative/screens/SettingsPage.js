@@ -40,7 +40,7 @@ export default function SettingsPage ({ navigation }) {
         <Text style={[{color: colors.text}]}>Receive notifications</Text>
         <Switch
           trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={notifications ? "#f5dd4b" : "#f4f3f4"}
+          thumbColor={notifications ? "red" : "#f4f3f4"}
           onValueChange={toggleNotifications}
           value={notifications}
         />
@@ -51,7 +51,7 @@ export default function SettingsPage ({ navigation }) {
         <Text style={[{color: colors.text}]}>Dark Mode (Beta)</Text>
         <Switch
           trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={dark ? "#f5dd4b" : "#f4f3f4"}
+          thumbColor={dark ? "red" : "#f4f3f4"}
           onValueChange={toggleTheme}
           value={dark}
         />

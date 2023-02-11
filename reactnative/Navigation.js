@@ -38,9 +38,27 @@ export default function Navigation() {
             headerTitleStyle: {color: colors.text},
             tabBarStyle: {backgroundColor: colors.primary}
           }}>
-          <Tab.Screen name="1" component={LoggedInScreen} options={{ tabBarLabel: ({ color })=>(<Text style={{color: colors.text}}>Screen 1</Text>), tabBarIcon: ({ color, size }) => (<Text style={[{color: colors.text}]}>A</Text>) }}/>
-          <Tab.Screen name="2" component={LoggedInScreen} options={{ tabBarLabel: ({ color })=>(<Text style={{color: colors.text}}>Screen 2</Text>), tabBarIcon: ({ color, size }) => (<Text style={[{color: colors.text}]}>B</Text>) }}/>
-          <Tab.Screen name="Settings" component={SettingsPage} options={{ tabBarLabel: ({ color })=>(<Text style={{color: colors.text}}>Settings</Text>), tabBarIcon: ({ color, size }) => (<Text style={[{color: colors.text}]}>C</Text>) }}/>
+          <Tab.Screen
+            name="1"
+            component={LoggedInScreen}
+            options={{
+              tabBarLabel: ({ focused })=>(<Text style={{color: focused ? colors.focused : colors.text}}>Screen 1</Text>),
+              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.focused : colors.text}}>A</Text>)
+            }}/>
+          <Tab.Screen
+            name="2"
+            component={LoggedInScreen}
+            options={{
+              tabBarLabel: ({ focused })=>(<Text style={{color: focused ? colors.focused : colors.text}}>Screen 2</Text>),
+              tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.focused : colors.text}}>B</Text>)
+            }}/>
+          <Tab.Screen
+            name="Settings"
+            component={SettingsPage}
+            options={{
+              tabBarLabel: ({ focused })=>(<Text style={{color: focused ? colors.focused : colors.text}}>Settings</Text>),
+              tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.focused : colors.text}}>C</Text>)
+            }}/>
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
