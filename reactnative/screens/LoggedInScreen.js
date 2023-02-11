@@ -22,8 +22,8 @@ export default function LoggedInScreen({ navigation }) {
         alignItems: 'center',
         paddingBottom: 20,
         backgroundColor: colors.background,
-        }}
-        style={styles.container}
+      }}
+      style={styles.container}
     >
       <StatusBar/>
       <Text style={[{color: colors.text}]}>You are logged in</Text>
