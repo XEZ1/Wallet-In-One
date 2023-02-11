@@ -34,6 +34,7 @@ export default function PieChartWallet({ navigation }) {
       </TouchableHighlight>
       <VictoryPie
         data={data}
+        testID="pieChart"
         padding={{left: 50, right: 85}}
         events={[{
           target: "data",
