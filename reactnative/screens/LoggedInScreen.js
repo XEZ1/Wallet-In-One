@@ -15,12 +15,15 @@ export default function LoggedInScreen({ navigation }) {
 
   return (
     <ScrollView
-     contentContainerStyle={{
-      backgroundColor: 'colors.primary',
-      alignItems: 'center',
-      justifyContent: 'center',
-     }}
-     style={styles.container}>
+      contentContainerStyle={{
+        flexGrow : 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 20,
+        backgroundColor: colors.primary,
+        }}
+        style={styles.container}
+    >
       <StatusBar/>
       <Text style={[{color: colors.text}]}>You are logged in</Text>
       <Button title="Logout" onPress={()=>{logout(user, setUser)}} />

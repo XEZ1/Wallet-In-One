@@ -14,7 +14,6 @@ import SettingsPage from './screens/SettingsPage';
 import AboutUsScreen from './screens/AboutUsScreen';
 import DeveloperInfoScreen from './screens/DeveloperInfoScreen';
 
-
 import { initAuthState } from './authentication';
 import { userContext } from './data';
 
