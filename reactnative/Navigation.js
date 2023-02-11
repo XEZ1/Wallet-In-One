@@ -32,10 +32,15 @@ export default function Navigation() {
   return (
     <NavigationContainer>
       {user.signedIn ? (
-        <Tab.Navigator screenOptions={{headerStyle: {backgroundColor: colors.primary}, headerTitleStyle: {color: colors.text}}}>
-          <Tab.Screen name="1" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 1', tabBarIcon: ({ color, size }) => (<Text>A</Text>)  }}/>
-          <Tab.Screen name="2" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 2', tabBarIcon: ({ color, size }) => (<Text>B</Text>) }}/>
-          <Tab.Screen name="Settings" component={SettingsPage} options={{ tabBarLabel: 'Settings', tabBarIcon: ({ color, size }) => (<Text>C</Text>) }}/>
+        <Tab.Navigator
+          screenOptions={{
+            headerStyle: {backgroundColor: colors.primary},
+            headerTitleStyle: {color: colors.text},
+            tabBarStyle: {backgroundColor: colors.primary}
+          }}>
+          <Tab.Screen name="1" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 1', tabBarIcon: ({ color, size }) => (<Text style={[{color: colors.text}]}>A</Text>) }}/>
+          <Tab.Screen name="2" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 2', tabBarIcon: ({ color, size }) => (<Text style={[{color: colors.text}]}>B</Text>) }}/>
+          <Tab.Screen name="Settings" component={SettingsPage} options={{ tabBarLabel: 'Settings', tabBarIcon: ({ color, size }) => (<Text style={[{color: colors.text}]}>C</Text>) }}/>
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
