@@ -50,8 +50,8 @@ export default function SettingsPage ({ navigation }) {
       <View style={styles.switchContainer}>
         <Text style={[{color: colors.text}]}>Dark Mode (Beta)</Text>
         <Switch
-          // trackColor={{ false: "#767577", true: "#81b0ff" }}
-          // thumbColor={dark ? "#f5dd4b" : "#f4f3f4"}
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={dark ? "#f5dd4b" : "#f4f3f4"}
           onValueChange={toggleTheme}
           value={dark}
         />
