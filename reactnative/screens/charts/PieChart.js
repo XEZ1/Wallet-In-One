@@ -1,15 +1,16 @@
 
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Alert } from 'react-native';
+import { StyleSheet, Text, ScrollView, View, Dimensions, Button, TouchableHighlight, Alert } from 'react-native';
 
 
 import { VictoryPie } from "victory-native";
 
 import data from "./chartData.json"
-
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 export default function PieChartWallet({ navigation }) {
 
+  const {dark, colors, setScheme} = useTheme();
 
   const handlePressIn = (event, datapoint) => {
     const dataPoint = data[datapoint.index];
@@ -22,37 +23,43 @@ export default function PieChartWallet({ navigation }) {
     value += jsonObj.y;
   });
 
-  
-
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Wallet-In-One</Text>
-      <Text style={styles.amountText}>Amount: £{value}</Text>
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow : 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 20,
+        backgroundColor: colors.background,
+      }}
+      style={styles.container}
+    >
+      <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
+      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
       <TouchableHighlight style={styles.button}> 
         <Button title="Switch Chart" onPress={() => navigation.navigate('Bar Chart')} />
       </TouchableHighlight>
       <VictoryPie
         data={data}
         padding={{left: 50, right: 85}}
+        style={{
+          labels: {fill: colors.text}
+        }}
         events={[{
           target: "data",
           eventHandlers: {
             onPressIn: handlePressIn
           }
         }]}
-        colorScale={["red", "blue", "green", "white"]}
+        colorScale={["red", "blue", "green", "yellow"]}
       />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFF00',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
     fontWeight: '900',
