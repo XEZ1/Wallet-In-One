@@ -1,5 +1,6 @@
 from crypto_exchanges.models import Token
 import requests
+import binance
 
 class BinanceFetcher:
     @staticmethod
@@ -24,3 +25,10 @@ class BinanceFetcher:
                     locked=balance["locked"]
                 ))
         return tokens
+
+class BinanceService:
+    def __init__(self, api_key, secret_key):
+        self.client = binance.Client(api_key, secret_key)
+
+    def get_account(self):
+        return self.client.get_account()
