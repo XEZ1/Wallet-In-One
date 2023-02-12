@@ -51,13 +51,41 @@ class CryptoWalletTestCase(TestCase):
     Test Cryptocurrency
     """
 
+    def test_cryptocurrency_can_equal_256_characters(self):
+        self.crypto_wallet.cryptocurrency = 'a' * 256
+        self._assert_crypto_wallet_is_valid(self.crypto_wallet)
+
+    def test_cryptocurrency_cannot_exceed_256_characters(self):
+        self.crypto_wallet.cryptocurrency = 'a' * 257
+        self._assert_crypto_wallet_is_invalid(self.crypto_wallet)
+
     """
     Test Symbol
     """
 
+    def test_symbol_can_equal_16_characters(self):
+        self.crypto_wallet.symbol = 'a' * 16
+        self._assert_crypto_wallet_is_valid(self.crypto_wallet)
+
+    def test_symbol_cannot_exceed_16_characters(self):
+        self.crypto_wallet.symbol = 'a' * 17
+        self._assert_crypto_wallet_is_invalid(self.crypto_wallet)
+
     """
     Test Address
     """
+
+    def test_address_can_equal_256_characters(self):
+        self.crypto_wallet.address = 'a' * 256
+        self._assert_crypto_wallet_is_valid(self.crypto_wallet)
+
+    def test_address_cannot_exceed_256_characters(self):
+        self.crypto_wallet.address = 'a' * 257
+        self._assert_crypto_wallet_is_invalid(self.crypto_wallet)
+
+    def test_address_cannot_be_blank(self):
+        self.crypto_wallet.address = ''
+        self._assert_crypto_wallet_is_invalid(self.crypto_wallet)
 
     """
     Test Balance
