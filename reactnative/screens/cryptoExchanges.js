@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { VictoryBar, VictoryChart, VictoryTheme } from "victory-native"
 
-
+import BinanceCredentials from './cryptoForlder/binanceExchange';
 
 export default function HomeScreen({ navigation }) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Binance')}
+          onPress={() => navigation.navigate("BinanceCredentials")}
           style={{
             padding: 20,
             backgroundColor: 'lightgray',

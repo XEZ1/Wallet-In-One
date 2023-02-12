@@ -1,34 +1,24 @@
-from crypto_exchanges.models import Token
 import requests
-import binance
+import time
+import hmac
+import hashlib
 
 class BinanceFetcher:
-    @staticmethod
-    def fetch_tokens(access_token):
-        endpoint = "https://api.binance.com/api/v3/account"
-        headers = {
-            "X-MBX-APIKEY": access_token
-        }
 
-        response = requests.get(endpoint, headers=headers)
-        if response.status_code != 200:
-            raise Exception("Failed to retrieve data from Binance API.")
-
-        data = response.json()
-        balances = data["balances"]
-        tokens = []
-        for balance in balances:
-            if float(balance["free"]) > 0:
-                tokens.append(Token(
-                    asset=balance["asset"],
-                    free=balance["free"],
-                    locked=balance["locked"]
-                ))
-        return tokens
-
-class BinanceService:
     def __init__(self, api_key, secret_key):
-        self.client = binance.Client(api_key, secret_key)
+        self.api_key = api_key
+        self.secret_key = secret_key
 
-    def get_account(self):
-        return self.client.get_account()
+    def get_account_data(self):
+        endpoint = "https://api.binance.com/api"
+        timestamp = f"timestamp={self.current_time()}"
+        request_url = f"{endpoint}/v3/account?{timestamp}&signature={hash(timestamp)}"
+        headers = {'X-MBX-APIKEY': self.api_key}
+        response = requests.get(url=request_url, headers=headers)
+        return response.json()
+
+    def hash(self, timestamp):
+        return hmac.new(self.secret_key.encode('utf-8'), timestamp.encode('utf-8'), hashlib.sha256).hexdigest()
+
+    def current_time(self):
+        return round(time.time() * 1000)

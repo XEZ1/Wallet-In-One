@@ -22,6 +22,7 @@ import DeveloperInfoScreen from './screens/DeveloperInfoScreen';
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';
+import BinanceCredentials from './screens/cryptoForlder/binanceExchange';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -39,6 +40,7 @@ export default function Navigation() {
           <Stack.Screen name='Pie Chart' component={PieChartWallet} />
           <Stack.Screen name='Bar Chart' component={BarChartWallet} />
           <Stack.Screen name='crypto exchanges' component={HomeScreen} />
+          <Stack.Screen name='Binance' component={BinanceCredentials}/>
           <Tab.Screen name="2" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 2', tabBarIcon: ({ color, size }) => (<Text>B</Text>) }}/>
           <Tab.Screen name="3" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 3', tabBarIcon: ({ color, size }) => (<Text>C</Text>) }}/>
           <Tab.Screen name="Settings" component={SettingsPage} options={{ tabBarLabel: 'Settings', tabBarIcon: ({ color, size }) => (<Text>C</Text>) }}/>

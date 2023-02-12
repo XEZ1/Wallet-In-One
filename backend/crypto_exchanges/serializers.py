@@ -1,14 +1,16 @@
 from rest_framework import serializers
-from accounts.models import User
-from crypto_exchanges.models import Token, BinanceAccount
-from rest_framework.fields import CurrentUserDefault
-from crypto_exchanges.services import BinanceFetcher
+from crypto_exchanges.models import BinanceAccount
 
 class BinanceAccountSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = BinanceAccount
         fields = ('user', 'api_key', 'secret_key', 'created_at')
-class TokenSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Token
-        fields = ('asset', 'free', 'locked')
+
+    def create(self, validated_data):
+        binance_account = BinanceAccount.objects.create(
+            **validated_data,
+        )
+        binance_account.save()
+        return binance_account
+
