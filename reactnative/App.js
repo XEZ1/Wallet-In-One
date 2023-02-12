@@ -1,5 +1,5 @@
-import { useState, createContext } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import {ThemeProvider} from './src/theme/ThemeProvider'
 
 import 'react-native-gesture-handler';
 import Navigation from './Navigation';
@@ -13,8 +13,10 @@ export default function App() {
   });
 
   return (
-    <userContext.Provider value={user}>
-      <Navigation></Navigation>
-    </userContext.Provider>
+    <ThemeProvider>
+      <userContext.Provider value={user}>
+        <Navigation></Navigation>
+      </userContext.Provider>
+    </ThemeProvider>
   );
 }
