@@ -36,13 +36,12 @@ export default function CryptoWallet(props) {
 
         <Button title="Add Wallet" onPress={() => props.navigation.navigate("WalletSelector", {connectWallet: connectWallet})} />
 
-        <FlatList
-          style={styles.walletList}
-          data={wallets}
-          renderItem={({ item }) => (
-            <WalletAsset item={item} removeWallet={removeWallet} navigation={props.navigation} />
-          )}
-        />
+        <View style={styles.walletList}>
+        {
+          wallets.map((item)=> <WalletAsset key={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
+        }
+        </View>
+
       </ScrollView>
     </SafeAreaView>
   );

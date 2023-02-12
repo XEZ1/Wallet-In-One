@@ -9,7 +9,7 @@ export default function useCryptoWallet() {
   const [wallets, setWallets] = useState([]);
 
   const fetchWallets = async () => {
-    await fetch("http://192.168.1.17:8000/crypto_wallets/", {
+    await fetch("http://localhost:8000/crypto_wallets/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -34,7 +34,11 @@ export default function useCryptoWallet() {
         address: address,
       }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Bad response from server");
+        return res.json()
+        }
+      )
       .then((res) => setWallets([...wallets, res])) // Handle 400
       .catch((err) => console.log(err));
   };

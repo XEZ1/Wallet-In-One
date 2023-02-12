@@ -4,6 +4,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import CryptoWallet from "./CryptoWallet";
 import WalletAssetDetail from "./WalletAssetDetail";
 import {WalletConnector, WalletSelector} from "./WalletModal"
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state', // Replace with Redux State Management
+]);
 
 
 const Stack = createStackNavigator();

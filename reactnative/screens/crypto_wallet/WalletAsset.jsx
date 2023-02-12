@@ -94,10 +94,10 @@ export default function WalletAsset(props) {
               {props.item.cryptocurrency}
             </Text>
             <Text style={styles.walletAssetTitle}>
-              {props.item.value} {props.item.symbol}
+              {props.item.balance} {props.item.symbol}
             </Text>
 
-            <Text style={styles.walletAssetTitle}>{new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(cryptoValue * props.item.value)}</Text>
+            <Text style={styles.walletAssetTitle}>{new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(cryptoValue * props.item.balance)}</Text>
             {/* ▲ 0.00% */}
           </View>
 
