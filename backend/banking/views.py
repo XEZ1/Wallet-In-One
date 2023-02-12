@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from .services import get_institutions, create_requisition, delete_all_requisitions, get_requisitions, get_account_data, get_account_details 
 from .serializers import URLSerializer
 from django.utils import timezone
+from .models import Account
 
 @api_view(['GET'])
 def bank_list(request):
@@ -37,13 +38,20 @@ def finish_auth(request):
             else:
                 accountsData = []
                 for i in accounts:
-                    account = {}
-                    account['id'] = i
-                    account['data'] = get_account_data(i)
-                    account['details'] = get_account_details(i)
-                    accountsData.append(account)
-                print(accountsData)
-                return Response(accountsData)     
+                    if (not Account.objects.filter(id=i).exists()):
+                        new_account = Account(id=i, user=request.user, requisition_id= requisition['id'])
+                        new_account.save()
+
+                        account = {}
+                        account['id'] = i
+                        account['data'] = get_account_data(i)
+                        account['details'] = get_account_details(i)
+                        accountsData.append(account)
+                
+                if (len(accountsData) == 0):
+                    return Response({'error': 'The bank account(s) you attempted to link have already be added to your account'}, status=400)
+                else:
+                    return Response(accountsData)    
 
         except StopIteration:
             return Response({'error': 'Link not found'}, status=400)

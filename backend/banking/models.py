@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 from django.utils import timezone
+from accounts.models import User
 
 # Create your models here.
 class Token(models.Model):
@@ -25,4 +26,5 @@ class Token(models.Model):
 
 class Account(models.Model):
     id = models.CharField(max_length=1024, primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bank_accounts')
     requisition_id = models.CharField(max_length=1024)
