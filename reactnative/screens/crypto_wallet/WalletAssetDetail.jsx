@@ -1,4 +1,4 @@
-import {Button, Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, View} from "react-native";
+import {Button, Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, View, ScrollView} from "react-native";
 import { useRoute } from "@react-navigation/native";
 import React from "react";
 import {LineChart} from "react-native-chart-kit";
@@ -42,7 +42,7 @@ export default function WalletAssetDetail(props) {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white', paddingHorizontal: 30}}>
+    <ScrollView style={{flex: 1, backgroundColor: 'white', paddingHorizontal: 30}}>
 
       <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
         <Text style={styles.backArrow}>←</Text>
@@ -107,7 +107,7 @@ export default function WalletAssetDetail(props) {
         </View>
       </Pressable>
 
-    </View>
+    </ScrollView>
   );
 }
 

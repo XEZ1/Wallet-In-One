@@ -1,5 +1,6 @@
 import { useState } from "react";
 import * as SecureStore from "expo-secure-store";
+import { BACKEND_URL } from "@env"
 
 /*
   Test BTC Address:
@@ -9,7 +10,7 @@ export default function useCryptoWallet() {
   const [wallets, setWallets] = useState([]);
 
   const fetchWallets = async () => {
-    await fetch("http://localhost:8000/crypto_wallets/", {
+    await fetch(`${BACKEND_URL}/crypto_wallets/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -22,7 +23,7 @@ export default function useCryptoWallet() {
   };
 
   const connectWallet = async (cryptocurrency, symbol, address) => {
-    await fetch("http://localhost:8000/crypto_wallets/", {
+    await fetch(`${BACKEND_URL}/crypto_wallets/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +45,7 @@ export default function useCryptoWallet() {
   };
 
   const removeWallet = async (id) => {
-    await fetch("http://localhost:8000/crypto_wallets/", {
+    await fetch(`${BACKEND_URL}/crypto_wallets/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
