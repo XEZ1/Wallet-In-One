@@ -6,7 +6,9 @@ from accounts.models import User
 
 class BinanceAccount(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    access_token = models.CharField(max_length=100)
+    api_key = models.CharField(max_length=255)
+    secret_key = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class Token(models.Model):
     account = models.ForeignKey(BinanceAccount, on_delete=models.CASCADE)
