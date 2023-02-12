@@ -17,7 +17,10 @@ export default function SignUpScreen({ navigation }) {
   
   const loginHandler = async () => {
     var response = await login(username,password,user,setUser);
-    if (response.status = 400 && response.body){
+    if (response.status == "Error"){
+      Alert.alert('Error', response.body['message'])
+    }
+    else if (response.status == 400 && response.body){
       setErrors(response.body)
 
       if (response.body['non_field_errors']){

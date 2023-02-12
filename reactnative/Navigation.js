@@ -17,6 +17,9 @@ import SettingsPage from './screens/SettingsPage';
 import AboutUsScreen from './screens/AboutUsScreen';
 import DeveloperInfoScreen from './screens/DeveloperInfoScreen';
 
+import AddBankScreen from './screens/banking/AddBankScreen'
+import BankAccountsScreen from './screens/banking/BankAccountsScreen'
+
 import { initAuthState } from './authentication';
 import { userContext } from './data';
 
@@ -67,14 +70,6 @@ export default function Navigation() {
             }}
           />
           <Tab.Screen
-            name="2"
-            component={LoggedInScreen}
-            options={{
-              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Screen 2</Text>),
-              tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>B</Text>)
-            }}
-          />
-          <Tab.Screen
             name="Settings"
             component={SettingsPage}
             options={{
@@ -82,6 +77,9 @@ export default function Navigation() {
               tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>C</Text>)
             }}
           />
+          <Tab.Screen name="Add Bank Account" component={AddBankScreen} options={{ tabBarLabel: 'Add Back Account', tabBarIcon: ({ color, size }) => (<Text>D</Text>) }}/>
+          <Tab.Screen name="Bank Accounts" component={BankAccountsScreen} options={{ tabBarLabel: 'Bank Accounts', tabBarIcon: ({ color, size }) => (<Text>E</Text>) }}/>
+
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
