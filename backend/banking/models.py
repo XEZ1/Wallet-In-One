@@ -22,3 +22,7 @@ class Token(models.Model):
 
     def set_access_expiry(self, seconds):
         self.access_token_expiration = timezone.now() + datetime.timedelta(seconds=seconds)
+
+class Account(models.Model):
+    id = models.CharField(max_length=1024, primary_key=True)
+    requisition_id = models.CharField(max_length=1024)

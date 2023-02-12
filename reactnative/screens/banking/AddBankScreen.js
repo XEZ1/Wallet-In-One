@@ -1,18 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, ScrollView, FlatList, TouchableOpacity, Image, TextInput,ActivityIndicator} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Button, FlatList, TouchableOpacity, Image, TextInput,ActivityIndicator, Alert} from 'react-native';
 import AuthWebView from './AuthView';
-import { auth_get } from '../../authentication'
+import { auth_get, auth_post} from '../../authentication'
 import Loading from './Loading'
 
 export default function AddBankScreen({ navigation }) {
-    const [ added, setAdded ] = useState(false)
-    const [ info, setInfo ] = useState(null)
-    const [ search, setSearch ] = useState('')
-    const [ data, setData ] = useState([])
-    const [ bankData, setbankData ] = useState([])
-    const [ isLoading, setIsLoading ] = useState(true)
-    const [ bankAuthURL, setbankAuthURL ] = useState(null)
+    const [ search, setSearch ] = useState('') // Stores contents of search box
+    const [ data, setData ] = useState([])     // Stores all bank data
+    const [ bankData, setbankData ] = useState([])        // Stores filtered bankdata
+    const [ isLoading, setIsLoading ] = useState(true)    // Initial load
+
+    const [ bankAuthURL, setbankAuthURL ] = useState(null)// Link to authenticate with selected bank
+    const [ authComplete, setAuthComplete ] = useState(false)
+    const [ savedBanks, setSavedBanks ] = useState(null)
+
+    const reset = () => {
+        setbankAuthURL(null)
+        setAuthComplete(false)
+        setSavedBanks(null)
+    }
+    
     
     useEffect(() =>{
         const fetchData = async () => {
@@ -28,7 +36,6 @@ export default function AddBankScreen({ navigation }) {
     }, [])
     
     const selectItem = (item) => {
-        setInfo(item)
 
         const getAuthURL = async (id) => {
             console.log('fetching url')
@@ -52,10 +59,30 @@ export default function AddBankScreen({ navigation }) {
 
     const detectFinish = (event) => {
         console.log('navigateURL',event.url)
-        if (event.url.includes('example.com')) {
-            setAdded(true)
+        if (!authComplete && event.url.includes('example.com')) {
+            setAuthComplete(true)
+            updateServer(bankAuthURL)
             setbankAuthURL(null)
         }
+    }
+
+    const updateServer = (url) => {
+        const sendLink = async () => {
+            const response = await auth_post('/banking/finish_auth/',{'url': url})
+            console.log(response)
+            if (response.status == 200){
+                setSavedBanks(response.body)
+            }
+            else if (response.status == 400 && response.body.error){
+                Alert.alert("Error", response.body.error)
+                reset()
+            }
+            else{
+                Alert.alert("Error", "There was an error with the server, try again")
+                reset()
+            }
+        }
+        sendLink()
     }
 
     if (isLoading){
@@ -65,34 +92,50 @@ export default function AddBankScreen({ navigation }) {
     if (bankAuthURL){
         return <AuthWebView url={bankAuthURL} onCancel={()=>{setbankAuthURL(null)}} stateChange={detectFinish} />
     }
+
+    if (authComplete){
+        return (
+            <View>
+                {!savedBanks ? (
+                    <TouchableOpacity onPress={()=>setAuthComplete(false)}>
+                        <Text>Bank Authentication Finished</Text>
+                        <Text>Waiting For server</Text>
+                        <ActivityIndicator/>
+                    </TouchableOpacity>
+                ):(
+                    <>
+                        <Text> These bank accounts have been added</Text>
+                        <FlatList data={savedBanks} renderItem={({item, index}) =>{
+                            return (
+                                    <Text key={index}>{JSON.stringify(savedBanks)}</Text>
+                                )
+                            }}
+                        />
+                        <Button title="Back" onPress={reset}/>
+                    </>
+                )}
+            </View>
+        )
+    }
     
     return (
-        <>  
-            {!added ? (
-                <View style={{flex:1, margin: 4, marginBottom: 54}}>
-                        <TextInput style={styles.input} placeholder='Search' value={search} onChangeText={updateSearch}/>
-                        <View style={styles.container}>
-                            <FlatList data={bankData} renderItem={({item, index}) =>{
-                                return (
-                                    <TouchableOpacity onPress={()=>selectItem(item)} style={styles.item}>
-                                        <Image
-                                            source={{ uri: item.logo }}
-                                            style={{ width: 50, height: 50, marginRight: 10, resizeMode: 'contain'}}
-                                        />
-                                        <Text key={index}>{item.name}</Text>
-                                    </TouchableOpacity>)
-                                }}
-                                ListEmptyComponent={<Text>{'\nNo banks found\n'}</Text>}
-                            />
-                        </View>
+        <View style={{flex:1, margin: 4, marginBottom: 54}}>
+                <TextInput style={styles.input} placeholder='Search' value={search} onChangeText={updateSearch}/>
+                <View style={styles.container}>
+                    <FlatList data={bankData} renderItem={({item, index}) =>{
+                        return (
+                            <TouchableOpacity onPress={()=>selectItem(item)} style={styles.item}>
+                                <Image
+                                    source={{ uri: item.logo }}
+                                    style={{ width: 50, height: 50, marginRight: 10, resizeMode: 'contain'}}
+                                />
+                                <Text key={index}>{item.name}</Text>
+                            </TouchableOpacity>)
+                        }}
+                        ListEmptyComponent={<Text>{'\nNo banks found\n'}</Text>}
+                    />
                 </View>
-            ): (
-                <TouchableOpacity onPress={()=>setAdded(false)}>
-                    <Text>Bank successfully linked</Text>
-                    <Text>Tap here to go back</Text>
-                </TouchableOpacity>
-            )}
-        </>
+        </View>
     );
 }
 

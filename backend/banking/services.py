@@ -93,14 +93,14 @@ def get_institution(id):
 
 # Requestions
 
-def create_requisition(institution_id,redirect,user_id=''):
+def create_requisition(institution_id,redirect,referance):
     # institution_id, redirect, agreement, reference,
     # user_language, ssn, account_selection, redirect_immediate
     body = {
         'institution_id': institution_id,
         'redirect': redirect,
         'user_language': 'EN',
-        'reference': user_id
+        'reference': referance
     }
     return auth_post('/requisitions/', body=body)
 
