@@ -1,12 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Dimensions, Button, TouchableHighlight, Alert } from 'react-native';
 
-import { VictoryBar, VictoryChart, VictoryTheme } from "victory-native"
+import { VictoryBar, VictoryChart, VictoryTheme, VictoryAxis } from "victory-native"
 
 import data from './chartData.json'
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 export default function BarChartWallet({ navigation }) {
+
+  const {dark, colors, setScheme} = useTheme();
 
   const handlePressIn = (event, datapoint) => {
     const dataPoint = data[datapoint.index];
@@ -19,36 +22,61 @@ export default function BarChartWallet({ navigation }) {
   });
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Wallet-In-One</Text>
-      <Text style={styles.amountText}>Amount: £{value}</Text>
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow : 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 20,
+        backgroundColor: colors.background,
+      }}
+      style={styles.container}
+    >
+      <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
+      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
+
       <TouchableHighlight style={styles.button}> 
         <Button title="Switch Chart" onPress={() => navigation.navigate('Pie Chart')} />
       </TouchableHighlight>
+
       <VictoryChart
-      theme={ VictoryTheme.material }
+        theme={ VictoryTheme.material}
       >
-      <VictoryBar
-      data={data}
-      events={[{
-        target: "data",
-        eventHandlers: {
-          onPressIn: handlePressIn
-        }
-      }]}
-      style={{ data: { fill: "blue"}}}
-      />
+        <VictoryAxis
+          dependentAxis
+          style={{
+            axis: {stroke: colors.primary},
+            tickLabels: {fill: colors.text},
+            grid: {stroke: colors.primary},
+          }}
+        />
+        <VictoryAxis
+          style={{
+            axis: {stroke: colors.primary},
+            tickLabels: {fill: colors.text},
+            grid: {stroke: colors.primary},
+          }}
+        />
+        <VictoryBar
+        data={data}
+        style={{
+          data: {fill: "blue"}
+        }}
+        events={[{
+          target: "data",
+          eventHandlers: {
+            onPressIn: handlePressIn
+          }
+        }]}
+        />
       </VictoryChart>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#FFFF00',
-      alignItems: 'center',
-      justifyContent: 'center',
     },
     title: {
       fontWeight: '900',
