@@ -45,10 +45,18 @@ export default function Navigation() {
           <Stack.Screen
             name='Pie Chart'
             component={PieChartWallet}
+            options={{
+              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Pie Chart</Text>),
+              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>1</Text>)
+            }}
           />
           <Stack.Screen
             name='Bar Chart'
             component={BarChartWallet}
+            options={{
+              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Bar Chart</Text>),
+              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>2</Text>)
+            }}
           />
           <Tab.Screen
             name="1"
