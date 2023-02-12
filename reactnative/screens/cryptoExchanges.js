@@ -18,7 +18,7 @@ export default function HomeScreen({ navigation }) {
             width: '70%'
           }}
         >
-          <Text style={{ textAlign: 'center' }}>Huobi</Text>
+          <Text style={{ textAlign: 'center' }}>Binance</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.navigate('Huobi')}
@@ -30,7 +30,7 @@ export default function HomeScreen({ navigation }) {
             width: '70%'
           }}
         >
-          <Text style={{ textAlign: 'center' }}>Coinlist</Text>
+          <Text style={{ textAlign: 'center' }}>Huobi</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.navigate('Coinlist')}
@@ -42,7 +42,7 @@ export default function HomeScreen({ navigation }) {
             width: '70%'
           }}
         >
-          <Text style={{ textAlign: 'center' }}>Binance</Text>
+          <Text style={{ textAlign: 'center' }}>Coinlist</Text>
         </TouchableOpacity>
       </View>
     );
