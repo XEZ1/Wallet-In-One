@@ -1,0 +1,256 @@
+import {
+    Linking,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    Image,
+    ScrollView,
+    ImageBackground,
+    div,
+  } from "react-native";
+import React from "react";
+
+export default function DeveloperInfoScreen ({ navigation }) {
+    return (
+        <ImageBackground
+            source={require('reactnative/assets/background.png')}
+            style={styles.background}
+        >
+        <ScrollView
+        contentContainerStyle={{
+            flexGrow : 1,
+            justifyContent : 'center',
+            paddingBottom: 15
+            }}
+        style={styles.developerPage}
+        >
+
+        <Image
+            source={require('reactnative/assets/logo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+        >
+        </Image>
+
+        <View
+        contentContainerStyle={{
+            paddingBottom: 30,
+            }}
+        style={styles.textBoxLayout}
+        >
+
+        <Text style={styles.meetTheTeam}> Meet the team </Text>
+        <Text style={[styles.paraStyle, styles.developersPara]}>
+            This app was developed by second year students from King's College 
+            London on the Computer Science course for the module 'Software
+            Engineering Group Project'. {"\n"}
+            Our team totals 8 students, feel free to visit our Github accounts
+            and view our other projects by tapping on the icons below.
+        </Text>
+        </View>
+
+            <View style={{ flexDirection:"row"}}>    
+                <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() =>
+                    Linking.openURL(
+                    "https://github.com/AbbasBinVakas"
+                    )
+                }>
+                <Image
+                style={styles.iconStyle}
+                source={require('reactnative/assets/github.png')}
+                />
+                </TouchableOpacity>
+                <Text style={styles.developerName}> Abbas Bin Vakas </Text>
+            </View>
+            <View style={{ flexDirection:"row"}}>    
+                <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() =>
+                    Linking.openURL(
+                    "https://github.com/YusufKCL"
+                    )
+                }>
+                <Image
+                style={styles.iconStyle}
+                source={require('reactnative/assets/github.png')}
+                />
+                </TouchableOpacity>
+                <Text style={styles.developerName}> Yusuf Abdulrahman </Text>
+            </View>
+            <View style={{ flexDirection:"row"}}>    
+                <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() =>
+                    Linking.openURL(
+                    "https://github.com/XEZ1"
+                    )
+                }>
+                <Image
+                style={styles.iconStyle}
+                source={require('reactnative/assets/github.png')}
+                />
+                </TouchableOpacity>
+                <Text style={styles.developerName}> Ezzat Alsalibi </Text>
+            </View>
+            <View style={{ flexDirection:"row"}}>    
+                <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() =>
+                    Linking.openURL(
+                    "https://github.com/Shozab-N18"
+                    )
+                }>
+                <Image
+                style={styles.iconStyle}
+                source={require('reactnative/assets/github.png')}
+                />
+                </TouchableOpacity>
+                <Text style={styles.developerName}> Shozab Anwar Siddique </Text>
+            </View>
+            <View style={{ flexDirection:"row"}}>    
+                <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() =>
+                    Linking.openURL(
+                    "https://github.com/JamalBoustani"
+                    )
+                }>
+                <Image
+                style={styles.iconStyle}
+                source={require('reactnative/assets/github.png')}
+                />
+                </TouchableOpacity>
+                <Text style={styles.developerName}> Jamal Boustani </Text>
+            </View>
+            <View style={{ flexDirection:"row"}}>    
+                <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() =>
+                    Linking.openURL(
+                    "https://github.com/krishnapk7"
+                    )
+                }>
+                <Image
+                style={styles.iconStyle}
+                source={require('reactnative/assets/github.png')}
+                />
+                </TouchableOpacity>
+                <Text style={styles.developerName}> Krishna Prasanna Kumar </Text>
+            </View>
+            <View style={{ flexDirection:"row"}}>    
+                <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() =>
+                    Linking.openURL(
+                    "https://github.com/mohawk49"
+                    )
+                }>
+                <Image
+                style={styles.iconStyle}
+                source={require('reactnative/assets/github.png')}
+                />
+                </TouchableOpacity>
+                <Text style={styles.developerName}> Michael Seiranian </Text>
+            </View>
+            <View style={{ flexDirection:"row"}}>    
+                <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() =>
+                    Linking.openURL(
+                    "https://github.com/mrmatyog"
+                    )
+                }>
+                <Image
+                style={styles.iconStyle}
+                source={require('reactnative/assets/github.png')}
+                />
+                </TouchableOpacity>
+                <Text style={styles.developerName}> Matushan Yogaraj </Text>
+            </View>
+
+            <TouchableOpacity
+                onPress={() => navigation.navigate('About Us')}
+            >
+            <Text style={styles.aboutUs}>Back to About Us</Text>
+            </TouchableOpacity>  
+        </ScrollView>   
+        </ImageBackground>
+    )
+}
+
+const styles = StyleSheet.create({
+    aboutUs: {
+        backgroundColor: 'red',
+        color: 'black',
+        width: "60%",
+        borderRadius: 25,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        padding: "2%",
+        fontSize:  20,
+        //marginTop: '-4%',
+        alignSelf: 'center',
+    },
+    developerName: {
+        fontSize: 18,
+        color: "#fff",
+        textTransform: "uppercase",
+        fontWeight: "500",
+        marginLeft: '-57%',
+        alignSelf: "center",
+    },
+    developerPage: {
+        marginTop: 20,
+    },
+    background: {
+        width: '100%',
+        height: '100%'
+    },
+    iconStyle: {
+        width: "100%",
+        height: 50,
+        aspectRatio: 1,
+    },
+    buttonStyle: {
+        borderRadius: 5,
+        paddingVertical: -10,
+        paddingHorizontal: 28,
+        marginRight: '60%',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        marginVertical: 15,
+    },
+
+    meetTheTeam: {
+        fontSize: 18,
+        color: "#fff",
+        textTransform: "uppercase",
+        fontWeight: "500",
+        marginVertical: 15,
+        alignSelf: "center",
+    },
+    developersPara: {
+        color: "#fff",
+    },
+    paraStyle: {
+        fontSize: 16,
+        color: "red",
+        paddingBottom: 25,
+    },
+    textBoxLayout: {
+        backgroundColor: "red",
+        paddingHorizontal: 30,
+        marginVertical: 30,
+    },
+    logo:{
+        width: 290,
+        height: 280,
+        marginTop: '-10%',
+        marginBottom: '-15%',
+        alignSelf:'center'
+    },
+})

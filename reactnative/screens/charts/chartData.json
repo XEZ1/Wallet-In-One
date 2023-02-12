@@ -1,0 +1,18 @@
+[
+    {
+      "x": "Credit Card",
+      "y": 200
+    },
+    {
+      "x": "Crypto",
+      "y": 50
+    },
+    {
+      "x": "Stocks",
+      "y": 75
+    },
+    {
+      "x": "Debit Card",
+      "y": 20
+    }
+]

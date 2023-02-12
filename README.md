@@ -29,6 +29,14 @@ This software is to be delivered to a client. The developers will retain no acce
 ## Django-Python (Backend): Installation and execution instructions
 To install the software and use it in your local development environment, you must first set up and activate a local development environment.  From the root of the project:
 
+Navigate to the `backend` folder:
+
+```
+$ cd backend
+```
+
+Create a virtual environment
+
 ```
 $ virtualenv venv
 $ source venv/bin/activate
@@ -47,9 +55,32 @@ $ python3 manage.py migrate
 ```
 
 Run all tests with:
+
 ```
 $ python3 manage.py test
 ```
+
+## React Native-Javascript (Frontend)
+
+Navigate to the `reactnative` folder:
+
+```
+$ cd reactnative
+```
+
+Install all required packages:
+
+```
+$ yarn install
+```
+
+
+Run all tests with:
+
+```
+$ yarn test
+```
+
 
 ## Sources
 The packages used by this application are specified in `requirements.txt`
