@@ -58,7 +58,6 @@ export default function AddBankScreen({ navigation }) {
     }
 
     const detectFinish = (event) => {
-        console.log('navigateURL',event.url)
         if (!authComplete && event.url.includes('example.com')) {
             setAuthComplete(true)
             updateServer(bankAuthURL)
@@ -104,7 +103,8 @@ export default function AddBankScreen({ navigation }) {
                     </TouchableOpacity>
                 ):(
                     <>
-                        <Text> These bank accounts have been added</Text>
+                        <Text> Bank account(s) have been added</Text>
+                        <Text> Data for debugging </Text>
                         <FlatList data={savedBanks} renderItem={({item, index}) =>{
                             return (
                                     <Text key={index}>{JSON.stringify(savedBanks)}</Text>

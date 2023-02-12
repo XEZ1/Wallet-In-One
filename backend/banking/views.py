@@ -1,10 +1,14 @@
 from django.shortcuts import render
+from django.http import JsonResponse
+from django.utils import timezone
+
+from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+
 from .services import get_institutions, create_requisition, delete_all_requisitions, get_requisitions, get_account_data, get_account_details 
-from .serializers import URLSerializer
-from django.utils import timezone
+from .serializers import URLSerializer, AccountSerializer
 from .models import Account
 
 @api_view(['GET'])
@@ -13,8 +17,6 @@ def bank_list(request):
 
 @api_view(['GET'])
 def auth_page(request, id):
-    #delete_all_requisitions()
-
     referance = str(request.user.id) + "-" + str(timezone.now().timestamp())
     response = create_requisition(id,"https://example.com", referance)
 
@@ -57,3 +59,17 @@ def finish_auth(request):
             return Response({'error': 'Link not found'}, status=400)
     else:
         return Response(serializer.errors, status=400)
+
+# Returns a list of user's accounts
+class AccountList(generics.ListAPIView):
+    model = Account
+    serializer_class = AccountSerializer
+
+    def get_queryset(self):
+        return Account.objects.filter(user = self.request.user)
+
+@api_view(['GET'])
+def delete_everything(request):
+    delete_all_requisitions()
+    Account.objects.all().delete()
+    return Response({'Success': 'Everything has been deleted'}, status=200)
