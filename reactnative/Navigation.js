@@ -17,9 +17,10 @@ import SettingsPage from './screens/SettingsPage';
 import AboutUsScreen from './screens/AboutUsScreen';
 import DeveloperInfoScreen from './screens/DeveloperInfoScreen';
 
-
 import { initAuthState } from './authentication';
 import { userContext } from './data';
+
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -27,29 +28,84 @@ const Stack = createStackNavigator();
 export default function Navigation() {
 
     const [user, setUser] = useContext(userContext)
+    const {dark, colors, setScheme} = useTheme();
 
     useEffect(()=>{initAuthState(user, setUser);}, []);
 
   return (
     <NavigationContainer>
       {user.signedIn ? (
-        <Tab.Navigator>
-          <Stack.Screen name='Pie Chart' component={PieChartWallet} />
-          <Stack.Screen name='Bar Chart' component={BarChartWallet} />
-          <Tab.Screen name="1" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 1', tabBarIcon: ({ color, size }) => (<Text>A</Text>) }}/>
-          <Tab.Screen name="2" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 2', tabBarIcon: ({ color, size }) => (<Text>B</Text>) }}/>
-          <Tab.Screen name="3" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 3', tabBarIcon: ({ color, size }) => (<Text>C</Text>) }}/>
-          <Tab.Screen name="Settings" component={SettingsPage} options={{ tabBarLabel: 'Settings', tabBarIcon: ({ color, size }) => (<Text>C</Text>) }}/>
+        <Tab.Navigator
+          screenOptions={{
+            headerStyle: {backgroundColor: colors.background},
+            headerTitleStyle: {color: colors.text},
+            tabBarStyle: {backgroundColor: colors.background}
+          }}
+        >
+          <Stack.Screen
+            name='Pie Chart'
+            component={PieChartWallet}
+          />
+          <Stack.Screen
+            name='Bar Chart'
+            component={BarChartWallet}
+          />
+          <Tab.Screen
+            name="1"
+            component={LoggedInScreen}
+            options={{
+              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Screen 1</Text>),
+              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>A</Text>)
+            }}
+          />
+          <Tab.Screen
+            name="2"
+            component={LoggedInScreen}
+            options={{
+              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Screen 2</Text>),
+              tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>B</Text>)
+            }}
+          />
+          <Tab.Screen
+            name="Settings"
+            component={SettingsPage}
+            options={{
+              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Settings</Text>),
+              tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>C</Text>)
+            }}
+          />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
-          <Stack.Screen options={{headerShown: false}} name='Start' component={StartScreen} />
-          <Stack.Screen name='Sign Up' component={SignUpScreen} />
-          <Stack.Screen name='Login' component={LoginScreen} />
-          <Stack.Screen name='Settings' component={SettingsPage} />
-          <Stack.Screen options={{headerShown: false}}  name='About Us' component={AboutUsScreen} />
-          <Stack.Screen options={{headerShown: false}} name='Developer Info' component={DeveloperInfoScreen} />
+          <Stack.Screen
+            name='Start'
+            component={StartScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name='Sign Up'
+            component={SignUpScreen}
+          />
+          <Stack.Screen
+            name='Login'
+            component={LoginScreen}
+          />
+          <Stack.Screen
+            name='Settings'
+            component={SettingsPage}
+          />
+          <Stack.Screen
+            name='About Us'
+            component={AboutUsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name='Developer Info'
+            component={DeveloperInfoScreen}
+            options={{headerShown: false}}
+          />
         </Stack.Navigator>
       )}
-    </NavigationContainer>)
+    </NavigationContainer>
+  )
 }
