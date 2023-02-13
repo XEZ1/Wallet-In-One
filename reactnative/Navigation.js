@@ -13,6 +13,7 @@ import StartScreen from './screens/StartScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import LoggedInScreen from './screens/LoggedInScreen';
 import LoginScreen from './screens/LoginScreen';
+
 import SettingsPage from './screens/SettingsPage';
 import AboutUsScreen from './screens/AboutUsScreen';
 import DeveloperInfoScreen from './screens/DeveloperInfoScreen';
@@ -22,6 +23,7 @@ import BankAccountsScreen from './screens/banking/BankAccountsScreen'
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';
+import CryptoWalletStackNavigator from "./screens/crypto_wallet/CryptoWalletStackNavigator";
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
@@ -77,6 +79,10 @@ export default function Navigation() {
               tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>C</Text>)
             }}
           />
+
+          {/* vvvvv Temporary (will be moved to account screen) vvvvv */}
+          <Tab.Screen name="Crypto Wallets" component={CryptoWalletStackNavigator} options={{ tabBarLabel: 'Crypto Wallet', tabBarIcon: ({ color, size }) => (<Text>₿</Text>) }}/>
+
           <Tab.Screen name="Add Bank Account" component={AddBankScreen} options={{ tabBarLabel: 'Add Back Account', tabBarIcon: ({ color, size }) => (<Text>D</Text>) }}/>
           <Tab.Screen name="Bank Accounts" component={BankAccountsScreen} options={{ tabBarLabel: 'Bank Accounts', tabBarIcon: ({ color, size }) => (<Text>E</Text>) }}/>
 
