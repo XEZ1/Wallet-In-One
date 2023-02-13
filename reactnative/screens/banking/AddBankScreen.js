@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: '#ddd',
+    //borderColor: '#ddd',
     overflow: 'hidden',
   },
   item:{

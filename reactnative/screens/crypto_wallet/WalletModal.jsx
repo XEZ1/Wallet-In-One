@@ -10,45 +10,49 @@ import {
 } from "react-native";
 import {createStackNavigator} from "@react-navigation/stack";
 import getCryptoIcon from "./icons/icon";
+import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 
 const Stack = createStackNavigator();
 
 export function WalletSelector(props) {
 
   const { connectWallet } = props.route.params;
+  const {dark, colors, setScheme} = useTheme();
 
   return(
-    <View style={{flex:1, backgroundColor: 'white', paddingTop: 30}}>
+    <View style={{flex:1, backgroundColor: colors.background, paddingTop: 30}}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 1, flexDirection: "column" }}>
           <Pressable onPress={() => props.navigation.navigate("Wallets")}>
-            <Text style={styles.backArrow}>←</Text>
+            <Text style={[styles.backArrow, {color: colors.text}]}>←</Text>
           </Pressable>
-          <Text style={styles.title}>Connect Wallet</Text>
+          <Text style={[styles.title, {color: colors.text}]}>Connect Wallet</Text>
         </View>
       </View>
 
       <View style={styles.container}>
 
-        <TouchableWithoutFeedback onPress={() =>
-          props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Bitcoin', symbol: 'BTC'})} >
-          <View style={styles.cryptoItem}>
+        <TouchableWithoutFeedback 
+          onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Bitcoin', symbol: 'BTC'})}
+        >
+          <View style={[styles.cryptoItem, {backgroundColor: colors.primary}]}>
             <Image
               style={{width: 64, height: 64}}
               source={require(`./icons/BTC.png`)}
             />
-            <Text style={{fontWeight: "700", fontSize: 20}}>Bitcoin</Text>
+            <Text style={{fontWeight: "700", fontSize: 20, color: colors.text}}>Bitcoin</Text>
           </View>
         </TouchableWithoutFeedback>
 
-        <TouchableWithoutFeedback onPress={() =>
-          props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Dogecoin', symbol: 'DOGE'})}>
-          <View style={styles.cryptoItem}>
+        <TouchableWithoutFeedback
+          onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Dogecoin', symbol: 'DOGE'})}
+        >
+          <View style={[styles.cryptoItem, {backgroundColor: colors.primary}]}>
             <Image
               style={{width: 64, height: 64}}
               source={require(`./icons/DOGE.png`)}
             />
-            <Text style={{fontWeight: "700", fontSize: 20}}>Dogecoin</Text>
+            <Text style={{fontWeight: "700", fontSize: 20, color: colors.text}}>Dogecoin</Text>
           </View>
         </TouchableWithoutFeedback>
 
@@ -139,5 +143,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: 'center',
-  }
+  },
 });
