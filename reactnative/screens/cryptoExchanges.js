@@ -5,11 +5,15 @@ import { VictoryBar, VictoryChart, VictoryTheme } from "victory-native"
 
 import BinanceCredentials from './cryptoForlder/binanceExchange';
 
+
+
+
+
 export default function HomeScreen({ navigation }) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("BinanceCredentials")}
+          onPress={() => navigation.navigate('BinanceCredentials')}
           style={{
             padding: 20,
             backgroundColor: 'lightgray',

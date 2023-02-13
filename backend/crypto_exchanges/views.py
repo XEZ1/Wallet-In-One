@@ -8,7 +8,7 @@ from crypto_exchanges.services import BinanceFetcher
 
 # Create your views here.
 
-class BinanceCredentialsView(APIView):
+class BinanceView(APIView):
     def post(self, request):
         # Pass the data to the serialiser so that the binance account can be created
         binance_account = BinanceAccountSerializer(data=request.data, context={'request': request})

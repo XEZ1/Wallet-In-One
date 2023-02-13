@@ -18,11 +18,11 @@ import LoginScreen from './screens/LoginScreen';
 import SettingsPage from './screens/SettingsPage';
 import AboutUsScreen from './screens/AboutUsScreen';
 import DeveloperInfoScreen from './screens/DeveloperInfoScreen';
+import BinanceCredentials from './screens/cryptoForlder/binanceExchange';
 
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';
-import BinanceCredentials from './screens/cryptoForlder/binanceExchange';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
