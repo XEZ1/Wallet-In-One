@@ -1,36 +1,85 @@
-import React, { useState } from 'react';
-import { View, Text, Switch, StyleSheet, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  Switch,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import { logout } from '../authentication';
 import { useContext } from 'react';
 import { userContext } from '../data';
-
-const SettingsScreen = ({  }) => {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+import { useTheme } from '../src/theme/ThemeProvider'
+  
+export default function SettingsPage ({ navigation }) {
+  const [notifications, setNotifications] = useState(false);
+  const toggleNotifications = () => setNotifications(previousState => !previousState);
   const [user, setUser] = useContext(userContext)
 
+  const {dark, colors, setScheme} = useTheme();
+  const toggleTheme=() => {
+    dark ? setScheme('light') : setScheme('dark');
+  };
+
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Notifications</Text>
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow : 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 20,
+        backgroundColor: colors.background,
+        }}
+      style={styles.container}
+    >
+      <Text style={[styles.title, {color: colors.text}]}>Notifications</Text>
       <View style={styles.switchContainer}>
-        <Text>Receive notifications:</Text>
+        <Text style={[{color: colors.text}]}>Receive notifications</Text>
         <Switch
           trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-          onValueChange={toggleSwitch}
-          value={isEnabled}
+          thumbColor={notifications ? "red" : "#f4f3f4"}
+          onValueChange={toggleNotifications}
+          value={notifications}
         />
       </View>
-      <Button title="Log out" onPress={()=>{logout(user, setUser)}} style={styles.logoutButton}/>
-    </View>
+
+      <Text style={[styles.title, {color: colors.text}]}>Themes</Text>
+      <View style={styles.switchContainer}>
+        <Text style={[{color: colors.text}]}>Dark Mode (Beta)</Text>
+        <Switch
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={dark ? "red" : "#f4f3f4"}
+          onValueChange={toggleTheme}
+          value={dark}
+        />
+      </View>
+
+      <TouchableOpacity
+        onPress={()=>{logout(user, setUser)}}
+      >
+        <Text style={[{backgroundColor: colors.primary}, {color: colors.text}, styles.button]}>Logout</Text>
+      </TouchableOpacity>
+
+      {/* <TouchableOpacity
+        onPress={() => navigation.navigate('About Us')}
+      >
+        <Text style={styles.aboutUs}>About Us</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Developer Info')}
+      >
+        <Text style={styles.developers}>Meet the team!</Text>
+      </TouchableOpacity> */}
+    </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   title: {
     fontSize: 24,
@@ -45,7 +94,39 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     marginTop: 20
-  }
+  },
+  aboutUs: {
+    backgroundColor: 'red',
+    color: 'black',
+    width: "30%",
+    borderRadius: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    padding: "2%",
+    fontSize:  17,
+    marginTop: '10%',
+    alignSelf: 'center'
+  },
+  developers: {
+    backgroundColor: 'black',
+    color: 'red',
+    width: "40%",
+    borderRadius: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    padding: "2%",
+    fontSize:  17,
+    marginTop: '10%',
+    alignSelf: 'center',
+  },
+  button: {
+    width: "75%",
+    borderRadius: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginTop: '4%',
+    paddingHorizontal: "12%",
+    paddingVertical: "2%",
+    fontSize:  20,
+  },
 });
-
-export default SettingsScreen;

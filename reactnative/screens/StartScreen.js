@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     marginLeft: '11%',
     padding: "2%",
     fontSize:  27,
-    marginTop: '5%'
+    marginTop: '5%',
   },
   aboutUs: {
     backgroundColor: 'black',

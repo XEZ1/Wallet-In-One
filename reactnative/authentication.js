@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 
-import {BACKEND_URL} from "@env";
+import {BACKEND_URL} from '@env';
 
 export const api_url = "http://10.0.2.2:8000"
 
@@ -26,7 +26,7 @@ export const fetchAPI = async (url, body=null, headers={}, method = "POST") => {
         return {status: res.status, body: data}
     }
     catch(error){
-        return {status: 'Error', body: error.toString()}
+        return {status: 'Error', body: {'message': error.message}}
     }
 }
 
@@ -67,3 +67,15 @@ export const logout = async (user, setUser) => {
     await SecureStore.deleteItemAsync('token')
     setUser({...user, 'signedIn': false})
 };
+
+export const auth_request = async (url, body=null, headers={}, method) => {
+    let token = await SecureStore.getItemAsync('token')
+    return await fetchAPI(url,body, {...headers, 'Authorization': 'Token '+ token }, method);
+}
+
+export const auth_get = async (url, body=null, headers={},) => {
+    return await auth_request(url, body, headers, "GET");
+}
+export const auth_post = async (url, body=null, headers={}) => {
+    return await auth_request(url, body, headers, "POST");
+}
