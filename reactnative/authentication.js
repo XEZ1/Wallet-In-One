@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 
-import {BACKEND_URL} from 'env';
+import {BACKEND_URL} from '@env';
 
 export const api_url = BACKEND_URL
 
