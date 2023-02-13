@@ -25,12 +25,27 @@ export default function BinanceCredentials({ navigation }) {
   };
 
   return (
-    <View>
-      <Text>API Key:</Text>
-      <TextInput value={apiKey} onChangeText={setApiKey} />
-      <Text>Secret Key:</Text>
-      <TextInput value={secretKey} onChangeText={setSecretKey} secureTextEntry />
-      <Button title="Submit" onPress={handleSubmit} />
+    <View style={{ padding: 20 }}>
+      <Text style={{ fontSize: 20, marginBottom: 10 }}>API Key:</Text>
+      <TextInput 
+        value={apiKey} 
+        onChangeText={setApiKey} 
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 20 }} 
+      />
+      <Text style={{ fontSize: 20, marginBottom: 10 }}>Secret Key:</Text>
+      <TextInput 
+        value={secretKey} 
+        onChangeText={setSecretKey} 
+        secureTextEntry 
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 20 }} 
+      />
+      <Button 
+        title="Submit" 
+        onPress={handleSubmit} 
+        color="#808080"
+        backgroundColor='#FFFF00'
+        buttonStyle={{ borderRadius: 20 }} 
+      />
     </View>
   );
 };

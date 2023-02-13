@@ -1,7 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { VictoryBar, VictoryChart, VictoryTheme } from "victory-native"
 
 import BinanceCredentials from './cryptoForlder/binanceExchange';
 
@@ -9,11 +7,11 @@ import BinanceCredentials from './cryptoForlder/binanceExchange';
 
 
 
-export default function HomeScreen({ navigation }) {
+export default function CryptoExchanges({ navigation }) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('BinanceCredentials')}
+          onPress={() => navigation.navigate(BinanceCredentials)}
           style={{
             padding: 20,
             backgroundColor: 'lightgray',
@@ -25,7 +23,7 @@ export default function HomeScreen({ navigation }) {
           <Text style={{ textAlign: 'center' }}>Binance</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Huobi')}
+          onPress={() => navigation.navigate('BinanceCredentials')}
           style={{
             padding: 20,
             backgroundColor: 'lightgray',
@@ -37,7 +35,7 @@ export default function HomeScreen({ navigation }) {
           <Text style={{ textAlign: 'center' }}>Huobi</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Coinlist')}
+          onPress={() => navigation.navigate('BinanceCredentials')}
           style={{
             padding: 20,
             backgroundColor: 'lightgray',

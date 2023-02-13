@@ -7,7 +7,6 @@ import { Text } from 'react-native';
 
 import PieChartWallet from './screens/charts/PieChart';
 import BarChartWallet from './screens/charts/BarChart';
-import HomeScreen from './screens/cryptoExchanges';
 
 
 // Screens
@@ -18,6 +17,7 @@ import LoginScreen from './screens/LoginScreen';
 import SettingsPage from './screens/SettingsPage';
 import AboutUsScreen from './screens/AboutUsScreen';
 import DeveloperInfoScreen from './screens/DeveloperInfoScreen';
+import CryptoExchanges from './screens/cryptoExchanges';
 import BinanceCredentials from './screens/cryptoForlder/binanceExchange';
 
 
@@ -39,7 +39,7 @@ export default function Navigation() {
         <Tab.Navigator>
           <Stack.Screen name='Pie Chart' component={PieChartWallet} />
           <Stack.Screen name='Bar Chart' component={BarChartWallet} />
-          <Stack.Screen name='crypto exchanges' component={HomeScreen} />
+          <Stack.Screen name='crypto exchanges' component={CryptoExchanges} />
           <Stack.Screen name='Binance' component={BinanceCredentials}/>
           <Tab.Screen name="2" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 2', tabBarIcon: ({ color, size }) => (<Text>B</Text>) }}/>
           <Tab.Screen name="3" component={LoggedInScreen} options={{ tabBarLabel: 'Screen 3', tabBarIcon: ({ color, size }) => (<Text>C</Text>) }}/>
