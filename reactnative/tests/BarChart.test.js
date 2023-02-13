@@ -21,5 +21,5 @@ describe('<BarChartWallet />', () => {
         const { getByText } = render(<BarChartWallet navigation={{ navigate }} />);
         fireEvent.press(getByText('Switch Chart'));
         expect(navigate).toHaveBeenCalledWith('Pie Chart');
-      })
+      });
   });
