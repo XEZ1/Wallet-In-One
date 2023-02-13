@@ -6,7 +6,7 @@ export const lightColors = {
 };
 
 export const darkColors = {
-    background: 'black',
+    background: '#242526',
     text: 'white',
     primary: 'red',
     secondary: 'white',
