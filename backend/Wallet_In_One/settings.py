@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'accounts',
-    'crypto_exchanges'
+    'crypto_exchanges',
     'banking'
 ]
 
