@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, ScrollView, Button, FlatList, TouchableOpacity,
 import AuthWebView from './AuthView';
 import { auth_get, auth_post} from '../../authentication'
 import Loading from './Loading'
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 export default function AddBankScreen({ navigation }) {
     const [ search, setSearch ] = useState('') // Stores contents of search box
@@ -14,6 +15,8 @@ export default function AddBankScreen({ navigation }) {
     const [ bankAuthURL, setbankAuthURL ] = useState(null)// Link to authenticate with selected bank
     const [ authComplete, setAuthComplete ] = useState(false)
     const [ savedBanks, setSavedBanks ] = useState(null)
+
+    const {dark, colors, setScheme} = useTheme();
 
     const reset = () => {
         setbankAuthURL(null)
@@ -94,20 +97,22 @@ export default function AddBankScreen({ navigation }) {
 
     if (authComplete){
         return (
-            <View>
+            <View
+                style={{flex:1, backgroundColor: colors.background}}
+            >
                 {!savedBanks ? (
                     <TouchableOpacity onPress={()=>setAuthComplete(false)}>
-                        <Text>Bank Authentication Finished</Text>
-                        <Text>Waiting For server</Text>
+                        <Text style={[{color: colors.text}]}>Bank Authentication Finished</Text>
+                        <Text style={[{color: colors.text}]}>Waiting For server</Text>
                         <ActivityIndicator/>
                     </TouchableOpacity>
                 ):(
                     <>
-                        <Text> Bank account(s) have been added</Text>
-                        <Text> Data for debugging </Text>
+                        <Text style={[{color: colors.text}]}> Bank account(s) have been added</Text>
+                        <Text style={[{color: colors.text}]}> Data for debugging </Text>
                         <FlatList data={savedBanks} renderItem={({item, index}) =>{
                             return (
-                                    <Text key={index}>{JSON.stringify(savedBanks)}</Text>
+                                    <Text style={[{color: colors.text}]} key={index}>{JSON.stringify(savedBanks)}</Text>
                                 )
                             }}
                         />
@@ -119,8 +124,16 @@ export default function AddBankScreen({ navigation }) {
     }
     
     return (
-        <View style={{flex:1, margin: 4, marginBottom: 54}}>
-                <TextInput style={styles.input} placeholder='Search' value={search} onChangeText={updateSearch}/>
+        <View
+            style={{flex:1, backgroundColor: colors.background}}
+        >
+                <TextInput
+                    style={[styles.input, {color: colors.text}, {backgroundColor: colors.background}]}
+                    placeholder='Search'
+                    placeholderTextColor= {colors.text}
+                    value={search}
+                    onChangeText={updateSearch}
+                />
                 <View style={styles.container}>
                     <FlatList data={bankData} renderItem={({item, index}) =>{
                         return (
@@ -129,10 +142,10 @@ export default function AddBankScreen({ navigation }) {
                                     source={{ uri: item.logo }}
                                     style={{ width: 50, height: 50, marginRight: 10, resizeMode: 'contain'}}
                                 />
-                                <Text key={index}>{item.name}</Text>
+                                <Text style={[{color: colors.text}]} key={index}>{item.name}</Text>
                             </TouchableOpacity>)
                         }}
-                        ListEmptyComponent={<Text>{'\nNo banks found\n'}</Text>}
+                        ListEmptyComponent={<Text style={[{color: colors.text}]}>{'\nNo banks found\n'}</Text>}
                     />
                 </View>
         </View>
@@ -141,13 +154,11 @@ export default function AddBankScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     width: '100%',
     paddingLeft: 20,
     paddingRight: 20,
     paddingBottom: 0,
     borderWidth: 1,
-
     borderRadius: 5,
     borderColor: '#ddd',
     overflow: 'hidden',
@@ -166,7 +177,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 5,
     marginBottom: 5,
-    backgroundColor: 'white'
   }
 
 });
