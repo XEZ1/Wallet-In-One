@@ -44,7 +44,7 @@ export default function Navigation() {
           screenOptions={{
             headerStyle: {backgroundColor: colors.background},
             headerTitleStyle: {color: colors.text},
-            tabBarStyle: {backgroundColor: colors.background}
+            tabBarStyle: {backgroundColor: colors.background},
           }}
         >
           <Stack.Screen
@@ -81,10 +81,30 @@ export default function Navigation() {
           />
 
           {/* vvvvv Temporary (will be moved to account screen) vvvvv */}
-          <Tab.Screen name="Crypto Wallets" component={CryptoWalletStackNavigator} options={{ tabBarLabel: 'Crypto Wallet', tabBarIcon: ({ color, size }) => (<Text>₿</Text>) }}/>
-
-          <Tab.Screen name="Add Bank Account" component={AddBankScreen} options={{ tabBarLabel: 'Add Back Account', tabBarIcon: ({ color, size }) => (<Text>D</Text>) }}/>
-          <Tab.Screen name="Bank Accounts" component={BankAccountsScreen} options={{ tabBarLabel: 'Bank Accounts', tabBarIcon: ({ color, size }) => (<Text>E</Text>) }}/>
+          <Tab.Screen
+            name="Crypto Wallets"
+            component={CryptoWalletStackNavigator}
+            options={{
+              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Crypto wallet</Text>),
+              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>₿</Text>)
+            }}
+          />
+          <Tab.Screen
+            name="Add Bank Account"
+            component={AddBankScreen}
+            options={{
+              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Add bank account</Text>),
+              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>D</Text>)
+            }}
+          />
+          <Tab.Screen
+            name="Bank Accounts"
+            component={BankAccountsScreen}
+            options={{
+              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Bank accounts</Text>),
+              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>E</Text>)
+            }}
+          />
 
         </Tab.Navigator>
       ) : (
