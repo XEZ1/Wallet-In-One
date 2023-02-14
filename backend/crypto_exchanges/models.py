@@ -11,7 +11,7 @@ class BinanceAccount(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Token(models.Model):
-    account = models.ForeignKey(BinanceAccount, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     asset = models.CharField(max_length=50)
     free = models.FloatField()
     locked = models.FloatField()
