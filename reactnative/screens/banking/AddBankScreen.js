@@ -87,6 +87,47 @@ export default function AddBankScreen({ navigation }) {
         sendLink()
     }
 
+    const styles = StyleSheet.create({
+        container: {
+          width: '100%',
+          paddingLeft: 20,
+          paddingRight: 20,
+          paddingBottom: 0,
+          borderWidth: 1,
+          borderRadius: 5,
+          borderColor: dark ? colors.background : '#ddd',
+          overflow: 'hidden',
+          backgroundColor: colors.background
+        },
+        item:{
+          flexDirection: 'row',
+          alignItems: 'center',
+          padding: 10
+        },
+        input:{
+          height: 40,
+          width: '100%',
+          borderWidth: 0.5,
+          padding: 10,
+          borderColor: 'gray',
+          borderRadius: 5,
+          marginTop: 5,
+          marginBottom: 5,
+          color: colors.text,
+          backgroundColor: colors.background
+        },
+        image:{
+            width: 50, 
+            height: 50,
+            marginRight: 10,
+            resizeMode: 'contain',
+        },
+        text:{
+            color: colors.text
+        },
+      });
+      
+
     if (isLoading){
         return <Loading/>
     }
@@ -102,17 +143,17 @@ export default function AddBankScreen({ navigation }) {
             >
                 {!savedBanks ? (
                     <TouchableOpacity onPress={()=>setAuthComplete(false)}>
-                        <Text style={[{color: colors.text}]}>Bank Authentication Finished</Text>
-                        <Text style={[{color: colors.text}]}>Waiting For server</Text>
+                        <Text style={styles.text}>Bank Authentication Finished</Text>
+                        <Text style={styles.text}>Waiting For server</Text>
                         <ActivityIndicator/>
                     </TouchableOpacity>
                 ):(
                     <>
-                        <Text style={[{color: colors.text}]}> Bank account(s) have been added</Text>
-                        <Text style={[{color: colors.text}]}> Data for debugging </Text>
+                        <Text style={styles.text}> Bank account(s) have been added</Text>
+                        <Text style={styles.text}> Data for debugging </Text>
                         <FlatList data={savedBanks} renderItem={({item, index}) =>{
                             return (
-                                    <Text style={[{color: colors.text}]} key={index}>{JSON.stringify(savedBanks)}</Text>
+                                    <Text style={styles.text} key={index}>{JSON.stringify(savedBanks)}</Text>
                                 )
                             }}
                         />
@@ -125,10 +166,10 @@ export default function AddBankScreen({ navigation }) {
     
     return (
         <View
-            style={{flex:1, backgroundColor: colors.background}}
+            style={{flex:1, margin: 4, marginBottom: 54}}
         >
                 <TextInput
-                    style={[styles.input, {color: colors.text}, {backgroundColor: colors.background}]}
+                    style={styles.input}
                     placeholder='Search'
                     placeholderTextColor= {colors.text}
                     value={search}
@@ -141,42 +182,14 @@ export default function AddBankScreen({ navigation }) {
                                 <Image
                                     
                                     source={{ uri: item.logo }}
-                                    style={{ width: 50, height: 50, marginRight: 10, resizeMode: 'contain'}}
+                                    style={styles.image}
                                 />
-                                <Text style={[{color: colors.text}]} key={index}>{item.name}</Text>
+                                <Text style={styles.text} key={index}>{item.name}</Text>
                             </TouchableOpacity>)
                         }}
-                        ListEmptyComponent={<Text style={[{color: colors.text}]}>{'\nNo banks found\n'}</Text>}
+                        ListEmptyComponent={<Text style={styles.text}>{'\nNo banks found\n'}</Text>}
                     />
                 </View>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingBottom: 0,
-    borderWidth: 1,
-    borderRadius: 5,
-    overflow: 'hidden',
-  },
-  item:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10
-  },
-  input:{
-    height: 40,
-    width: '100%',
-    borderWidth: 0.5,
-    padding: 10,
-    borderColor: 'gray',
-    borderRadius: 5,
-    marginTop: 5,
-    marginBottom: 5,
-  }
-
-});

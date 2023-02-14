@@ -132,7 +132,8 @@ export default function DeveloperInfoScreen ({ navigation }) {
                     Linking.openURL(
                     "https://github.com/krishnapk7"
                     )
-                }>
+                }
+                testID={'GithubButtonTest'}>
                 <Image
                 style={styles.iconStyle}
                 source={require('reactnative/assets/github.png')}

@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer,  DefaultTheme, DarkTheme} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -27,6 +27,9 @@ import CryptoWalletStackNavigator from "./screens/crypto_wallet/CryptoWalletStac
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
+import Icon from 'react-native-vector-icons/AntDesign';
+import { setStatusBarHidden } from 'expo-status-bar';
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -38,31 +41,17 @@ export default function Navigation() {
     useEffect(()=>{initAuthState(user, setUser);}, []);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={dark ? DarkTheme: DefaultTheme}>
       {user.signedIn ? (
         <Tab.Navigator
-          screenOptions={{
+        initialRouteName='Pie Chart'
+          screenOptions={
+          {
             headerStyle: {backgroundColor: colors.background},
             headerTitleStyle: {color: colors.text},
             tabBarStyle: {backgroundColor: colors.background},
           }}
         >
-          <Stack.Screen
-            name='Pie Chart'
-            component={PieChartWallet}
-            options={{
-              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Pie Chart</Text>),
-              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>1</Text>)
-            }}
-          />
-          <Stack.Screen
-            name='Bar Chart'
-            component={BarChartWallet}
-            options={{
-              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Bar Chart</Text>),
-              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>2</Text>)
-            }}
-          />
           <Tab.Screen
             name="1"
             component={LoggedInScreen}
@@ -76,10 +65,18 @@ export default function Navigation() {
             component={SettingsPage}
             options={{
               tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Settings</Text>),
-              tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>C</Text>)
+              tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><Icon name="setting" size={26}/></Text>)
             }}
           />
 
+          <Tab.Screen
+            name='Pie Chart'
+            component={PieChartWallet}
+            options={{
+              tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Home</Text>),
+              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><Icon name="home" size={30}/></Text>),
+            }}
+          />
           {/* vvvvv Temporary (will be moved to account screen) vvvvv */}
           <Tab.Screen
             name="Crypto Wallets"
@@ -105,7 +102,10 @@ export default function Navigation() {
               tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>E</Text>)
             }}
           />
-
+          <Tab.Screen
+            name='Bar Chart'
+            component={BarChartWallet}
+            />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
@@ -141,3 +141,4 @@ export default function Navigation() {
     </NavigationContainer>
   )
 }
+

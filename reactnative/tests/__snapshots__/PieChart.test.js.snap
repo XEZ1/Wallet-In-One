@@ -54,7 +54,8 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
     </Text>
     <View
       accessible={true}
-      focusable={false}
+      collapsable={false}
+      focusable={true}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -62,48 +63,31 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+      testID="Switch Chart"
     >
-      <View
-        accessibilityRole="button"
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
+      <Text
         style={
           Object {
-            "opacity": 1,
+            "alignSelf": "center",
+            "backgroundColor": "red",
+            "borderRadius": 25,
+            "color": "black",
+            "fontSize": 30,
+            "fontWeight": "bold",
+            "padding": "2%",
+            "textAlign": "center",
+            "width": "60%",
           }
         }
       >
-        <View
-          style={
-            Array [
-              Object {},
-            ]
-          }
-        >
-          <Text
-            style={
-              Array [
-                Object {
-                  "color": "#007AFF",
-                  "fontSize": 18,
-                  "margin": 8,
-                  "textAlign": "center",
-                },
-              ]
-            }
-          >
-            Switch Chart
-          </Text>
-        </View>
-      </View>
+        <Text />
+         Switch Chart
+      </Text>
     </View>
     <View
       className="VictoryContainer"
