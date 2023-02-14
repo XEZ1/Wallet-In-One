@@ -25,8 +25,8 @@ export default function BinanceCredentials({ navigation}) {
       console.log(data)
       Alert.alert('Success', 'Binance account data retrieved successfully!');
     } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'An error occurred while retrieving Binance account data');
+      console.error(error.response);
+      Alert.alert('Error', 'An error occurred while retrieving Binance account data.');
     }
   };
 
