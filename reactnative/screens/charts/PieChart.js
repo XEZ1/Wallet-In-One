@@ -40,6 +40,7 @@ export default function PieChartWallet({ navigation }) {
       <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
       <TouchableOpacity
         onPress={() => navigation.navigate('Bar Chart')}
+        testID="Switch Chart"
       >
         <Text style={styles.button}><Icon name='barchart' size={30}/> Switch Chart</Text>
       </TouchableOpacity>

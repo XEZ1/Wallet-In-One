@@ -18,8 +18,8 @@ describe('<PieChartWallet />', () => {
 
       it('switch chart button test', () => {
         const navigate = jest.fn();
-        const { getByText } = render(<PieChartWallet navigation={{ navigate }} />);
-        fireEvent.press(getByText('Switch Chart'));
+        const { getByTestId } = render(<PieChartWallet navigation={{ navigate }} />);
+        fireEvent.press(getByTestId('Switch Chart'));
         expect(navigate).toHaveBeenCalledWith('Bar Chart');
       });
   });
