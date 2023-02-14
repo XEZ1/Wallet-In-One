@@ -39,7 +39,7 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
       style={
         Array [
           Object {
-            "fontSize": 25,
+            "fontSize": 40,
             "fontWeight": "900",
             "textAlign": "left",
           },
@@ -52,43 +52,6 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
       Amount: £
       345
     </Text>
-    <View
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        Object {
-          "opacity": 1,
-        }
-      }
-      testID="Switch Chart"
-    >
-      <Text
-        style={
-          Object {
-            "alignSelf": "center",
-            "backgroundColor": "red",
-            "borderRadius": 25,
-            "color": "black",
-            "fontSize": 30,
-            "fontWeight": "bold",
-            "padding": "2%",
-            "textAlign": "center",
-            "width": "60%",
-          }
-        }
-      >
-        <Text />
-         Switch Chart
-      </Text>
-    </View>
     <View
       className="VictoryContainer"
       onMoveShouldSetResponder={[Function]}
@@ -156,7 +119,7 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
           />
           <RNSVGGroup>
             <RNSVGPath
-              d="M1.8828944536890554e-14,-307.5A307.5,307.5,0,1,1,-147.64825745281888,269.7336502387978L0,0Z"
+              d="M8.702605105677332,-324.8834632054618A325,325,0,1,1,-128.05574843256215,298.7084285609905L-21.16294941205638,66.72428022978399A70,70,0,1,0,8.70260510567734,-69.45692668391425Z"
               fill={
                 Object {
                   "payload": 4294901760,
@@ -169,7 +132,7 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
                   0,
                   0,
                   1,
-                  357.5,
+                  375,
                   375,
                 ]
               }
@@ -187,7 +150,7 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
               responsible={true}
             />
             <RNSVGPath
-              d="M-147.64825745281888,269.7336502387978A307.5,307.5,0,0,1,-303.60386919400685,48.79488303529754L0,0Z"
+              d="M-143.8635533787256,291.42456658498537A325,325,0,0,1,-316.2040183676902,75.10005837631184L-66.19911964060131,22.752506648924484A70,70,0,0,0,-36.970754358219885,59.440418253778844Z"
               fill={
                 Object {
                   "payload": 4278190335,
@@ -200,7 +163,7 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
                   0,
                   0,
                   1,
-                  357.5,
+                  375,
                   375,
                 ]
               }
@@ -218,7 +181,7 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
               responsible={true}
             />
             <RNSVGPath
-              d="M-303.60386919400685,48.79488303529754A307.5,307.5,0,0,1,-109.54432631374586,-287.3261049269063L0,0Z"
+              d="M-319.7710719490164,58.06428803125871A325,325,0,0,1,-135.8496716556809,-295.2454346997489L-35.33335678450577,-60.42808865369498A70,70,0,0,0,-69.76617322192755,5.716736303871321Z"
               fill={
                 Object {
                   "payload": 4278222848,
@@ -231,7 +194,7 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
                   0,
                   0,
                   1,
-                  357.5,
+                  375,
                   375,
                 ]
               }
@@ -249,10 +212,10 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
               responsible={true}
             />
             <RNSVGPath
-              d="M-109.54432631374586,-287.3261049269063A307.5,307.5,0,0,1,-5.648683361067166e-14,-307.5L0,0Z"
+              d="M-119.84880767004228,-302.0947919115277A325,325,0,0,1,-8.702605105677515,-324.8834632054618L-8.702605105677348,-69.45692668391425A70,70,0,0,0,-19.332492798867374,-67.27744586547367Z"
               fill={
                 Object {
-                  "payload": 4294967040,
+                  "payload": 4286578816,
                   "type": 0,
                 }
               }
@@ -262,7 +225,7 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
                   0,
                   0,
                   1,
-                  357.5,
+                  375,
                   375,
                 ]
               }
@@ -279,254 +242,6 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
               }
               responsible={true}
             />
-            <RNSVGText
-              content={null}
-              dx={
-                Array [
-                  "0",
-                ]
-              }
-              dy={Array []}
-              font={Object {}}
-              name="pie-labels-0"
-              rotate={Array []}
-              x={
-                Array [
-                  "674.5",
-                ]
-              }
-              y={
-                Array [
-                  "460.97",
-                ]
-              }
-            >
-              <RNSVGTSpan
-                content="Credit Card"
-                dx={
-                  Array [
-                    "0",
-                  ]
-                }
-                dy={
-                  Array [
-                    "0",
-                  ]
-                }
-                fill={
-                  Object {
-                    "payload": 4278190080,
-                    "type": 0,
-                  }
-                }
-                font={
-                  Object {
-                    "fontFamily": "Gill Sans",
-                    "fontSize": "14",
-                    "letterSpacing": "normal",
-                    "textAnchor": "start",
-                  }
-                }
-                propList={
-                  Array [
-                    "fill",
-                  ]
-                }
-                rotate={Array []}
-                x={
-                  Array [
-                    "674.5",
-                  ]
-                }
-                y={Array []}
-              />
-            </RNSVGText>
-            <RNSVGText
-              content={null}
-              dx={
-                Array [
-                  "0",
-                ]
-              }
-              dy={Array []}
-              font={Object {}}
-              name="pie-labels-1"
-              rotate={Array []}
-              x={
-                Array [
-                  "89.5",
-                ]
-              }
-              y={
-                Array [
-                  "568.97",
-                ]
-              }
-            >
-              <RNSVGTSpan
-                content="Crypto"
-                dx={
-                  Array [
-                    "0",
-                  ]
-                }
-                dy={
-                  Array [
-                    "0",
-                  ]
-                }
-                fill={
-                  Object {
-                    "payload": 4278190080,
-                    "type": 0,
-                  }
-                }
-                font={
-                  Object {
-                    "fontFamily": "Gill Sans",
-                    "fontSize": "14",
-                    "letterSpacing": "normal",
-                    "textAnchor": "end",
-                  }
-                }
-                propList={
-                  Array [
-                    "fill",
-                  ]
-                }
-                rotate={Array []}
-                x={
-                  Array [
-                    "89.5",
-                  ]
-                }
-                y={Array []}
-              />
-            </RNSVGText>
-            <RNSVGText
-              content={null}
-              dx={
-                Array [
-                  "0",
-                ]
-              }
-              dy={Array []}
-              font={Object {}}
-              name="pie-labels-2"
-              rotate={Array []}
-              x={
-                Array [
-                  "73.5",
-                ]
-              }
-              y={
-                Array [
-                  "215.97",
-                ]
-              }
-            >
-              <RNSVGTSpan
-                content="Stocks"
-                dx={
-                  Array [
-                    "0",
-                  ]
-                }
-                dy={
-                  Array [
-                    "0",
-                  ]
-                }
-                fill={
-                  Object {
-                    "payload": 4278190080,
-                    "type": 0,
-                  }
-                }
-                font={
-                  Object {
-                    "fontFamily": "Gill Sans",
-                    "fontSize": "14",
-                    "letterSpacing": "normal",
-                    "textAnchor": "end",
-                  }
-                }
-                propList={
-                  Array [
-                    "fill",
-                  ]
-                }
-                rotate={Array []}
-                x={
-                  Array [
-                    "73.5",
-                  ]
-                }
-                y={Array []}
-              />
-            </RNSVGText>
-            <RNSVGText
-              content={null}
-              dx={
-                Array [
-                  "0",
-                ]
-              }
-              dy={Array []}
-              font={Object {}}
-              name="pie-labels-3"
-              rotate={Array []}
-              x={
-                Array [
-                  "298.5",
-                ]
-              }
-              y={
-                Array [
-                  "50.97",
-                ]
-              }
-            >
-              <RNSVGTSpan
-                content="Debit Card"
-                dx={
-                  Array [
-                    "0",
-                  ]
-                }
-                dy={
-                  Array [
-                    "0",
-                  ]
-                }
-                fill={
-                  Object {
-                    "payload": 4278190080,
-                    "type": 0,
-                  }
-                }
-                font={
-                  Object {
-                    "fontFamily": "Gill Sans",
-                    "fontSize": "14",
-                    "letterSpacing": "normal",
-                    "textAnchor": "middle",
-                  }
-                }
-                propList={
-                  Array [
-                    "fill",
-                  ]
-                }
-                rotate={Array []}
-                x={
-                  Array [
-                    "298.5",
-                  ]
-                }
-                y={Array []}
-              />
-            </RNSVGText>
           </RNSVGGroup>
           <View
             pointerEvents="box-none"
@@ -567,6 +282,493 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
                 ]
               }
               vbHeight={750}
+              vbWidth={750}
+              width={750}
+            >
+              <RNSVGGroup />
+            </RNSVGSvgView>
+          </View>
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+    <View
+      className="VictoryContainer"
+      onMoveShouldSetResponder={[Function]}
+      onMoveShouldSetResponderCapture={[Function]}
+      onResponderEnd={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderReject={[Function]}
+      onResponderRelease={[Function]}
+      onResponderStart={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onStartShouldSetResponderCapture={[Function]}
+      pointerEvents="box-none"
+      style={
+        Object {
+          "position": "relative",
+        }
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="240"
+        bbWidth="750"
+        focusable={false}
+        height={240}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        role="img"
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            Object {
+              "height": "100%",
+              "width": "100%",
+            },
+            Object {
+              "flex": 0,
+              "height": 240,
+              "width": 750,
+            },
+          ]
+        }
+        vbHeight={240}
+        vbWidth={750}
+        width={750}
+      >
+        <RNSVGGroup>
+          <RNSVGRect
+            fill={null}
+            height="240"
+            propList={
+              Array [
+                "fill",
+              ]
+            }
+            width="750"
+            x="0"
+            y="0"
+          />
+          <RNSVGGroup>
+            <RNSVGPath
+              d="M 40, 209 
+A 0 0 0 0 1, 40, 209 
+L 40, 191 
+A 0 0 0 0 1, 40, 191 
+L 710, 191 
+A 0 0 0 0 1, 710, 191 
+L 710, 209 
+A 0 0 0 0 1, 710, 209 
+ z"
+              fill={
+                Object {
+                  "payload": 4294901760,
+                  "type": 0,
+                }
+              }
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              stroke={
+                Object {
+                  "payload": 4294901760,
+                  "type": 0,
+                }
+              }
+              strokeWidth="0"
+            />
+            <RNSVGPath
+              d="M 40, 155.66666666666669 
+A 0 0 0 0 1, 40, 155.66666666666669 
+L 40, 137.66666666666669 
+A 0 0 0 0 1, 40, 137.66666666666669 
+L 207.5, 137.66666666666669 
+A 0 0 0 0 1, 207.5, 137.66666666666669 
+L 207.5, 155.66666666666669 
+A 0 0 0 0 1, 207.5, 155.66666666666669 
+ z"
+              fill={
+                Object {
+                  "payload": 4278190335,
+                  "type": 0,
+                }
+              }
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              stroke={
+                Object {
+                  "payload": 4278190335,
+                  "type": 0,
+                }
+              }
+              strokeWidth="0"
+            />
+            <RNSVGPath
+              d="M 40, 102.33333333333334 
+A 0 0 0 0 1, 40, 102.33333333333334 
+L 40, 84.33333333333334 
+A 0 0 0 0 1, 40, 84.33333333333334 
+L 291.25, 84.33333333333334 
+A 0 0 0 0 1, 291.25, 84.33333333333334 
+L 291.25, 102.33333333333334 
+A 0 0 0 0 1, 291.25, 102.33333333333334 
+ z"
+              fill={
+                Object {
+                  "payload": 4278222848,
+                  "type": 0,
+                }
+              }
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              stroke={
+                Object {
+                  "payload": 4278222848,
+                  "type": 0,
+                }
+              }
+              strokeWidth="0"
+            />
+            <RNSVGPath
+              d="M 40, 49 
+A 0 0 0 0 1, 40, 49 
+L 40, 31 
+A 0 0 0 0 1, 40, 31 
+L 107, 31 
+A 0 0 0 0 1, 107, 31 
+L 107, 49 
+A 0 0 0 0 1, 107, 49 
+ z"
+              fill={
+                Object {
+                  "payload": 4286578816,
+                  "type": 0,
+                }
+              }
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              stroke={
+                Object {
+                  "payload": 4286578816,
+                  "type": 0,
+                }
+              }
+              strokeWidth="0"
+            />
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  "10",
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="bar-labels-0"
+              rotate={Array []}
+              x={
+                Array [
+                  "30",
+                ]
+              }
+              y={
+                Array [
+                  "188.875",
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="Credit Card"
+                dx={
+                  Array [
+                    "10",
+                  ]
+                }
+                dy={
+                  Array [
+                    "0",
+                  ]
+                }
+                fill={
+                  Object {
+                    "payload": 4280624421,
+                    "type": 0,
+                  }
+                }
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": "25",
+                    "fontWeight": "900",
+                    "textAnchor": "start",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    "30",
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  "10",
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="bar-labels-1"
+              rotate={Array []}
+              x={
+                Array [
+                  "30",
+                ]
+              }
+              y={
+                Array [
+                  "135.54166666666669",
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="Crypto"
+                dx={
+                  Array [
+                    "10",
+                  ]
+                }
+                dy={
+                  Array [
+                    "0",
+                  ]
+                }
+                fill={
+                  Object {
+                    "payload": 4280624421,
+                    "type": 0,
+                  }
+                }
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": "25",
+                    "fontWeight": "900",
+                    "textAnchor": "start",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    "30",
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  "10",
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="bar-labels-2"
+              rotate={Array []}
+              x={
+                Array [
+                  "30",
+                ]
+              }
+              y={
+                Array [
+                  "82.20833333333334",
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="Stocks"
+                dx={
+                  Array [
+                    "10",
+                  ]
+                }
+                dy={
+                  Array [
+                    "0",
+                  ]
+                }
+                fill={
+                  Object {
+                    "payload": 4280624421,
+                    "type": 0,
+                  }
+                }
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": "25",
+                    "fontWeight": "900",
+                    "textAnchor": "start",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    "30",
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  "10",
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="bar-labels-3"
+              rotate={Array []}
+              x={
+                Array [
+                  "30",
+                ]
+              }
+              y={
+                Array [
+                  "28.875",
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="Debit Card"
+                dx={
+                  Array [
+                    "10",
+                  ]
+                }
+                dy={
+                  Array [
+                    "0",
+                  ]
+                }
+                fill={
+                  Object {
+                    "payload": 4280624421,
+                    "type": 0,
+                  }
+                }
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": "25",
+                    "fontWeight": "900",
+                    "textAnchor": "start",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    "30",
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+          </RNSVGGroup>
+          <View
+            pointerEvents="box-none"
+            style={
+              Object {
+                "left": 0,
+                "position": "absolute",
+                "top": 0,
+                "zIndex": 99,
+              }
+            }
+          >
+            <RNSVGSvgView
+              align="xMidYMid"
+              bbHeight="240"
+              bbWidth="750"
+              focusable={false}
+              height={240}
+              meetOrSlice={0}
+              minX={0}
+              minY={0}
+              style={
+                Array [
+                  Object {
+                    "backgroundColor": "transparent",
+                    "borderWidth": 0,
+                  },
+                  Object {
+                    "height": "100%",
+                    "overflow": "visible",
+                    "width": "100%",
+                  },
+                  Object {
+                    "flex": 0,
+                    "height": 240,
+                    "width": 750,
+                  },
+                ]
+              }
+              vbHeight={240}
               vbWidth={750}
               width={750}
             >

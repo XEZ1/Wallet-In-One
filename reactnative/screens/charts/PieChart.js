@@ -1,14 +1,12 @@
 
 import React from 'react';
-import { StyleSheet, Text, ScrollView, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, ScrollView, Alert } from 'react-native';
 
 
-import { VictoryPie } from "victory-native";
+import { VictoryPie, VictoryBar, VictoryLabel } from "victory-native";
 
 import data from "./chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-
-import Icon from 'react-native-vector-icons/AntDesign';
 
 export default function PieChartWallet({ navigation }) {
 
@@ -19,11 +17,15 @@ export default function PieChartWallet({ navigation }) {
     Alert.alert(dataPoint.x);
   };
 
-
   let value = 0;
   data.forEach(jsonObj => {
     value += jsonObj.y;
   });
+
+  const list = data.map(val => val.x);
+  const colours = ["red", "blue", "green", "purple"];
+
+  let spacing = list.length * 60;
 
   return (
     <ScrollView
@@ -38,25 +40,29 @@ export default function PieChartWallet({ navigation }) {
     >
       <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
       <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Bar Chart')}
-        testID="Switch Chart"
-      >
-        <Text style={styles.button}><Icon name='barchart' size={30}/> Switch Chart</Text>
-      </TouchableOpacity>
       <VictoryPie
         data={data}
-        padding={{left: 50, right: 85}}
-        style={{
-          labels: {fill: colors.text}
-        }}
+        innerRadius={70}
+        padAngle={3}
+        labels={() => null}
         events={[{
           target: "data",
           eventHandlers: {
             onPressIn: handlePressIn
           }
         }]}
-        colorScale={["red", "blue", "green", "yellow"]}
+        colorScale={colours}
+      />
+
+      <VictoryBar
+        horizontal={true}
+        style={{ data:  { fill: ({ datum }) => colours[list.indexOf(datum.x)]  }}}
+        data={data}
+        barWidth={18}
+        padding={40}
+        labelComponent={<VictoryLabel dy={-20} x={30} style={{ fontSize: 25, fontWeight: '900' }} />}
+        labels={({ datum }) => datum.x}
+        height={spacing}
       />
     </ScrollView>
   );
@@ -74,7 +80,7 @@ const styles = StyleSheet.create({
   },
   amountText:{
     fontWeight: '900',
-    fontSize: 25,
+    fontSize: 40,
     textAlign: 'left',
   },
   button: {

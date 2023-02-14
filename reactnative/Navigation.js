@@ -6,7 +6,6 @@ import { useContext, useEffect } from 'react';
 import { Text } from 'react-native';
 
 import PieChartWallet from './screens/charts/PieChart';
-import BarChartWallet from './screens/charts/BarChart';
 
 // Screens
 import StartScreen from './screens/StartScreen';
@@ -96,6 +95,7 @@ export default function Navigation() {
               tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="creditcard" size= {30}/></Text>)
             }}
           />
+
           <Tab.Screen
             name="Settings"
             component={SettingsPage}
