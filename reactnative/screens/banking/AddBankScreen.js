@@ -139,6 +139,7 @@ export default function AddBankScreen({ navigation }) {
                         return (
                             <TouchableOpacity onPress={()=>selectItem(item)} style={styles.item}>
                                 <Image
+                                    
                                     source={{ uri: item.logo }}
                                     style={{ width: 50, height: 50, marginRight: 10, resizeMode: 'contain'}}
                                 />
@@ -160,7 +161,6 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     borderWidth: 1,
     borderRadius: 5,
-    //borderColor: '#ddd',
     overflow: 'hidden',
   },
   item:{

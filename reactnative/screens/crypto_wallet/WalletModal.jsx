@@ -68,16 +68,17 @@ export function WalletSelector(props) {
 export function WalletConnector(props) {
   const [address, setAddress] = useState("");
   const { connectWallet, cryptocurrency, symbol } = props.route.params;
+  const {dark, colors, setScheme} = useTheme();
 
   return (
-    <View style={{flex:1, backgroundColor: 'white'}}>
+    <View style={{flex:1, backgroundColor: colors.background}}>
       <View style={{ paddingTop: 30 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View style={{ flex: 1, flexDirection: "column" }}>
             <Pressable onPress={() => props.navigation.navigate("Wallets")}>
-              <Text style={styles.backArrow}>✗</Text>
+              <Text style={[styles.backArrow, {color: colors.text}]}>✗</Text>
             </Pressable>
-            <Text style={styles.title}>Connect Wallet</Text>
+            <Text style={[styles.title, {color: colors.text}]}>Connect Wallet</Text>
           </View>
         </View>
 
@@ -86,13 +87,13 @@ export function WalletConnector(props) {
             style={{width: 100, height: 100}}
             source={getCryptoIcon(symbol)}
           />
-          <Text style={{fontWeight: "800", fontSize: 30, alignSelf: "center"}}>{cryptocurrency}</Text>
-
+          <Text style={{fontWeight: "800", fontSize: 30, alignSelf: "center", color: colors.text}}>{cryptocurrency}</Text>
         </View>
 
         <TextInput
-          style={styles.input}
+          style={[styles.input, {color: colors.text}, {backgroundColor: colors.background}]}
           onChangeText={(text) => setAddress(text)}
+          placeholderTextColor= {colors.text}
           placeholder="Wallet Address"
         />
 
@@ -121,11 +122,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   input: {
-    backgroundColor: "#e5e5e5",
-    borderRadius: 10,
-    marginHorizontal: 30,
-    marginVertical: 10,
+    height: 40,
+    width: '100%',
+    borderWidth: 0.5,
     padding: 10,
+    borderColor: 'gray',
+    borderRadius: 5,
+    marginTop: 5,
+    marginBottom: 5,
   },
   container: {
     flex: 1,
