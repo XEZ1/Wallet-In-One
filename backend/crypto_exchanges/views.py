@@ -18,6 +18,9 @@ class BinanceView(APIView):
         # Validate data
         binance_account.is_valid(raise_exception=True)
 
+        # Save the binance account to the database
+        #binance_account.save()
+
         # Use the provided API key and secret key to connect to the Binance API
         service = BinanceFetcher(self.request.data["api_key"], self.request.data["secret_key"])
 

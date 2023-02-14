@@ -16,7 +16,6 @@ LogBox.ignoreLogs([
 const Stack = createStackNavigator();
 
 export default function CryptoExchangesStackNavigator( props ) {
-  console.log(props)
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Crypto exchanges" component={CryptoExchanges} />
