@@ -3,70 +3,53 @@ import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Alert, 
 
 import BinanceCredentials from './BinanceExchange';
 
-
-
-
-
 export default function CryptoExchanges({ navigation }) {
-
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <TouchableOpacity
-          onPress={() =>  navigation.navigate('Binance')}
-          style={{
-            padding: 20,
-            backgroundColor: 'lightgray',
-            borderRadius: 10,
-            marginVertical: 10,
-            width: '70%'
-          }}
-        >
-          <Text style={{ textAlign: 'center' }}>Binance</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Huobi')}
-          style={{
-            padding: 20,
-            backgroundColor: 'lightgray',
-            borderRadius: 10,
-            marginVertical: 10,
-            width: '70%'
-          }}
-        >
-          <Text style={{ textAlign: 'center' }}>Huobi</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('CoinList')}
-          style={{
-            padding: 20,
-            backgroundColor: 'lightgray',
-            borderRadius: 10,
-            marginVertical: 10,
-            width: '70%'
-          }}
-        >
-          <Text style={{ textAlign: 'center' }}>Coinlist</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Add a cryptocurrency account from an exchange:</Text>
+      <TouchableOpacity
+        onPress={() =>  navigation.navigate('Binance')}
+        style={[styles.button, {width: Dimensions.get('window').width - 40}]}
+      >
+        <Text style={styles.buttonText}>Binance</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Huobi')}
+        style={[styles.button, {width: Dimensions.get('window').width - 40}]}
+      >
+        <Text style={styles.buttonText}>Huobi</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('CoinList')}
+        style={[styles.button, {width: Dimensions.get('window').width - 40}]}
+      >
+        <Text style={styles.buttonText}>Coinlist</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFF00',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   title: {
-    fontWeight: '900',
-    fontSize: 50,
-    alignSelf: 'center',
-    paddingVertical: 10,
+    fontWeight: 'bold',
+    fontSize: 30,
+    marginBottom: 20,
   },
-  amountText:{
-    fontWeight: '900',
-    fontSize: 25,
-    textAlign: 'left',
-  }
-});  
+  button: {
+    padding: 20,
+    backgroundColor: 'lightgray',
+    borderRadius: 10,
+    marginVertical: 10,
+  },
+  buttonText: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+});
