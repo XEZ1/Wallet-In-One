@@ -25,6 +25,8 @@ export default function PieChartWallet({ navigation }) {
     value += jsonObj.y;
   });
 
+  const list = data.map(val => val.x);
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -57,6 +59,11 @@ export default function PieChartWallet({ navigation }) {
         }]}
         colorScale={["red", "blue", "green", "yellow"]}
       />
+      {list.map((num) => {
+        return (
+        <Text key={num}>{num}</Text>
+        );
+      })}
     </ScrollView>
   );
 }
