@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StyleSheet, Text, ScrollView, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, ScrollView, Alert, TouchableOpacity, View } from 'react-native';
 
 
 import { VictoryPie } from "victory-native";
@@ -10,6 +10,7 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 import Icon from 'react-native-vector-icons/AntDesign';
 
+
 export default function PieChartWallet({ navigation }) {
 
   const {dark, colors, setScheme} = useTheme();
@@ -18,7 +19,6 @@ export default function PieChartWallet({ navigation }) {
     const dataPoint = data[datapoint.index];
     Alert.alert(dataPoint.x);
   };
-
 
   let value = 0;
   data.forEach(jsonObj => {
@@ -46,10 +46,9 @@ export default function PieChartWallet({ navigation }) {
       </TouchableOpacity>
       <VictoryPie
         data={data}
-        padding={{left: 50, right: 85}}
-        style={{
-          labels: {fill: colors.text}
-        }}
+        innerRadius={70}
+        padAngle={3}
+        labels={() => null}
         events={[{
           target: "data",
           eventHandlers: {
