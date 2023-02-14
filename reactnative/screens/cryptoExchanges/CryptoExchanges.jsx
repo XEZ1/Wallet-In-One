@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 import BinanceCredentials from './BinanceExchange';
 
@@ -38,8 +38,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   title: {
-    fontWeight: 'bold',
-    fontSize: 30,
+    fontSize: 25,
     marginBottom: 20,
   },
   button: {
@@ -51,5 +50,11 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  backArrow: {
+    fontWeight: "900",
+    fontSize: 30,
+    position: "absolute",
+    marginLeft: 10,
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { StyleSheet, Pressable, View, Text, TextInput, Button, Alert } from 'react-native';
 import * as SecureStore from "expo-secure-store";
 
 export default function BinanceCredentials({ navigation}) {
@@ -32,6 +32,12 @@ export default function BinanceCredentials({ navigation}) {
 
   return (
     <View style={{ padding: 20 }}>
+      <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
+        <Pressable onPress={() => navigation.navigate("Crypto exchanges")}>
+          <Text style={styles.backArrow}>←</Text>
+        </Pressable>
+        <Text style={{ fontSize: 30 }}>Binance Credentials:</Text>
+      </View>
       <Text style={{ fontSize: 20, marginBottom: 10 }}>API Key:</Text>
       <TextInput 
         value={apiKey} 
@@ -54,4 +60,12 @@ export default function BinanceCredentials({ navigation}) {
       />
     </View>
   );
-};
+}
+
+const styles = StyleSheet.create({
+  backArrow: {
+    fontWeight: "900",
+    fontSize: 30,
+    marginRight: 10,
+  },
+});
