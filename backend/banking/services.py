@@ -1,5 +1,5 @@
 import requests
-from .models import Token
+from .models import Token, Account
 
 credentials = {
 	"secret_id": "5aa6c2d1-2e27-4c46-b030-2d9add58a256",
@@ -127,3 +127,23 @@ def get_account_transactions(account_id):
 
 def get_account_details(account_id):
     return auth_get(f'/accounts/{account_id}/details/')
+
+# Helper Methods
+
+def update_user_accounts(user):
+    accounts = Account.objects.filter(user=user)
+    for i in accounts:
+        if i.can_update():
+            print('can update')
+            update_account_transactions(i)
+            update_account_balance(i)
+        else:
+            print('cannnot update')
+
+def update_account_transactions(account):
+    transaction_data = get_account_transactions(account.id)["transactions"]["booked"]
+    account.add_transactions(transaction_data)
+    
+def update_account_balance(account):
+    balance_data = get_account_balances(account.id)["balances"]
+    account.add_balances(balance_data)
