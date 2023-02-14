@@ -22,8 +22,8 @@ export default function SettingsPage ({ navigation }) {
     dark ? setScheme('light') : setScheme('dark');
   };
 
-
   return (
+    
     <ScrollView
       contentContainerStyle={{
         flexGrow : 1,
@@ -76,6 +76,7 @@ export default function SettingsPage ({ navigation }) {
     </ScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

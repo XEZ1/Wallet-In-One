@@ -31,7 +31,7 @@ export default function CryptoWallet(props) {
               justifyContent: "center",
             }}
           >
-            <Text style={[styles.backArrow, {color: colors.text}]}>←</Text>
+            <Text style={[styles.backArrow, {color: colors.primary}]}>←</Text>
             <Text style={[styles.cryptoWalletTitle, {color: colors.text}]}>Crypto Wallets</Text>
           </View>
         </View>

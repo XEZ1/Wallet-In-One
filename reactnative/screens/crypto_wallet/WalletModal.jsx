@@ -24,7 +24,7 @@ export function WalletSelector(props) {
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 1, flexDirection: "column" }}>
           <Pressable onPress={() => props.navigation.navigate("Wallets")}>
-            <Text style={[styles.backArrow, {color: colors.text}]}>←</Text>
+            <Text style={[styles.backArrow, {color: colors.primary}]}>←</Text>
           </Pressable>
           <Text style={[styles.title, {color: colors.text}]}>Connect Wallet</Text>
         </View>
