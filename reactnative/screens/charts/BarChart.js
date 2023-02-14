@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Dimensions, Button, TouchableHighlight, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Alert, TouchableOpacity } from 'react-native';
 
 import { VictoryBar, VictoryChart, VictoryTheme, VictoryAxis } from "victory-native"
+
+import Icon from 'react-native-vector-icons/AntDesign';
 
 import data from './chartData.json'
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
@@ -35,9 +37,12 @@ export default function BarChartWallet({ navigation }) {
       <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
       <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
 
-      <TouchableHighlight style={styles.button}> 
-        <Button title="Switch Chart" onPress={() => navigation.navigate('Pie Chart')} />
-      </TouchableHighlight>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Pie Chart')}
+        testID="Switch Chart"
+      >
+        <Text style={styles.button}><Icon name='piechart' size={30}/> Switch Chart</Text>
+      </TouchableOpacity>
 
       <VictoryChart
         theme={ VictoryTheme.material}
@@ -88,5 +93,16 @@ const styles = StyleSheet.create({
       fontWeight: '900',
       fontSize: 25,
       textAlign: 'left',
-    }
+    },
+    button: {
+      backgroundColor: 'red',
+      color: 'black',
+      width: "60%",
+      borderRadius: 25,
+      textAlign: 'center',
+      fontWeight: 'bold',
+      padding: "2%",
+      fontSize:  30,
+      alignSelf: 'center',
+  }
   });

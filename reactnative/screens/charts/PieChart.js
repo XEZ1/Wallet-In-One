@@ -1,12 +1,14 @@
 
 import React from 'react';
-import { StyleSheet, Text, ScrollView, View, Dimensions, Button, TouchableHighlight, Alert } from 'react-native';
+import { StyleSheet, Text, ScrollView, Alert, TouchableOpacity } from 'react-native';
 
 
 import { VictoryPie } from "victory-native";
 
 import data from "./chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+
+import Icon from 'react-native-vector-icons/AntDesign';
 
 export default function PieChartWallet({ navigation }) {
 
@@ -36,9 +38,12 @@ export default function PieChartWallet({ navigation }) {
     >
       <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
       <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
-      <TouchableHighlight style={styles.button}> 
-        <Button title="Switch Chart" onPress={() => navigation.navigate('Bar Chart')} />
-      </TouchableHighlight>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Bar Chart')}
+        testID="Switch Chart"
+      >
+        <Text style={styles.button}><Icon name='barchart' size={30}/> Switch Chart</Text>
+      </TouchableOpacity>
       <VictoryPie
         data={data}
         padding={{left: 50, right: 85}}
@@ -71,6 +76,17 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     fontSize: 25,
     textAlign: 'left',
-  }
+  },
+  button: {
+    backgroundColor: 'red',
+    color: 'black',
+    width: "60%",
+    borderRadius: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    padding: "2%",
+    fontSize:  30,
+    alignSelf: 'center',
+}
 });
 
