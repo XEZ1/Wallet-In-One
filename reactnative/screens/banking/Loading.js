@@ -7,7 +7,7 @@ export default function Loading() {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
-        <ActivityIndicator />
+        <ActivityIndicator color={colors.primary} />
     </View>
   );
 }
