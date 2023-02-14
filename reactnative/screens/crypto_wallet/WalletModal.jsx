@@ -10,45 +10,49 @@ import {
 } from "react-native";
 import {createStackNavigator} from "@react-navigation/stack";
 import getCryptoIcon from "./icons/icon";
+import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 
 const Stack = createStackNavigator();
 
 export function WalletSelector(props) {
 
   const { connectWallet } = props.route.params;
+  const {dark, colors, setScheme} = useTheme();
 
   return(
-    <View style={{flex:1, backgroundColor: 'white', paddingTop: 30}}>
+    <View style={{flex:1, backgroundColor: colors.background, paddingTop: 30}}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 1, flexDirection: "column" }}>
           <Pressable onPress={() => props.navigation.navigate("Wallets")}>
-            <Text style={styles.backArrow}>←</Text>
+            <Text style={[styles.backArrow, {color: colors.primary}]}>←</Text>
           </Pressable>
-          <Text style={styles.title}>Connect Wallet</Text>
+          <Text style={[styles.title, {color: colors.text}]}>Connect Wallet</Text>
         </View>
       </View>
 
       <View style={styles.container}>
 
-        <TouchableWithoutFeedback onPress={() =>
-          props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Bitcoin', symbol: 'BTC'})} >
-          <View style={styles.cryptoItem}>
+        <TouchableWithoutFeedback 
+          onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Bitcoin', symbol: 'BTC'})}
+        >
+          <View style={[styles.cryptoItem, {backgroundColor: colors.primary}]}>
             <Image
               style={{width: 64, height: 64}}
               source={require(`./icons/BTC.png`)}
             />
-            <Text style={{fontWeight: "700", fontSize: 20}}>Bitcoin</Text>
+            <Text style={{fontWeight: "700", fontSize: 20, color: colors.text}}>Bitcoin</Text>
           </View>
         </TouchableWithoutFeedback>
 
-        <TouchableWithoutFeedback onPress={() =>
-          props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Dogecoin', symbol: 'DOGE'})}>
-          <View style={styles.cryptoItem}>
+        <TouchableWithoutFeedback
+          onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Dogecoin', symbol: 'DOGE'})}
+        >
+          <View style={[styles.cryptoItem, {backgroundColor: colors.primary}]}>
             <Image
               style={{width: 64, height: 64}}
               source={require(`./icons/DOGE.png`)}
             />
-            <Text style={{fontWeight: "700", fontSize: 20}}>Dogecoin</Text>
+            <Text style={{fontWeight: "700", fontSize: 20, color: colors.text}}>Dogecoin</Text>
           </View>
         </TouchableWithoutFeedback>
 
@@ -64,16 +68,17 @@ export function WalletSelector(props) {
 export function WalletConnector(props) {
   const [address, setAddress] = useState("");
   const { connectWallet, cryptocurrency, symbol } = props.route.params;
+  const {dark, colors, setScheme} = useTheme();
 
   return (
-    <View style={{flex:1, backgroundColor: 'white'}}>
+    <View style={{flex:1, backgroundColor: colors.background}}>
       <View style={{ paddingTop: 30 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View style={{ flex: 1, flexDirection: "column" }}>
             <Pressable onPress={() => props.navigation.navigate("Wallets")}>
-              <Text style={styles.backArrow}>✗</Text>
+              <Text style={[styles.backArrow, {color: colors.text}]}>✗</Text>
             </Pressable>
-            <Text style={styles.title}>Connect Wallet</Text>
+            <Text style={[styles.title, {color: colors.text}]}>Connect Wallet</Text>
           </View>
         </View>
 
@@ -82,13 +87,13 @@ export function WalletConnector(props) {
             style={{width: 100, height: 100}}
             source={getCryptoIcon(symbol)}
           />
-          <Text style={{fontWeight: "800", fontSize: 30, alignSelf: "center"}}>{cryptocurrency}</Text>
-
+          <Text style={{fontWeight: "800", fontSize: 30, alignSelf: "center", color: colors.text}}>{cryptocurrency}</Text>
         </View>
 
         <TextInput
-          style={styles.input}
+          style={[styles.input, {color: colors.text}, {backgroundColor: colors.background}]}
           onChangeText={(text) => setAddress(text)}
+          placeholderTextColor= {colors.text}
           placeholder="Wallet Address"
         />
 
@@ -117,11 +122,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   input: {
-    backgroundColor: "#e5e5e5",
-    borderRadius: 10,
-    marginHorizontal: 30,
-    marginVertical: 10,
+    height: 40,
+    width: '100%',
+    borderWidth: 0.5,
     padding: 10,
+    borderColor: 'gray',
+    borderRadius: 5,
+    marginTop: 5,
+    marginBottom: 5,
   },
   container: {
     flex: 1,
@@ -139,5 +147,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: 'center',
-  }
+  },
 });

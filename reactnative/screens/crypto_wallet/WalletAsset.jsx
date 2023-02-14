@@ -10,10 +10,12 @@ import {
 import { LineChart } from "react-native-chart-kit";
 import React, {useEffect, useState} from "react";
 import getCryptoIcon from "./icons/icon";
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 export default function WalletAsset(props) {
 
   const [cryptoValue, setCryptoValue] = useState(0);
+  const {dark, colors, setScheme} = useTheme();
 
   const getCryptoValue = async () => {
     await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${props.item.symbol}&tsyms=GBP`)
@@ -68,7 +70,7 @@ export default function WalletAsset(props) {
           { item: props.item, removeWallet: props.removeWallet })
       }
     >
-      <View style={styles.walletAsset}>
+      <View style={[styles.walletAsset, {backgroundColor: colors.primary}]}>
         <View
           style={{
             alignItems: "center",
@@ -90,14 +92,14 @@ export default function WalletAsset(props) {
           }}
         >
           <View style={{}}>
-            <Text style={{ fontSize: 25, fontWeight: "700" }}>
+            <Text style={{ fontSize: 25, fontWeight: "700", color: colors.background }}>
               {props.item.cryptocurrency}
             </Text>
-            <Text style={styles.walletAssetTitle}>
+            <Text style={[styles.walletAssetTitle, {color: colors.background}]}>
               {props.item.balance} {props.item.symbol}
             </Text>
 
-            <Text style={styles.walletAssetTitle}>£{cryptoValue * props.item.balance}</Text>
+            <Text style={[styles.walletAssetTitle, {color: colors.background}]}>£{cryptoValue * props.item.balance}</Text>
             {/* ▲ 0.00% */}
           </View>
 
@@ -132,7 +134,7 @@ export default function WalletAsset(props) {
 
 const styles = StyleSheet.create({
   walletAsset: {
-    backgroundColor: "#e5e5e5",
+    //backgroundColor: "#e5e5e5",
     padding: 10,
     marginVertical: 5,
     borderRadius: 10,

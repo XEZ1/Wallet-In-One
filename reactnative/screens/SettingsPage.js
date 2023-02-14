@@ -10,7 +10,7 @@ import {
 import { logout } from '../authentication';
 import { useContext } from 'react';
 import { userContext } from '../data';
-import { useTheme } from '../src/theme/ThemeProvider'
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
   
 export default function SettingsPage ({ navigation }) {
   const [notifications, setNotifications] = useState(false);
@@ -22,8 +22,8 @@ export default function SettingsPage ({ navigation }) {
     dark ? setScheme('light') : setScheme('dark');
   };
 
-
   return (
+    
     <ScrollView
       contentContainerStyle={{
         flexGrow : 1,
@@ -39,7 +39,7 @@ export default function SettingsPage ({ navigation }) {
         <Text style={[{color: colors.text}]}>Receive notifications</Text>
         <Switch
           trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={notifications ? "red" : "#f4f3f4"}
+          thumbColor={notifications ? colors.primary : "#f4f3f4"}
           onValueChange={toggleNotifications}
           value={notifications}
         />
@@ -50,7 +50,7 @@ export default function SettingsPage ({ navigation }) {
         <Text style={[{color: colors.text}]}>Dark Mode (Beta)</Text>
         <Switch
           trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={dark ? "red" : "#f4f3f4"}
+          thumbColor={dark ? colors.primary : "#f4f3f4"}
           onValueChange={toggleTheme}
           value={dark}
         />
@@ -76,6 +76,7 @@ export default function SettingsPage ({ navigation }) {
     </ScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
