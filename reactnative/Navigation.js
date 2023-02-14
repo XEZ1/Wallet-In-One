@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer,  DefaultTheme, DarkTheme} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -41,7 +41,7 @@ export default function Navigation() {
     useEffect(()=>{initAuthState(user, setUser);}, []);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={dark ? DarkTheme: DefaultTheme}>
       {user.signedIn ? (
         <Tab.Navigator
         initialRouteName='Pie Chart'
