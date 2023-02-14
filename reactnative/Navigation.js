@@ -25,6 +25,9 @@ import { userContext } from './data';
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
+import CryptoExchangesStackNavigator from './screens/cryptoExchanges/CryptoExchangesStackNavigator';
+import BinanceCredentials from './screens/cryptoExchanges/BinanceExchange';
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -77,6 +80,7 @@ export default function Navigation() {
               tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>C</Text>)
             }}
           />
+          <Tab.Screen name="Crypto Exchanges" component={CryptoExchangesStackNavigator} options={{ tabBarLabel: 'Crypto Exchanges', tabBarIcon: ({ color, size }) => (<Text>₿</Text>) }}/>
           <Tab.Screen name="Add Bank Account" component={AddBankScreen} options={{ tabBarLabel: 'Add Back Account', tabBarIcon: ({ color, size }) => (<Text>D</Text>) }}/>
           <Tab.Screen name="Bank Accounts" component={BankAccountsScreen} options={{ tabBarLabel: 'Bank Accounts', tabBarIcon: ({ color, size }) => (<Text>E</Text>) }}/>
 

@@ -1,7 +1,9 @@
+from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from crypto_exchanges.models import Token
 from crypto_exchanges.serializers import BinanceAccountSerializer
 from crypto_exchanges.services import BinanceFetcher
 
@@ -23,4 +25,20 @@ class BinanceView(APIView):
         account = service.get_account_data()
 
         # Return the account information to the user
-        return Response(account)
+        filtered_data = list(filter(self.filter_not_empty_balance, account['balances']))
+        #for coin in filtered_data:
+        #    token = Token()
+        #    token.account = binance_account
+        #    token.asset = coin['asset']
+        #    token.free = coin['free']
+        #    token.locked = coin['locked']
+        #    token.save()
+
+        #print(binance_account.token_set.all())
+        #print(f"{filtered_data=}")
+        return Response(filtered_data)
+
+    def filter_not_empty_balance(self, coin):
+        return float(coin['free']) > 0
+
+

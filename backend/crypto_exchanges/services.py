@@ -12,7 +12,8 @@ class BinanceFetcher:
     def get_account_data(self):
         endpoint = "https://api.binance.com/api"
         timestamp = f"timestamp={self.current_time()}"
-        request_url = f"{endpoint}/v3/account?{timestamp}&signature={hash(timestamp)}"
+        request_url = f"{endpoint}/v3/account?{timestamp}&signature={self.hash(timestamp)}"
+        print(request_url)
         headers = {'X-MBX-APIKEY': self.api_key}
         response = requests.get(url=request_url, headers=headers)
         return response.json()

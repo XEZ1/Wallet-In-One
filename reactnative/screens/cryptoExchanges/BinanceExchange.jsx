@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import * as SecureStore from "expo-secure-store";
 
-export default function BinanceCredentials({ navigation }) {
+export default function BinanceCredentials({ navigation}) {
   const [apiKey, setApiKey] = useState('');
   const [secretKey, setSecretKey] = useState('');
 
   const handleSubmit = async () => {
+    if (!apiKey || !secretKey) {
+      Alert.alert('Error', 'Please enter both API Key and Secret Key.');
+      return;
+    }
+
     try {
       const response = await fetch('http://10.0.2.2:8000/crypto-exchanges/binance', {
         method: 'POST',
@@ -17,6 +22,7 @@ export default function BinanceCredentials({ navigation }) {
         body: JSON.stringify({ api_key: apiKey, secret_key: secretKey }),
       });
       const data = await response.json();
+      console.log(data)
       Alert.alert('Success', 'Binance account data retrieved successfully!');
     } catch (error) {
       console.error(error);

@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions, Button, TouchableHighlight, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 
-import BinanceCredentials from './cryptoForlder/binanceExchange';
+import BinanceCredentials from './BinanceExchange';
 
 
 
 
 
 export default function CryptoExchanges({ navigation }) {
+
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <TouchableOpacity
-          onPress={() => navigation.navigate(BinanceCredentials)}
+          onPress={() =>  navigation.navigate('Binance')}
           style={{
             padding: 20,
             backgroundColor: 'lightgray',
@@ -23,7 +24,7 @@ export default function CryptoExchanges({ navigation }) {
           <Text style={{ textAlign: 'center' }}>Binance</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate('BinanceCredentials')}
+          onPress={() => navigation.navigate('Huobi')}
           style={{
             padding: 20,
             backgroundColor: 'lightgray',
@@ -35,7 +36,7 @@ export default function CryptoExchanges({ navigation }) {
           <Text style={{ textAlign: 'center' }}>Huobi</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate('BinanceCredentials')}
+          onPress={() => navigation.navigate('CoinList')}
           style={{
             padding: 20,
             backgroundColor: 'lightgray',
