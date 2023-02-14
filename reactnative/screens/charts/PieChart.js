@@ -26,6 +26,7 @@ export default function PieChartWallet({ navigation }) {
   });
 
   const list = data.map(val => val.x);
+  const colours = ["red", "blue", "green", "yellow"];
 
   return (
     <ScrollView
@@ -57,11 +58,11 @@ export default function PieChartWallet({ navigation }) {
             onPressIn: handlePressIn
           }
         }]}
-        colorScale={["red", "blue", "green", "yellow"]}
+        colorScale={colours}
       />
-      {list.map((num) => {
+      {list.map((val) => {
         return (
-        <Text key={num}>{num}</Text>
+        <Text style={{color: colours[list.indexOf(val)]}} key={val}>{val}</Text>
         );
       })}
     </ScrollView>
