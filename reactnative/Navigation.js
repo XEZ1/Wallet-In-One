@@ -6,7 +6,6 @@ import { useContext, useEffect } from 'react';
 import { Text } from 'react-native';
 
 import PieChartWallet from './screens/charts/PieChart';
-import BarChartWallet from './screens/charts/BarChart';
 
 // Screens
 import StartScreen from './screens/StartScreen';
@@ -28,7 +27,6 @@ import CryptoWalletStackNavigator from "./screens/crypto_wallet/CryptoWalletStac
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 import Icon from 'react-native-vector-icons/AntDesign';
-import { setStatusBarHidden } from 'expo-status-bar';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -102,10 +100,6 @@ export default function Navigation() {
               tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>E</Text>)
             }}
           />
-          <Tab.Screen
-            name='Bar Chart'
-            component={BarChartWallet}
-            />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>

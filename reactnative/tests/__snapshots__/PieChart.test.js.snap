@@ -39,7 +39,7 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
       style={
         Array [
           Object {
-            "fontSize": 25,
+            "fontSize": 40,
             "fontWeight": "900",
             "textAlign": "left",
           },
@@ -52,43 +52,6 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
       Amount: £
       345
     </Text>
-    <View
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        Object {
-          "opacity": 1,
-        }
-      }
-      testID="Switch Chart"
-    >
-      <Text
-        style={
-          Object {
-            "alignSelf": "center",
-            "backgroundColor": "red",
-            "borderRadius": 25,
-            "color": "black",
-            "fontSize": 30,
-            "fontWeight": "bold",
-            "padding": "2%",
-            "textAlign": "center",
-            "width": "60%",
-          }
-        }
-      >
-        <Text />
-         Switch Chart
-      </Text>
-    </View>
     <View
       className="VictoryContainer"
       onMoveShouldSetResponder={[Function]}
