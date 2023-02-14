@@ -12,6 +12,6 @@ class BinanceAccount(models.Model):
 
 class Token(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    asset = models.CharField(max_length=50)
+    asset = models.CharField(max_length=50, unique=True)
     free = models.FloatField()
     locked = models.FloatField()

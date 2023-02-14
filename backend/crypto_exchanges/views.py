@@ -19,7 +19,7 @@ class BinanceView(APIView):
         binance_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(BinanceAccount.objects.filter(api_key=self.request.data["api_key"], secret_key=self.request.data["secret_key"])):
+        if bool(BinanceAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"], secret_key=self.request.data["secret_key"])):
             raise Exception('This binance account has already been added')
 
         # Use the provided API key and secret key to connect to the Binance API
@@ -45,12 +45,19 @@ class BinanceView(APIView):
 
         # Create tokens
         for coin in filtered_data:
-            token = Token()
-            token.user = request.user
-            token.asset = coin['asset']
-            token.free = coin['free']
-            token.locked = coin['locked']
-            token.save()
+            # check if the coin already exists
+            if bool(Token.objects.filter(user=self.request.user, asset=coin['asset'])):
+                token = Token.objects.filter(user=self.request.user, asset=coin['asset'])
+                token.free += coin['free']
+                token.locked += coin['locked']
+
+            else:
+                token = Token()
+                token.user = request.user
+                token.asset = coin['asset']
+                token.free = coin['free']
+                token.locked = coin['locked']
+                token.save()
 
         #print(token)
         #print(f"{filtered_data=}")
