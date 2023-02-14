@@ -3,8 +3,11 @@ import { useRoute } from "@react-navigation/native";
 import React from "react";
 import {LineChart} from "react-native-chart-kit";
 import getCryptoIcon from "./icons/icon";
+import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 
 export default function WalletAssetDetail(props) {
+
+  const {dark, colors, setScheme} = useTheme();
   const route = useRoute();
   const { item, removeWallet } = props.route.params;
   const data = {
@@ -42,47 +45,48 @@ export default function WalletAssetDetail(props) {
   };
 
   return (
-    <ScrollView style={{flex: 1, backgroundColor: 'white', paddingHorizontal: 30}}>
+    <ScrollView style={{flex: 1, backgroundColor: colors.background, paddingHorizontal: 30}}>
 
       <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
-        <Text style={styles.backArrow}>←</Text>
+        <Text style={[styles.backArrow, {color: colors.primary}]}>←</Text>
       </TouchableWithoutFeedback>
 
-      <View style={styles.walletAsset}>
+      <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
         <Image
           style={styles.walletAssetImage}
           source={getCryptoIcon(item.symbol)}
         />
-        <Text style={{fontWeight: "800", fontSize: 40}}>{item.cryptocurrency} Wallet</Text>
+        <Text style={{fontWeight: "800", fontSize: 40, color: colors.text}}>{item.cryptocurrency} Wallet</Text>
         <Text />
 
-        <Text style={{fontWeight: "700"}}>Address</Text>
-        <Text>{item.address}</Text>
+        <Text style={{fontWeight: "700", color: colors.text}}>Address</Text>
+        <Text style={{color: colors.text}}>{item.address}</Text>
         <Text />
 
-        <Text style={{fontWeight: "700"}}>Balance</Text>
-        <Text>{item.value} {item.symbol}</Text>
+        <Text style={{fontWeight: "700", color: colors.text}}>Balance</Text>
+        <Text style={{color: colors.text}}>{item.value} {item.symbol}</Text>
         <Text />
 
-        <Text style={{fontWeight: "700"}}>Value</Text>
-        <Text>£0.00 ▲ 0.00% (Not Implemented)</Text>
+        <Text style={{fontWeight: "700", color: colors.text}}>Value</Text>
+        <Text style={{color: colors.text}}>£0.00 ▲ 0.00% (Not Implemented)</Text>
 
       </View>
 
-      <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10}}>Graph</Text>
-      <View style={styles.walletAsset}>
+      <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Graph</Text>
+      <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
         <LineChart
           data={data}
           width={Dimensions.get("window").width * 0.8}
           height={120}
-          style={{ paddingRight: 0, paddingBottom: 3 }}
+          style={{ paddingRight: 0, paddingBottom: 3}}
           chartConfig={{
             fillShadowGradientFrom: "#000",
-            fillShadowGradientTo: "#e5e5e5",
+            fillShadowGradientTo: colors.text,
             fillShadowGradientOpacity: 0,
             backgroundGradientFromOpacity: 0,
             backgroundGradientToOpacity: 0,
-            color: (opacity = 1) => `rgb(0, 0, 0)`,
+            //color: (opacity = 1) => `rgb(0, 0, 0)`,
+            color: (opacity = 1) => colors.primary,
             propsForDots: {
               r: "0",
             },
@@ -94,15 +98,15 @@ export default function WalletAssetDetail(props) {
         />
       </View>
 
-      <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10}}>Transactions</Text>
-      <View style={styles.walletAsset}>
-        <Text>⚠ Transaction history not implemented.</Text>
+      <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
+      <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
+        <Text style= {{color: colors.text}}>⚠ Transaction history not implemented.</Text>
       </View>
 
       <Pressable
         onPress={() => removeWallet(item.id).then(() => props.navigation.goBack())}
         style={{alignItems: "center", justifyContent: "center"}}>
-        <View style={styles.deleteButton}>
+        <View style={[styles.deleteButton, {backgroundColor: colors.primary}]}>
           <Text style={{color: "#fee2e2", fontWeight: "800"}}>Remove</Text>
         </View>
       </Pressable>
@@ -136,6 +140,5 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 30,
     borderRadius: 5,
-    backgroundColor: '#dc2626',
   }
 });
