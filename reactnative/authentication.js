@@ -1,7 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
-import { BACKEND_URL } from "@env";
+//import { BACKEND_URL } from "@env";
 
-export const api_url = BACKEND_URL
+export const api_url = 'http://10.0.2.2:8000'
 
 export const fetchAPI = async (url, body=null, headers={}, method = "POST") => {
     try{
