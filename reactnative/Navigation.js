@@ -62,14 +62,6 @@ export default function Navigation() {
               tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="home" size={30}/></Text>),
             }}
           />
-          <Tab.Screen
-            name='Bar Chart'
-            component={BarChartWallet}
-            options={{
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Bar chart</Text>),
-              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="barschart" size= {30}/></Text>)
-            }}
-          />
           {/* vvvvv Temporary (will be moved to account screen) vvvvv */}
           <Tab.Screen
             name="Crypto Wallets"
