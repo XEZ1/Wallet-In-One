@@ -81,7 +81,15 @@ class HuobiView(APIView):
         service = HuobiFetcher(self.request.data["api_key"], self.request.data["secret_key"])
 
         # Get the user's account information
-        data = service.get_account_data()
+
+        success = False
+        while not success:
+            try:
+                data = service.get_account_data()
+                success = True
+            except TypeError:
+                pass
+
 
         # Making sure the api and secret keys are valid before saving the binance account
         if 'status' in data and data['status'] == 'error':
