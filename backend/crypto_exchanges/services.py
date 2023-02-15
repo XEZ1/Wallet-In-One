@@ -34,13 +34,6 @@ class CoinListFetcher:
         self.secret_key = secret_key
 
     def get_account_data(self):
-        def sha265hmac(data, key):
-            h = hmac.new(key, data.encode('utf-8'), digestmod=hashlib.sha256)
-            return base64.b64encode(h.digest()).decode('utf-8')
-
-        def prehash(timestamp, method, path, body):
-            return timestamp + method.upper() + path + (body or '')
-
         endpoint = 'https://trade-api.coinlist.co'
         path = f'v1/accounts/{self.api_key}'
         timestamp = str(int(time.time()))
@@ -48,10 +41,10 @@ class CoinListFetcher:
         body = None
         method = 'POST'
 
-        prehashed = prehash(timestamp, method, path, body)
+        prehashed = self.prehash(timestamp, method, path, body)
         secret = base64.b64decode(self.secret_key)
-        signature = sha265hmac(prehashed, secret)
-        
+        signature = self.sha265hmac(prehashed, secret)
+
         headers = {
             'Content-Type': 'application/json',
             'CL-ACCESS-KEY': self.api_key,
@@ -62,8 +55,9 @@ class CoinListFetcher:
         response = requests.get(url=request_url, headers=headers)
         return response.json()
 
-    def hash(self, timestamp):
-        return hmac.new(self.secret_key.encode('utf-8'), timestamp.encode('utf-8'), hashlib.sha256).hexdigest()
+    def sha265hmac(self, data, key):
+        h = hmac.new(key, data.encode('utf-8'), digestmod=hashlib.sha256)
+        return base64.b64encode(h.digest()).decode('utf-8')
 
-    def current_time(self):
-        return round(time.time() * 1000)
+    def prehash(self, timestamp, method, path, body):
+        return timestamp + method.upper() + path + (body or '')
