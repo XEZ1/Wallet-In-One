@@ -1,6 +1,20 @@
 from rest_framework import serializers
 from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, CoinListAccount
 
+
+class TokenSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = Token
+        fields = ('user', 'asset', 'free', 'locked')
+
+    def create(self, validated_data):
+        token = Token.objects.create(
+            **validated_data,
+        )
+        token.save()
+        return token
+
 class BinanceAccountSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
@@ -21,7 +35,7 @@ class HuobiAccountSerializer(serializers.ModelSerializer):
         fields = ('user', 'api_key', 'secret_key', 'created_at')
 
     def create(self, validated_data):
-        Huobi_account = CoinListAccount.objects.create(
+        Huobi_account = HuobiAccount.objects.create(
             **validated_data,
         )
         Huobi_account.save()
@@ -40,15 +54,3 @@ class CoinListAccountSerializer(serializers.ModelSerializer):
         coinlist_account.save()
         return coinlist_account
 
-class TokenSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    class Meta:
-        model = Token
-        fields = ('user', 'asset', 'free', 'locked')
-
-    def create(self, validated_data):
-        token = Token.objects.create(
-            **validated_data,
-        )
-        token.save()
-        return token

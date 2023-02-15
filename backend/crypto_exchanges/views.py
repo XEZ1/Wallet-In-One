@@ -47,9 +47,9 @@ class BinanceView(APIView):
         for coin in filtered_data:
             # check if the coin already exists
             if bool(Token.objects.filter(user=self.request.user, asset=coin['asset'])):
-                token = Token.objects.filter(user=self.request.user, asset=coin['asset'])
-                token.free += coin['free']
-                token.locked += coin['locked']
+                token = Token.objects.get(user=self.request.user, asset=coin['asset'])
+                token.free += float(coin['free'])
+                token.locked += float(coin['locked'])
 
             else:
                 token = Token()
@@ -81,7 +81,9 @@ class HuobiView(APIView):
         service = HuobiFetcher(self.request.data["api_key"], self.request.data["secret_key"])
 
         # Get the user's account information
-
+        # For some reason only every 4th/5th request is successful, thus it was decided to add this awful construct.
+        # It is hard to explain why 4 requests fall while having the same input data, it seems like huobi API is
+        # Encountering some internal server issues.
         success = False
         while not success:
             try:
@@ -110,8 +112,8 @@ class HuobiView(APIView):
         for coin in filtered_data:
             # check if the coin already exists
             if bool(Token.objects.filter(user=self.request.user, asset=coin['currency'])):
-                token = Token.objects.filter(user=self.request.user, asset=coin['currency'])
-                token.free += coin['balance']
+                token = Token.objects.get(user=self.request.user, asset=coin['currency'])
+                token.free += float(coin['balance'])
 
             else:
                 token = Token()
@@ -162,9 +164,9 @@ class CoinListView(APIView):
         for coin in filtered_data:
             # check if the coin already exists
             if bool(Token.objects.filter(user=self.request.user, asset=coin['asset'])):
-                token = Token.objects.filter(user=self.request.user, asset=coin['asset'])
-                token.free += coin['free']
-                token.locked += coin['locked']
+                token = Token.objects.get(user=self.request.user, asset=coin['asset'])
+                token.free += float(coin['free'])
+                token.locked += float(coin['locked'])
 
             else:
                 token = Token()
