@@ -87,9 +87,8 @@ class HuobiFetcher:
 
             url = f"https://{base_uri}{endpoint}?{encoded_params}&Signature={signature}"
             response = requests.get(url)
-            data = response.json()['data']['list']
 
-            return data
+            return response.json()['data']['list']
 
 
 
