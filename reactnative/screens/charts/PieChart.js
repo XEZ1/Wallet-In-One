@@ -1,20 +1,22 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, ScrollView, Alert } from 'react-native';
 
 
 import { VictoryPie, VictoryBar, VictoryLabel } from "victory-native";
 
-import data from "./chartData.json"
+import fixture from "./chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 export default function PieChartWallet({ navigation }) {
 
   const {dark, colors, setScheme} = useTheme();
 
+  const [data, setNewData] = useState(fixture);
+
   const handlePressIn = (event, datapoint) => {
     const dataPoint = data[datapoint.index];
-    Alert.alert(dataPoint.x);
+    setNewData(fixture.filter((val) => val.x.match(dataPoint.x)));
   };
 
   let value = 0;
@@ -26,6 +28,26 @@ export default function PieChartWallet({ navigation }) {
   const colours = ["red", "blue", "green", "purple"];
 
   let spacing = list.length * 60;
+
+  if(value == 0){
+    return (
+      <ScrollView
+      contentContainerStyle={{
+        flexGrow : 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 20,
+        backgroundColor: colors.background,
+      }}
+      style={styles.container}
+    >
+        <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
+      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
+      <Text style={[styles.amountText, {color: colors.text}]}>Connect your Wallets to See your Funds!</Text>
+      </ScrollView>
+    );
+  }
+  else{
 
   return (
     <ScrollView
@@ -60,12 +82,19 @@ export default function PieChartWallet({ navigation }) {
         data={data}
         barWidth={18}
         padding={40}
-        labelComponent={<VictoryLabel dy={-20} x={30} style={{ fontSize: 25, fontWeight: '900' }} />}
         labels={({ datum }) => datum.x}
+        labelComponent={<VictoryLabel dy={-20} x={30} style={{ fontSize: 25, fontWeight: '900' }} />}
         height={spacing}
+        events={[{
+          target: "data",
+          eventHandlers: {
+            onPressIn: handlePressIn
+          }
+        }]}
       />
     </ScrollView>
   );
+}
 }
 
 const styles = StyleSheet.create({
