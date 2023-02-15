@@ -59,8 +59,6 @@ class BinanceView(APIView):
                 token.locked = coin['locked']
                 token.save()
 
-        #print(token)
-        #print(f"{filtered_data=}")
         return Response(filtered_data, status=200)
 
 
