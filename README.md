@@ -19,6 +19,9 @@ Django backend
 ReactNative Frontend
 SQL database (PostgresSQL/SQLite)
 
+## External resources and libraries used
+reactnative/src/theme folder code partly derived from Youtube video - https://www.youtube.com/watch?v=JD5scyA6v0c
+
 ## Features
 Multiple graphs to represent data with dynamic features.
 A dynamic pie chart that shows the current portfolio of a person with different categories. Once you click on a segment of the pie chart it should show another pie chart of a detailed description of the assets (such as particular stocks) within that category.
