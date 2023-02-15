@@ -1,20 +1,22 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, ScrollView, Alert } from 'react-native';
 
 
 import { VictoryPie, VictoryBar, VictoryLabel } from "victory-native";
 
-import data from "./chartData.json"
+import fixture from "./chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 export default function PieChartWallet({ navigation }) {
 
   const {dark, colors, setScheme} = useTheme();
 
+  const [data, setNewData] = useState(fixture);
+
   const handlePressIn = (event, datapoint) => {
     const dataPoint = data[datapoint.index];
-    Alert.alert(dataPoint.x);
+    setNewData(fixture.filter((val) => val.x.match(dataPoint.x)));
   };
 
   let value = 0;
