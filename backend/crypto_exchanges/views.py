@@ -85,18 +85,20 @@ class HuobiView(APIView):
         # It is hard to explain why 4 requests fall while having the same input data, it seems like huobi API is
         # Encountering some internal server issues.
         success = False
+        counter = 0
         while not success:
             try:
-                data = service.get_account_data()
+                self.data = service.get_account_data()
                 success = True
             except TypeError:
-                pass
-
+                counter += 1
+                if counter == 20:
+                    return Response({'error': 'Huobi API is currently experiencing some issues. Please try later.'}, status=503)
 
         # Making sure the api and secret keys are valid before saving the binance account
-        if 'status' in data and data['status'] == 'error':
+        if 'status' in self.data and self.data['status'] == 'error':
             # encountering an error while retrieving data
-            return Response({'error': data['err-msg']}, status=400)
+            return Response({'error': self.data['err-msg']}, status=400)
 
         # Save the binance account to the database
         huobi_account.save()
@@ -106,19 +108,19 @@ class HuobiView(APIView):
             return float(coin_to_check['balance']) > 0
 
         # Return the account information to the user
-        filtered_data = list(filter(filter_not_empty_balance, data))
+        filtered_data = list(filter(filter_not_empty_balance, self.data))
 
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=self.request.user, asset=coin['currency'])):
-                token = Token.objects.get(user=self.request.user, asset=coin['currency'])
+            if bool(Token.objects.filter(user=self.request.user, asset=coin['currency'].upper)):
+                token = Token.objects.get(user=self.request.user, asset=coin['currency'].upper)
                 token.free += float(coin['balance'])
 
             else:
                 token = Token()
                 token.user = self.request.user
-                token.asset = coin['currency']
+                token.asset = coin['currency'].upper()
                 token.free = coin['balance']
                 token.locked = coin['debt']
                 token.save()
