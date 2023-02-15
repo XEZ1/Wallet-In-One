@@ -59,6 +59,8 @@ class BinanceView(APIView):
                 token.locked = coin['locked']
                 token.save()
 
+        #print(token)
+        #print(f"{filtered_data=}")
         return Response(filtered_data, status=200)
 
 
@@ -82,9 +84,9 @@ class HuobiView(APIView):
         data = service.get_account_data()
 
         # Making sure the api and secret keys are valid before saving the binance account
-        if 'msg' in data:
+        if 'status' in data and data['status'] == 'error':
             # encountering an error while retrieving data
-            return Response({'error': data['msg']}, status=400)
+            return Response({'error': data['err-msg']}, status=400)
 
         # Save the binance account to the database
         huobi_account.save()
@@ -134,9 +136,9 @@ class CoinListView(APIView):
         data = service.get_account_data()
 
         # Making sure the api and secret keys are valid before saving the binance account
-        if 'status' in data and data['status'] == 'error':
+        if 'msg' in data:
             # encountering an error while retrieving data
-            return Response({'error': data['err-msg']}, status=400)
+            return Response({'error': data['msg']}, status=400)
 
         # Save the binance account to the database
         coinlist_account.save()
