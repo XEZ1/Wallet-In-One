@@ -36,7 +36,7 @@ export default function BinanceCredentials({ navigation}) {
         <Pressable onPress={() => navigation.navigate("Crypto exchanges")}>
           <Text style={styles.backArrow}>←</Text>
         </Pressable>
-        <Text style={{ fontSize: 30 }}>Binance Credentials:</Text>
+        <Text style={styles.title}>Binance Credentials:</Text>
       </View>
       <Text style={{ fontSize: 20, marginBottom: 10 }}>API Key:</Text>
       <TextInput 
@@ -63,6 +63,14 @@ export default function BinanceCredentials({ navigation}) {
 }
 
 const styles = StyleSheet.create({
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 25,
+  },
   backArrow: {
     fontWeight: "900",
     fontSize: 30,
