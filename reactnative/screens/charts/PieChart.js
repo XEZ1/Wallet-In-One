@@ -29,6 +29,26 @@ export default function PieChartWallet({ navigation }) {
 
   let spacing = list.length * 60;
 
+  if(value == 0){
+    return (
+      <ScrollView
+      contentContainerStyle={{
+        flexGrow : 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 20,
+        backgroundColor: colors.background,
+      }}
+      style={styles.container}
+    >
+        <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
+      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
+      <Text style={[styles.amountText, {color: colors.text}]}>Connect your Wallets to See your Funds!</Text>
+      </ScrollView>
+    );
+  }
+  else{
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -74,6 +94,7 @@ export default function PieChartWallet({ navigation }) {
       />
     </ScrollView>
   );
+}
 }
 
 const styles = StyleSheet.create({
