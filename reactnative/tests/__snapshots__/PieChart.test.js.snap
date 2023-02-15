@@ -373,6 +373,12 @@ A 0 0 0 0 1, 710, 209
                   "type": 0,
                 }
               }
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               propList={
                 Array [
                   "fill",
@@ -380,6 +386,7 @@ A 0 0 0 0 1, 710, 209
                   "strokeWidth",
                 ]
               }
+              responsible={true}
               stroke={
                 Object {
                   "payload": 4294901760,
@@ -404,6 +411,12 @@ A 0 0 0 0 1, 207.5, 155.66666666666669
                   "type": 0,
                 }
               }
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               propList={
                 Array [
                   "fill",
@@ -411,6 +424,7 @@ A 0 0 0 0 1, 207.5, 155.66666666666669
                   "strokeWidth",
                 ]
               }
+              responsible={true}
               stroke={
                 Object {
                   "payload": 4278190335,
@@ -435,6 +449,12 @@ A 0 0 0 0 1, 291.25, 102.33333333333334
                   "type": 0,
                 }
               }
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               propList={
                 Array [
                   "fill",
@@ -442,6 +462,7 @@ A 0 0 0 0 1, 291.25, 102.33333333333334
                   "strokeWidth",
                 ]
               }
+              responsible={true}
               stroke={
                 Object {
                   "payload": 4278222848,
@@ -466,6 +487,12 @@ A 0 0 0 0 1, 107, 49
                   "type": 0,
                 }
               }
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               propList={
                 Array [
                   "fill",
@@ -473,6 +500,7 @@ A 0 0 0 0 1, 107, 49
                   "strokeWidth",
                 ]
               }
+              responsible={true}
               stroke={
                 Object {
                   "payload": 4286578816,
