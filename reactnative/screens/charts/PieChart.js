@@ -62,9 +62,15 @@ export default function PieChartWallet({ navigation }) {
         data={data}
         barWidth={18}
         padding={40}
-        labelComponent={<VictoryLabel dy={-20} x={30} style={{ fontSize: 25, fontWeight: '900' }} />}
         labels={({ datum }) => datum.x}
+        labelComponent={<VictoryLabel dy={-20} x={30} style={{ fontSize: 25, fontWeight: '900' }} />}
         height={spacing}
+        events={[{
+          target: "data",
+          eventHandlers: {
+            onPressIn: handlePressIn
+          }
+        }]}
       />
     </ScrollView>
   );
