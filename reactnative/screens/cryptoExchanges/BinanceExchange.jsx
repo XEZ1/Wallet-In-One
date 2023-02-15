@@ -22,8 +22,13 @@ export default function BinanceCredentials({ navigation }) {
         body: JSON.stringify({ api_key: apiKey, secret_key: secretKey }),
       });
       const data = await response.json();
-      console.log(data)
-      Alert.alert('Success', 'Binance account data retrieved successfully!');
+      const statusCode = response.status;
+      console.log(statusCode)
+      if (statusCode == 200) {
+        Alert.alert('Success', 'Binance account data retrieved successfully!');
+      } else {
+        Alert.alert('Error', data["error"]);
+      }
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'An error occurred while retrieving Binance account data.');

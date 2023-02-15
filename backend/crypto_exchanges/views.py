@@ -20,7 +20,7 @@ class BinanceView(APIView):
 
         # Checking if the account has already been registered
         if bool(BinanceAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"], secret_key=self.request.data["secret_key"])):
-            raise Exception('This binance account has already been added')
+            return Response({'error': 'This binance account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Binance API
         service = BinanceFetcher(self.request.data["api_key"], self.request.data["secret_key"])
@@ -31,7 +31,7 @@ class BinanceView(APIView):
         # Making sure the api and secret keys are valid before saving the binance account
         if 'msg' in data:
             # encountering an error while retrieving data
-            raise Exception(data['msg'])
+            return Response({'error': data['msg']}, status=400)
 
         # Save the binance account to the database
         binance_account.save()
@@ -61,7 +61,7 @@ class BinanceView(APIView):
 
         #print(token)
         #print(f"{filtered_data=}")
-        return Response(filtered_data)
+        return Response(filtered_data, status=200)
 
 
 
@@ -75,7 +75,7 @@ class HuobiView(APIView):
 
         # Checking if the account has already been registered
         if bool(HuobiAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"], secret_key=self.request.data["secret_key"])):
-            raise Exception('This huobi account has already been added')
+            return Response({'error': 'This huobi account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Binance API
         service = HuobiFetcher(self.request.data["api_key"], self.request.data["secret_key"])
@@ -86,7 +86,7 @@ class HuobiView(APIView):
         # Making sure the api and secret keys are valid before saving the binance account
         if 'msg' in data:
             # encountering an error while retrieving data
-            raise Exception(data['msg'])
+            return Response({'error': data['msg']}, status=400)
 
         # Save the binance account to the database
         huobi_account.save()
@@ -113,7 +113,7 @@ class HuobiView(APIView):
                 token.locked = coin['debt']
                 token.save()
 
-        return Response(filtered_data)
+        return Response(filtered_data, status=200)
 
 
 
@@ -127,7 +127,7 @@ class CoinListView(APIView):
 
         # Checking if the account has already been registered
         if bool(CoinListAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"], secret_key=self.request.data["secret_key"])):
-            raise Exception('This coinlist account has already been added')
+            return Response({'error': 'This coinlist account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Binance API
         service = CoinListFetcher(self.request.data["api_key"], self.request.data["secret_key"])
@@ -138,7 +138,7 @@ class CoinListView(APIView):
         # Making sure the api and secret keys are valid before saving the binance account
         if 'msg' in data:
             # encountering an error while retrieving data
-            raise Exception(data['msg'])
+            return Response({'error': data['msg']}, status=400)
 
         # Save the binance account to the database
         coinlist_account.save()
@@ -166,4 +166,4 @@ class CoinListView(APIView):
                 token.locked = coin['locked']
                 token.save()
 
-        return Response(filtered_data)
+        return Response(filtered_data, status=200)
