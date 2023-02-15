@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import BinanceCredentials from "./BinanceExchange";
 import HuobiCredentials from "./HuobiExchange";
+import CoinListCredentials from "./CoinlistExchange";
 import CryptoExchanges from "./CryptoExchanges";
 
 import { LogBox } from 'react-native';
@@ -22,7 +23,7 @@ export default function CryptoExchangesStackNavigator( props ) {
       <Stack.Screen name="Crypto exchanges" component={CryptoExchanges} />
       <Stack.Screen name="Binance" component={BinanceCredentials} />
       <Stack.Screen name="Huobi" component={HuobiCredentials} />
-      <Stack.Screen name="CoinList" component={BinanceCredentials} />
+      <Stack.Screen name="CoinList" component={CoinListCredentials} />
     </Stack.Navigator>
   );
 }

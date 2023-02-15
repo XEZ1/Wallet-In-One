@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Pressable, View, Text, TextInput, Button, Alert } from 'react-native';
 import * as SecureStore from "expo-secure-store";
 
-export default function HuobiCredentials({ navigation }) {
+export default function CoinListCredentials({ navigation }) {
   const [apiKey, setApiKey] = useState('');
   const [secretKey, setSecretKey] = useState('');
 
@@ -13,7 +13,7 @@ export default function HuobiCredentials({ navigation }) {
     }
 
     try {
-      const response = await fetch('http://10.0.2.2:8000/crypto-exchanges/huobi', {
+      const response = await fetch('http://10.0.2.2:8000/crypto-exchanges/coinlist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -23,10 +23,10 @@ export default function HuobiCredentials({ navigation }) {
       });
       const data = await response.json();
       console.log(data)
-      Alert.alert('Success', 'Huobi account data retrieved successfully!');
+      Alert.alert('Success', 'Coinlist account data retrieved successfully!');
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'An error occurred while retrieving Huobi account data.');
+      Alert.alert('Error', 'An error occurred while retrieving Coinlist account data.');
     }
   };
 
@@ -36,7 +36,7 @@ export default function HuobiCredentials({ navigation }) {
         <Pressable onPress={() => navigation.navigate("Crypto exchanges")}>
           <Text style={styles.backArrow}>←</Text>
         </Pressable>
-        <Text style={styles.title}>Huobi Credentials:</Text>
+        <Text style={styles.title}>Coinlist Credentials:</Text>
       </View>
       <Text style={{ fontSize: 20, marginBottom: 10 }}>API Key:</Text>
       <TextInput 

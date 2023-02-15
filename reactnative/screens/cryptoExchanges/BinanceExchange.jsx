@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Pressable, View, Text, TextInput, Button, Alert } from 'react-native';
 import * as SecureStore from "expo-secure-store";
 
-export default function BinanceCredentials({ navigation}) {
+export default function BinanceCredentials({ navigation }) {
   const [apiKey, setApiKey] = useState('');
   const [secretKey, setSecretKey] = useState('');
 
