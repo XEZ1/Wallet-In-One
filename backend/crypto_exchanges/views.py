@@ -81,6 +81,7 @@ class HuobiView(APIView):
         # Use the provided API key and secret key to connect to the Binance API
         service = HuobiFetcher(self.request.data["api_key"], self.request.data["secret_key"])
 
+        # Making sure the api and secret keys are valid before saving the binance account and
         # Get the user's account information
         # For some reason only every 4th/5th request is successful, thus it was decided to add this awful construct.
         # It is hard to explain why 4 requests fall while having the same input data, it seems like huobi API is
@@ -89,17 +90,30 @@ class HuobiView(APIView):
         counter = 0
         while not success:
             try:
-                data = service.get_account_data()
-                success = True
+                account_ids = service.get_account_IDs()
+                if account_ids['status'] == 'ok':
+                    success = True
+                # Internal huobi_api error
+                elif account_ids['status'] == 'error' and account_ids['err-msg'] == 'Signature not valid: Verification failure [校验失败]':
+                    raise TypeError
+                else:
+                    return Response({'error': account_ids['err-msg']}, status=400)
             except TypeError:
                 counter += 1
                 if counter == 20:
                     return Response({'error': 'Huobi API is currently experiencing some issues. Please try later.'}, status=503)
 
-        # Making sure the api and secret keys are valid before saving the binance account
-        if 'status' in data and data['status'] == 'error':
-            # encountering an error while retrieving data
-            return Response({'error': data['err-msg']}, status=400)
+        # Now we have account IDs so we can retrieve the data from them
+        # Get the user's account information
+        # For some reason only every 4th/5th request is successful, thus it was decided to add this awful construct.
+        # It is hard to explain why 4 requests fall while having the same input data, it seems like huobi API is
+        # Encountering some internal server issues.
+        success = False
+        while not success:
+            try:
+                data = service.get_account_data()
+            except TypeError:
+                pass
 
         # Save the binance account to the database
         huobi_account.save()
@@ -109,7 +123,7 @@ class HuobiView(APIView):
             return float(coin_to_check['balance']) > 0
 
         # Return the account information to the user
-        filtered_data = list(filter(filter_not_empty_balance, self.data))
+        filtered_data = list(filter(filter_not_empty_balance, data))
 
         # Create tokens
         for coin in filtered_data:

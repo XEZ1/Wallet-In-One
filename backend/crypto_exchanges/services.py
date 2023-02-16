@@ -9,6 +9,9 @@ from urllib.parse import urlencode
 from datetime import datetime, timezone
 from urllib.parse import quote_plus
 
+from requests import Response
+
+
 class BinanceFetcher:
 
     def __init__(self, api_key, secret_key):
@@ -37,7 +40,7 @@ class HuobiFetcher:
         self.api_key = api_key
         self.secret_key = secret_key
 
-    def get_account_data(self):
+    def get_account_IDs(self):
         # Get account IDs
         timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
         params = {
@@ -60,8 +63,10 @@ class HuobiFetcher:
 
         url = f"https://{base_uri}{endpoint}?{encoded_params}&Signature={signature}"
         response = requests.get(url)
-        account_ids = [account['id'] for account in response.json()['data']]
+        return response.json()
 
+    def get_account_data(self, response):
+        account_ids = [account['id'] for account in response.json()['data']]
         # Get account balances
         balances = {}
         for account_id in account_ids:
