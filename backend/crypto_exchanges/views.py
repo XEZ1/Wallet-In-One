@@ -150,9 +150,9 @@ class GateioView(APIView):
         data = service.get_account_data()
 
         # Making sure the api and secret keys are valid before saving the binance account
-        if 'msg' in data:
+        if 'label' and 'message' in data:
             # encountering an error while retrieving data
-            return Response({'error': data['msg']}, status=400)
+            return Response({'error': data['message']}, status=400)
 
         # Save the binance account to the database
         gateio_account.save()
