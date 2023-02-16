@@ -8,13 +8,13 @@ import { Text } from 'react-native';
 import HomePage from './screens/charts/HomePage';
 
 // Screens
-import StartScreen from './screens/StartScreen';
-import SignUpScreen from './screens/SignUpScreen';
+import StartScreen from './screens/pre_logged_in/StartScreen';
+import SignUpScreen from './screens/pre_logged_in/SignUpScreen';
 import LoginScreen from './screens/LoginScreen';
 
 import SettingsPage from './screens/SettingsPage';
-import AboutUsScreen from './screens/AboutUsScreen';
-import DeveloperInfoScreen from './screens/DeveloperInfoScreen';
+import AboutUsScreen from './screens/pre_logged_in/AboutUsScreen';
+import DeveloperInfoScreen from './screens/pre_logged_in/DeveloperInfoScreen';
 
 import AddBankScreen from './screens/banking/AddBankScreen'
 import BankAccountsScreen from './screens/banking/BankAccountsScreen'

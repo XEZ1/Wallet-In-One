@@ -2,9 +2,9 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView, Button, TextInput, Alert } from 'react-native';
 
 import { useContext, useState } from 'react';
-import { userContext } from '../data';
+import { userContext } from '../../data';
 
-import { api_url, login } from '../authentication';
+import { api_url, login } from '../../authentication';
 
 export default function SignUpScreen({ navigation }) {
 

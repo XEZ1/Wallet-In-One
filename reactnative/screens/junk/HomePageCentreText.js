@@ -5,7 +5,7 @@ import { StyleSheet, Text, ScrollView, Alert } from 'react-native';
 
 import { VictoryPie, VictoryBar, VictoryLabel } from "victory-native";
 
-import fixture from "./chartData.json"
+import fixture from "../charts/chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 import Svg from 'react-native-svg'

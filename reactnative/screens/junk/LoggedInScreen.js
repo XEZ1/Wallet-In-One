@@ -2,11 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, ScrollView, View, Button } from 'react-native';
 
 import { useContext } from 'react';
-import { userContext } from '../data';
+import { userContext } from '../../data';
 
-import { logout } from '../authentication';
+import { logout } from '../../authentication';
 
-import { useTheme } from '../src/theme/ThemeProvider'
+import { useTheme } from '../../src/theme/ThemeProvider'
 import { TouchableOpacity } from 'react-native';
 
 export default function LoggedInScreen({ navigation }) {
