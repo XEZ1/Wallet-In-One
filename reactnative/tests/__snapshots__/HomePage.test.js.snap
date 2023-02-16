@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<PieChartWallet /> snapshot test 1`] = `
+exports[`<HomePage /> snapshot test 1`] = `
 <RCTScrollView
   contentContainerStyle={
     Object {
@@ -38,11 +38,7 @@ exports[`<PieChartWallet /> snapshot test 1`] = `
     <Text
       style={
         Array [
-          Object {
-            "fontSize": 40,
-            "fontWeight": "900",
-            "textAlign": "left",
-          },
+          undefined,
           Object {
             "color": "black",
           },
@@ -527,7 +523,7 @@ A 0 0 0 0 1, 107, 49
               }
               y={
                 Array [
-                  "188.875",
+                  "187.81",
                 ]
               }
             >
@@ -545,14 +541,14 @@ A 0 0 0 0 1, 107, 49
                 }
                 fill={
                   Object {
-                    "payload": 4280624421,
+                    "payload": 4278190080,
                     "type": 0,
                   }
                 }
                 font={
                   Object {
                     "fontFamily": "Gill Sans",
-                    "fontSize": "25",
+                    "fontSize": "22",
                     "fontWeight": "900",
                     "textAnchor": "start",
                   }
@@ -589,7 +585,7 @@ A 0 0 0 0 1, 107, 49
               }
               y={
                 Array [
-                  "135.54166666666669",
+                  "134.4766666666667",
                 ]
               }
             >
@@ -607,14 +603,14 @@ A 0 0 0 0 1, 107, 49
                 }
                 fill={
                   Object {
-                    "payload": 4280624421,
+                    "payload": 4278190080,
                     "type": 0,
                   }
                 }
                 font={
                   Object {
                     "fontFamily": "Gill Sans",
-                    "fontSize": "25",
+                    "fontSize": "22",
                     "fontWeight": "900",
                     "textAnchor": "start",
                   }
@@ -651,7 +647,7 @@ A 0 0 0 0 1, 107, 49
               }
               y={
                 Array [
-                  "82.20833333333334",
+                  "81.14333333333335",
                 ]
               }
             >
@@ -669,14 +665,14 @@ A 0 0 0 0 1, 107, 49
                 }
                 fill={
                   Object {
-                    "payload": 4280624421,
+                    "payload": 4278190080,
                     "type": 0,
                   }
                 }
                 font={
                   Object {
                     "fontFamily": "Gill Sans",
-                    "fontSize": "25",
+                    "fontSize": "22",
                     "fontWeight": "900",
                     "textAnchor": "start",
                   }
@@ -713,7 +709,7 @@ A 0 0 0 0 1, 107, 49
               }
               y={
                 Array [
-                  "28.875",
+                  "27.81",
                 ]
               }
             >
@@ -731,14 +727,14 @@ A 0 0 0 0 1, 107, 49
                 }
                 fill={
                   Object {
-                    "payload": 4280624421,
+                    "payload": 4278190080,
                     "type": 0,
                   }
                 }
                 font={
                   Object {
                     "fontFamily": "Gill Sans",
-                    "fontSize": "25",
+                    "fontSize": "22",
                     "fontWeight": "900",
                     "textAnchor": "start",
                   }
