@@ -50,6 +50,7 @@ class BinanceView(APIView):
                 token = Token.objects.get(user=self.request.user, asset=coin['asset'])
                 token.free += float(coin['free'])
                 token.locked += float(coin['locked'])
+                token.save()
 
             else:
                 token = Token()
@@ -116,6 +117,7 @@ class HuobiView(APIView):
             if bool(Token.objects.filter(user=self.request.user, asset=coin['currency'].upper)):
                 token = Token.objects.get(user=self.request.user, asset=coin['currency'].upper)
                 token.free += float(coin['balance'])
+                token.save()
 
             else:
                 token = Token()
@@ -169,6 +171,7 @@ class GateioView(APIView):
                 token = Token.objects.get(user=self.request.user, asset=coin['currency'])
                 token.free += float(coin['available'])
                 token.locked += float(coin['locked'])
+                token.save()
 
             else:
                 token = Token()
@@ -222,6 +225,7 @@ class CoinListView(APIView):
                 token = Token.objects.get(user=self.request.user, asset=coin['asset'])
                 token.free += float(coin['free'])
                 token.locked += float(coin['locked'])
+                token.save()
 
             else:
                 token = Token()
