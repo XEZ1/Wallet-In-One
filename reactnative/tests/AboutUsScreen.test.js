@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import AboutUsScreen from '../screens/AboutUsScreen';
+import AboutUsScreen from '../screens/pre_logged_in/AboutUsScreen';
 
 describe('<AboutUsScreen/>', () => {
     it('developer team button test', () => {
