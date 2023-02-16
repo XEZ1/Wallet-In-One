@@ -11,7 +11,7 @@ from crypto_exchanges.services import BinanceFetcher, HuobiFetcher, GateioFetche
 # Create your views here.
 
 class BinanceView(APIView):
-    def get(self, request):
+    def post(self, request):
         # Pass the data to the serialiser so that the binance account can be created
         binance_account = BinanceAccountSerializer(data=request.data, context={'request': request})
 
@@ -67,7 +67,7 @@ class BinanceView(APIView):
 
 
 class HuobiView(APIView):
-    def get(self, request):
+    def post(self, request):
         # Pass the data to the serialiser so that the binance account can be created
         huobi_account = HuobiAccountSerializer(data=request.data, context={'request': request})
 
@@ -132,7 +132,7 @@ class HuobiView(APIView):
 
 
 class GateioView(APIView):
-    def get(self, request):
+    def post(self, request):
         # Pass the data to the serialiser so that the binance account can be created
         gateio_account = GateioAccountSerializer(data=request.data, context={'request': request})
 
@@ -141,7 +141,7 @@ class GateioView(APIView):
 
         # Checking if the account has already been registered
         if bool(GateioAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"], secret_key=self.request.data["secret_key"])):
-            return Response({'error': 'This binance account has already been added'}, status=400)
+            return Response({'error': 'This gateio account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Binance API
         service = GateioFetcher(self.request.data["api_key"], self.request.data["secret_key"])
@@ -186,7 +186,7 @@ class GateioView(APIView):
 
 
 class CoinListView(APIView):
-    def get(self, request):
+    def post(self, request):
         # Pass the data to the serialiser so that the binance account can be created
         coinlist_account = CoinListAccountSerializer(data=request.data, context={'request': request})
 
