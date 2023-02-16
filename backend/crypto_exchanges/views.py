@@ -3,9 +3,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, CoinListAccount
-from crypto_exchanges.serializers import TokenSerializer, BinanceAccountSerializer, HuobiAccountSerializer, CoinListAccountSerializer
-from crypto_exchanges.services import BinanceFetcher, HuobiFetcher, CoinListFetcher
+from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, GateioAccount, CoinListAccount
+from crypto_exchanges.serializers import TokenSerializer, BinanceAccountSerializer, HuobiAccountSerializer, GateioAccountSerializer, CoinListAccountSerializer
+from crypto_exchanges.services import BinanceFetcher, HuobiFetcher, GateioFetcher, CoinListFetcher
 
 
 # Create your views here.
@@ -123,6 +123,59 @@ class HuobiView(APIView):
                 token.asset = coin['currency'].upper()
                 token.free = coin['balance']
                 token.locked = coin['debt']
+                token.save()
+
+        return Response(filtered_data, status=200)
+
+
+
+class GateioView(APIView):
+    def post(self, request):
+        # Pass the data to the serialiser so that the binance account can be created
+        gateio_account = GateioAccountSerializer(data=request.data, context={'request': request})
+
+        # Validate data
+        gateio_account.is_valid(raise_exception=True)
+
+        # Checking if the account has already been registered
+        if bool(GateioAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"], secret_key=self.request.data["secret_key"])):
+            return Response({'error': 'This binance account has already been added'}, status=400)
+
+        # Use the provided API key and secret key to connect to the Binance API
+        service = GateioFetcher(self.request.data["api_key"], self.request.data["secret_key"])
+
+        # Get the user's account information
+        data = service.get_account_data()
+
+        # Making sure the api and secret keys are valid before saving the binance account
+        if 'msg' in data:
+            # encountering an error while retrieving data
+            return Response({'error': data['msg']}, status=400)
+
+        # Save the binance account to the database
+        gateio_account.save()
+
+        # Inner function for filtering data
+        def filter_not_empty_balance(coin_to_check):
+            return float(coin_to_check['available']) > 0
+
+        # Return the account information to the user
+        filtered_data = list(filter(filter_not_empty_balance, data))
+
+        # Create tokens
+        for coin in filtered_data:
+            # check if the coin already exists
+            if bool(Token.objects.filter(user=self.request.user, asset=coin['currency'])):
+                token = Token.objects.get(user=self.request.user, asset=coin['currency'])
+                token.free += float(coin['available'])
+                token.locked += float(coin['locked'])
+
+            else:
+                token = Token()
+                token.user = self.request.user
+                token.asset = coin['currency']
+                token.free = coin['available']
+                token.locked = coin['locked']
                 token.save()
 
         return Response(filtered_data, status=200)
