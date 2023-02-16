@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import BinanceCredentials from './BinanceExchange';
 
 export default function CryptoExchanges({ navigation }) {
   return (
@@ -32,6 +31,12 @@ export default function CryptoExchanges({ navigation }) {
         style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
       >
         <Text style={styles.buttonText}>Huobi</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Gateio')}
+        style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+      >
+        <Text style={styles.buttonText}>Gateio</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigation.navigate('CoinList')}
