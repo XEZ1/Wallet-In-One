@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, CoinListAccount
+from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, GateioAccount, CoinListAccount
 
 
 class TokenSerializer(serializers.ModelSerializer):
@@ -41,6 +41,20 @@ class HuobiAccountSerializer(serializers.ModelSerializer):
         Huobi_account.save()
         return Huobi_account
 
+class GateioAccountSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = GateioAccount
+        fields = ('user', 'api_key', 'secret_key', 'created_at')
+
+    def create(self, validated_data):
+        gateio_account = GateioAccount.objects.create(
+            **validated_data,
+        )
+        )
+        gateio_account.save()
+        return gateio_account
+
 class CoinListAccountSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
@@ -53,4 +67,3 @@ class CoinListAccountSerializer(serializers.ModelSerializer):
         )
         coinlist_account.save()
         return coinlist_account
-
