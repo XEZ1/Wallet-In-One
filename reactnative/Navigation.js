@@ -5,17 +5,16 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useContext, useEffect } from 'react';
 import { Text } from 'react-native';
 
-import PieChartWallet from './screens/charts/PieChart';
+import HomePage from './screens/charts/HomePage';
 
 // Screens
-import StartScreen from './screens/StartScreen';
-import SignUpScreen from './screens/SignUpScreen';
-import LoggedInScreen from './screens/LoggedInScreen';
+import StartScreen from './screens/pre_logged_in/StartScreen';
+import SignUpScreen from './screens/pre_logged_in/SignUpScreen';
 import LoginScreen from './screens/LoginScreen';
 
 import SettingsPage from './screens/SettingsPage';
-import AboutUsScreen from './screens/AboutUsScreen';
-import DeveloperInfoScreen from './screens/DeveloperInfoScreen';
+import AboutUsScreen from './screens/pre_logged_in/AboutUsScreen';
+import DeveloperInfoScreen from './screens/pre_logged_in/DeveloperInfoScreen';
 
 import AddBankScreen from './screens/banking/AddBankScreen'
 import BankAccountsScreen from './screens/banking/BankAccountsScreen'
@@ -45,7 +44,7 @@ export default function Navigation() {
     <NavigationContainer theme={dark ? DarkTheme: DefaultTheme}>
       {user.signedIn ? (
         <Tab.Navigator
-          initialRouteName='Pie Chart'
+          initialRouteName='Home Page'
           screenOptions={
           {
             headerStyle: {backgroundColor: colors.background},
@@ -55,8 +54,8 @@ export default function Navigation() {
           }}
         >
           <Tab.Screen
-            name='Pie Chart'
-            component={PieChartWallet}
+            name='Home Page'
+            component={HomePage}
             options={{
               //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Home</Text>),
               tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="home" size={30}/></Text>),
@@ -94,14 +93,6 @@ export default function Navigation() {
             options={{
               //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Settings</Text>),
               tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="setting" size={30}/></Text>)
-            }}
-          />
-          <Tab.Screen
-            name="1"
-            component={LoggedInScreen}
-            options={{
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Screen 1</Text>),
-              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="logout" size={30}/></Text>)
             }}
           />
         </Tab.Navigator>
