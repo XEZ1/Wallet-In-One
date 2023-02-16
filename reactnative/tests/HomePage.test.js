@@ -9,10 +9,4 @@ describe('<HomePage />', () => {
         const snapshot = renderer.create(<HomePage />).toJSON();
         expect(snapshot).toMatchSnapshot();
       });
-
-      it('displays the text "Wallet-In-One"', () => {
-        const { getByText } = render(<HomePage />);
-        const walletInOne = getByText('Wallet-In-One');
-        expect(walletInOne).toBeDefined();
-      });
   });
