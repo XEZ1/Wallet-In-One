@@ -21,6 +21,12 @@ class HuobiAccount(models.Model):
     api_key = models.CharField(max_length=255)
     secret_key = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+class GateioAccount(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    api_key = models.CharField(max_length=255)
+    secret_key = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class CoinListAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
