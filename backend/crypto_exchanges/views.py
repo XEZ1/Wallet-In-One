@@ -11,7 +11,7 @@ from crypto_exchanges.services import BinanceFetcher, HuobiFetcher, GateioFetche
 # Create your views here.
 
 class BinanceView(APIView):
-    def post(self, request):
+    def get(self, request):
         # Pass the data to the serialiser so that the binance account can be created
         binance_account = BinanceAccountSerializer(data=request.data, context={'request': request})
 
@@ -67,7 +67,7 @@ class BinanceView(APIView):
 
 
 class HuobiView(APIView):
-    def post(self, request):
+    def get(self, request):
         # Pass the data to the serialiser so that the binance account can be created
         huobi_account = HuobiAccountSerializer(data=request.data, context={'request': request})
 
@@ -132,7 +132,7 @@ class HuobiView(APIView):
 
 
 class GateioView(APIView):
-    def post(self, request):
+    def get(self, request):
         # Pass the data to the serialiser so that the binance account can be created
         gateio_account = GateioAccountSerializer(data=request.data, context={'request': request})
 
@@ -186,7 +186,7 @@ class GateioView(APIView):
 
 
 class CoinListView(APIView):
-    def post(self, request):
+    def get(self, request):
         # Pass the data to the serialiser so that the binance account can be created
         coinlist_account = CoinListAccountSerializer(data=request.data, context={'request': request})
 

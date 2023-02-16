@@ -139,7 +139,7 @@ class CoinListFetcher:
         timestamp = str(int(time.time()))
         request_url = f"{endpoint}/v1/accounts/{self.api_key}"
         body = None
-        method = 'POST'
+        method = 'GET'
 
         prehashed = self.prehash(timestamp, method, path, body)
         secret = base64.b64decode(self.secret_key)
