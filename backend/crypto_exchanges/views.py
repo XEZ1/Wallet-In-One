@@ -89,7 +89,7 @@ class HuobiView(APIView):
         counter = 0
         while not success:
             try:
-                self.data = service.get_account_data()
+                data = service.get_account_data()
                 success = True
             except TypeError:
                 counter += 1
@@ -97,9 +97,9 @@ class HuobiView(APIView):
                     return Response({'error': 'Huobi API is currently experiencing some issues. Please try later.'}, status=503)
 
         # Making sure the api and secret keys are valid before saving the binance account
-        if 'status' in self.data and self.data['status'] == 'error':
+        if 'status' in data and data['status'] == 'error':
             # encountering an error while retrieving data
-            return Response({'error': self.data['err-msg']}, status=400)
+            return Response({'error': data['err-msg']}, status=400)
 
         # Save the binance account to the database
         huobi_account.save()
