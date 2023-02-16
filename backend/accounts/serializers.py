@@ -65,3 +65,24 @@ class SignUpSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+    
+
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    """ Serializer enabling users to change passwords """
+
+    new_password = serializers.CharField(
+        label='New Password',
+        write_only=True,
+        required=True,
+        validators=[
+            validate_password,
+            RegexValidator(
+                regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$&+,:;=?@#|<>.^*()%!-]).*$',
+                message='Password must contain an uppercase character, a lowercase character, a number and a special character.')
+            ]
+        )
+    password_confirmation = serializers.CharField(
+        label='Confirm password',
+        write_only=True,
+        required=True
+        )
