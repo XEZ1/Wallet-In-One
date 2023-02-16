@@ -92,6 +92,41 @@ class HuobiFetcher:
 
 
 
+class GateioFetcher:
+
+    def __init__(self, api_key, secret_key):
+        self.api_key = api_key
+        self.secret_key = secret_key
+
+    def get_account_data(self):
+        endpoint = "https://api.gateio.ws/api/v4/spot/accounts"
+        path = '/api/v4/spot/accounts'
+
+        headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+
+        query_param = ''
+        sign_headers = self.gen_sign('GET', path, query_param)
+        headers.update(sign_headers)
+        response = requests.request('GET', endpoint, headers=headers)
+
+        return response.json()
+
+
+    # This method of getting the right signature was specified in the API docs and modified by me.
+    # https://www.gate.io/docs/developers/apiv4/en/#authentication
+    def gen_sign(self, method, url, query_string=None, payload_string=None):
+        timestamp = time.time()
+        message = hashlib.sha512()
+        message.update((payload_string or "").encode('utf-8'))
+        hashed_payload = message.hexdigest()
+        path = '%s\n%s\n%s\n%s\n%s' % (method, url, query_string or "", hashed_payload, timestamp)
+        signature = hmac.new(self.secret_key.encode('utf-8'), path.encode('utf-8'), hashlib.sha512).hexdigest()
+        return {'KEY': self.api_key, 'Timestamp': str(timestamp), 'SIGN': signature}
+
+
 class CoinListFetcher:
 
     def __init__(self, api_key, secret_key):

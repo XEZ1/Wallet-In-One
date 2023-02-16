@@ -51,7 +51,6 @@ class GateioAccountSerializer(serializers.ModelSerializer):
         gateio_account = GateioAccount.objects.create(
             **validated_data,
         )
-        )
         gateio_account.save()
         return gateio_account
 
