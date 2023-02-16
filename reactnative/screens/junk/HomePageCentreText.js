@@ -8,6 +8,8 @@ import { VictoryPie, VictoryBar, VictoryLabel } from "victory-native";
 import fixture from "./chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
+import Svg from 'react-native-svg'
+
 export default function HomePage({ navigation }) {
 
   const {dark, colors, setScheme} = useTheme();
@@ -60,12 +62,16 @@ export default function HomePage({ navigation }) {
       }}
       style={styles.container}
     >
-      <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
-      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
+      {/* <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
+      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text> */}
+      
+      <Svg width={'100%'} height={'120%'} viewBox="0 0 100 100">
       <VictoryPie
         data={data}
-        innerRadius={70}
-        padAngle={3}
+        innerRadius={120}
+        padAngle={1}
+        cornerRadius= {10}
+        radius= {100}
         labels={() => null}
         events={[{
           target: "data",
@@ -74,7 +80,33 @@ export default function HomePage({ navigation }) {
           }
         }]}
         colorScale={colours}
+      > 
+      </VictoryPie>
+      <VictoryLabel
+          textAnchor="middle"
+          style={{fontSize: 3, fill: colors.text}}
+          x={50} y={-7}
+          text= {"Net Worth"}
       />
+      <VictoryLabel
+          textAnchor="middle"
+          style={{fontSize: 7, fontWeight: '700', fill: colors.text}}
+          x={50} y={0}
+          text= {"£" + value}
+      />
+      <VictoryLabel
+          textAnchor="middle"
+          style={{fontSize: 3, fill: colors.text}}
+          x={50} y={9}
+          text= {"Assets"}
+      />
+      <VictoryLabel
+          textAnchor="middle"
+          style={{fontSize: 7, fontWeight: '700', fill: colors.text}}
+          x={50} y={15}
+          text= {data.length}
+      />
+      
 
       <VictoryBar
         horizontal={true}
@@ -92,6 +124,7 @@ export default function HomePage({ navigation }) {
           }
         }]}
       />
+      </Svg>
     </ScrollView>
   );
 }

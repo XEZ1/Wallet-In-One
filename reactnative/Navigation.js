@@ -10,7 +10,6 @@ import HomePage from './screens/charts/HomePage';
 // Screens
 import StartScreen from './screens/StartScreen';
 import SignUpScreen from './screens/SignUpScreen';
-import LoggedInScreen from './screens/LoggedInScreen';
 import LoginScreen from './screens/LoginScreen';
 
 import SettingsPage from './screens/SettingsPage';
@@ -94,14 +93,6 @@ export default function Navigation() {
             options={{
               //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Settings</Text>),
               tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="setting" size={30}/></Text>)
-            }}
-          />
-          <Tab.Screen
-            name="1"
-            component={LoggedInScreen}
-            options={{
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Screen 1</Text>),
-              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="logout" size={30}/></Text>)
             }}
           />
         </Tab.Navigator>

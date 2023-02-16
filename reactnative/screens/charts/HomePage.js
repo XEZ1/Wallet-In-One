@@ -8,8 +8,6 @@ import { VictoryPie, VictoryBar, VictoryLabel } from "victory-native";
 import fixture from "./chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
-import Svg from 'react-native-svg'
-
 export default function HomePage({ navigation }) {
 
   const {dark, colors, setScheme} = useTheme();
@@ -62,13 +60,12 @@ export default function HomePage({ navigation }) {
       }}
       style={styles.container}
     >
-      {/* <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
-      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text> */}
-      <Svg height="60%" width="100%" viewBox="0 0 100 100">
+      <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
+      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
       <VictoryPie
         data={data}
-        innerRadius={120}
-        padAngle={2}
+        innerRadius={70}
+        padAngle={3}
         labels={() => null}
         events={[{
           target: "data",
@@ -78,31 +75,6 @@ export default function HomePage({ navigation }) {
         }]}
         colorScale={colours}
       />
-      <VictoryLabel
-          textAnchor="middle"
-          style={{fontSize: 3, fill: colors.text}}
-          x={50} y={37}
-          text= {"Net Worth"}
-      />
-      <VictoryLabel
-          textAnchor="middle"
-          style={{fontSize: 7, fontWeight: '700', fill: colors.text}}
-          x={50} y={43}
-          text= {"£" + value}
-      />
-      <VictoryLabel
-          textAnchor="middle"
-          style={{fontSize: 3, fill: colors.text}}
-          x={50} y={59}
-          text= {"Assets"}
-      />
-      <VictoryLabel
-          textAnchor="middle"
-          style={{fontSize: 7, fontWeight: '700', fill: colors.text}}
-          x={50} y={65}
-          text= {data.length}
-      />
-      </Svg>
 
       <VictoryBar
         horizontal={true}
