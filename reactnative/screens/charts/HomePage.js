@@ -8,7 +8,9 @@ import { VictoryPie, VictoryBar, VictoryLabel } from "victory-native";
 import fixture from "./chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
-export default function PieChartWallet({ navigation }) {
+import Svg from 'react-native-svg'
+
+export default function HomePage({ navigation }) {
 
   const {dark, colors, setScheme} = useTheme();
 
@@ -41,7 +43,7 @@ export default function PieChartWallet({ navigation }) {
       }}
       style={styles.container}
     >
-        <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
+      <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
       <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
       <Text style={[styles.amountText, {color: colors.text}]}>Connect your Wallets to See your Funds!</Text>
       </ScrollView>
@@ -60,12 +62,13 @@ export default function PieChartWallet({ navigation }) {
       }}
       style={styles.container}
     >
-      <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
-      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
+      {/* <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
+      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text> */}
+      <Svg height="60%" width="100%" viewBox="0 0 100 100">
       <VictoryPie
         data={data}
-        innerRadius={70}
-        padAngle={3}
+        innerRadius={120}
+        padAngle={2}
         labels={() => null}
         events={[{
           target: "data",
@@ -75,15 +78,40 @@ export default function PieChartWallet({ navigation }) {
         }]}
         colorScale={colours}
       />
+      <VictoryLabel
+          textAnchor="middle"
+          style={{fontSize: 3, fill: colors.text}}
+          x={50} y={37}
+          text= {"Net Worth"}
+      />
+      <VictoryLabel
+          textAnchor="middle"
+          style={{fontSize: 7, fontWeight: '700', fill: colors.text}}
+          x={50} y={43}
+          text= {"£" + value}
+      />
+      <VictoryLabel
+          textAnchor="middle"
+          style={{fontSize: 3, fill: colors.text}}
+          x={50} y={59}
+          text= {"Assets"}
+      />
+      <VictoryLabel
+          textAnchor="middle"
+          style={{fontSize: 7, fontWeight: '700', fill: colors.text}}
+          x={50} y={65}
+          text= {data.length}
+      />
+      </Svg>
 
       <VictoryBar
         horizontal={true}
-        style={{ data:  { fill: ({ datum }) => colours[list.indexOf(datum.x)]  }}}
+        style={{ data:  { fill: ({ datum }) => colours[list.indexOf(datum.x)] }}}
         data={data}
         barWidth={18}
         padding={40}
         labels={({ datum }) => datum.x}
-        labelComponent={<VictoryLabel dy={-20} x={30} style={{ fontSize: 25, fontWeight: '900' }} />}
+        labelComponent={<VictoryLabel dy={-20} x={30} style={{ fontSize: 22, fontWeight: '900', fill: colors.text}} />}
         height={spacing}
         events={[{
           target: "data",
@@ -107,21 +135,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingVertical: 10,
   },
-  amountText:{
-    fontWeight: '900',
-    fontSize: 40,
-    textAlign: 'left',
-  },
-  button: {
-    backgroundColor: 'red',
-    color: 'black',
-    width: "60%",
-    borderRadius: 25,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    padding: "2%",
-    fontSize:  30,
-    alignSelf: 'center',
-}
 });
 

@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useContext, useEffect } from 'react';
 import { Text } from 'react-native';
 
-import PieChartWallet from './screens/charts/PieChart';
+import HomePage from './screens/charts/HomePage';
 
 // Screens
 import StartScreen from './screens/StartScreen';
@@ -45,7 +45,7 @@ export default function Navigation() {
     <NavigationContainer theme={dark ? DarkTheme: DefaultTheme}>
       {user.signedIn ? (
         <Tab.Navigator
-          initialRouteName='Pie Chart'
+          initialRouteName='Home Page'
           screenOptions={
           {
             headerStyle: {backgroundColor: colors.background},
@@ -55,8 +55,8 @@ export default function Navigation() {
           }}
         >
           <Tab.Screen
-            name='Pie Chart'
-            component={PieChartWallet}
+            name='Home Page'
+            component={HomePage}
             options={{
               //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Home</Text>),
               tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="home" size={30}/></Text>),
