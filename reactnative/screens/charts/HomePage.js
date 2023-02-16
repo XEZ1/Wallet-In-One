@@ -1,10 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, ScrollView, Alert } from 'react-native';
+import { StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 
-import { VictoryPie, VictoryBar, VictoryLabel } from "victory-native";
 
-import fixture from "./chartData.json"
+import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer } from "victory-native";
+
+import fixture from "../charts/chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 import {auth_get} from '../../authentication'
@@ -87,12 +87,18 @@ export default function HomePage({ navigation }) {
       }}
       style={styles.container}
     >
-      <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
-      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
+      {/* <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
+      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text> */}
+      <VictoryContainer
+      width={Dimensions.get('window').width}
+      height={Dimensions.get('window').height/2}
+      >    
       <VictoryPie
         data={data}
-        innerRadius={70}
-        padAngle={3}
+        innerRadius={100}
+        padAngle={1}
+        cornerRadius= {10}
+        radius= {Dimensions.get('window').width/2.5}
         labels={() => null}
         events={[{
           target: "data",
@@ -101,7 +107,34 @@ export default function HomePage({ navigation }) {
           }
         }]}
         colorScale={colours}
+        standalone={false}
+        height={400}
       />
+      <VictoryLabel
+          textAnchor="middle"
+          style={{fontSize: 22, fill: colors.text}}
+          x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/5.5}
+          text= {"Net Worth"}
+      />
+      <VictoryLabel
+          textAnchor="middle"
+          style={{fontSize: 22, fontWeight: '700', fill: colors.text}}
+          x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/4.5}
+          text= {"£" + value}
+      />
+      <VictoryLabel
+          textAnchor="middle"
+          style={{fontSize: 22, fill: colors.text}}
+          x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.7}
+          text= {"Assets"}
+      />
+      <VictoryLabel
+          textAnchor="middle"
+          style={{fontSize: 22, fontWeight: '700', fill: colors.text}}
+          x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.25}
+          text= {data.length}
+      />
+      </VictoryContainer>
 
       <VictoryBar
         horizontal={true}
@@ -119,6 +152,11 @@ export default function HomePage({ navigation }) {
           }
         }]}
       />
+    <TouchableOpacity
+      onPress={()=>{setNewData(baseData.all);setPressed(false)}}
+      >
+        <Text style={styles.button} x={10}>Back</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -133,6 +171,13 @@ const styles = StyleSheet.create({
     fontSize: 50,
     alignSelf: 'center',
     paddingVertical: 10,
+  },
+  button: {
+    width: "75%",
+    borderRadius: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize:  30,
   },
 });
 
