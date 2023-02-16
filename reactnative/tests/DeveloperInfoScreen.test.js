@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import DeveloperInfoScreen from '../screens/DeveloperInfoScreen';
+import DeveloperInfoScreen from '../screens/pre_logged_in/DeveloperInfoScreen';
 import { Linking } from 'react-native';
 
 describe('<DeveloperInfoScreen />', () => {

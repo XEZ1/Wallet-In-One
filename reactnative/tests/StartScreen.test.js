@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import StartScreen from '../screens/StartScreen';
+import StartScreen from '../screens/pre_logged_in/StartScreen';
 import { NavigationContainer } from '@react-navigation/native';
 
 describe('<StartScreen />', () => {
