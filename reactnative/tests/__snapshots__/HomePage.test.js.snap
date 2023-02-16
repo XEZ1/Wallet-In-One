@@ -1014,6 +1014,38 @@ A 0 0 0 0 1, 107, 49
         </RNSVGGroup>
       </RNSVGSvgView>
     </View>
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "borderRadius": 25,
+            "fontSize": 30,
+            "fontWeight": "bold",
+            "textAlign": "center",
+            "width": "75%",
+          }
+        }
+        x={10}
+      >
+        Back
+      </Text>
+    </View>
   </View>
 </RCTScrollView>
 `;

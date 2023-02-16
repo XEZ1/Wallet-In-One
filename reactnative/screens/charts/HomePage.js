@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { StyleSheet, Text, ScrollView, Dimensions, Alert } from 'react-native';
+import { StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 
 
 import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer } from "victory-native";
@@ -66,7 +66,7 @@ export default function HomePage({ navigation }) {
       <VictoryContainer
       width={Dimensions.get('window').width}
       height={Dimensions.get('window').height/2}
-      >
+      >    
       <VictoryPie
         data={data}
         innerRadius={100}
@@ -126,6 +126,11 @@ export default function HomePage({ navigation }) {
           }
         }]}
       />
+    <TouchableOpacity
+      onPress={()=>{setNewData(fixture.filter((val) => val.length != 0))}}
+      >
+        <Text style={styles.button} x={10}>Back</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -140,6 +145,13 @@ const styles = StyleSheet.create({
     fontSize: 50,
     alignSelf: 'center',
     paddingVertical: 10,
+  },
+  button: {
+    width: "75%",
+    borderRadius: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize:  30,
   },
 });
 
