@@ -42,10 +42,17 @@ class AccountSerializer(serializers.ModelSerializer):
 class AmountSerializer(serializers.Serializer):
     amount = MoneyField(max_digits=11, decimal_places=2)
 
-class TransactionSerializer(serializers.Serializer):
+class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation.update({
+            'formatted_amount': format_money(instance.amount)
+        })
+        return representation
 
 def format_money(money):
     return {'string':str(money),'currency':str(money.currency),'amount':str(money.amount)}
