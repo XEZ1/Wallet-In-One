@@ -1,11 +1,12 @@
 from rest_framework import serializers
-from .models import Account
-from .services import get_account_data, get_account_details, get_institution
+from .models import Account, Transaction
+from .services import get_account_data, get_account_details, get_institution, account_balance
+from djmoney.contrib.django_rest_framework import MoneyField
 
 class URLSerializer(serializers.Serializer):
     url = serializers.URLField()
 
-class AccountSerializer(serializers.ModelSerializer):
+class OldAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = '__all__'
@@ -23,3 +24,28 @@ class AccountSerializer(serializers.ModelSerializer):
         })
 
         return representation
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        representation.update({
+            'balance': format_money(account_balance(instance)),
+        })
+
+        return representation
+
+class AmountSerializer(serializers.Serializer):
+    amount = MoneyField(max_digits=11, decimal_places=2)
+
+class TransactionSerializer(serializers.Serializer):
+    class Meta:
+        model = Transaction
+        fields = '__all__'
+
+def format_money(money):
+    return {'string':str(money),'currency':str(money.currency),'amount':str(money.amount)}

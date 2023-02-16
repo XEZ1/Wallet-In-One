@@ -31,7 +31,11 @@ class Account(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bank_accounts')
     requisition_id = models.CharField(max_length=1024)
     last_update = models.DateTimeField(null=True)
-    #balance = MoneyField( decimal_places=2, default_currency='GBP', max_digits=11)
+    
+    iban = models.CharField(max_length=1024)
+    institution_id = models.CharField(max_length=1024)
+    institution_name = models.CharField(max_length=1024)
+    institution_logo = models.CharField(max_length=1024)
 
     # Updates transactions if they haven't been updated for 24 hours
     def can_update(self):
@@ -42,7 +46,7 @@ class Account(models.Model):
         else:
             return False
 
-    # Adds transaction data from the Nordigen API
+    # Add transaction data
     def add_transactions(self, data):
         for t in data:
             if Transaction.objects.filter(id=t['internalTransactionId']).exists():
@@ -71,6 +75,10 @@ class Account(models.Model):
                 balance.save()
             else:
                 Balance(account=self, amount=amount, date=date).save()
+
+    def account_balance(self):
+        latest_balance = Balance.objects.filter(account=self, amount_currency="GBP").order_by('date').first()
+        return latest_balance.amount
 
 class Transaction(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='transactions')

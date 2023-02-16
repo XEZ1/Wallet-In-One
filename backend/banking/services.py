@@ -1,5 +1,6 @@
 import requests
 from .models import Token, Account
+from accounts.models import User
 
 credentials = {
 	"secret_id": "5aa6c2d1-2e27-4c46-b030-2d9add58a256",
@@ -147,3 +148,13 @@ def update_account_transactions(account):
 def update_account_balance(account):
     balance_data = get_account_balances(account.id)["balances"]
     account.add_balances(balance_data)
+
+def account_balance(account):
+    update_user_accounts(account.user)
+    account.refresh_from_db()
+    return account.account_balance()
+
+def total_user_balance(user):
+    update_user_accounts(user)
+    accounts = Account.objects.filter(user=user)
+    return sum(a.account_balance() for a in accounts) 

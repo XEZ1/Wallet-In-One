@@ -7,4 +7,5 @@ urlpatterns = [
     path('finish_auth/', views.finish_auth, name='finish_auth'),
     path('user_accounts/', views.AccountList.as_view(), name='user_accounts'),
     path('delete_everything/', views.delete_everything, name='delete_everything'), # View only for debugging purposes
+    path('get_total_balance/', views.get_total_balance, name='get_total_balance'),
 ]

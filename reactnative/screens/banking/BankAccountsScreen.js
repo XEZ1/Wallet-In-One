@@ -68,14 +68,14 @@ export default function BankAccountsScreen({ navigation }) {
                         <TouchableOpacity style={styles.item} key={index}>
                             <View style={styles.row}>
                                 <Image
-                                    source={{ uri: item.institution.logo }}
+                                    source={{ uri: item.institution_logo }}
                                     style={{ width: 50, height: 50, marginRight: 10, resizeMode: 'contain'}}
                                 />
-                                <Text style={styles.text}>{item.institution.name}</Text>
+                                <Text style={styles.text}>{item.institution_name}</Text>
                               </View>
                               {/* <Text>{'\n'}IBAN: {item.data.iban}</Text> */}
-                            <Text style={styles.text}>Currency: {item.details.account.currency}</Text>
-                            <Text style={styles.text}>Created: {displayTimestamp(item.data.created)} </Text>
+                            <Text style={styles.text}>Balance: {item.balance.string}</Text>
+                            {/* <Text style={styles.text}>Created: {displayTimestamp(item.data.created)} </Text> */}
                           </TouchableOpacity>)
                       }}
                       ListEmptyComponent={<Text style={styles.text}>{'\nYou have no bank accounts\n'}</Text>}
