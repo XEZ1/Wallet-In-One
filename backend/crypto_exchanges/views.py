@@ -90,14 +90,14 @@ class HuobiView(APIView):
         counter = 0
         while not success:
             try:
-                account_ids = service.get_account_IDs()
-                if account_ids['status'] == 'ok':
+                self.account_ids = service.get_account_IDs()
+                if self.account_ids['status'] == 'ok':
                     success = True
                 # Internal huobi_api error
-                elif account_ids['status'] == 'error' and account_ids['err-msg'] == 'Signature not valid: Verification failure [校验失败]':
+                elif self.account_ids['status'] == 'error' and self.account_ids['err-msg'] == 'Signature not valid: Verification failure [校验失败]':
                     raise TypeError
                 else:
-                    return Response({'error': account_ids['err-msg']}, status=400)
+                    return Response({'error': self.account_ids['err-msg']}, status=400)
             except TypeError:
                 counter += 1
                 if counter == 20:
@@ -111,7 +111,8 @@ class HuobiView(APIView):
         success = False
         while not success:
             try:
-                data = service.get_account_data()
+                data = service.get_account_data(self.account_ids)
+                success = True
             except TypeError:
                 pass
 

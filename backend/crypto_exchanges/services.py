@@ -66,7 +66,7 @@ class HuobiFetcher:
         return response.json()
 
     def get_account_data(self, response):
-        account_ids = [account['id'] for account in response.json()['data']]
+        account_ids = [account['id'] for account in response['data']]
         # Get account balances
         balances = {}
         for account_id in account_ids:
