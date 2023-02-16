@@ -86,3 +86,21 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         write_only=True,
         required=True
         )
+    
+    class Meta:
+
+        model = User
+        fields = ['new_password', 'password_confirmation']
+
+        def validate(self, attrs):
+            """Validate the data and generate messages for any errors."""
+
+            super().validate(attrs)
+            if attrs['new_password'] != attrs['password_confirmation']:
+                raise serializers.ValidationError({"new_password": "Password fields didn't match."})
+
+            return attrs
+        
+        def savePassword(self, instance, attrs):
+            instance.set_password(self.validated_data['new_password'])
+            instance.save()
