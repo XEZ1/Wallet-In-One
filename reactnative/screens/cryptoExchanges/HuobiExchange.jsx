@@ -23,7 +23,6 @@ export default function HuobiCredentials({ navigation }) {
       });
       const data = await response.json();
       const statusCode = response.status;
-      console.log(statusCode)
       if (statusCode == 200) {
         Alert.alert('Success', 'Huobi account data retrieved successfully!');
       } else {

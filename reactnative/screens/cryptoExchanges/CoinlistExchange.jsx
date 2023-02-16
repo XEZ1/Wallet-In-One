@@ -22,7 +22,6 @@ export default function CoinListCredentials({ navigation }) {
         body: JSON.stringify({ api_key: apiKey, secret_key: secretKey }),
       });
       const data = await response.json();
-      console.log(data)
       Alert.alert('Success', 'Coinlist account data retrieved successfully!');
     } catch (error) {
       console.error(error);
