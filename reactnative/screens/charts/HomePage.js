@@ -1,22 +1,49 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, ScrollView, Alert } from 'react-native';
-
 
 import { VictoryPie, VictoryBar, VictoryLabel } from "victory-native";
 
 import fixture from "./chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
+import {auth_get} from '../../authentication'
+
 export default function HomePage({ navigation }) {
-
+  const [baseData, setBaseData ] = useState(fixture)
   const {dark, colors, setScheme} = useTheme();
+  const [data, setNewData] = useState(baseData.all);
+  const [pressed, setPressed ] = useState(false)
 
-  const [data, setNewData] = useState(fixture);
+  // Uncomment to show bank data from backend
 
+  // useEffect(() =>{
+  //   const fetchData = async () => {
+  //       const response = await auth_get('/graph_data/')
+  //       console.log('fetch graph data', response.status)
+  //       if (response.status == 200){
+  //         setBaseData(response.body)
+  //         setNewData(response.body.all)
+  //         setPressed(false)
+  //       }
+  //     }
+  //     fetchData()
+  // }, [])
+  
   const handlePressIn = (event, datapoint) => {
-    const dataPoint = data[datapoint.index];
-    setNewData(fixture.filter((val) => val.x.match(dataPoint.x)));
+    if (pressed){
+      setNewData(baseData.all)
+    }
+    else{
+      const dataPoint = data[datapoint.index];
+      if (baseData[dataPoint.x]){
+        setNewData(baseData[dataPoint.x]);
+      }
+      else{
+        setNewData(baseData.all.filter((val) => val.x.match(dataPoint.x)));
+      }
+    }
+    setPressed(!pressed)
   };
 
   let value = 0;

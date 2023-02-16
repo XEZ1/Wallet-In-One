@@ -20,3 +20,23 @@ class change_password(generics.CreateAPIView):
 @api_view(['GET'])
 def validate_token(request):
     return Response({'token_valid': True})
+
+from banking.services import total_user_balance, chart_breakdown
+
+# Maybe this should go in new app
+@api_view(['GET'])
+def graph_data(request):
+    data = {
+        "all": [
+            {
+                "x": "Banks",
+                "y": total_user_balance(request.user).amount
+            }
+        ]
+    }
+    
+    bank_data = chart_breakdown(request.user)
+    if bank_data:
+        data['Banks'] = bank_data
+
+    return Response(data)
