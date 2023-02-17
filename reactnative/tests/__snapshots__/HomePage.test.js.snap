@@ -35,16 +35,17 @@ exports[`<HomePage /> snapshot test 1`] = `
       pointerEvents="box-none"
       style={
         Object {
+          "paddingBottom": 10,
           "position": "relative",
         }
       }
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="667"
+        bbHeight="300"
         bbWidth="750"
         focusable={false}
-        height={667}
+        height={300}
         meetOrSlice={0}
         minX={0}
         minY={0}
@@ -61,19 +62,19 @@ exports[`<HomePage /> snapshot test 1`] = `
             },
             Object {
               "flex": 0,
-              "height": 667,
+              "height": 300,
               "width": 750,
             },
           ]
         }
-        vbHeight={667}
+        vbHeight={300}
         vbWidth={750}
         width={750}
       >
         <RNSVGGroup>
           <RNSVGRect
             fill={null}
-            height="667"
+            height="300"
             propList={
               Array [
                 "fill",
@@ -88,7 +89,7 @@ exports[`<HomePage /> snapshot test 1`] = `
               d="M2.7595728257174343,-289.7191628134135A10,10,0,0,1,13.19955809556976,-299.7094787724967A300,300,0,0,1,116.52047287282068,276.4470643748894A10,10,0,0,1,103.25958774117187,270.7069745740011L40.552533638486146,101.4903963879593A10,10,0,0,1,45.390366370643264,89.10507640274362A100,100,0,0,0,11.599611659743124,-99.32496669691439A10,10,0,0,1,2.7595728257174326,-109.25746336660582Z"
               fill={
                 Object {
-                  "payload": 4294901760,
+                  "payload": 4294951115,
                   "type": 0,
                 }
               }
@@ -99,7 +100,7 @@ exports[`<HomePage /> snapshot test 1`] = `
                   0,
                   1,
                   375,
-                  200,
+                  150,
                 ]
               }
               onResponderGrant={[Function]}
@@ -119,7 +120,7 @@ exports[`<HomePage /> snapshot test 1`] = `
               d="M98.08435696085076,272.62477411831463A10,10,0,0,1,91.76636647409927,285.62026185854063A300,300,0,0,1,-252.95624332419018,161.28589201574042A10,10,0,0,1,-249.52436854671717,147.24944157737133L-93.2399524156696,57.01859185396742A10,10,0,0,1,-80.21813855969964,59.70804171982891A100,100,0,0,0,23.636757717221425,97.16637116110375A10,10,0,0,1,35.37730285816502,103.40819593227279Z"
               fill={
                 Object {
-                  "payload": 4278190335,
+                  "payload": 4282441936,
                   "type": 0,
                 }
               }
@@ -130,7 +131,7 @@ exports[`<HomePage /> snapshot test 1`] = `
                   0,
                   1,
                   375,
-                  200,
+                  150,
                 ]
               }
               onResponderGrant={[Function]}
@@ -150,7 +151,7 @@ exports[`<HomePage /> snapshot test 1`] = `
               d="M-252.28394137243464,142.4697212360424A10,10,0,0,1,-266.15580141976,138.42358675675655A300,300,0,0,1,-13.199558095570204,-299.70947877249677A10,10,0,0,1,-2.759572825717857,-289.7191628134135L-2.759572825717573,-109.2574633666058A10,10,0,0,1,-11.599611659743248,-99.32496669691436A100,100,0,0,0,-91.81775021944273,39.61692497708555A10,10,0,0,1,-95.99952524138699,52.238871512638475Z"
               fill={
                 Object {
-                  "payload": 4278222848,
+                  "payload": 4278255360,
                   "type": 0,
                 }
               }
@@ -161,7 +162,7 @@ exports[`<HomePage /> snapshot test 1`] = `
                   0,
                   1,
                   375,
-                  200,
+                  150,
                 ]
               }
               onResponderGrant={[Function]}
@@ -195,7 +196,7 @@ exports[`<HomePage /> snapshot test 1`] = `
             }
             y={
               Array [
-                "250.35545454545453",
+                "111.035",
               ]
             }
           >
@@ -220,7 +221,7 @@ exports[`<HomePage /> snapshot test 1`] = `
               font={
                 Object {
                   "fontFamily": "Gill Sans",
-                  "fontSize": "22",
+                  "fontSize": "17",
                   "textAnchor": "middle",
                 }
               }
@@ -255,7 +256,7 @@ exports[`<HomePage /> snapshot test 1`] = `
             }
             y={
               Array [
-                "304.25444444444446",
+                "134.585",
               ]
             }
           >
@@ -280,7 +281,7 @@ exports[`<HomePage /> snapshot test 1`] = `
               font={
                 Object {
                   "fontFamily": "Gill Sans",
-                  "fontSize": "22",
+                  "fontSize": "27",
                   "fontWeight": "700",
                   "textAnchor": "middle",
                 }
@@ -316,7 +317,7 @@ exports[`<HomePage /> snapshot test 1`] = `
             }
             y={
               Array [
-                "368.3505405405405",
+                "171.035",
               ]
             }
           >
@@ -341,7 +342,7 @@ exports[`<HomePage /> snapshot test 1`] = `
               font={
                 Object {
                   "fontFamily": "Gill Sans",
-                  "fontSize": "22",
+                  "fontSize": "17",
                   "textAnchor": "middle",
                 }
               }
@@ -376,7 +377,7 @@ exports[`<HomePage /> snapshot test 1`] = `
             }
             y={
               Array [
-                "418.27153846153846",
+                "194.585",
               ]
             }
           >
@@ -401,7 +402,7 @@ exports[`<HomePage /> snapshot test 1`] = `
               font={
                 Object {
                   "fontFamily": "Gill Sans",
-                  "fontSize": "22",
+                  "fontSize": "27",
                   "fontWeight": "700",
                   "textAnchor": "middle",
                 }
@@ -433,10 +434,10 @@ exports[`<HomePage /> snapshot test 1`] = `
           >
             <RNSVGSvgView
               align="xMidYMid"
-              bbHeight="667"
+              bbHeight="300"
               bbWidth="750"
               focusable={false}
-              height={667}
+              height={300}
               meetOrSlice={0}
               minX={0}
               minY={0}
@@ -453,12 +454,12 @@ exports[`<HomePage /> snapshot test 1`] = `
                   },
                   Object {
                     "flex": 0,
-                    "height": 667,
+                    "height": 300,
                     "width": 750,
                   },
                 ]
               }
-              vbHeight={667}
+              vbHeight={300}
               vbWidth={750}
               width={750}
             >
@@ -546,7 +547,7 @@ A 0 0 0 0 1, 710, 149
  z"
               fill={
                 Object {
-                  "payload": 4294901760,
+                  "payload": 4294951115,
                   "type": 0,
                 }
               }
@@ -566,7 +567,7 @@ A 0 0 0 0 1, 710, 149
               responsible={true}
               stroke={
                 Object {
-                  "payload": 4294901760,
+                  "payload": 4294951115,
                   "type": 0,
                 }
               }
@@ -584,7 +585,7 @@ A 0 0 0 0 1, 375, 99
  z"
               fill={
                 Object {
-                  "payload": 4278190335,
+                  "payload": 4282441936,
                   "type": 0,
                 }
               }
@@ -604,7 +605,7 @@ A 0 0 0 0 1, 375, 99
               responsible={true}
               stroke={
                 Object {
-                  "payload": 4278190335,
+                  "payload": 4282441936,
                   "type": 0,
                 }
               }
@@ -902,13 +903,18 @@ A 0 0 0 0 1, 542.5, 49
     >
       <Text
         style={
-          Object {
-            "borderRadius": 25,
-            "fontSize": 30,
-            "fontWeight": "bold",
-            "textAlign": "center",
-            "width": "75%",
-          }
+          Array [
+            Object {
+              "borderRadius": 25,
+              "fontSize": 30,
+              "fontWeight": "bold",
+              "textAlign": "center",
+              "width": "75%",
+            },
+            Object {
+              "color": "black",
+            },
+          ]
         }
         x={10}
       >
