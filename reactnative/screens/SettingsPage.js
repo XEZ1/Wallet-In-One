@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  AsyncStorage
 } from 'react-native';
 import { logout } from '../authentication';
 import { useContext } from 'react';
@@ -14,14 +15,40 @@ import { useTheme } from '../src/theme/ThemeProvider'
   
 export default function SettingsPage ({ navigation }) {
   const [notifications, setNotifications] = useState(false);
-  const toggleNotifications = () => setNotifications(previousState => !previousState);
+
   const [user, setUser] = useContext(userContext)
 
   const {dark, colors, setScheme} = useTheme();
-  const toggleTheme=() => {
-    dark ? setScheme('light') : setScheme('dark');
+
+  //Load notification setting
+  useEffect(() => {
+      async function loadNotificationSettings() {
+        const savedSettings = await AsyncStorage.getItem('notificationSettings');
+        setNotifications(savedSettings === 'true');
+      }
+      loadNotificationSettings();
+  }, []);
+
+  //Load Dark mode setting
+  useEffect(() => {
+      async function loadDarkModeSettings() {
+        const savedDarkModeSettings = await AsyncStorage.getItem('darkModeSettings');
+
+      }
+      loadDarkModeSettings();
+  }, []);
+
+  //Toggle and save notif setting
+  const toggleNotifications = async () => {
+      setNotifications(previousState => !previousState);
+      await AsyncStorage.setItem('notificationSettings', (!notifications).toString());
   };
 
+  //Toggle and save theme setting
+  const toggleTheme = async () => {
+      dark ? setScheme('light') : setScheme('dark');
+      await AsyncStorage.setItem('darkModeSettings', (!dark).toString());
+  };
 
   return (
     <ScrollView
