@@ -140,9 +140,9 @@ class CoinListFetcher:
 
     def get_account_data(self):
         endpoint = 'https://trade-api.coinlist.co'
-        path = f'v1/accounts/{self.api_key}'
+        path = '/v1/accounts/'
         timestamp = str(int(time.time()))
-        request_url = f"{endpoint}/v1/accounts/{self.api_key}"
+        request_url = f"{endpoint}{path}"
         body = None
         method = 'GET'
 
@@ -157,8 +157,36 @@ class CoinListFetcher:
             'CL-ACCESS-TIMESTAMP': timestamp
         }
 
-        response = requests.get(url=request_url, headers=headers)
-        return response.json()
+        response_id = requests.get(url=request_url, headers=headers)
+
+        if 'accounts' not in response_id.json():
+            return response_id.json()
+
+        # We retrieved ID addresses of sub-accounts, its time to retrieve the actual data
+        to_return = {}
+        for account_id in response_id.json()['accounts']:
+            endpoint = 'https://trade-api.coinlist.co'
+            path = f"""/v1/accounts/{account_id['trader_id']}"""
+            timestamp = str(int(time.time()))
+            request_url = f"{endpoint}{path}"
+            body = None
+            method = 'GET'
+
+            prehashed = self.prehash(timestamp, method, path, body)
+            secret = base64.b64decode(self.secret_key)
+            signature = self.sha265hmac(prehashed, secret)
+
+            headers = {
+                'Content-Type': 'application/json',
+                'CL-ACCESS-KEY': self.api_key,
+                'CL-ACCESS-SIG': signature,
+                'CL-ACCESS-TIMESTAMP': timestamp
+            }
+
+            response = requests.get(url=request_url, headers=headers)
+            to_return.update(response.json())
+
+        return to_return
 
     def sha265hmac(self, data, key):
         h = hmac.new(key, data.encode('utf-8'), digestmod=hashlib.sha256)

@@ -56,8 +56,8 @@ class BinanceView(APIView):
                 token = Token()
                 token.user = self.request.user
                 token.asset = coin['asset']
-                token.free = coin['free']
-                token.locked = coin['locked']
+                token.free = float(coin['free'])
+                token.locked = float(coin['locked'])
                 token.save()
 
         #print(token)
@@ -129,8 +129,8 @@ class HuobiView(APIView):
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=self.request.user, asset=coin['currency'].upper)):
-                token = Token.objects.get(user=self.request.user, asset=coin['currency'].upper)
+            if bool(Token.objects.filter(user=self.request.user, asset=coin['currency'].upper())):
+                token = Token.objects.get(user=self.request.user, asset=coin['currency'].upper())
                 token.free += float(coin['balance'])
                 token.save()
 
@@ -138,8 +138,8 @@ class HuobiView(APIView):
                 token = Token()
                 token.user = self.request.user
                 token.asset = coin['currency'].upper()
-                token.free = coin['balance']
-                token.locked = coin['debt']
+                token.free = float(coin['balance'])
+                token.locked = float(coin['debt'])
                 token.save()
 
         return Response(filtered_data, status=200)
@@ -192,8 +192,8 @@ class GateioView(APIView):
                 token = Token()
                 token.user = self.request.user
                 token.asset = coin['currency']
-                token.free = coin['available']
-                token.locked = coin['locked']
+                token.free = float(coin['available'])
+                token.locked = float(coin['locked'])
                 token.save()
 
         return Response(filtered_data, status=200)
@@ -218,36 +218,38 @@ class CoinListView(APIView):
         # Get the user's account information
         data = service.get_account_data()
 
+        print(data)
+
         # Making sure the api and secret keys are valid before saving the binance account
-        if 'msg' in data:
+        if 'status' in data and (data['status'] != 'ok' or data['status'] != '200'):
             # encountering an error while retrieving data
-            return Response({'error': data['msg']}, status=400)
+            return Response({'error': data['message']}, status=400)
 
         # Save the binance account to the database
         coinlist_account.save()
 
         # Inner function for filtering data
         def filter_not_empty_balance(coin_to_check):
-            return float(coin_to_check['free']) > 0
+            return float(coin_to_check[1]) > 0
 
         # Return the account information to the user
-        filtered_data = list(filter(filter_not_empty_balance, data['balances']))
+        filtered_data = list(filter(filter_not_empty_balance, data['asset_balances'].items()))
 
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=self.request.user, asset=coin['asset'])):
-                token = Token.objects.get(user=self.request.user, asset=coin['asset'])
-                token.free += float(coin['free'])
-                token.locked += float(coin['locked'])
+            if bool(Token.objects.filter(user=self.request.user, asset=coin[0])):
+                token = Token.objects.get(user=self.request.user, asset=coin[0])
+                token.free += float(coin[1])
+                token.locked += float(0)
                 token.save()
 
             else:
                 token = Token()
                 token.user = self.request.user
-                token.asset = coin['asset']
-                token.free = coin['free']
-                token.locked = coin['locked']
+                token.asset = coin[0]
+                token.free = float(coin[1])
+                token.locked = float(0)
                 token.save()
 
         return Response(filtered_data, status=200)
