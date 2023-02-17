@@ -1,7 +1,8 @@
-[
+{
+  "all": [
     {
-      "x": "Credit Card",
-      "y": 200
+      "x": "Banks",
+      "y": 100
     },
     {
       "x": "Crypto",
@@ -10,9 +11,16 @@
     {
       "x": "Stocks",
       "y": 75
+    }
+  ],
+  "Banks": [
+    {
+      "x": "Bank 2",
+      "y": 50
     },
     {
-      "x": "Debit Card",
-      "y": 20
+      "x": "Bank 1",
+      "y": 50
     }
-]
+  ]
+}
