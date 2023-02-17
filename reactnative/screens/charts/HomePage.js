@@ -26,7 +26,7 @@ export default function HomePage({ navigation }) {
   });
 
   const list = data.map(val => val.x);
-  const colours = ["red", "blue", "green", "purple"];
+  const colours = ["pink", "turquoise", "lime", "#FA991C"];
 
   let spacing = list.length * 60;
 
@@ -65,14 +65,16 @@ export default function HomePage({ navigation }) {
       <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text> */}
       <VictoryContainer
       width={Dimensions.get('window').width}
-      height={Dimensions.get('window').height/2}
+      // height={Dimensions.get('window').height/2}
+      height={300}
+      style= {{ paddingBottom: 10}}
       >    
       <VictoryPie
         data={data}
         innerRadius={100}
         padAngle={1}
         cornerRadius= {10}
-        radius= {Dimensions.get('window').width/2.5}
+        radius= {Dimensions.get('window').width/3}
         labels={() => null}
         events={[{
           target: "data",
@@ -82,30 +84,34 @@ export default function HomePage({ navigation }) {
         }]}
         colorScale={colours}
         standalone={false}
-        height={400}
+        height={300}
       />
       <VictoryLabel
           textAnchor="middle"
-          style={{fontSize: 22, fill: colors.text}}
-          x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/5.5}
+          style={{fontSize: 17, fill: colors.text}}
+          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/5.5}
+          x={Dimensions.get('window').width/2} y={105}
           text= {"Net Worth"}
       />
       <VictoryLabel
           textAnchor="middle"
-          style={{fontSize: 22, fontWeight: '700', fill: colors.text}}
-          x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/4.5}
+          style={{fontSize: 27, fontWeight: '700', fill: colors.text}}
+          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/4.5}
+          x={Dimensions.get('window').width/2} y={125}
           text= {"£" + value}
       />
       <VictoryLabel
           textAnchor="middle"
-          style={{fontSize: 22, fill: colors.text}}
-          x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.7}
+          style={{fontSize: 17, fill: colors.text}}
+          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.7}
+          x={Dimensions.get('window').width/2} y={165}
           text= {"Assets"}
       />
       <VictoryLabel
           textAnchor="middle"
-          style={{fontSize: 22, fontWeight: '700', fill: colors.text}}
-          x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.25}
+          style={{fontSize: 27, fontWeight: '700', fill: colors.text}}
+          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.25}
+          x={Dimensions.get('window').width/2} y={185}
           text= {data.length}
       />
       </VictoryContainer>
@@ -129,7 +135,7 @@ export default function HomePage({ navigation }) {
     <TouchableOpacity
       onPress={()=>{setNewData(fixture.filter((val) => val.length != 0))}}
       >
-        <Text style={styles.button} x={10}>Back</Text>
+        <Text style={[styles.button, {color: colors.text}]} x={10}>Back</Text>
       </TouchableOpacity>
     </ScrollView>
   );
