@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
-
+import { useIsFocused } from '@react-navigation/native';
 
 import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer } from "victory-native";
 
@@ -9,12 +9,13 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 import {auth_get} from '../../authentication'
 
+
 export default function HomePage({ navigation }) {
   const [baseData, setBaseData ] = useState(fixture)
   const {dark, colors, setScheme} = useTheme();
   const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed ] = useState(false)
-
+  
   // Uncomment to show bank data from backend
 
   useEffect(() =>{
@@ -120,7 +121,7 @@ export default function HomePage({ navigation }) {
           textAnchor="middle"
           style={{fontSize: 22, fontWeight: '700', fill: colors.text}}
           x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/4.5}
-          text= {"£" + value}
+          text= {"£" + value.toFixed(2)}
       />
       <VictoryLabel
           textAnchor="middle"
