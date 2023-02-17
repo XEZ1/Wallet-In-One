@@ -19,6 +19,8 @@ def validate_token(request):
 
 from banking.services import total_user_balance, chart_breakdown
 
+from crypto_wallets.services import total_user_balance_crypto, chart_breakdown_crypto
+
 # Maybe this should go in new app
 @api_view(['GET'])
 def graph_data(request):
@@ -27,12 +29,18 @@ def graph_data(request):
             {
                 "x": "Banks",
                 "y": total_user_balance(request.user).amount
+            },
+            {
+                "x": "Cryptocurrency",
+                "y": total_user_balance_crypto(request.user)
             }
         ]
     }
     
     bank_data = chart_breakdown(request.user)
+    crypto_data = chart_breakdown_crypto(request.user)
     if bank_data:
         data['Banks'] = bank_data
+        data['Cryptocurrency'] = crypto_data
 
     return Response(data)

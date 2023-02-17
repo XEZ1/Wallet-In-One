@@ -17,18 +17,18 @@ export default function HomePage({ navigation }) {
 
   // Uncomment to show bank data from backend
 
-  // useEffect(() =>{
-  //   const fetchData = async () => {
-  //       const response = await auth_get('/graph_data/')
-  //       console.log('fetch graph data', response.status)
-  //       if (response.status == 200){
-  //         setBaseData(response.body)
-  //         setNewData(response.body.all)
-  //         setPressed(false)
-  //       }
-  //     }
-  //     fetchData()
-  // }, [])
+  useEffect(() =>{
+    const fetchData = async () => {
+        const response = await auth_get('/graph_data/')
+        console.log('fetch graph data', response.status)
+        if (response.status == 200){
+          setBaseData(response.body)
+          setNewData(response.body.all)
+          setPressed(false)
+        }
+      }
+      fetchData()
+  }, [])
   
   const handlePressIn = (event, datapoint) => {
     if (pressed){
