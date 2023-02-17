@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djmoney',
     'accounts',
+    'crypto_exchanges',
     'crypto_wallets',
     'banking',
 ]
