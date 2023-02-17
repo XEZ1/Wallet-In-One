@@ -37,7 +37,8 @@ export default function BankAccountsScreen({ navigation }) {
       paddingLeft: 20,
       paddingRight: 20,
       paddingBottom: 0,
-      borderWidth: 1,
+      paddingTop: 10,
+      //borderWidth: 1,
       borderRadius: 5,
       borderColor: dark ? colors.background : '#ddd',
       overflow: 'hidden',
@@ -48,6 +49,8 @@ export default function BankAccountsScreen({ navigation }) {
     },
     item:{
       padding: 20,
+      backgroundColor: colors.primary,
+      borderRadius: 10,
     },
     text:{
       color: colors.text
@@ -61,8 +64,9 @@ export default function BankAccountsScreen({ navigation }) {
 }
 
   return (
-    <View style={{flex:1,  margin: 4, marginBottom: 54}} >
-              <View style={[styles.container, {backgroundColor: colors.background}]}>
+    // <View style={{flex:1,  margin: 4, marginBottom: 54, backgroundColor: colors.background}} >
+    <View style={{flex:1, backgroundColor: colors.background}} >
+              <View style={[styles.container]}>
                   <FlatList data={bankData} renderItem={({item, index}) =>{
                       return (
                         <TouchableOpacity style={styles.item} key={index}>

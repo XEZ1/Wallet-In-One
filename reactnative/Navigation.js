@@ -46,7 +46,9 @@ export default function Navigation() {
     useEffect(()=>{initAuthState(user, setUser);}, []);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      theme={dark ? DarkTheme: DefaultTheme}
+    >
       {user.signedIn ? (
         <Tab.Navigator
           initialRouteName='Home Page'
