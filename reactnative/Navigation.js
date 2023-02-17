@@ -99,7 +99,7 @@ export default function Navigation() {
           />
 
           <Tab.Screen
-            name="Bank Transactions"
+            name="All Bank Transactions"
             component={BankTransactionsScreen}
             options={{
               //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Bank Tranasactions</Text>),

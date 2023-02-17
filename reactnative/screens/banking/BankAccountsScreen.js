@@ -16,6 +16,7 @@ export default function BankAccountsScreen({ navigation }) {
   useEffect(() =>{
     const fetchData = async () => {
         console.log('fetch bank accounts data')
+        setIsLoading(true)
         const response = await auth_get('/banking/user_accounts/')
         if (response.status == 200){
             setIsLoading(false)

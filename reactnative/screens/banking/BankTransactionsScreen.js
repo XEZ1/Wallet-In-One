@@ -14,7 +14,8 @@ function BankTransactionsScreen({ route, navigation }) {
 
   useEffect(() =>{
     const fetchData = async () => {
-        console.log('fetch bank data')
+        console.log('fetch bank transactions')
+        setIsLoading(true)
         if (route.params == undefined){
           response = await auth_get('/banking/transactions/')
         }
