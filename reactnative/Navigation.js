@@ -27,6 +27,7 @@ import CryptoExchangesStackNavigator from './screens/cryptoExchanges/CryptoExcha
 
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import { ThemeProvider, defaultTheme } from 'reactnative/src/theme/ThemeProvider';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -45,7 +46,7 @@ export default function Navigation() {
     useEffect(()=>{initAuthState(user, setUser);}, []);
 
   return (
-    <NavigationContainer theme={dark ? DarkTheme: DefaultTheme}>
+    <NavigationContainer>
       {user.signedIn ? (
         <Tab.Navigator
           initialRouteName='Home Page'
