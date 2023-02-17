@@ -15,15 +15,15 @@ export default function BankAccountsScreen({ navigation }) {
   
   useEffect(() =>{
     const fetchData = async () => {
-        console.log('fetch bank data')
-        const response = await auth_get('/banking/user_accounts')
-        console.log('response', response)
+        console.log('fetch bank accounts data')
+        setIsLoading(true)
+        const response = await auth_get('/banking/user_accounts/')
         if (response.status == 200){
             setIsLoading(false)
             setBankData(response.body)
         }
     }
-    fetchData()
+    if(isFocused){fetchData()}
   }, [isFocused])
 
   const displayTimestamp = (timestamp) => {
@@ -45,15 +45,28 @@ export default function BankAccountsScreen({ navigation }) {
     },
     row:{
       flexDirection: 'row',
-      alignItems: 'center',
+      alignItems: 'flex-start',
     },
     item:{
       padding: 20,
-      backgroundColor: colors.primary,
       borderRadius: 10,
     },
     text:{
       color: colors.text
+    },
+    name:{
+      color: "white",
+      fontWeight: 'bold',
+      fontSize: 21,
+    },
+    amount:{
+      color: "white",
+      fontSize: 18,
+    },
+    iban:{
+      color: 'rgba(255,255,255,0.5)',
+      fontSize: 10,
+      marginBottom: 3,
     },
   });
   
@@ -69,17 +82,18 @@ export default function BankAccountsScreen({ navigation }) {
               <View style={[styles.container]}>
                   <FlatList data={bankData} renderItem={({item, index}) =>{
                       return (
-                        <TouchableOpacity style={styles.item} key={index}>
+                        <TouchableOpacity style={[styles.item, {backgroundColor: item.color}]} key={index} onPress={()=> navigation.navigate('Bank Transactions', {accountID: item.id}) }>
                             <View style={styles.row}>
                                 <Image
                                     source={{ uri: item.institution_logo }}
-                                    style={{ width: 50, height: 50, marginRight: 10, resizeMode: 'contain'}}
+                                    style={{ width: 70, height: 70, marginRight: 10, resizeMode: 'contain', borderRadius: 10}}
                                 />
-                                <Text style={styles.text}>{item.institution_name}</Text>
+                                <View style={{ borderRadius: 10}}>
+                                  <Text style={styles.name}>{item.institution_name}</Text>
+                                  <Text style={styles.iban}>{item.iban}</Text>
+                                  <Text style={styles.amount}>{item.balance.string}</Text>
+                                </View>
                               </View>
-                              {/* <Text>{'\n'}IBAN: {item.data.iban}</Text> */}
-                            <Text style={styles.text}>Balance: {item.balance.string}</Text>
-                            {/* <Text style={styles.text}>Created: {displayTimestamp(item.data.created)} </Text> */}
                           </TouchableOpacity>)
                       }}
                       ListEmptyComponent={<Text style={styles.text}>{'\nYou have no bank accounts\n'}</Text>}

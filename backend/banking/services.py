@@ -136,11 +136,8 @@ def update_user_accounts(user):
     accounts = Account.objects.filter(user=user)
     for i in accounts:
         if i.can_update():
-            print('can update')
             update_account_transactions(i)
             update_account_balance(i)
-        else:
-            print('cannnot update')
 
 def update_account_transactions(account):
     transaction_data = get_account_transactions(account.id)["transactions"]["booked"]
