@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'djmoney',
     'accounts',
     'crypto_exchanges',
-    'banking'
+    'crypto_wallets',
+    'banking',
 ]
 
 MIDDLEWARE = [

@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, ScrollView, Button, FlatList, TouchableOpacity,
 import AuthWebView from './AuthView';
 import { auth_get, auth_post} from '../../authentication'
 import Loading from './Loading'
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 export default function AddBankScreen({ navigation }) {
     const [ search, setSearch ] = useState('') // Stores contents of search box
@@ -14,6 +15,8 @@ export default function AddBankScreen({ navigation }) {
     const [ bankAuthURL, setbankAuthURL ] = useState(null)// Link to authenticate with selected bank
     const [ authComplete, setAuthComplete ] = useState(false)
     const [ savedBanks, setSavedBanks ] = useState(null)
+
+    const {dark, colors, setScheme} = useTheme();
 
     const reset = () => {
         setbankAuthURL(null)
@@ -84,6 +87,47 @@ export default function AddBankScreen({ navigation }) {
         sendLink()
     }
 
+    const styles = StyleSheet.create({
+        container: {
+          width: '100%',
+          paddingLeft: 20,
+          paddingRight: 20,
+          paddingBottom: 0,
+          borderWidth: 1,
+          borderRadius: 5,
+          borderColor: dark ? colors.background : '#ddd',
+          overflow: 'hidden',
+          backgroundColor: colors.background
+        },
+        item:{
+          flexDirection: 'row',
+          alignItems: 'center',
+          padding: 10
+        },
+        input:{
+          height: 40,
+          width: '100%',
+          borderWidth: 0.5,
+          padding: 10,
+          borderColor: 'gray',
+          borderRadius: 5,
+          marginTop: 5,
+          marginBottom: 5,
+          color: colors.text,
+          backgroundColor: colors.background
+        },
+        image:{
+            width: 50, 
+            height: 50,
+            marginRight: 10,
+            resizeMode: 'contain',
+        },
+        text:{
+            color: colors.text
+        },
+      });
+      
+
     if (isLoading){
         return <Loading/>
     }
@@ -94,20 +138,22 @@ export default function AddBankScreen({ navigation }) {
 
     if (authComplete){
         return (
-            <View>
+            <View
+                style={{flex:1, backgroundColor: colors.background}}
+            >
                 {!savedBanks ? (
                     <TouchableOpacity onPress={()=>setAuthComplete(false)}>
-                        <Text>Bank Authentication Finished</Text>
-                        <Text>Waiting For server</Text>
+                        <Text style={styles.text}>Bank Authentication Finished</Text>
+                        <Text style={styles.text}>Waiting For server</Text>
                         <ActivityIndicator/>
                     </TouchableOpacity>
                 ):(
                     <>
-                        <Text> Bank account(s) have been added</Text>
-                        <Text> Data for debugging </Text>
+                        <Text style={styles.text}> Bank account(s) have been added</Text>
+                        <Text style={styles.text}> Data for debugging </Text>
                         <FlatList data={savedBanks} renderItem={({item, index}) =>{
                             return (
-                                    <Text key={index}>{JSON.stringify(savedBanks)}</Text>
+                                    <Text style={styles.text} key={index}>{JSON.stringify(savedBanks)}</Text>
                                 )
                             }}
                         />
@@ -119,54 +165,31 @@ export default function AddBankScreen({ navigation }) {
     }
     
     return (
-        <View style={{flex:1, margin: 4, marginBottom: 54}}>
-                <TextInput style={styles.input} placeholder='Search' value={search} onChangeText={updateSearch}/>
+        <View
+            style={{flex:1, margin: 4, marginBottom: 54}}
+        >
+                <TextInput
+                    style={styles.input}
+                    placeholder='Search'
+                    placeholderTextColor= {colors.text}
+                    value={search}
+                    onChangeText={updateSearch}
+                />
                 <View style={styles.container}>
                     <FlatList data={bankData} renderItem={({item, index}) =>{
                         return (
                             <TouchableOpacity onPress={()=>selectItem(item)} style={styles.item}>
                                 <Image
+                                    
                                     source={{ uri: item.logo }}
-                                    style={{ width: 50, height: 50, marginRight: 10, resizeMode: 'contain'}}
+                                    style={styles.image}
                                 />
-                                <Text key={index}>{item.name}</Text>
+                                <Text style={styles.text} key={index}>{item.name}</Text>
                             </TouchableOpacity>)
                         }}
-                        ListEmptyComponent={<Text>{'\nNo banks found\n'}</Text>}
+                        ListEmptyComponent={<Text style={styles.text}>{'\nNo banks found\n'}</Text>}
                     />
                 </View>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    width: '100%',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingBottom: 0,
-    borderWidth: 1,
-
-    borderRadius: 5,
-    borderColor: '#ddd',
-    overflow: 'hidden',
-  },
-  item:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10
-  },
-  input:{
-    height: 40,
-    width: '100%',
-    borderWidth: 0.5,
-    padding: 10,
-    borderColor: 'gray',
-    borderRadius: 5,
-    marginTop: 5,
-    marginBottom: 5,
-    backgroundColor: 'white'
-  }
-
-});
