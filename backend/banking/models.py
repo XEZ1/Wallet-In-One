@@ -36,6 +36,7 @@ class Account(models.Model):
     institution_id = models.CharField(max_length=1024)
     institution_name = models.CharField(max_length=1024)
     institution_logo = models.CharField(max_length=1024)
+    color = models.CharField(blank=True, default='',max_length=40)
 
     # Updates transactions if they haven't been updated for 24 hours
     def can_update(self):

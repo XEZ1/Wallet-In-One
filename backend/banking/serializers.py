@@ -32,13 +32,15 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
+        if instance.color == '':
+            instance.color = main_image_color(instance.institution_logo)
+            instance.save()
+
         representation = super().to_representation(instance)
 
         representation.update({
             'balance': format_money(account_balance(instance)),
         })
-
-        representation['color'] = main_image_color(representation['institution_logo'])
 
         return representation
 

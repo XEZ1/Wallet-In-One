@@ -6,23 +6,29 @@ import { useIsFocused } from '@react-navigation/native';
 import Loading from './Loading'
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
-export default function BankTransactionsScreen({ navigation }) {
+function BankTransactionsScreen({ route, navigation }) {
   const [ isLoading, setIsLoading ] = useState(true)
   const [ bankData, setBankData ] = useState([])
   const isFocused = useIsFocused();
   const {dark, colors, setScheme} = useTheme();
-  
+
   useEffect(() =>{
     const fetchData = async () => {
         console.log('fetch bank data')
-        const response = await auth_get('/banking/transactions/')
+        if (route.params == undefined){
+          response = await auth_get('/banking/transactions/')
+        }
+        else{
+          response = await auth_get('/banking/transactions/' + route.params.accountID +'/')
+        }
+        
         if (response.status == 200){
             setIsLoading(false)
             response.body.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
             setBankData(response.body)
         }
     }
-    fetchData()
+    if (isFocused){fetchData()}
   }, [isFocused])
 
   const displayDate = (timestamp) => {
@@ -129,3 +135,6 @@ export default function BankTransactionsScreen({ navigation }) {
       </View>
   );
 }
+
+
+export default BankTransactionsScreen

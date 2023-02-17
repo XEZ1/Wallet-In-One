@@ -9,8 +9,8 @@ def main_image_color(url):
 
     color_count = {}
 
-    for x in range(image.size[0]):
-        for y in range(image.size[1]):
+    for x in range(0,image.size[0],10):
+        for y in range(0,image.size[1],10):
             pixel = image.getpixel((x,y))
             if not (pixel[0] > 150 and pixel[1] > 150 and pixel[2] > 150):
                 color_count[pixel] = color_count.get(pixel, 0) + 1

@@ -27,7 +27,7 @@ export default function BankStackNavigator() {
       <Stack.Screen 
         name="Add Bank Account"
         component={AddBankScreen} />
-      <Stack.Screen name="All Bank Transactions" component={BankTransactionsScreen} />
+      <Stack.Screen name="Bank Transactions" component={BankTransactionsScreen} />
     </Stack.Navigator>
   );
 }

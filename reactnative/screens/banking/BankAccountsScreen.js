@@ -15,15 +15,14 @@ export default function BankAccountsScreen({ navigation }) {
   
   useEffect(() =>{
     const fetchData = async () => {
-        console.log('fetch bank data')
-        const response = await auth_get('/banking/user_accounts')
-        console.log('response', response)
+        console.log('fetch bank accounts data')
+        const response = await auth_get('/banking/user_accounts/')
         if (response.status == 200){
             setIsLoading(false)
             setBankData(response.body)
         }
     }
-    fetchData()
+    if(isFocused){fetchData()}
   }, [isFocused])
 
   const displayTimestamp = (timestamp) => {
@@ -82,7 +81,7 @@ export default function BankAccountsScreen({ navigation }) {
               <View style={[styles.container]}>
                   <FlatList data={bankData} renderItem={({item, index}) =>{
                       return (
-                        <TouchableOpacity style={[styles.item, {backgroundColor: item.color}]} key={index}>
+                        <TouchableOpacity style={[styles.item, {backgroundColor: item.color}]} key={index} onPress={()=> navigation.navigate('Bank Transactions', {accountID: item.id}) }>
                             <View style={styles.row}>
                                 <Image
                                     source={{ uri: item.institution_logo }}
