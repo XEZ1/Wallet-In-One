@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Account, Transaction
 from .services import get_account_data, get_account_details, get_institution, account_balance
 from djmoney.contrib.django_rest_framework import MoneyField
+from .util import main_image_color
 
 class URLSerializer(serializers.Serializer):
     url = serializers.URLField()
@@ -36,6 +37,8 @@ class AccountSerializer(serializers.ModelSerializer):
         representation.update({
             'balance': format_money(account_balance(instance)),
         })
+
+        representation['color'] = main_image_color(representation['institution_logo'])
 
         return representation
 
