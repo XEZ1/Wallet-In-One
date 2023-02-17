@@ -1,0 +1,1051 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<HomePage /> snapshot test 1`] = `
+<RCTScrollView
+  contentContainerStyle={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "white",
+      "flexGrow": 1,
+      "justifyContent": "center",
+      "paddingBottom": 20,
+    }
+  }
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View>
+    <View
+      className="VictoryContainer"
+      onMoveShouldSetResponder={[Function]}
+      onMoveShouldSetResponderCapture={[Function]}
+      onResponderEnd={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderReject={[Function]}
+      onResponderRelease={[Function]}
+      onResponderStart={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onStartShouldSetResponderCapture={[Function]}
+      pointerEvents="box-none"
+      style={
+        Object {
+          "position": "relative",
+        }
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="667"
+        bbWidth="750"
+        focusable={false}
+        height={667}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        role="img"
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            Object {
+              "height": "100%",
+              "width": "100%",
+            },
+            Object {
+              "flex": 0,
+              "height": 667,
+              "width": 750,
+            },
+          ]
+        }
+        vbHeight={667}
+        vbWidth={750}
+        width={750}
+      >
+        <RNSVGGroup>
+          <RNSVGRect
+            fill={null}
+            height="667"
+            propList={
+              Array [
+                "fill",
+              ]
+            }
+            width="750"
+            x="0"
+            y="0"
+          />
+          <RNSVGGroup>
+            <RNSVGPath
+              d="M2.7595728257174343,-289.7191628134135A10,10,0,0,1,13.19955809556976,-299.7094787724967A300,300,0,1,1,-126.09730911798103,272.2121757622248A10,10,0,0,1,-130.77408109802892,258.54003221252185L-47.79049458589858,98.28976127105432A10,10,0,0,1,-35.373162698713266,93.53469602607558A100,100,0,1,0,11.599611659743124,-99.32496669691439A10,10,0,0,1,2.7595728257174326,-109.25746336660582Z"
+              fill={
+                Object {
+                  "payload": 4294901760,
+                  "type": 0,
+                }
+              }
+              matrix={
+                Array [
+                  1,
+                  0,
+                  0,
+                  1,
+                  375,
+                  200,
+                ]
+              }
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              propList={
+                Array [
+                  "fill",
+                ]
+              }
+              responsible={true}
+            />
+            <RNSVGPath
+              d="M-135.67509105592606,256.00210587112724A10,10,0,0,1,-149.53976552404143,260.0727946691363A300,300,0,0,1,-292.83119687810057,65.19118142002868A10,10,0,0,1,-284.81162060533865,53.170944242568325L-107.10741568553131,21.74419574627806A10,10,0,0,1,-95.7872291475969,28.71944867551888A100,100,0,0,0,-55.974109237372495,82.86675506548264A10,10,0,0,1,-52.69150454379576,95.75183492965975Z"
+              fill={
+                Object {
+                  "payload": 4278190335,
+                  "type": 0,
+                }
+              }
+              matrix={
+                Array [
+                  1,
+                  0,
+                  0,
+                  1,
+                  375,
+                  200,
+                ]
+              }
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              propList={
+                Array [
+                  "fill",
+                ]
+              }
+              responsible={true}
+            />
+            <RNSVGPath
+              d="M-285.7727597436363,47.736132352669614A10,10,0,0,1,-297.4285069311838,39.19544954056231A300,300,0,0,1,-122.78309987511142,-273.7230541716543A10,10,0,0,1,-109.39498803996786,-268.2863118670443L-42.852271835772406,-100.54099334101848A10,10,0,0,1,-47.40692152279896,-88.04875803627887A100,100,0,0,0,-99.82728949727606,5.874714599624207A10,10,0,0,1,-108.06855482382895,16.30938385637936Z"
+              fill={
+                Object {
+                  "payload": 4278222848,
+                  "type": 0,
+                }
+              }
+              matrix={
+                Array [
+                  1,
+                  0,
+                  0,
+                  1,
+                  375,
+                  200,
+                ]
+              }
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              propList={
+                Array [
+                  "fill",
+                ]
+              }
+              responsible={true}
+            />
+            <RNSVGPath
+              d="M-104.26475349086678,-270.3214192826282A10,10,0,0,1,-98.24421894988998,-283.4573573624896A300,300,0,0,1,-13.199558095569937,-299.70947877249677A10,10,0,0,1,-2.759572825717596,-289.7191628134135L-2.75957282571747,-109.25746336660582A10,10,0,0,1,-11.599611659743156,-99.32496669691437A100,100,0,0,0,-25.842450406695498,-96.60314568883088A10,10,0,0,1,-37.72203728667148,-102.57610075660224Z"
+              fill={
+                Object {
+                  "payload": 4286578816,
+                  "type": 0,
+                }
+              }
+              matrix={
+                Array [
+                  1,
+                  0,
+                  0,
+                  1,
+                  375,
+                  200,
+                ]
+              }
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              propList={
+                Array [
+                  "fill",
+                ]
+              }
+              responsible={true}
+            />
+          </RNSVGGroup>
+          <RNSVGText
+            content={null}
+            dx={
+              Array [
+                "0",
+              ]
+            }
+            dy={Array []}
+            font={Object {}}
+            rotate={Array []}
+            x={
+              Array [
+                "375",
+              ]
+            }
+            y={
+              Array [
+                "250.35545454545453",
+              ]
+            }
+          >
+            <RNSVGTSpan
+              content="Net Worth"
+              dx={
+                Array [
+                  "0",
+                ]
+              }
+              dy={
+                Array [
+                  "0",
+                ]
+              }
+              fill={
+                Object {
+                  "payload": 4278190080,
+                  "type": 0,
+                }
+              }
+              font={
+                Object {
+                  "fontFamily": "Gill Sans",
+                  "fontSize": "22",
+                  "textAnchor": "middle",
+                }
+              }
+              propList={
+                Array [
+                  "fill",
+                ]
+              }
+              rotate={Array []}
+              x={
+                Array [
+                  "375",
+                ]
+              }
+              y={Array []}
+            />
+          </RNSVGText>
+          <RNSVGText
+            content={null}
+            dx={
+              Array [
+                "0",
+              ]
+            }
+            dy={Array []}
+            font={Object {}}
+            rotate={Array []}
+            x={
+              Array [
+                "375",
+              ]
+            }
+            y={
+              Array [
+                "304.25444444444446",
+              ]
+            }
+          >
+            <RNSVGTSpan
+              content="£345"
+              dx={
+                Array [
+                  "0",
+                ]
+              }
+              dy={
+                Array [
+                  "0",
+                ]
+              }
+              fill={
+                Object {
+                  "payload": 4278190080,
+                  "type": 0,
+                }
+              }
+              font={
+                Object {
+                  "fontFamily": "Gill Sans",
+                  "fontSize": "22",
+                  "fontWeight": "700",
+                  "textAnchor": "middle",
+                }
+              }
+              propList={
+                Array [
+                  "fill",
+                ]
+              }
+              rotate={Array []}
+              x={
+                Array [
+                  "375",
+                ]
+              }
+              y={Array []}
+            />
+          </RNSVGText>
+          <RNSVGText
+            content={null}
+            dx={
+              Array [
+                "0",
+              ]
+            }
+            dy={Array []}
+            font={Object {}}
+            rotate={Array []}
+            x={
+              Array [
+                "375",
+              ]
+            }
+            y={
+              Array [
+                "368.3505405405405",
+              ]
+            }
+          >
+            <RNSVGTSpan
+              content="Assets"
+              dx={
+                Array [
+                  "0",
+                ]
+              }
+              dy={
+                Array [
+                  "0",
+                ]
+              }
+              fill={
+                Object {
+                  "payload": 4278190080,
+                  "type": 0,
+                }
+              }
+              font={
+                Object {
+                  "fontFamily": "Gill Sans",
+                  "fontSize": "22",
+                  "textAnchor": "middle",
+                }
+              }
+              propList={
+                Array [
+                  "fill",
+                ]
+              }
+              rotate={Array []}
+              x={
+                Array [
+                  "375",
+                ]
+              }
+              y={Array []}
+            />
+          </RNSVGText>
+          <RNSVGText
+            content={null}
+            dx={
+              Array [
+                "0",
+              ]
+            }
+            dy={Array []}
+            font={Object {}}
+            rotate={Array []}
+            x={
+              Array [
+                "375",
+              ]
+            }
+            y={
+              Array [
+                "418.27153846153846",
+              ]
+            }
+          >
+            <RNSVGTSpan
+              content="4"
+              dx={
+                Array [
+                  "0",
+                ]
+              }
+              dy={
+                Array [
+                  "0",
+                ]
+              }
+              fill={
+                Object {
+                  "payload": 4278190080,
+                  "type": 0,
+                }
+              }
+              font={
+                Object {
+                  "fontFamily": "Gill Sans",
+                  "fontSize": "22",
+                  "fontWeight": "700",
+                  "textAnchor": "middle",
+                }
+              }
+              propList={
+                Array [
+                  "fill",
+                ]
+              }
+              rotate={Array []}
+              x={
+                Array [
+                  "375",
+                ]
+              }
+              y={Array []}
+            />
+          </RNSVGText>
+          <View
+            pointerEvents="box-none"
+            style={
+              Object {
+                "left": 0,
+                "position": "absolute",
+                "top": 0,
+                "zIndex": 99,
+              }
+            }
+          >
+            <RNSVGSvgView
+              align="xMidYMid"
+              bbHeight="667"
+              bbWidth="750"
+              focusable={false}
+              height={667}
+              meetOrSlice={0}
+              minX={0}
+              minY={0}
+              style={
+                Array [
+                  Object {
+                    "backgroundColor": "transparent",
+                    "borderWidth": 0,
+                  },
+                  Object {
+                    "height": "100%",
+                    "overflow": "visible",
+                    "width": "100%",
+                  },
+                  Object {
+                    "flex": 0,
+                    "height": 667,
+                    "width": 750,
+                  },
+                ]
+              }
+              vbHeight={667}
+              vbWidth={750}
+              width={750}
+            >
+              <RNSVGGroup />
+            </RNSVGSvgView>
+          </View>
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+    <View
+      className="VictoryContainer"
+      onMoveShouldSetResponder={[Function]}
+      onMoveShouldSetResponderCapture={[Function]}
+      onResponderEnd={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderReject={[Function]}
+      onResponderRelease={[Function]}
+      onResponderStart={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onStartShouldSetResponderCapture={[Function]}
+      pointerEvents="box-none"
+      style={
+        Object {
+          "position": "relative",
+        }
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="240"
+        bbWidth="750"
+        focusable={false}
+        height={240}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        role="img"
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            Object {
+              "height": "100%",
+              "width": "100%",
+            },
+            Object {
+              "flex": 0,
+              "height": 240,
+              "width": 750,
+            },
+          ]
+        }
+        vbHeight={240}
+        vbWidth={750}
+        width={750}
+      >
+        <RNSVGGroup>
+          <RNSVGRect
+            fill={null}
+            height="240"
+            propList={
+              Array [
+                "fill",
+              ]
+            }
+            width="750"
+            x="0"
+            y="0"
+          />
+          <RNSVGGroup>
+            <RNSVGPath
+              d="M 40, 209 
+A 0 0 0 0 1, 40, 209 
+L 40, 191 
+A 0 0 0 0 1, 40, 191 
+L 710, 191 
+A 0 0 0 0 1, 710, 191 
+L 710, 209 
+A 0 0 0 0 1, 710, 209 
+ z"
+              fill={
+                Object {
+                  "payload": 4294901760,
+                  "type": 0,
+                }
+              }
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              responsible={true}
+              stroke={
+                Object {
+                  "payload": 4294901760,
+                  "type": 0,
+                }
+              }
+              strokeWidth="0"
+            />
+            <RNSVGPath
+              d="M 40, 155.66666666666669 
+A 0 0 0 0 1, 40, 155.66666666666669 
+L 40, 137.66666666666669 
+A 0 0 0 0 1, 40, 137.66666666666669 
+L 207.5, 137.66666666666669 
+A 0 0 0 0 1, 207.5, 137.66666666666669 
+L 207.5, 155.66666666666669 
+A 0 0 0 0 1, 207.5, 155.66666666666669 
+ z"
+              fill={
+                Object {
+                  "payload": 4278190335,
+                  "type": 0,
+                }
+              }
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              responsible={true}
+              stroke={
+                Object {
+                  "payload": 4278190335,
+                  "type": 0,
+                }
+              }
+              strokeWidth="0"
+            />
+            <RNSVGPath
+              d="M 40, 102.33333333333334 
+A 0 0 0 0 1, 40, 102.33333333333334 
+L 40, 84.33333333333334 
+A 0 0 0 0 1, 40, 84.33333333333334 
+L 291.25, 84.33333333333334 
+A 0 0 0 0 1, 291.25, 84.33333333333334 
+L 291.25, 102.33333333333334 
+A 0 0 0 0 1, 291.25, 102.33333333333334 
+ z"
+              fill={
+                Object {
+                  "payload": 4278222848,
+                  "type": 0,
+                }
+              }
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              responsible={true}
+              stroke={
+                Object {
+                  "payload": 4278222848,
+                  "type": 0,
+                }
+              }
+              strokeWidth="0"
+            />
+            <RNSVGPath
+              d="M 40, 49 
+A 0 0 0 0 1, 40, 49 
+L 40, 31 
+A 0 0 0 0 1, 40, 31 
+L 107, 31 
+A 0 0 0 0 1, 107, 31 
+L 107, 49 
+A 0 0 0 0 1, 107, 49 
+ z"
+              fill={
+                Object {
+                  "payload": 4286578816,
+                  "type": 0,
+                }
+              }
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              responsible={true}
+              stroke={
+                Object {
+                  "payload": 4286578816,
+                  "type": 0,
+                }
+              }
+              strokeWidth="0"
+            />
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  "10",
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="bar-labels-0"
+              rotate={Array []}
+              x={
+                Array [
+                  "30",
+                ]
+              }
+              y={
+                Array [
+                  "187.81",
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="Credit Card"
+                dx={
+                  Array [
+                    "10",
+                  ]
+                }
+                dy={
+                  Array [
+                    "0",
+                  ]
+                }
+                fill={
+                  Object {
+                    "payload": 4278190080,
+                    "type": 0,
+                  }
+                }
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": "22",
+                    "fontWeight": "900",
+                    "textAnchor": "start",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    "30",
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  "10",
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="bar-labels-1"
+              rotate={Array []}
+              x={
+                Array [
+                  "30",
+                ]
+              }
+              y={
+                Array [
+                  "134.4766666666667",
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="Crypto"
+                dx={
+                  Array [
+                    "10",
+                  ]
+                }
+                dy={
+                  Array [
+                    "0",
+                  ]
+                }
+                fill={
+                  Object {
+                    "payload": 4278190080,
+                    "type": 0,
+                  }
+                }
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": "22",
+                    "fontWeight": "900",
+                    "textAnchor": "start",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    "30",
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  "10",
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="bar-labels-2"
+              rotate={Array []}
+              x={
+                Array [
+                  "30",
+                ]
+              }
+              y={
+                Array [
+                  "81.14333333333335",
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="Stocks"
+                dx={
+                  Array [
+                    "10",
+                  ]
+                }
+                dy={
+                  Array [
+                    "0",
+                  ]
+                }
+                fill={
+                  Object {
+                    "payload": 4278190080,
+                    "type": 0,
+                  }
+                }
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": "22",
+                    "fontWeight": "900",
+                    "textAnchor": "start",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    "30",
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  "10",
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="bar-labels-3"
+              rotate={Array []}
+              x={
+                Array [
+                  "30",
+                ]
+              }
+              y={
+                Array [
+                  "27.81",
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="Debit Card"
+                dx={
+                  Array [
+                    "10",
+                  ]
+                }
+                dy={
+                  Array [
+                    "0",
+                  ]
+                }
+                fill={
+                  Object {
+                    "payload": 4278190080,
+                    "type": 0,
+                  }
+                }
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": "22",
+                    "fontWeight": "900",
+                    "textAnchor": "start",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    "30",
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+          </RNSVGGroup>
+          <View
+            pointerEvents="box-none"
+            style={
+              Object {
+                "left": 0,
+                "position": "absolute",
+                "top": 0,
+                "zIndex": 99,
+              }
+            }
+          >
+            <RNSVGSvgView
+              align="xMidYMid"
+              bbHeight="240"
+              bbWidth="750"
+              focusable={false}
+              height={240}
+              meetOrSlice={0}
+              minX={0}
+              minY={0}
+              style={
+                Array [
+                  Object {
+                    "backgroundColor": "transparent",
+                    "borderWidth": 0,
+                  },
+                  Object {
+                    "height": "100%",
+                    "overflow": "visible",
+                    "width": "100%",
+                  },
+                  Object {
+                    "flex": 0,
+                    "height": 240,
+                    "width": 750,
+                  },
+                ]
+              }
+              vbHeight={240}
+              vbWidth={750}
+              width={750}
+            >
+              <RNSVGGroup />
+            </RNSVGSvgView>
+          </View>
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "borderRadius": 25,
+            "fontSize": 30,
+            "fontWeight": "bold",
+            "textAlign": "center",
+            "width": "75%",
+          }
+        }
+        x={10}
+      >
+        Back
+      </Text>
+    </View>
+  </View>
+</RCTScrollView>
+`;

@@ -30,6 +30,30 @@ export default function BankAccountsScreen({ navigation }) {
     const date = new Date(timestamp);
     return  date.toLocaleDateString() + " "+  date.toLocaleTimeString();
   };
+
+  const styles = StyleSheet.create({
+    container: {
+      width: '100%',
+      paddingLeft: 20,
+      paddingRight: 20,
+      paddingBottom: 0,
+      borderWidth: 1,
+      borderRadius: 5,
+      borderColor: dark ? colors.background : '#ddd',
+      overflow: 'hidden',
+    },
+    row:{
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    item:{
+      padding: 20,
+    },
+    text:{
+      color: colors.text
+    },
+  });
+  
   
 
   if (isLoading){
@@ -37,49 +61,26 @@ export default function BankAccountsScreen({ navigation }) {
 }
 
   return (
-    <View 
-      style={{flex:1, backgroundColor: colors.background}}
-    >
+    <View style={{flex:1,  margin: 4, marginBottom: 54}} >
               <View style={[styles.container, {backgroundColor: colors.background}]}>
                   <FlatList data={bankData} renderItem={({item, index}) =>{
                       return (
                         <TouchableOpacity style={styles.item} key={index}>
                             <View style={styles.row}>
                                 <Image
-                                    source={{ uri: item.institution.logo }}
+                                    source={{ uri: item.institution_logo }}
                                     style={{ width: 50, height: 50, marginRight: 10, resizeMode: 'contain'}}
                                 />
-                                <Text style={[{color: colors.text}]}>{item.institution.name}</Text>
+                                <Text style={styles.text}>{item.institution_name}</Text>
                               </View>
                               {/* <Text>{'\n'}IBAN: {item.data.iban}</Text> */}
-                            <Text style={[{color: colors.text}]}>Currency: {item.details.account.currency}</Text>
-                            <Text style={[{color: colors.text}]}>Created: {displayTimestamp(item.data.created)} </Text>
+                            <Text style={styles.text}>Balance: {item.balance.string}</Text>
+                            {/* <Text style={styles.text}>Created: {displayTimestamp(item.data.created)} </Text> */}
                           </TouchableOpacity>)
                       }}
-                      ListEmptyComponent={<Text>{'\nYou have no bank accounts\n'}</Text>}
+                      ListEmptyComponent={<Text style={styles.text}>{'\nYou have no bank accounts\n'}</Text>}
                   />
               </View>
       </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingBottom: 0,
-    borderWidth: 1,
-
-    borderRadius: 5,
-    borderColor: '#ddd',
-    overflow: 'hidden',
-  },
-  row:{
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  item:{
-    padding: 20,
-  }
-});

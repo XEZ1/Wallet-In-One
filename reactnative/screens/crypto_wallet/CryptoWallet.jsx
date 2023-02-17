@@ -10,16 +10,18 @@ import {
 } from "react-native";
 import useCryptoWallet from "./useCryptoWallet";
 import WalletAsset from "./WalletAsset";
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 export default function CryptoWallet(props) {
   const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
+  const {dark, colors, setScheme} = useTheme();
 
   useEffect(() => {
     fetchWallets();
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View
@@ -29,14 +31,17 @@ export default function CryptoWallet(props) {
               justifyContent: "center",
             }}
           >
-            <Text style={styles.backArrow}>←</Text>
-            <Text style={styles.cryptoWalletTitle}>Crypto Wallets</Text>
+            <Text style={[styles.backArrow, {color: colors.primary}]}>←</Text>
+            <Text style={[styles.cryptoWalletTitle, {color: colors.text}]}>Crypto Wallets</Text>
           </View>
         </View>
 
-        <Button title="Add Wallet" onPress={() => props.navigation.navigate("WalletSelector", {connectWallet: connectWallet})} />
+        <Button
+          title="Add Wallet"
+          onPress={() => props.navigation.navigate("WalletSelector", {connectWallet: connectWallet})}
+        />
 
-        <View style={styles.walletList}>
+        <View style={[styles.walletList]}>
         {
           wallets.map((item)=> <WalletAsset key={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
         }
