@@ -155,7 +155,16 @@ export default function HomePage({ navigation }) {
         barWidth={18}
         padding={40}
         labels={({ datum }) => datum.x}
-        labelComponent={<VictoryLabel dy={-20} x={30} style={{ fontSize: 22, fontWeight: '900', fill: colors.text}} />}
+        labelComponent={
+          <VictoryLabel 
+            dy={-20}
+            x={30}
+            style={{ fontSize: 22, fontWeight: '900', fill: colors.text}}
+            events={{
+                onPress:() => handlePressIn
+            }}
+          />
+        }
         height={spacing}
         animate={{
           onExit: {
