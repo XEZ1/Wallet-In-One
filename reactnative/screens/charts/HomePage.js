@@ -110,10 +110,10 @@ export default function HomePage({ navigation }) {
             onPressIn: handlePressIn
           }
         }]}
-        animate={{
-          duration: 2000,
-          easing: "bounce"
-        }}
+        // animate={{
+        //   duration: 2000,
+        //   easing: "bounce"
+        // }}
         colorScale={colours}
         standalone={false}
         height={300}
@@ -163,14 +163,14 @@ export default function HomePage({ navigation }) {
           />
         }
         height={spacing}
-        animate={{
-          onExit: {
-            duration: 200,
-            before: () => ({
-              _y: 0,
-            })
-          },
-        }}
+        // animate={{
+        //   onExit: {
+        //     duration: 200,
+        //     before: () => ({
+        //       _y: 0,
+        //     })
+        //   },
+        // }}
         events={[{
           target: "data",
           eventHandlers: {
