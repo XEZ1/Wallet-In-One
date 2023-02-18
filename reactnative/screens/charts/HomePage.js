@@ -51,6 +51,7 @@ export default function HomePage({ navigation }) {
   data.forEach(jsonObj => {
     value += jsonObj.y;
   });
+  value = value.toFixed(2)
 
   const list = data.map(val => val.x);
   const colours = ["pink", "turquoise", "lime", "#FA991C"];
