@@ -60,6 +60,7 @@ export default function Navigation() {
             headerTitleStyle: {color: colors.text},
             tabBarStyle: {backgroundColor: colors.background},
             tabBarShowLabel: false,
+            tabBarHideOnKeyboard: true,
           }}
         >
           <Tab.Screen
