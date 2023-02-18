@@ -154,15 +154,12 @@ export default function HomePage({ navigation }) {
         data={data}
         barWidth={18}
         padding={40}
-        labels={({ datum }) => datum.x}
+        labels={({ datum }) => "●"+ datum.x}
         labelComponent={
           <VictoryLabel 
             dy={-20}
             x={30}
             style={{ fontSize: 22, fontWeight: '900', fill: colors.text}}
-            events={{
-                onPress:() => handlePressIn
-            }}
           />
         }
         height={spacing}
@@ -176,6 +173,12 @@ export default function HomePage({ navigation }) {
         }}
         events={[{
           target: "data",
+          eventHandlers: {
+            onPressIn: handlePressIn
+          }
+        },
+        {
+          target: "labels",
           eventHandlers: {
             onPressIn: handlePressIn
           }
