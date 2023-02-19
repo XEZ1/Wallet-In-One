@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
-import { Button } from 'react-native';
-import PlaidLink from 'react-native-plaid-link-sdk';
+import { Button, Text } from 'react-native';
+import { PlaidLink, LinkSuccess, LinkExit} from 'react-native-plaid-link-sdk';
+import * as SecureStore from 'expo-secure-store';
 
 const PlaidComponent = () => {
   const [linkToken, setLinkToken] = useState('');
 
   const initiatePlaidLink = async () => {
+    let token = await SecureStore.getItemAsync('token')
     const response = await fetch('http://10.0.2.2:8000/initiate_plaid_link/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Token '+ token
       },
       body: JSON.stringify({
         // any additional parameters needed for the Django view
@@ -17,23 +20,26 @@ const PlaidComponent = () => {
     });
     const data = await response.json();
     setLinkToken(data.link_token);
-    console.log(linkToken);
+    console.log(data.link_token);
   };
 
   return (
     <>
       <Button title="Connect with Plaid" onPress={initiatePlaidLink} />
-      {linkToken && (
         <PlaidLink
-          token={linkToken}
-          onSuccess={(publicToken, metadata) => {
-            // Handle successful Plaid Link flow
+          tokenConfig={{
+          token: linkToken,
+          noLoadingState: false,
           }}
-          onExit={() => {
-            // Handle user exit from Plaid Link flow
+          onSuccess={(success: LinkSuccess) => {
+            console.log(success);
           }}
-        />
-      )}
+          onExit={(exit: LinkExit) => {
+            console.log(exit);
+          }}
+        >
+          <Text>Add Account</Text>
+          </PlaidLink>
     </>
   );
 };
