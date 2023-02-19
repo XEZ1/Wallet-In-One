@@ -184,11 +184,11 @@ export default function HomePage({ navigation }) {
           }
         }]}
       />
-    <TouchableOpacity
-      onPress={()=>{setNewData(baseData.all);setPressed(false)}}
-      >
-        <Text style={[styles.button, {color: colors.text}]} x={10}>Back</Text>
-      </TouchableOpacity>
+      {pressed ? (
+        <TouchableOpacity onPress={()=>{setNewData(baseData.all);setPressed(false)}}>
+          <Text style={[styles.button, { color: colors.text }]}>Back</Text>
+        </TouchableOpacity>
+      ):''}
     </ScrollView>
   );
 }
