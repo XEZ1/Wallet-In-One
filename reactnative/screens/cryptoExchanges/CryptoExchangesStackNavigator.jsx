@@ -8,6 +8,7 @@ import HuobiCredentials from "./HuobiExchange";
 import GateioCredentials from "./GateioExchange";
 import CoinListCredentials from "./CoinlistExchange";
 import CryptoExchanges from "./CryptoExchanges";
+import KrakenCredentials from "./KrakenExchange";
 
 import { LogBox } from 'react-native';
 
@@ -26,6 +27,7 @@ export default function CryptoExchangesStackNavigator( props ) {
       <Stack.Screen name="Huobi" component={HuobiCredentials} />
       <Stack.Screen name="Gateio" component={GateioCredentials} />
       <Stack.Screen name="CoinList" component={CoinListCredentials} />
+      <Stack.Screen name="Kraken" component={KrakenCredentials} />
     </Stack.Navigator>
   );
 }
