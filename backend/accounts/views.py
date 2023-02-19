@@ -4,6 +4,11 @@ from .serializers import SignUpSerializer
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+import plaid
+import requests
 
 # Create your views here.
 
@@ -38,3 +43,33 @@ def graph_data(request):
         data['Cryptocurrency'] = crypto_data
     print(data)
     return Response(data)
+
+
+PLAID_CLIENT_ID = '63ef90fc73e3070014496336'
+PLAID_SECRET = 'a57f2537ac53e9842da752b987bb5b'
+PLAID_ENV = 'sandbox'  # Change to 'development' or 'production' in production environment
+
+@api_view(['POST'])
+@csrf_exempt
+def initiate_plaid_link(request):
+    client = plaid.Client(
+        client_id='63ef90fc73e3070014496336',
+        secret='a57f2537ac53e9842da752b987bb5b',
+        environment='sandbox'
+    )
+    
+    requests.post(f'/api/create_link_token')
+
+    # Generate a Link token
+    response = client.linkTokenCreate({
+        'user': {
+            'client_user_id': request.user.id,
+        },
+        'client_name': 'KCL',
+        'products': ['transactions'],
+        'country_codes': ['US'],
+        'language': 'en',
+    })
+    print(response)
+    link_token = response['link_token']
+    return Response({'link_token': link_token})

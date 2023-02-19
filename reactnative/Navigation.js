@@ -26,7 +26,7 @@ import { userContext } from './data';
 import CryptoWalletStackNavigator from "./screens/crypto_wallet/CryptoWalletStackNavigator";
 import CryptoExchangesStackNavigator from './screens/cryptoExchanges/CryptoExchangesStackNavigator';
 
-
+import PlaidComponent from './screens/Plaid';
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { ThemeProvider, defaultTheme } from 'reactnative/src/theme/ThemeProvider';
@@ -116,6 +116,8 @@ export default function Navigation() {
               tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="setting" size={30}/></Text>)
             }}
           />
+
+          <Tab.Screen name="Test" component={PlaidComponent} />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
