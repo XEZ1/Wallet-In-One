@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, GateioAccount, CoinListAccount
+from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, GateioAccount, CoinListAccount, KrakenAccount
 
 
 class TokenSerializer(serializers.ModelSerializer):
@@ -66,3 +66,17 @@ class CoinListAccountSerializer(serializers.ModelSerializer):
         )
         coinlist_account.save()
         return coinlist_account
+
+class KrakenAccountSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = KrakenAccount
+        fields = ('user', 'api_key', 'secret_key', 'created_at')
+
+    def create(self, validated_data):
+        kraken_account = KrakenAccount.objects.create(
+            **validated_data,
+        )
+        kraken_account.save()
+        return kraken_account

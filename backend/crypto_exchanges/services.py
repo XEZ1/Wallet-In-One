@@ -8,6 +8,8 @@ from base64 import b64encode
 from urllib.parse import urlencode
 from datetime import datetime, timezone
 from urllib.parse import quote_plus
+import krakenex
+from pykrakenapi import KrakenAPI
 
 from requests import Response
 
@@ -194,3 +196,18 @@ class CoinListFetcher:
 
     def prehash(self, timestamp, method, path, body):
         return timestamp + method.upper() + path + (body or '')
+
+
+class KrakenFetcher:
+    def __init__(self, api_key, secret_key):
+        self.api_key = api_key
+        self.secret_key = secret_key
+
+    def get_account_data(self):
+        api = krakenex.API(self.api_key, self.secret_key)
+        kraken = KrakenAPI(api)
+
+        # Fetch user assets data
+        user_assets = kraken.get_account_balance()
+
+        return user_assets

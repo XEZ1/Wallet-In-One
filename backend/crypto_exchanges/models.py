@@ -34,3 +34,9 @@ class CoinListAccount(models.Model):
     secret_key = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+class KrakenAccount(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    api_key = models.CharField(max_length=255)
+    secret_key = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)

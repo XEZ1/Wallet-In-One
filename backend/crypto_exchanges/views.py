@@ -3,9 +3,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, GateioAccount, CoinListAccount
-from crypto_exchanges.serializers import TokenSerializer, BinanceAccountSerializer, HuobiAccountSerializer, GateioAccountSerializer, CoinListAccountSerializer
-from crypto_exchanges.services import BinanceFetcher, HuobiFetcher, GateioFetcher, CoinListFetcher
+from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, GateioAccount, CoinListAccount, KrakenAccount
+from crypto_exchanges.serializers import TokenSerializer, BinanceAccountSerializer, HuobiAccountSerializer, GateioAccountSerializer, CoinListAccountSerializer, KrakenAccountSerializer
+from crypto_exchanges.services import BinanceFetcher, HuobiFetcher, GateioFetcher, CoinListFetcher, KrakenFetcher
 
 
 # Create your views here.
@@ -234,6 +234,52 @@ class CoinListView(APIView):
 
         # Return the account information to the user
         filtered_data = list(filter(filter_not_empty_balance, data['asset_balances'].items()))
+
+        # Create tokens
+        for coin in filtered_data:
+            # check if the coin already exists
+            if bool(Token.objects.filter(user=self.request.user, asset=coin[0])):
+                token = Token.objects.get(user=self.request.user, asset=coin[0])
+                token.free += float(coin[1])
+                token.locked += float(0)
+                token.save()
+
+            else:
+                token = Token()
+                token.user = self.request.user
+                token.asset = coin[0]
+                token.free = float(coin[1])
+                token.locked = float(0)
+                token.save()
+
+        return Response(filtered_data, status=200)
+
+
+
+class KrakenView(APIView):
+    def post(self, request):
+        kraken_account = KrakenAccountSerializer(data=self.request.data, context={'request': request})
+
+        kraken_account.is_valid(raise_exception=True)
+
+        if bool(KrakenAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"], secret_key=self.request.data["secret_key"])):
+            return Response({'error': 'This kraken account has already been added'}, status=400)
+
+        service = KrakenFetcher(self.request.data["api_key"], self.request.data["secret_key"])
+
+        data = service.get_account_data()
+
+        # Making sure the api and secret keys are valid before saving the binance account
+        if 'EAPI' in data:
+            # encountering an error while retrieving data
+            return Response({'error': data['EAPI']}, status=400)
+
+        kraken_account.save()
+
+        def filter_not_empty_balance(coin_to_check):
+            return float(coin_to_check[1]) > 0
+
+        filtered_data = list(filter(filter_not_empty_balance, data['result'].items()))
 
         # Create tokens
         for coin in filtered_data:
