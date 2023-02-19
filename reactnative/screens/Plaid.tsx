@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Text } from 'react-native';
-import { PlaidLink, LinkSuccess, LinkExit} from 'react-native-plaid-link-sdk';
+import { LinkSuccess, LinkExit} from 'react-native-plaid-link-sdk';
+import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
 
 const PlaidComponent = () => {
@@ -20,26 +21,18 @@ const PlaidComponent = () => {
     });
     const data = await response.json();
     setLinkToken(data.link_token);
-    console.log(data.link_token);
+    console.log(linkToken);
   };
 
   return (
     <>
       <Button title="Connect with Plaid" onPress={initiatePlaidLink} />
-        <PlaidLink
-          tokenConfig={{
-          token: linkToken,
-          noLoadingState: false,
-          }}
-          onSuccess={(success: LinkSuccess) => {
-            console.log(success);
-          }}
-          onExit={(exit: LinkExit) => {
-            console.log(exit);
-          }}
-        >
-          <Text>Add Account</Text>
-          </PlaidLink>
+      <PlaidLink
+      linkToken={linkToken}
+      onEvent={(event) => console.log(event)}
+      onExit={(exit) => console.log(exit)}
+      onSuccess={(success) => console.log(success.publicToken)}
+    />
     </>
   );
 };
