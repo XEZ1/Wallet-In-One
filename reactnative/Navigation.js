@@ -31,6 +31,8 @@ import PlaidComponent from './screens/Plaid';
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { ThemeProvider, defaultTheme } from 'reactnative/src/theme/ThemeProvider';
 
+import SuccessComponent from './screens/Success';
+
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -118,6 +120,7 @@ export default function Navigation() {
           />
 
           <Tab.Screen name="Test" component={PlaidComponent} />
+          <Tab.Screen name="sc" component={SuccessComponent} />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>

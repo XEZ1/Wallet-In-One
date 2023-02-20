@@ -4,8 +4,35 @@ import { LinkSuccess, LinkExit} from 'react-native-plaid-link-sdk';
 import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
 
-const PlaidComponent = () => {
+const PlaidComponent = ({ navigation }) => {
   const [linkToken, setLinkToken] = useState('');
+  const [account_id, setAccountID] = useState();
+  const [name, setName] = useState();
+
+  const addAccount = () => {
+    fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        account_id: account_id,
+        name: name
+      }),
+    }).then(res => res.json().then(data => ({status: res.status, body: data})) )
+    .then((data) => console.log(data))
+    };
+    
+  const listAccounts = async () => {
+
+  fetch('http://10.0.2.2:8000/stocks/list_accounts/', {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+    },
+  }).then((res) => console.log(res.json()))};
 
   const initiatePlaidLink = async () => {
     let token = await SecureStore.getItemAsync('token')
@@ -31,7 +58,12 @@ const PlaidComponent = () => {
       linkToken={linkToken}
       onEvent={(event) => console.log(event)}
       onExit={(exit) => console.log(exit)}
-      onSuccess={(success) => console.log(success.publicToken)}
+      onSuccess={(success) => {
+        setAccountID(success.metadata.accounts[0]._id)
+        setName(success.metadata.accounts[0].meta.name)
+        addAccount()
+        listAccounts()
+      }}
     />
     </>
   );
