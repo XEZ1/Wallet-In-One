@@ -8,6 +8,7 @@ const PlaidComponent = ({ navigation }) => {
   const [linkToken, setLinkToken] = useState('');
   const [account_id, setAccountID] = useState();
   const [name, setName] = useState();
+  const [list, setList] = useState();
 
   const addAccount = () => {
     fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
@@ -32,7 +33,7 @@ const PlaidComponent = ({ navigation }) => {
       "Content-Type": "application/json",
       Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
     },
-  }).then((res) => console.log(res.json()))};
+  }).then(async (res) => setList(await res.json()))};
 
   const initiatePlaidLink = async () => {
     let token = await SecureStore.getItemAsync('token')
@@ -54,6 +55,7 @@ const PlaidComponent = ({ navigation }) => {
   return (
     <>
       <Button title="Connect with Plaid" onPress={initiatePlaidLink} />
+      {list ? (<Text>{JSON.stringify(list)}</Text>):''}
       <PlaidLink
       linkToken={linkToken}
       onEvent={(event) => console.log(event)}

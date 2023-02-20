@@ -10,7 +10,7 @@ class AddStockAccount(serializers.ModelSerializer):
             account = StockAccount.objects.create(
                 account_id=validated_data['account_id'],
                 name=validated_data['name'],
-                user = self.context['request'].user.id
+                #user = self.context['request'].user.id
             )
             account.save()
             return account
