@@ -64,6 +64,6 @@ class addAccount(generics.CreateAPIView):
 
 @api_view(['GET'])
 def listAccounts(request):
-    accounts = StockAccount.objects.all()
+    accounts = StockAccount.objects.filter(user=request.user)
     serializer = AddStockAccount(accounts, many=True)
     return Response(serializer.data)

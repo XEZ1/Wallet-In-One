@@ -10,12 +10,13 @@ const PlaidComponent = ({ navigation }) => {
   const [name, setName] = useState();
   const [list, setList] = useState();
 
-  const addAccount = () => {
+  const addAccount = async () => {
     fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
       },
       body: JSON.stringify({
         account_id: account_id,
@@ -61,8 +62,11 @@ const PlaidComponent = ({ navigation }) => {
       onEvent={(event) => console.log(event)}
       onExit={(exit) => console.log(exit)}
       onSuccess={(success) => {
+        console.log(success.metadata)
         setAccountID(success.metadata.accounts[0]._id)
+        console.log(success.metadata.accounts[0]._id)
         setName(success.metadata.accounts[0].meta.name)
+        console.log(success.metadata.accounts[0].meta.name)
         addAccount()
         listAccounts()
       }}
