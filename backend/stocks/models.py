@@ -1,3 +1,8 @@
 from django.db import models
+from accounts.models import User
 
-# Create your models here.
+
+class StockAccount(models.Model):
+    account_id = models.CharField(max_length=1024, primary_key=True)
+    name = models.CharField(max_length=1024)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stock_accounts')
