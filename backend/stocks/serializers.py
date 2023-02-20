@@ -6,7 +6,7 @@ class AddStockAccount(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = StockAccount
-        fields = ['account_id', 'name', 'user']
+        fields = ['account_id', 'name', 'user', 'institution_name', 'institution_id']
 
         def create(self, validated_data):
             account = StockAccount.objects.create(**validated_data)

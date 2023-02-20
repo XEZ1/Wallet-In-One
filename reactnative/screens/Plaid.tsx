@@ -9,6 +9,8 @@ const PlaidComponent = ({ navigation }) => {
   const [account_id, setAccountID] = useState();
   const [name, setName] = useState();
   const [list, setList] = useState();
+  const [institution_name, setInstitutionName] = useState();
+  const [institution_id, setInstitutionID] = useState();
 
   const addAccount = async () => {
     fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
@@ -20,7 +22,9 @@ const PlaidComponent = ({ navigation }) => {
       },
       body: JSON.stringify({
         account_id: account_id,
-        name: name
+        name: name,
+        institution_name: institution_name,
+        institution_id: institution_id,
       }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
     .then((data) => console.log(data))
@@ -67,6 +71,10 @@ const PlaidComponent = ({ navigation }) => {
         console.log(success.metadata.accounts[0]._id)
         setName(success.metadata.accounts[0].meta.name)
         console.log(success.metadata.accounts[0].meta.name)
+        setInstitutionName(success.metadata.institution.name)
+        console.log(success.metadata.institution.name)
+        setInstitutionID(success.metadata.institution.id)
+        console.log(success.metadata.institution.id)
         addAccount()
         listAccounts()
       }}
