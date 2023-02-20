@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { LineChart } from "react-native-chart-kit";
+//import { LineChart } from "react-native-chart-kit";
 import React, {useEffect, useState} from "react";
 import getCryptoIcon from "./icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
@@ -104,6 +104,7 @@ export default function WalletAsset(props) {
           </View>
 
           <View style={{}}>
+            {/* Old Chart
             <LineChart
               data={data}
               width={200} // Dimensions.get("window").width
@@ -125,6 +126,7 @@ export default function WalletAsset(props) {
               withOuterLines={false}
               bezier
             />
+            */}
           </View>
         </View>
       </View>
