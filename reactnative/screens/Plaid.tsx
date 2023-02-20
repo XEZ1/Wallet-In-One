@@ -9,7 +9,7 @@ const PlaidComponent = () => {
 
   const initiatePlaidLink = async () => {
     let token = await SecureStore.getItemAsync('token')
-    const response = await fetch('http://10.0.2.2:8000/initiate_plaid_link/', {
+    const response = await fetch('http://10.0.2.2:8000/stocks/initiate_plaid_link/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
