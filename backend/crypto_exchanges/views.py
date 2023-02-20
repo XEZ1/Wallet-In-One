@@ -3,7 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from crypto_exchanges.models import Token, coinbaseAccount, HuobiAccount, GateioAccount, CoinListAccount, KrakenAccount
+from crypto_exchanges.models import Token, CoinbaseAccount, HuobiAccount, GateioAccount, CoinListAccount, KrakenAccount, \
+    BinanceAccount
 from crypto_exchanges.serializers import TokenSerializer, BinanceAccountSerializer, HuobiAccountSerializer, \
     GateioAccountSerializer, CoinListAccountSerializer, KrakenAccountSerializer, CoinbaseAccountSerializer
 from crypto_exchanges.services import BinanceFetcher, HuobiFetcher, GateioFetcher, CoinListFetcher, KrakenFetcher, \
@@ -315,7 +316,7 @@ class CoinbaseView(APIView):
         coinbase_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(coinbaseAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"],
+        if bool(CoinbaseAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"],
                                                secret_key=self.request.data["secret_key"])):
             return Response({'error': 'This coinbase account has already been added'}, status=400)
 
