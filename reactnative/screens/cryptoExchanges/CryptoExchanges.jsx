@@ -92,6 +92,12 @@ export default function CryptoExchanges({ navigation }) {
       >
         <Text style={styles.buttonText}>Kraken</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Coinbase')}
+        style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+      >
+        <Text style={styles.buttonText}>Coinbase</Text>
+      </TouchableOpacity>
     </View>
   );
 
