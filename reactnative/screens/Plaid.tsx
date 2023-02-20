@@ -66,16 +66,19 @@ const PlaidComponent = ({ navigation }) => {
       onEvent={(event) => console.log(event)}
       onExit={(exit) => console.log(exit)}
       onSuccess={(success) => {
+        let account_list = success.metadata.accounts
         console.log(success.metadata)
-        setAccountID(success.metadata.accounts[0]._id)
-        console.log(success.metadata.accounts[0]._id)
-        setName(success.metadata.accounts[0].meta.name)
-        console.log(success.metadata.accounts[0].meta.name)
-        setInstitutionName(success.metadata.institution.name)
-        console.log(success.metadata.institution.name)
-        setInstitutionID(success.metadata.institution.id)
-        console.log(success.metadata.institution.id)
-        addAccount()
+        account_list.forEach(element => {
+          setAccountID(element._id)
+          console.log(element._id)
+          setName(element.meta.name)
+          console.log(element.meta.name)
+          setInstitutionName(success.metadata.institution.name)
+          console.log(success.metadata.institution.name)
+          setInstitutionID(success.metadata.institution.id)
+          console.log(success.metadata.institution.id)
+          addAccount()
+        });
         listAccounts()
       }}
     />
