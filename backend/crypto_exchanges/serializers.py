@@ -1,9 +1,10 @@
 from rest_framework import serializers
-from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, GateioAccount, CoinListAccount, KrakenAccount
+from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, GateioAccount, CoinListAccount, KrakenAccount, CoinbaseAccount
 
 
 class TokenSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Token
         fields = ('user', 'asset', 'free', 'locked')
@@ -15,8 +16,10 @@ class TokenSerializer(serializers.ModelSerializer):
         token.save()
         return token
 
+
 class BinanceAccountSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = BinanceAccount
         fields = ('user', 'api_key', 'secret_key', 'created_at')
@@ -28,8 +31,10 @@ class BinanceAccountSerializer(serializers.ModelSerializer):
         binance_account.save()
         return binance_account
 
+
 class HuobiAccountSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = HuobiAccount
         fields = ('user', 'api_key', 'secret_key', 'created_at')
@@ -41,8 +46,10 @@ class HuobiAccountSerializer(serializers.ModelSerializer):
         Huobi_account.save()
         return Huobi_account
 
+
 class GateioAccountSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = GateioAccount
         fields = ('user', 'api_key', 'secret_key', 'created_at')
@@ -54,8 +61,10 @@ class GateioAccountSerializer(serializers.ModelSerializer):
         gateio_account.save()
         return gateio_account
 
+
 class CoinListAccountSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = CoinListAccount
         fields = ('user', 'api_key', 'secret_key', 'created_at')
@@ -66,6 +75,7 @@ class CoinListAccountSerializer(serializers.ModelSerializer):
         )
         coinlist_account.save()
         return coinlist_account
+
 
 class KrakenAccountSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -80,3 +90,18 @@ class KrakenAccountSerializer(serializers.ModelSerializer):
         )
         kraken_account.save()
         return kraken_account
+
+
+class CoinbaseAccountSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = CoinbaseAccount
+        fields = ('user', 'api_key', 'secret_key', 'created_at')
+
+    def create(self, validated_data):
+        coinbase_account = CoinbaseAccount.objects.create(
+            **validated_data,
+        )
+        coinbase_account.save()
+        return coinbase_account

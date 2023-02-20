@@ -10,11 +10,13 @@ class Token(models.Model):
     free = models.FloatField()
     locked = models.FloatField()
 
+
 class BinanceAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     api_key = models.CharField(max_length=255)
     secret_key = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+
 
 class HuobiAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -22,11 +24,13 @@ class HuobiAccount(models.Model):
     secret_key = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
 class GateioAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     api_key = models.CharField(max_length=255)
     secret_key = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+
 
 class CoinListAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -36,6 +40,13 @@ class CoinListAccount(models.Model):
 
 
 class KrakenAccount(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    api_key = models.CharField(max_length=255)
+    secret_key = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class CoinbaseAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     api_key = models.CharField(max_length=255)
     secret_key = models.CharField(max_length=255)
