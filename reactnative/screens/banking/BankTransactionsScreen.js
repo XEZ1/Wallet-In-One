@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, Button, TextInput, Alert, FlatList , TouchableOpacity, Image} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Button, TextInput, Alert, SectionList , TouchableOpacity, Image } from 'react-native';
 import { useState, useEffect } from 'react';
 import { auth_get} from '../../authentication'
 import { useIsFocused } from '@react-navigation/native';
@@ -45,8 +45,6 @@ function BankTransactionsScreen({ route, navigation }) {
   const styles = StyleSheet.create({
     container: {
       width: '100%',
-      paddingLeft: 20,
-      paddingRight: 20,
       paddingBottom: 0,
       borderWidth: 1,
       borderRadius: 5,
@@ -68,8 +66,6 @@ function BankTransactionsScreen({ route, navigation }) {
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingVertical: 8,
-      borderBottomWidth: 1,
-      borderBottomColor: 'lightgray',
     },
     leftContainer: {
       flex: 1,
@@ -95,12 +91,43 @@ function BankTransactionsScreen({ route, navigation }) {
       fontSize: 14,
       color: 'gray',
     },
+    header:{
+      paddingLeft:20, 
+      paddingRight: 20,
+      paddingTop: 6,
+      paddingBottom: 6,
+      fontWeight: 'bold',
+      color:  colors.text,
+      backgroundColor: dark ? '#505050' : '#f5f5f5',
+    },
+    padding:{
+      paddingLeft:20, 
+      paddingRight: 20
+    }
   });
 
-  const TransactionItem = ({ item, name, date, amount, time }) => {
+  const groupData = (data) => {
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    return data.reduce((acc, item) => {
+      const date = new Date(item.time);
+      const month = months[date.getMonth()]
+      const year = date.getFullYear();
+      const title = `${month} ${year}`;
+      const monthData = acc.find((item) => item.title === title);
+      if (monthData) {
+        monthData.data.push(item);
+      } else {
+        acc.push({ title: title, data: [item] });
+      }
+    
+      return acc;
+    }, []);
+  }
+
+  const TransactionItem = ({ item, name, date, amount, time, last}) => {
     const amountColor = amount >= 0 ? 'green' : 'red';
     return (
-      <View style={styles.item}>
+      <View style={[styles.item,last ? {} : {borderBottomWidth: 1, borderBottomColor: 'lightgray'}]}>
         <View style={styles.leftContainer}>
           <ScrollView horizontal={true}>
             <Text style={styles.name}>{name}</Text>
@@ -116,21 +143,28 @@ function BankTransactionsScreen({ route, navigation }) {
 
   if (isLoading){
     return <Loading/>
-}
-
+  }
+  
   return (
     <View style={{flex:1,  margin: 4, marginBottom: 54}} >
               <View style={[styles.container, {backgroundColor: colors.background}]}>
-                  <FlatList data={bankData} renderItem={({item, index}) =>{
+                  <SectionList 
+                    ListEmptyComponent={<View style={styles.padding}><Text style={styles.text}>{'\nYou have no bank accounts\n'}</Text></View>}
+                    sections={groupData(bankData)} 
+                    renderSectionHeader={({section: {title}}) => (<Text style={styles.header}>{title}</Text>)}
+                    renderItem={({item, index, section}) =>{
                       return (
+                        <View style={styles.padding}>
                         <TransactionItem
                           item={item}
                           name={item.info}
                           amount={item.amount}
                           date={displayDate(item.time)}
-                          time={displayTime(item.time)} />)
+                          time={displayTime(item.time)}
+                          last={index == section.data.length-1}/>
+                        </View>)
                       }}
-                      ListEmptyComponent={<Text style={styles.text}>{'\nYou have no bank accounts\n'}</Text>}
+                      
                   />
               </View>
       </View>
