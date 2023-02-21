@@ -6,17 +6,24 @@ import {
   Platform,
   Alert,
 } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
 const SuccessComponent = () => {
     const [data, setData] = useState(null);
-
-    const listAccounts = fetch('http://10.0.2.2:8000/stocks/list_accounts/')
+    const [list, setList] = useState()
 
       useEffect(() => {
-        if (data == null) {
+        const listAccounts = async () => {
 
-        }
-      }, [data])
+          fetch('http://10.0.2.2:8000/stocks/list_accounts/', {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+            },
+          }).then(async (res) => setList(await res.json()))};
+        listAccounts()
+      })
     return (
         <View>
           <View>
@@ -25,7 +32,7 @@ const SuccessComponent = () => {
           <View>
             <Text>
                 {
-                  JSON.stringify(data)
+                  JSON.stringify(list)
                 }
             </Text>
           </View>

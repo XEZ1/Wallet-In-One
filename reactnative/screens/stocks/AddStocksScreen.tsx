@@ -67,7 +67,7 @@ const PlaidComponent = ({ navigation }) => {
       onExit={(exit) => console.log(exit)}
       onSuccess={(success) => {
         let account_list = success.metadata.accounts
-        console.log(success.metadata)
+        console.log(success.metadata.accounts[0].meta)
 
         account_list.forEach(element => {
           // setAccountID(element._id)
@@ -80,7 +80,7 @@ const PlaidComponent = ({ navigation }) => {
           // console.log(success.metadata.institution.id)
           addAccount(element, success)
         });
-        listAccounts()
+        // listAccounts()
       }}
     />
     </>

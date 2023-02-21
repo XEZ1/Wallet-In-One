@@ -26,12 +26,12 @@ import { userContext } from './data';
 import CryptoWalletStackNavigator from "./screens/crypto_wallet/CryptoWalletStackNavigator";
 import CryptoExchangesStackNavigator from './screens/cryptoExchanges/CryptoExchangesStackNavigator';
 
-import PlaidComponent from './screens/Plaid';
+import PlaidComponent from './screens/stocks/AddStocksScreen';
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { ThemeProvider, defaultTheme } from 'reactnative/src/theme/ThemeProvider';
 
-import SuccessComponent from './screens/Success';
+import SuccessComponent from './screens/stocks/ListStocksScreen';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
