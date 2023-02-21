@@ -5,15 +5,15 @@ import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
 
 const PlaidComponent = ({ navigation }) => {
-  const [linkToken, setLinkToken] = useState('');
-  const [account_id, setAccountID] = useState();
-  const [name, setName] = useState();
-  const [list, setList] = useState();
-  const [institution_name, setInstitutionName] = useState();
-  const [institution_id, setInstitutionID] = useState();
+  const [linkToken, setLinkToken] = useState()
+  const [account_id, setAccountID] = useState()
+  const [name, setName] = useState()
+  const [list, setList] = useState()
+  const [institution_name, setInstitutionName] = useState()
+  const [institution_id, setInstitutionID] = useState()
 
-  const addAccount = async () => {
-    fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
+  const addAccount = async (account, success) => {
+    await fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -21,10 +21,10 @@ const PlaidComponent = ({ navigation }) => {
         Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
       },
       body: JSON.stringify({
-        account_id: account_id,
-        name: name,
-        institution_name: institution_name,
-        institution_id: institution_id,
+        account_id: account._id,
+        name: account.meta.name,
+        institution_name: success.metadata.institution.name,
+        institution_id: success.metadata.institution.id,
       }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
     .then((data) => console.log(data))
@@ -68,16 +68,17 @@ const PlaidComponent = ({ navigation }) => {
       onSuccess={(success) => {
         let account_list = success.metadata.accounts
         console.log(success.metadata)
+
         account_list.forEach(element => {
-          setAccountID(element._id)
-          console.log(element._id)
-          setName(element.meta.name)
-          console.log(element.meta.name)
-          setInstitutionName(success.metadata.institution.name)
-          console.log(success.metadata.institution.name)
-          setInstitutionID(success.metadata.institution.id)
-          console.log(success.metadata.institution.id)
-          addAccount()
+          // setAccountID(element._id)
+          // console.log(element._id)
+          // setName(element.meta.name)
+          // console.log(element.meta.name)
+          // setInstitutionName(success.metadata.institution.name)
+          // console.log(success.metadata.institution.name)
+          // setInstitutionID(success.metadata.institution.id)
+          // console.log(success.metadata.institution.id)
+          addAccount(element, success)
         });
         listAccounts()
       }}
