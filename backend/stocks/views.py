@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from rest_framework import generics, permissions
 from .serializers import AddStockAccount
 from .models import StockAccount
+from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
 
 PLAID_CLIENT_ID = '63ef90fc73e3070014496336'
 PLAID_SECRET = 'a57f2537ac53e9842da752b987bb5b'
@@ -56,6 +57,31 @@ def initiate_plaid_link(request):
         print(response)
         return json.loads(e.body)
 
+
+@api_view(['POST'])
+def get_access_token(request):
+    public_token = request.data.get('public_token')
+    host = plaid.Environment.Sandbox
+    configuration = plaid.Configuration(
+    host=host,
+    api_key={
+        'clientId': PLAID_CLIENT_ID,
+        'secret': PLAID_SECRET,
+        'plaidVersion': '2020-09-14'
+    }
+    )
+
+    api_client = plaid.ApiClient(configuration)
+    client = plaid_api.PlaidApi(api_client)
+    try:
+        exchange_request = ItemPublicTokenExchangeRequest(
+            public_token=public_token)
+        exchange_response = client.item_public_token_exchange(exchange_request)
+        access_token = exchange_response['access_token']
+        item_id = exchange_response['item_id']
+        return Response({'access_token': access_token, 'item_id': item_id})
+    except plaid.ApiException as e:
+        return json.loads(e.body)
 
 class addAccount(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]

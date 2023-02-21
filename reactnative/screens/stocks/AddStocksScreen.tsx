@@ -5,7 +5,7 @@ import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
 
 const PlaidComponent = ({ navigation }) => {
-  const [linkToken, setLinkToken] = useState()
+  const [linkToken, setLinkToken] = useState<string | undefined>(undefined)
   const [account_id, setAccountID] = useState()
   const [name, setName] = useState()
   const [list, setList] = useState()
@@ -41,21 +41,44 @@ const PlaidComponent = ({ navigation }) => {
   }).then(async (res) => setList(await res.json()))};
 
   const initiatePlaidLink = async () => {
-    let token = await SecureStore.getItemAsync('token')
-    const response = await fetch('http://10.0.2.2:8000/stocks/initiate_plaid_link/', {
+    let access_token = await SecureStore.getItemAsync('access_token')
+    console.log(access_token)
+    if(access_token == null)
+    {
+      let token = await SecureStore.getItemAsync('token')
+      const response = await fetch('http://10.0.2.2:8000/stocks/initiate_plaid_link/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Token '+ token
+        },
+        body: JSON.stringify({
+          // any additional parameters needed for the Django view
+        }),
+      });
+      const data = await response.json();
+      setLinkToken(data.link_token);
+      console.log(linkToken);
+    }
+    else{
+      setLinkToken(access_token);
+      console.log(access_token)
+    }
+  };
+
+  const getAccessToken = async (publicToken) => {
+    const response = await fetch('http://10.0.2.2:8000/stocks/get_access_token/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Token '+ token
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
       },
-      body: JSON.stringify({
-        // any additional parameters needed for the Django view
-      }),
+      body: JSON.stringify({ public_token: publicToken }),
     });
     const data = await response.json();
-    setLinkToken(data.link_token);
-    console.log(linkToken);
-  };
+    await SecureStore.setItemAsync('access_token', data.access_token)
+  }
+
 
   return (
     <>
@@ -67,6 +90,11 @@ const PlaidComponent = ({ navigation }) => {
       onExit={(exit) => console.log(exit)}
       onSuccess={async (success) => {
         let account_list = success.metadata.accounts
+        let access_token = await SecureStore.getItemAsync('access_token')
+        if(access_token == null){
+          getAccessToken(success.publicToken)
+          console.log("krishna")
+        }
         console.log(success.metadata.accounts[0].meta)
         console.log(success.publicToken)
         // await fetch(`http://10.0.2.2:8080/api/exchange_public_token`, {
@@ -75,7 +103,7 @@ const PlaidComponent = ({ navigation }) => {
         //     "Content-Type": "application/json",
         //   },
         //   body: JSON.stringify({ public_token: success.publicToken }),
-        //   }).then(res => console.log(res))
+        //   })
         //   .catch((err) => {
         //     console.log(err);
         //   });
