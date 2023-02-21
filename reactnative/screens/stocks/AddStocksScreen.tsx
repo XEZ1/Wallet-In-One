@@ -65,9 +65,20 @@ const PlaidComponent = ({ navigation }) => {
       linkToken={linkToken}
       onEvent={(event) => console.log(event)}
       onExit={(exit) => console.log(exit)}
-      onSuccess={(success) => {
+      onSuccess={async (success) => {
         let account_list = success.metadata.accounts
         console.log(success.metadata.accounts[0].meta)
+        console.log(success.publicToken)
+        // await fetch(`http://10.0.2.2:8080/api/exchange_public_token`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({ public_token: success.publicToken }),
+        //   }).then(res => console.log(res))
+        //   .catch((err) => {
+        //     console.log(err);
+        //   });
 
         account_list.forEach(element => {
           // setAccountID(element._id)
