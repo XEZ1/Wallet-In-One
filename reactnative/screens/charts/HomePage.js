@@ -13,7 +13,7 @@ import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 
 export default function HomePage({ navigation }) {
-  const [baseData, setBaseData ] = useState(fixture)
+  const [baseData, setBaseData ] = useState(fixture);
   const {dark, colors, setScheme} = useTheme();
   const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed ] = useState(false)
