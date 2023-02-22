@@ -43,8 +43,8 @@ const PlaidComponent = ({ navigation }) => {
   const initiatePlaidLink = async () => {
     let access_token = await SecureStore.getItemAsync('access_token')
     console.log(access_token)
-    if(access_token == null)
-    {
+    // if(access_token == null)
+    // {
       let token = await SecureStore.getItemAsync('token')
       const response = await fetch('http://10.0.2.2:8000/stocks/initiate_plaid_link/', {
         method: 'POST',
@@ -59,11 +59,11 @@ const PlaidComponent = ({ navigation }) => {
       const data = await response.json();
       setLinkToken(data.link_token);
       console.log(linkToken);
-    }
-    else{
-      setLinkToken(access_token);
-      console.log(access_token)
-    }
+    // }
+    // else{
+    //   setLinkToken(access_token);
+    //   console.log(access_token)
+    // }
   };
 
   const getAccessToken = async (publicToken) => {
@@ -77,6 +77,19 @@ const PlaidComponent = ({ navigation }) => {
     });
     const data = await response.json();
     await SecureStore.setItemAsync('access_token', data.access_token)
+  }
+
+  const getBalance = async (accessToken) => {
+    const response = await fetch('http://10.0.2.2:8000/stocks/get_balance/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+      body: JSON.stringify({ access_token: accessToken }),
+    });
+    const data = await response.json();
+    console.log(data)
   }
 
 
@@ -93,8 +106,11 @@ const PlaidComponent = ({ navigation }) => {
         let access_token = await SecureStore.getItemAsync('access_token')
         if(access_token == null){
           getAccessToken(success.publicToken)
+          getBalance(access_token)
           console.log("krishna")
         }
+        getBalance(access_token)
+        console.log("krishna")
         console.log(success.metadata.accounts[0].meta)
         console.log(success.publicToken)
         // await fetch(`http://10.0.2.2:8080/api/exchange_public_token`, {

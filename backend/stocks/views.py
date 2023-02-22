@@ -14,6 +14,8 @@ from rest_framework import generics, permissions
 from .serializers import AddStockAccount
 from .models import StockAccount
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
+from plaid.model.accounts_balance_get_request import AccountsBalanceGetRequest
+from flask import jsonify
 
 PLAID_CLIENT_ID = '63ef90fc73e3070014496336'
 PLAID_SECRET = 'a57f2537ac53e9842da752b987bb5b'
@@ -80,6 +82,30 @@ def get_access_token(request):
         access_token = exchange_response['access_token']
         item_id = exchange_response['item_id']
         return Response({'access_token': access_token, 'item_id': item_id})
+    except plaid.ApiException as e:
+        return json.loads(e.body)
+    
+@api_view(['POST'])
+def get_balance(request):
+    host = plaid.Environment.Sandbox
+    configuration = plaid.Configuration(
+    host=host,
+    api_key={
+        'clientId': PLAID_CLIENT_ID,
+        'secret': PLAID_SECRET,
+        'plaidVersion': '2020-09-14'
+    }
+    )
+
+    api_client = plaid.ApiClient(configuration)
+    client = plaid_api.PlaidApi(api_client)
+    try:
+        request = AccountsBalanceGetRequest(
+            access_token=request.data.get('access_token')
+        )
+        response = client.accounts_balance_get(request)
+        print(response.to_dict())
+        return Response(response.to_dict())
     except plaid.ApiException as e:
         return json.loads(e.body)
 
