@@ -14,8 +14,8 @@ class Token(models.Model):
 
 class BinanceAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    api_key = models.CharField(max_length=255)
-    secret_key = models.CharField(max_length=255)
+    api_key = models.CharField(max_length=255, blank=False)
+    secret_key = models.CharField(max_length=255, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
