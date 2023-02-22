@@ -1,14 +1,15 @@
 from django.db import models
 from accounts.models import User
+from django.core.validators import MinValueValidator
 
 
 # Create your models here.
 
 class Token(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    asset = models.CharField(max_length=50, unique=True)
-    free = models.FloatField()
-    locked = models.FloatField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
+    asset = models.CharField(max_length=50, unique=True, blank=False)
+    free = models.FloatField(validators=[MinValueValidator(0.0)])
+    locked = models.FloatField(validators=[MinValueValidator(0.0)])
 
 
 class BinanceAccount(models.Model):

@@ -14,7 +14,7 @@ from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, GateioA
 class TokenModelTestCase(TestCase):
     """Unit tests for the token model"""
 
-    fixtures = ['accounts/fixtures/user.json',]
+    fixtures = ['accounts/fixtures/user.json']
 
     def setUp(self):
         super(TestCase, self).setUp()
@@ -35,4 +35,29 @@ class TokenModelTestCase(TestCase):
     def _assert_token_is_invalid(self, token):
         with self.assertRaises(ValidationError):
             token.full_clean()
+
+    def test_user_not_blank(self):
+        self.token.user = None
+        self._assert_token_is_invalid(self.token)
+
+    def test_asset_not_blank(self):
+        self.token.asset = None
+        self._assert_token_is_invalid(self.token)
+
+    def test_asset_can_be_50_chars(self):
+        self.token.asset = 'Q' * 50
+        self._assert_token_is_valid(self.token)
+
+    def test_asset_cannot_exceed_50_chars(self):
+        self.token.asset = 'Q' * 51
+        self._assert_token_is_invalid(self.token)
+
+    def test_free_cannot_be_negative(self):
+        self.token.free = -1.0
+        self._assert_token_is_invalid(self.token)
+
+    def test_locked_cannot_be_negative(self):
+        self.token.locked = -1.0
+        self._assert_token_is_invalid(self.token)
+
 
