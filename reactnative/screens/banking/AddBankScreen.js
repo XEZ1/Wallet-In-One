@@ -99,7 +99,7 @@ export default function AddBankScreen({ navigation }) {
     if (authComplete){
         return (
             <View
-                style={{flex:1, backgroundColor: colors.background}}
+                style={styles(dark, colors).container}
             >
                 {!savedBanks ? (
                     <TouchableOpacity onPress={()=>setAuthComplete(false)}>
@@ -126,7 +126,7 @@ export default function AddBankScreen({ navigation }) {
     
     return (
         <View
-            style={{flex:1, margin: 4, marginBottom: 54}}
+            style={[styles(dark, colors).container, {margin: 4, marginBottom: 54}]}
         >
                 <TextInput
                     style={styles(dark, colors).bankingInput}
