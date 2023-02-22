@@ -67,11 +67,11 @@ export default function HomePage({ navigation }) {
         alignItems: 'center',
         paddingBottom: 20, 
       }}
-      style={styles.container}
+      style={styles(dark, colors).container}
     >
-      <Text style={styles(colors).title}>Wallet-In-One</Text>
-      <Text style={styles(colors).text}>Amount: £{value}</Text>
-      <Text style={styles(colors).text}>Connect your Wallets to See your Funds!</Text>
+      <Text style={styles(dark, colors).title}>Wallet-In-One</Text>
+      <Text style={styles(dark, colors).text}>Amount: £{value}</Text>
+      <Text style={styles(dark, colors).text}>Connect your Wallets to See your Funds!</Text>
       </ScrollView>
     );
   }
@@ -85,7 +85,7 @@ export default function HomePage({ navigation }) {
           paddingBottom: 20,
           backgroundColor: colors.background,
         }}
-        style={styles(colors).container}
+        style={styles(dark, colors).container}
       >
         <VictoryContainer
         width={Dimensions.get('window').width}
@@ -115,28 +115,28 @@ export default function HomePage({ navigation }) {
         />
         <VictoryLabel
             textAnchor="middle"
-            style={styles(colors).victoryLabelSmall}
+            style={styles(dark, colors).victoryLabelSmall}
             // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/5.5}
             x={Dimensions.get('window').width/2} y={105}
             text= {"Net Worth"}
         />
         <VictoryLabel
             textAnchor="middle"
-            style={styles(colors).victoryLabelBig}
+            style={styles(dark, colors).victoryLabelBig}
             // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/4.5}
             x={Dimensions.get('window').width/2} y={125}
             text= {"£" + value}
         />
         <VictoryLabel
             textAnchor="middle"
-            style={styles(colors).victoryLabelSmall}
+            style={styles(dark, colors).victoryLabelSmall}
             // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.7}
             x={Dimensions.get('window').width/2} y={165}
             text= {"Assets"}
         />
         <VictoryLabel
             textAnchor="middle"
-            style={styles(colors).victoryLabelBig}
+            style={styles(dark, colors).victoryLabelBig}
             // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.25}
             x={Dimensions.get('window').width/2} y={185}
             text= {data.length}
@@ -154,7 +154,7 @@ export default function HomePage({ navigation }) {
             <VictoryLabel 
               dy={-20}
               x={30}
-              style={styles(colors).victoryLabelBar}
+              style={styles(dark, colors).victoryLabelBar}
             />
           }
           height={spacing}
@@ -181,7 +181,7 @@ export default function HomePage({ navigation }) {
         />
         {pressed ? (
           <TouchableOpacity onPress={()=>{setNewData(baseData.all);setPressed(false)}}>
-            <Text style={styles(colors).button}>Back</Text>
+            <Text style={styles(dark, colors).button}>Back</Text>
           </TouchableOpacity>
         ):''}
       </ScrollView>
