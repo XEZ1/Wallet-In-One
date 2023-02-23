@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { Text, ScrollView, Dimensions, TouchableOpacity, StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer } from "victory-native";
@@ -17,6 +17,23 @@ export default function HomePage({ navigation }) {
   const {dark, colors, setScheme} = useTheme();
   const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed ] = useState(false)
+
+  const stylesInternal = StyleSheet.create({
+    victoryLabelSmall: {
+      fontSize: 17,
+      fill: colors.text,
+    },
+    victoryLabelBig: {
+      fontSize: 27,
+      fontWeight: '700',
+      fill: colors.text,
+    },
+    victoryLabelBar: {
+      fontSize: 22,
+      fontWeight: '900',
+      fill: colors.text,
+    },
+  });
 
   useEffect(() =>{
     const fetchData = async () => {
@@ -115,28 +132,28 @@ export default function HomePage({ navigation }) {
         />
         <VictoryLabel
             textAnchor="middle"
-            style={styles(dark, colors).victoryLabelSmall}
+            style={stylesInternal.victoryLabelSmall}
             // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/5.5}
             x={Dimensions.get('window').width/2} y={105}
             text= {"Net Worth"}
         />
         <VictoryLabel
             textAnchor="middle"
-            style={styles(dark, colors).victoryLabelBig}
+            style={stylesInternal.victoryLabelBig}
             // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/4.5}
             x={Dimensions.get('window').width/2} y={125}
             text= {"£" + value}
         />
         <VictoryLabel
             textAnchor="middle"
-            style={styles(dark, colors).victoryLabelSmall}
+            style={stylesInternal.victoryLabelSmall}
             // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.7}
             x={Dimensions.get('window').width/2} y={165}
             text= {"Assets"}
         />
         <VictoryLabel
             textAnchor="middle"
-            style={styles(dark, colors).victoryLabelBig}
+            style={stylesInternal.victoryLabelBig}
             // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.25}
             x={Dimensions.get('window').width/2} y={185}
             text= {data.length}
@@ -154,7 +171,7 @@ export default function HomePage({ navigation }) {
             <VictoryLabel 
               dy={-20}
               x={30}
-              style={styles(dark, colors).victoryLabelBar}
+              style={stylesInternal.victoryLabelBar}
             />
           }
           height={spacing}

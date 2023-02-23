@@ -23,20 +23,6 @@ export const styles = (dark, colors) => StyleSheet.create({
   text: {
     color: colors.text
   },
-  victoryLabelSmall: {
-    fontSize: 17,
-    fill: colors.text,
-  },
-  victoryLabelBig: {
-    fontSize: 27,
-    fontWeight: '700',
-    fill: colors.text,
-  },
-  victoryLabelBar: {
-    fontSize: 22,
-    fontWeight: '900',
-    fill: colors.text,
-  },
   bankingInput:{
     height: 40,
     width: '100%',
