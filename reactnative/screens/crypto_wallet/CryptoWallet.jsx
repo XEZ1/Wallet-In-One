@@ -18,20 +18,6 @@ export default function CryptoWallet(props) {
   const {dark, colors, setScheme} = useTheme();
 
   const stylesInternal = StyleSheet.create({
-    cryptoWalletTitle: {
-      fontWeight: "900",
-      fontSize: 40,
-      alignSelf: "center",
-      paddingVertical: 10,
-      color: colors.text,
-    },
-    backArrow: {
-      fontWeight: "900",
-      fontSize: 30,
-      position: "absolute",
-      marginLeft: 10,
-      color: colors.primary
-    },
     walletList: {
       marginHorizontal: 10,
       marginVertical: 30,
@@ -57,8 +43,8 @@ export default function CryptoWallet(props) {
               justifyContent: "center",
             }}
           >
-            <Text style={stylesInternal.backArrow}>←</Text>
-            <Text style={stylesInternal.cryptoWalletTitle}>Crypto Wallets</Text>
+            <Text style={[styles(dark, colors).backArrow, {position: "absolute"}]}>←</Text>
+            <Text style={[styles(dark, colors).largeTextBold, {alignSelf: "center", paddingVertical: 10}]}>Crypto Wallets</Text>
           </View>
         </View>
 

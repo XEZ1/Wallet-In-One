@@ -17,6 +17,24 @@ export default function WalletAsset(props) {
   const [cryptoValue, setCryptoValue] = useState(0);
   const {dark, colors, setScheme} = useTheme();
 
+  const styles = StyleSheet.create({
+    walletAsset: {
+      padding: 10,
+      marginVertical: 5,
+      borderRadius: 10,
+      flexDirection: "row",
+    },
+    walletAssetTitle: {
+      fontWeight: "700",
+      flex: 1,
+    },
+    walletAssetImage: {
+      width: 30,
+      height: 30,
+    },
+  });
+  
+
   const getCryptoValue = async () => {
     await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${props.item.symbol}&tsyms=GBP`)
       .then((res) => res.json())
@@ -131,21 +149,3 @@ export default function WalletAsset(props) {
     </TouchableWithoutFeedback>
   );
 }
-
-const styles = StyleSheet.create({
-  walletAsset: {
-    //backgroundColor: "#e5e5e5",
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 10,
-    flexDirection: "row",
-  },
-  walletAssetTitle: {
-    fontWeight: "700",
-    flex: 1,
-  },
-  walletAssetImage: {
-    width: 30,
-    height: 30,
-  },
-});
