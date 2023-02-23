@@ -4,7 +4,7 @@ import React from "react";
 import {LineChart} from "react-native-chart-kit";
 import getCryptoIcon from "./icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
-import {styles} from 'reactnative/screens/All_Styles.style.js'
+import {styles} from 'reactnative/screens/All_Styles.style.js';
 
 export default function WalletAssetDetail(props) {
 
