@@ -24,3 +24,4 @@ class CryptoExchangeAdmin(admin.ModelAdmin):
         'created_at'
     ]
 
+
