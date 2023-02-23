@@ -11,19 +11,45 @@ import {
 import useCryptoWallet from "./useCryptoWallet";
 import WalletAsset from "./WalletAsset";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 export default function CryptoWallet(props) {
   const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
   const {dark, colors, setScheme} = useTheme();
+
+  const stylesInternal = StyleSheet.create({
+    cryptoWalletTitle: {
+      fontWeight: "900",
+      fontSize: 40,
+      alignSelf: "center",
+      paddingVertical: 10,
+      color: colors.text,
+    },
+    backArrow: {
+      fontWeight: "900",
+      fontSize: 30,
+      position: "absolute",
+      marginLeft: 10,
+      color: colors.primary
+    },
+    walletList: {
+      marginHorizontal: 10,
+      marginVertical: 30,
+    },
+    view: {
+      flexDirection: "row",
+      alignItems: "center",
+    }
+  });
 
   useEffect(() => {
     fetchWallets();
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView style={styles(dark, colors).container}>
       <ScrollView>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={stylesInternal.view}>
           <View
             style={{
               flex: 1,
@@ -31,8 +57,8 @@ export default function CryptoWallet(props) {
               justifyContent: "center",
             }}
           >
-            <Text style={[styles.backArrow, {color: colors.primary}]}>←</Text>
-            <Text style={[styles.cryptoWalletTitle, {color: colors.text}]}>Crypto Wallets</Text>
+            <Text style={stylesInternal.backArrow}>←</Text>
+            <Text style={stylesInternal.cryptoWalletTitle}>Crypto Wallets</Text>
           </View>
         </View>
 
@@ -41,7 +67,7 @@ export default function CryptoWallet(props) {
           onPress={() => props.navigation.navigate("WalletSelector", {connectWallet: connectWallet})}
         />
 
-        <View style={[styles.walletList]}>
+        <View style={[stylesInternal.walletList]}>
         {
           wallets.map((item)=> <WalletAsset key={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
         }
@@ -51,22 +77,3 @@ export default function CryptoWallet(props) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  cryptoWalletTitle: {
-    fontWeight: "900",
-    fontSize: 40,
-    alignSelf: "center",
-    paddingVertical: 10,
-  },
-  backArrow: {
-    fontWeight: "900",
-    fontSize: 30,
-    position: "absolute",
-    marginLeft: 10,
-  },
-  walletList: {
-    marginHorizontal: 10,
-    marginVertical: 30,
-  },
-});
