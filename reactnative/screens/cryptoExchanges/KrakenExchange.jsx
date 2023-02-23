@@ -70,7 +70,7 @@ export default function KrakenCredentials({ navigation }) {
   return (
     <View style={{ padding: 20, backgroundColor:colors.background, flex: 1 }}>
       <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
-        <Pressable onPress={() => navigation.navigate("Crypto exchanges")}>
+        <Pressable onPress={() => navigation.goBack()}>
           <Text style={styles.backArrow}>←</Text>
         </Pressable>
         <Text style={styles.title}>Kraken Credentials:</Text>
