@@ -10,6 +10,7 @@ import {
   ChartPathProvider, ChartXLabel, ChartYLabel,
   monotoneCubicInterpolation,
 } from '@rainbow-me/animated-charts';
+import WalletAsset from "./WalletAsset";
 
 export default function WalletAssetDetail(props) {
 
@@ -132,7 +133,10 @@ export default function WalletAssetDetail(props) {
 
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
       <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
-        <Text style= {{color: colors.text}}>⚠ Transaction history not implemented.</Text>
+        {/* Text if no transactions */}
+        {
+          item.transactions.map((t)=> <CryptoWalletTransaction id={t.id} transaction={t} symbol={item.symbol}/>)
+        }
       </View>
 
       <Pressable
@@ -147,6 +151,27 @@ export default function WalletAssetDetail(props) {
   );
 }
 
+function CryptoWalletTransaction(props) {
+
+  const {dark, colors, setScheme} = useTheme();
+
+  const date = new Date(Number(props.transaction.time * 1000))
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+  };
+  const f_date = date.toLocaleString("en-JP", options);
+
+  return (
+    <View style={styles.transaction}>
+      <Text style={{color: colors.text}}>{props.transaction.value} {props.symbol}</Text>
+      <Text style={{color: colors.text}}>{f_date}</Text>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   backArrow: {
@@ -172,5 +197,8 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 30,
     borderRadius: 5,
+  },
+  transaction: {
+    paddingVertical: 5,
   }
 });

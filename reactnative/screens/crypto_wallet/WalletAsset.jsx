@@ -14,7 +14,7 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 export default function WalletAsset(props) {
 
-  const [cryptoValue, setCryptoValue] = useState(0);
+  const [cryptoValue, setCryptoValue] = useState(0); {/* Display `-` if not retrievable */}
   const {dark, colors, setScheme} = useTheme();
 
   const getCryptoValue = async () => {
