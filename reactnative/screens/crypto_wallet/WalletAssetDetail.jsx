@@ -7,7 +7,7 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {
   ChartDot,
   ChartPath,
-  ChartPathProvider,
+  ChartPathProvider, ChartXLabel, ChartYLabel,
   monotoneCubicInterpolation,
 } from '@rainbow-me/animated-charts';
 
@@ -38,6 +38,24 @@ export default function WalletAssetDetail(props) {
 
   const points = monotoneCubicInterpolation({data, range: 40});
 
+  const formatPrice = value => {
+    'worklet';
+    const price = (value === '') ? Number(item.balance) : Number(value);
+    return `${price.toPrecision(5)} ${item.symbol}`;
+  }
+
+  const formatDate = value => {
+    'worklet';
+    const date = (value === '') ? new Date() : new Date(Number(value * 1000));
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    };
+    return date.toLocaleString("en-JP", options);
+  }
 
 
   return (
@@ -60,11 +78,12 @@ export default function WalletAssetDetail(props) {
         <Text />
 
         <Text style={{fontWeight: "700", color: colors.text}}>Balance</Text>
-        <Text style={{color: colors.text}}>{item.value} {item.symbol}</Text>
+        <Text style={{color: colors.text}}>{item.balance} {item.symbol}</Text>
         <Text />
 
         <Text style={{fontWeight: "700", color: colors.text}}>Value</Text>
-        <Text style={{color: colors.text}}>£0.00 ▲ 0.00% (Not Implemented)</Text>
+        <Text style={{color: colors.text}}>£0.00 (Not Implemented)</Text>
+        {/* ▲ 0.00% */}
 
       </View>
 
@@ -75,12 +94,14 @@ export default function WalletAssetDetail(props) {
             points,
             smoothingStrategy: 'bezier',
           }}>
-          <ChartPath height={SIZE / 2} stroke="black" width={SIZE * 0.8} />
+          <ChartPath height={SIZE / 2} stroke={colors.text} width={SIZE * 0.85} strokeWidth="5" selectedStrokeWidth="5" selectedOpacity={0.4}/>
           <ChartDot
             style={{
-              backgroundColor: 'black',
+              backgroundColor: colors.text,
             }}
           />
+          <ChartYLabel style={{color: colors.text}} format={formatPrice} />
+          <ChartXLabel style={{color: colors.text}} format={formatDate} />
         </ChartPathProvider>
 
         {/* Old Chart
@@ -136,7 +157,7 @@ const styles = StyleSheet.create({
   walletAsset: {
     backgroundColor: "#e5e5e5",
     borderRadius: 10,
-    padding: 20,
+    //paddingVertical: 20,
   },
   walletAssetTitle: {
     fontWeight: "700",
