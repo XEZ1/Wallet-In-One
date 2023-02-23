@@ -13,9 +13,3 @@ class Token(models.Model):
     locked = models.FloatField()
 
 # Crypto exchange account model
-class CryptoExchangeAccount(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    crypto_exchange = models.CharField(max_length=255)
-    api_key = models.CharField(max_length=255)
-    secret_key = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
