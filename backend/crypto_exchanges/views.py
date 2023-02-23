@@ -25,7 +25,7 @@ class BinanceView(APIView):
         binance_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request['crypto_exchange'], api_key=self.request.data['api_key'], secret_key=self.request.data['secret_key'])):
+        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request.data['crypto_exchange'], api_key=self.request.data['api_key'], secret_key=self.request.data['secret_key'])):
             return Response({'error': 'This binance account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Binance API
@@ -83,7 +83,7 @@ class HuobiView(APIView):
         huobi_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request['crypto_exchange'], api_key=self.request.data['api_key'], secret_key=self.request.data['secret_key'])):
+        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request.data['crypto_exchange'], api_key=self.request.data['api_key'], secret_key=self.request.data['secret_key'])):
             return Response({'error': 'This huobi account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Binance API
@@ -165,7 +165,7 @@ class GateioView(APIView):
         gateio_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request['crypto_exchange'], api_key=self.request.data['api_key'], secret_key=self.request.data['secret_key'])):
+        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request.data['crypto_exchange'], api_key=self.request.data['api_key'], secret_key=self.request.data['secret_key'])):
             return Response({'error': 'This gateio account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Binance API
@@ -221,7 +221,7 @@ class CoinListView(APIView):
         coinlist_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request['crypto_exchange'], api_key=self.request.data['api_key'], secret_key=self.request.data['secret_key'])):
+        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request.data['crypto_exchange'], api_key=self.request.data['api_key'], secret_key=self.request.data['secret_key'])):
             return Response({'error': 'This coinlist account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Binance API
@@ -276,7 +276,7 @@ class KrakenView(APIView):
 
         kraken_account.is_valid(raise_exception=True)
 
-        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request['crypto_exchange'], api_key=self.request.data['api_key'],
+        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request.data['crypto_exchange'], api_key=self.request.data['api_key'],
                                              secret_key=self.request.data['secret_key'])):
             return Response({'error': 'This kraken account has already been added'}, status=400)
 
@@ -328,7 +328,7 @@ class CoinbaseView(APIView):
         coinbase_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request['crypto_exchange'], api_key=self.request.data['api_key'],
+        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request.data['crypto_exchange'], api_key=self.request.data['api_key'],
                                                secret_key=self.request.data['secret_key'])):
             return Response({'error': 'This coinbase account has already been added'}, status=400)
 
