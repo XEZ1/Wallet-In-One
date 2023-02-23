@@ -4,12 +4,54 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 
 export default function CryptoExchanges({ navigation }) {
+
+  const {dark, colors, setScheme} = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      paddingHorizontal: 20,
+      paddingTop: 20,
+      flex: 1,
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      backgroundColor: colors.background,
+    },
+    titleContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    title: {
+      fontSize: 25,
+      color: colors.text,
+    },
+    button: {
+      padding: 20,
+      borderRadius: 10,
+      marginVertical: 10,
+      backgroundColor: colors.primary,
+    },
+    buttonText: {
+      textAlign: 'center',
+      fontWeight: 'bold',
+      color: colors.text,
+    },
+    backArrow: {
+      fontWeight: '900',
+      fontSize: 30,
+      marginRight: 10,
+      color: colors.text,
+    },
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -46,37 +88,7 @@ export default function CryptoExchanges({ navigation }) {
       </TouchableOpacity>
     </View>
   );
+
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    paddingHorizontal: 20,
-    paddingTop: 20,
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 25,
-  },
-  button: {
-    padding: 20,
-    backgroundColor: 'lightgray',
-    borderRadius: 10,
-    marginVertical: 10,
-  },
-  buttonText: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  backArrow: {
-    fontWeight: '900',
-    fontSize: 30,
-    marginRight: 10,
-  },
-});
+

@@ -18,6 +18,8 @@ import DeveloperInfoScreen from './screens/pre_logged_in/DeveloperInfoScreen';
 
 import AddBankScreen from './screens/banking/AddBankScreen'
 import BankAccountsScreen from './screens/banking/BankAccountsScreen'
+import BankTransactionsScreen from './screens/banking/BankTransactionsScreen'
+import BankStackNavigator from "./screens/banking/BankStackNavigator";
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';
@@ -27,6 +29,7 @@ import CryptoExchangesStackNavigator from './screens/cryptoExchanges/CryptoExcha
 
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import { ThemeProvider, defaultTheme } from 'reactnative/src/theme/ThemeProvider';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -45,7 +48,9 @@ export default function Navigation() {
     useEffect(()=>{initAuthState(user, setUser);}, []);
 
   return (
-    <NavigationContainer theme={dark ? DarkTheme: DefaultTheme}>
+    <NavigationContainer
+      theme={dark ? DarkTheme: DefaultTheme}
+    >
       {user.signedIn ? (
         <Tab.Navigator
           initialRouteName='Home Page'
@@ -55,6 +60,7 @@ export default function Navigation() {
             headerTitleStyle: {color: colors.text},
             tabBarStyle: {backgroundColor: colors.background},
             tabBarShowLabel: false,
+            tabBarHideOnKeyboard: true,
           }}
         >
           <Tab.Screen
@@ -84,18 +90,20 @@ export default function Navigation() {
             }}
           />
           <Tab.Screen
-            name="Add Bank Account"
-            component={AddBankScreen}
+            name="Bank"
+            component={BankStackNavigator}
             options={{
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Add bank account</Text>),
+              headerShown: false,
+              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Bank</Text>),
               tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="bank" size= {30}/></Text>)
-            }}
+          }}
           />
+
           <Tab.Screen
-            name="Bank Accounts"
-            component={BankAccountsScreen}
+            name="All Bank Transactions"
+            component={BankTransactionsScreen}
             options={{
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Bank accounts</Text>),
+              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Bank Tranasactions</Text>),
               tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="creditcard" size= {30}/></Text>)
             }}
           />

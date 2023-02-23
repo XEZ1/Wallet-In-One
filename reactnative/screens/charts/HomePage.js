@@ -1,32 +1,61 @@
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
-
+import { useIsFocused } from '@react-navigation/native';
 
 import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer } from "victory-native";
 
 import fixture from "../charts/chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
+import {auth_get} from '../../authentication'
+
 
 export default function HomePage({ navigation }) {
-
+  const [baseData, setBaseData ] = useState(fixture)
   const {dark, colors, setScheme} = useTheme();
+  const [data, setNewData] = useState(baseData.all);
+  const [pressed, setPressed ] = useState(false)
+  const isFocused = useIsFocused()
+  
+  // Uncomment to show bank data from backend
 
-  const [data, setNewData] = useState(fixture);
-
+  useEffect(() =>{
+    const fetchData = async () => {
+        const response = await auth_get('/graph_data/')
+        console.log('fetch graph data', response.status)
+        if (response.status == 200){
+          setBaseData(response.body)
+          setNewData(response.body.all)
+          setPressed(false)
+        }
+      }
+      if(isFocused){fetchData()}
+  }, [isFocused])
+  
   const handlePressIn = (event, datapoint) => {
-    const dataPoint = data[datapoint.index];
-    setNewData(fixture.filter((val) => val.x.match(dataPoint.x)));
+    if (pressed){
+      setNewData(baseData.all)
+    }
+    else{
+      const dataPoint = data[datapoint.index];
+      if (baseData[dataPoint.x]){
+        setNewData(baseData[dataPoint.x]);
+      }
+      else{
+        setNewData(baseData.all.filter((val) => val.x.match(dataPoint.x)));
+      }
+    }
+    setPressed(!pressed)
   };
 
   let value = 0;
   data.forEach(jsonObj => {
     value += jsonObj.y;
   });
+  value = value.toFixed(2)
 
   const list = data.map(val => val.x);
-  const colours = ["red", "blue", "green", "purple"];
+  const colours = ["pink", "turquoise", "lime", "#FA991C"];
 
   let spacing = list.length * 60;
 
@@ -65,14 +94,16 @@ export default function HomePage({ navigation }) {
       <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text> */}
       <VictoryContainer
       width={Dimensions.get('window').width}
-      height={Dimensions.get('window').height/2}
+      // height={Dimensions.get('window').height/2}
+      height={300}
+      style= {{ paddingBottom: 10}}
       >    
       <VictoryPie
         data={data}
         innerRadius={100}
         padAngle={1}
         cornerRadius= {10}
-        radius= {Dimensions.get('window').width/2.5}
+        radius= {Dimensions.get('window').width/3}
         labels={() => null}
         events={[{
           target: "data",
@@ -80,32 +111,40 @@ export default function HomePage({ navigation }) {
             onPressIn: handlePressIn
           }
         }]}
+        // animate={{
+        //   duration: 2000,
+        //   easing: "bounce"
+        // }}
         colorScale={colours}
         standalone={false}
-        height={400}
+        height={300}
       />
       <VictoryLabel
           textAnchor="middle"
-          style={{fontSize: 22, fill: colors.text}}
-          x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/5.5}
+          style={{fontSize: 17, fill: colors.text}}
+          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/5.5}
+          x={Dimensions.get('window').width/2} y={105}
           text= {"Net Worth"}
       />
       <VictoryLabel
           textAnchor="middle"
-          style={{fontSize: 22, fontWeight: '700', fill: colors.text}}
-          x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/4.5}
+          style={{fontSize: 27, fontWeight: '700', fill: colors.text}}
+          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/4.5}
+          x={Dimensions.get('window').width/2} y={125}
           text= {"£" + value}
       />
       <VictoryLabel
           textAnchor="middle"
-          style={{fontSize: 22, fill: colors.text}}
-          x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.7}
+          style={{fontSize: 17, fill: colors.text}}
+          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.7}
+          x={Dimensions.get('window').width/2} y={165}
           text= {"Assets"}
       />
       <VictoryLabel
           textAnchor="middle"
-          style={{fontSize: 22, fontWeight: '700', fill: colors.text}}
-          x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.25}
+          style={{fontSize: 27, fontWeight: '700', fill: colors.text}}
+          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.25}
+          x={Dimensions.get('window').width/2} y={185}
           text= {data.length}
       />
       </VictoryContainer>
@@ -116,21 +155,41 @@ export default function HomePage({ navigation }) {
         data={data}
         barWidth={18}
         padding={40}
-        labels={({ datum }) => datum.x}
-        labelComponent={<VictoryLabel dy={-20} x={30} style={{ fontSize: 22, fontWeight: '900', fill: colors.text}} />}
+        labels={({ datum }) => "●"+ datum.x}
+        labelComponent={
+          <VictoryLabel 
+            dy={-20}
+            x={30}
+            style={{ fontSize: 22, fontWeight: '900', fill: colors.text}}
+          />
+        }
         height={spacing}
+        // animate={{
+        //   onExit: {
+        //     duration: 200,
+        //     before: () => ({
+        //       _y: 0,
+        //     })
+        //   },
+        // }}
         events={[{
           target: "data",
           eventHandlers: {
             onPressIn: handlePressIn
           }
+        },
+        {
+          target: "labels",
+          eventHandlers: {
+            onPressIn: handlePressIn
+          }
         }]}
       />
-    <TouchableOpacity
-      onPress={()=>{setNewData(fixture.filter((val) => val.length != 0))}}
-      >
-        <Text style={styles.button} x={10}>Back</Text>
-      </TouchableOpacity>
+      {pressed ? (
+        <TouchableOpacity onPress={()=>{setNewData(baseData.all);setPressed(false)}}>
+          <Text style={[styles.button, { color: colors.text }]}>Back</Text>
+        </TouchableOpacity>
+      ):''}
     </ScrollView>
   );
 }
