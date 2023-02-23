@@ -40,7 +40,7 @@ export default function CryptoWallet(props) {
       paddingHorizontal: 20,
       paddingTop: 20,
       flex: 1,
-      alignItems: 'flex-start',
+      alignItems: 'center',
       justifyContent: 'flex-start',
       backgroundColor: colors.background,
     },
@@ -51,6 +51,8 @@ export default function CryptoWallet(props) {
     },
     title: {
       fontSize: 25,
+      alignItems: 'center',
+      textAlign: "center",
       color: colors.text,
     },
     button: {
@@ -87,10 +89,22 @@ export default function CryptoWallet(props) {
         </View>
 
         <View style={styles.container}>
-          <View style={styles.titleContainer}>
-              <Text style={styles.title}>
-                Add a cryptocurrency account from an exchange:
-              </Text>
+          <View
+            style={[
+              styles.titleContainer,
+              {
+                borderWidth: 1,
+                borderColor: colors.text,
+                padding: 10,
+                borderRadius: 10,
+                width: Dimensions.get('window').width - 40,
+                alignSelf: "center",
+              },
+            ]}
+          >
+            <Text style={styles.title}>
+              Add a cryptocurrency account from an exchange:
+            </Text>
           </View>
         </View>
 
@@ -108,7 +122,19 @@ export default function CryptoWallet(props) {
         </View>
 
         <View style={styles.container}>
-          <View style={styles.titleContainer}>
+          <View
+            style={[
+              styles.titleContainer,
+              {
+                borderWidth: 1,
+                borderColor: colors.text,
+                padding: 10,
+                borderRadius: 10,
+                width: Dimensions.get('window').width - 40,
+                alignSelf: "center",
+              },
+            ]}
+          >
             <Text style={styles.title}>
               Add a cryptocurrency account from an exchange:
             </Text>
