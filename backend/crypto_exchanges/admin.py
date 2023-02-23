@@ -14,61 +14,13 @@ class TokenAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(BinanceAccount)
+@admin.register(CryptoExchangeAccount)
 class BinanceAdmin(admin.ModelAdmin):
     list_display = [
         'user',
+        'crypto_exchange',
         'api_key',
         'secret_key',
         'created_at'
     ]
 
-
-@admin.register(HuobiAccount)
-class BinanceAdmin(admin.ModelAdmin):
-    list_display = [
-        'user',
-        'api_key',
-        'secret_key',
-        'created_at'
-    ]
-
-
-@admin.register(GateioAccount)
-class BinanceAdmin(admin.ModelAdmin):
-    list_display = [
-        'user',
-        'api_key',
-        'secret_key',
-        'created_at'
-    ]
-
-
-@admin.register(CoinListAccount)
-class BinanceAdmin(admin.ModelAdmin):
-    list_display = [
-        'user',
-        'api_key',
-        'secret_key',
-        'created_at'
-    ]
-
-
-@admin.register(KrakenAccount)
-class BinanceAdmin(admin.ModelAdmin):
-    list_display = [
-        'user',
-        'api_key',
-        'secret_key',
-        'created_at'
-    ]
-
-
-@admin.register(CoinbaseAccount)
-class BinanceAdmin(admin.ModelAdmin):
-    list_display = [
-        'user',
-        'api_key',
-        'secret_key',
-        'created_at'
-    ]
