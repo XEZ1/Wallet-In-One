@@ -195,3 +195,55 @@ class CoinListFetcher:
     def prehash(self, timestamp, method, path, body):
         return timestamp + method.upper() + path + (body or '')
 
+
+# Class was implemented according to: ""
+# Create custom authentication for Coinbase API
+class CoinBaseAuthorisation(AuthBase):
+    def __init__(self, api_key, secret_key):
+        self.api_key = api_key
+        self.secret_key = secret_key.encode('utf-8')  # Convert string to bytes
+        self.timestamp = str(int(time.time()))
+
+    # A template for this callable hook was taking from the coinbase API documentation
+    def __call__(self, request):
+        # The hook should be callable
+        message = self.timestamp + request.method + request.path_url + (request.body or '')
+        signature = self.signature(message)  # Convert message to bytes
+
+        # Add headers
+        request.headers.update({
+            'CB-ACCESS-SIGN': signature,
+            'CB-ACCESS-TIMESTAMP': self.timestamp,
+            'CB-ACCESS-KEY': self.api_key,
+        })
+        return request
+
+    def signature(self, message):
+        return hmac.new(self.secret_key, message.encode(), hashlib.sha256).hexdigest()  # Convert string to bytes
+
+
+class CoinBaseFetcher:
+    def __init__(self, api_key, secret_key):
+        self.api_key = api_key
+        self.secret_key = secret_key
+
+    def get_account_data(self):
+        api_url = 'https://api.coinbase.com/v2/'
+        auth = CoinBaseAuthorisation(self.api_key, self.secret_key)
+
+        # Get current user
+        response = requests.get(api_url + 'accounts', auth=auth)
+
+        if response.status_code == 400 or response.status_code == 401 or response.status_code == 402 \
+                or response.status_code == 403 or response.status_code == 404 or response.status_code == 405:
+            return response.json()
+
+        data_to_return = []
+
+        data = response.json()['data']
+        for coin in data:
+            data_to_return.append(coin['balance'])
+
+        return data_to_return
+
+# Kraken
