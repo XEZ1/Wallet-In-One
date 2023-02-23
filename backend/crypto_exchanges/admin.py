@@ -15,7 +15,7 @@ class TokenAdmin(admin.ModelAdmin):
 
 
 @admin.register(CryptoExchangeAccount)
-class BinanceAdmin(admin.ModelAdmin):
+class CryptoExchangeAdmin(admin.ModelAdmin):
     list_display = [
         'user',
         'crypto_exchange',
