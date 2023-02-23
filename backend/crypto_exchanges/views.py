@@ -3,31 +3,33 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from crypto_exchanges.models import Token, CoinbaseAccount, HuobiAccount, GateioAccount, CoinListAccount, KrakenAccount, \
-    BinanceAccount
-from crypto_exchanges.serializers import TokenSerializer, BinanceAccountSerializer, HuobiAccountSerializer, \
-    GateioAccountSerializer, CoinListAccountSerializer, KrakenAccountSerializer, CoinbaseAccountSerializer
+from crypto_exchanges.models import Token, CryptoExchangeAccount
+from crypto_exchanges.serializers import TokenSerializer, CryptoExchangeAccountSerializer
+
 from crypto_exchanges.services import BinanceFetcher, HuobiFetcher, GateioFetcher, CoinListFetcher, KrakenFetcher, \
     CoinbaseFetcher
 
 
 # Create your views here.
 
+
+# Binance
 class BinanceView(APIView):
     def post(self, request):
         # Pass the data to the serialiser so that the binance account can be created
-        binance_account = BinanceAccountSerializer(data=request.data, context={'request': request})
+        # Create a field 'crypto_exchange' in the request du=ict to prevent double adding the same account
+        request.data['crypto_exchange'] = 'Binance'
+        binance_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
         # Validate data
         binance_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(BinanceAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"],
-                                              secret_key=self.request.data["secret_key"])):
+        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request['crypto_exchange'], api_key=self.request.data['api_key'], secret_key=self.request.data['secret_key'])):
             return Response({'error': 'This binance account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Binance API
-        service = BinanceFetcher(self.request.data["api_key"], self.request.data["secret_key"])
+        service = BinanceFetcher(self.request.data['api_key'], self.request.data['secret_key'])
 
         # Get the user's account information
         data = service.get_account_data()
@@ -64,28 +66,30 @@ class BinanceView(APIView):
                 token.locked = float(coin['locked'])
                 token.save()
 
-        # print(token)
-        # print(f"{filtered_data=}")
+        #print(token)
+        #print(f"{filtered_data=}")
         return Response(filtered_data, status=200)
 
 
+# Huobi
 class HuobiView(APIView):
     def post(self, request):
-        # Pass the data to the serialiser so that the huobi account can be created
-        huobi_account = HuobiAccountSerializer(data=request.data, context={'request': request})
+        # Pass the data to the serialiser so that the binance account can be created
+        # Create a field 'crypto_exchange' in the request du=ict to prevent double adding the same account
+        request.data['crypto_exchange'] = 'Huobi'
+        huobi_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
         # Validate data
         huobi_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(HuobiAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"],
-                                            secret_key=self.request.data["secret_key"])):
+        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request['crypto_exchange'], api_key=self.request.data['api_key'], secret_key=self.request.data['secret_key'])):
             return Response({'error': 'This huobi account has already been added'}, status=400)
 
-        # Use the provided API key and secret key to connect to the huobi API
-        service = HuobiFetcher(self.request.data["api_key"], self.request.data["secret_key"])
+        # Use the provided API key and secret key to connect to the Binance API
+        service = HuobiFetcher(self.request.data['api_key'], self.request.data['secret_key'])
 
-        # Making sure the api and secret keys are valid before saving the huobi account and
+        # Making sure the api and secret keys are valid before saving the binance account and
         # Get the user's account information
         # For some reason only every 4th/5th request is successful, thus it was decided to add this awful construct.
         # It is hard to explain why 4 requests fall while having the same input data, it seems like huobi API is
@@ -98,16 +102,14 @@ class HuobiView(APIView):
                 if self.account_ids['status'] == 'ok':
                     success = True
                 # Internal huobi_api error
-                elif self.account_ids['status'] == 'error' and self.account_ids[
-                    'err-msg'] == 'Signature not valid: Verification failure [校验失败]':
+                elif self.account_ids['status'] == 'error' and self.account_ids['err-msg'] == 'Signature not valid: Verification failure [校验失败]':
                     raise TypeError
                 else:
                     return Response({'error': self.account_ids['err-msg']}, status=400)
             except TypeError:
                 counter += 1
                 if counter == 20:
-                    return Response({'error': 'Huobi API is currently experiencing some issues. Please try later.'},
-                                    status=503)
+                    return Response({'error': 'Huobi API is currently experiencing some issues. Please try later.'}, status=503)
 
         # Now we have account IDs so we can retrieve the data from them
         # Get the user's account information
@@ -122,7 +124,7 @@ class HuobiView(APIView):
             except TypeError:
                 pass
 
-        # Save the huobi account to the database
+        # Save the binance account to the database
         huobi_account.save()
 
         # Inner function for filtering data
@@ -151,31 +153,33 @@ class HuobiView(APIView):
         return Response(filtered_data, status=200)
 
 
+# GateIo
 class GateioView(APIView):
     def post(self, request):
-        # Pass the data to the serialiser so that the gateio account can be created
-        gateio_account = GateioAccountSerializer(data=request.data, context={'request': request})
+        # Pass the data to the serialiser so that the binance account can be created
+        # Create a field 'crypto_exchange' in the request du=ict to prevent double adding the same account
+        request.data['crypto_exchange'] = 'GateIo'
+        gateio_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
         # Validate data
         gateio_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(GateioAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"],
-                                             secret_key=self.request.data["secret_key"])):
+        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request['crypto_exchange'], api_key=self.request.data['api_key'], secret_key=self.request.data['secret_key'])):
             return Response({'error': 'This gateio account has already been added'}, status=400)
 
-        # Use the provided API key and secret key to connect to the gateio API
-        service = GateioFetcher(self.request.data["api_key"], self.request.data["secret_key"])
+        # Use the provided API key and secret key to connect to the Binance API
+        service = GateioFetcher(self.request.data['api_key'], self.request.data['secret_key'])
 
         # Get the user's account information
         data = service.get_account_data()
 
-        # Making sure the api and secret keys are valid before saving the gateio account
+        # Making sure the api and secret keys are valid before saving the binance account
         if 'label' and 'message' in data:
             # encountering an error while retrieving data
             return Response({'error': data['message']}, status=400)
 
-        # Save the huobi account to the database
+        # Save the binance account to the database
         gateio_account.save()
 
         # Inner function for filtering data
@@ -205,33 +209,35 @@ class GateioView(APIView):
         return Response(filtered_data, status=200)
 
 
+# CoinList
 class CoinListView(APIView):
     def post(self, request):
-        # Pass the data to the serialiser so that the coinlist account can be created
-        coinlist_account = CoinListAccountSerializer(data=request.data, context={'request': request})
+        # Pass the data to the serialiser so that the binance account can be created
+        # Create a field 'crypto_exchange' in the request du=ict to prevent double adding the same account
+        request.data['crypto_exchange'] = 'CoinList'
+        coinlist_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
         # Validate data
         coinlist_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CoinListAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"],
-                                               secret_key=self.request.data["secret_key"])):
+        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request['crypto_exchange'], api_key=self.request.data['api_key'], secret_key=self.request.data['secret_key'])):
             return Response({'error': 'This coinlist account has already been added'}, status=400)
 
-        # Use the provided API key and secret key to connect to the coinlist API
-        service = CoinListFetcher(self.request.data["api_key"], self.request.data["secret_key"])
+        # Use the provided API key and secret key to connect to the Binance API
+        service = CoinListFetcher(self.request.data['api_key'], self.request.data['secret_key'])
 
         # Get the user's account information
         data = service.get_account_data()
 
         print(data)
 
-        # Making sure the api and secret keys are valid before saving the coinlist account
+        # Making sure the api and secret keys are valid before saving the binance account
         if 'status' in data and (data['status'] != 'ok' or data['status'] != '200'):
             # encountering an error while retrieving data
             return Response({'error': data['message']}, status=400)
 
-        # Save the coinlist account to the database
+        # Save the binance account to the database
         coinlist_account.save()
 
         # Inner function for filtering data
@@ -261,17 +267,20 @@ class CoinListView(APIView):
         return Response(filtered_data, status=200)
 
 
+# Kraken
 class KrakenView(APIView):
     def post(self, request):
-        kraken_account = KrakenAccountSerializer(data=self.request.data, context={'request': request})
+        # Create a field 'crypto_exchange' in the request du=ict to prevent double adding the same account
+        request.data['crypto_exchange'] = 'Kraken'
+        kraken_account = CryptoExchangeAccountSerializer(data=self.request.data, context={'request': request})
 
         kraken_account.is_valid(raise_exception=True)
 
-        if bool(KrakenAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"],
-                                             secret_key=self.request.data["secret_key"])):
+        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request['crypto_exchange'], api_key=self.request.data['api_key'],
+                                             secret_key=self.request.data['secret_key'])):
             return Response({'error': 'This kraken account has already been added'}, status=400)
 
-        service = KrakenFetcher(self.request.data["api_key"], self.request.data["secret_key"])
+        service = KrakenFetcher(self.request.data['api_key'], self.request.data['secret_key'])
 
         data = service.get_account_data()
 
@@ -307,21 +316,24 @@ class KrakenView(APIView):
         return Response(filtered_data, status=200)
 
 
+# Coinbase
 class CoinbaseView(APIView):
     def post(self, request):
         # Pass the data to the serialiser so that the coinbase account can be created
-        coinbase_account = CoinbaseAccountSerializer(data=request.data, context={'request': request})
+        # Create a field 'crypto_exchange' in the request du=ict to prevent double adding the same account
+        request.data['crypto_exchange'] = 'CoinBase'
+        coinbase_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
         # Validate data
         coinbase_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CoinbaseAccount.objects.filter(user=self.request.user, api_key=self.request.data["api_key"],
-                                               secret_key=self.request.data["secret_key"])):
+        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user, crypto_exchange=self.request['crypto_exchange'], api_key=self.request.data['api_key'],
+                                               secret_key=self.request.data['secret_key'])):
             return Response({'error': 'This coinbase account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the coinbase API
-        service = CoinbaseFetcher(self.request.data["api_key"], self.request.data["secret_key"])
+        service = CoinbaseFetcher(self.request.data['api_key'], self.request.data['secret_key'])
 
         # Get the user's account information
         data = service.get_account_data()

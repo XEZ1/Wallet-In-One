@@ -5,50 +5,17 @@ from django.core.validators import MinValueValidator
 
 # Create your models here.
 
+# Token model
 class Token(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
-    asset = models.CharField(max_length=50, unique=True, blank=False)
-    free = models.FloatField(validators=[MinValueValidator(0.0)])
-    locked = models.FloatField(validators=[MinValueValidator(0.0)])
-
-
-class BinanceAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    api_key = models.CharField(max_length=255, blank=False)
-    secret_key = models.CharField(max_length=255, blank=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    asset = models.CharField(max_length=5, unique=True)
+    free = models.FloatField()
+    locked = models.FloatField()
 
-
-class HuobiAccount(models.Model):
+# Crypto exchange account model
+class CryptoExchangeAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    api_key = models.CharField(max_length=255)
-    secret_key = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-class GateioAccount(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    api_key = models.CharField(max_length=255)
-    secret_key = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-class CoinListAccount(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    api_key = models.CharField(max_length=255)
-    secret_key = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-class KrakenAccount(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    api_key = models.CharField(max_length=255)
-    secret_key = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-class CoinbaseAccount(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    crypto_exchange = models.CharField(max_length=255)
     api_key = models.CharField(max_length=255)
     secret_key = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
