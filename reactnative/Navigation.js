@@ -23,8 +23,8 @@ import BankStackNavigator from "./screens/banking/BankStackNavigator";
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';
-import CryptoWalletStackNavigator from "./screens/crypto_wallet/CryptoWalletStackNavigator";
-import CryptoExchangesStackNavigator from './screens/cryptoExchanges/CryptoExchangesStackNavigator';
+import CryptoStackNavigator from "./screens/crypto_wallet/CryptoStackNavigator";
+
 
 
 
@@ -74,16 +74,7 @@ export default function Navigation() {
           {/* vvvvv Temporary (will be moved to account screen) vvvvv */}
           <Tab.Screen
             name="Crypto Wallets"
-            component={CryptoWalletStackNavigator}
-            options={{
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Crypto wallet</Text>),
-              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><MaterialCommunityIcons name="ethereum" size= {30}/></Text>)
-            }}
-          />
-          {/* vvvvv Temporary (will be moved to account screen) vvvvv */}
-          <Tab.Screen
-            name="Crypto Exchanges"
-            component={CryptoExchangesStackNavigator}
+            component={CryptoStackNavigator}
             options={{
               //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Crypto wallet</Text>),
               tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><MaterialCommunityIcons name="ethereum" size= {30}/></Text>)

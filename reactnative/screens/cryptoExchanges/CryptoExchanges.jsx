@@ -55,7 +55,7 @@ export default function CryptoExchanges({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Pressable onPress={() => navigation.navigate('Crypto exchanges')}>
+        <Pressable onPress={() => navigation.goBack()}>
           <Text style={styles.backArrow}>←</Text>
         </Pressable>
         <Text style={styles.title}>
