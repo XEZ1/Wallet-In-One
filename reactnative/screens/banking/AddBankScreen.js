@@ -24,6 +24,43 @@ export default function AddBankScreen({ navigation }) {
         setAuthComplete(false)
         setSavedBanks(null)
     }
+
+    const stylesInternal = StyleSheet.create({
+        bankingContainer: {
+            width: '100%',
+            paddingLeft: 20,
+            paddingRight: 20,
+            paddingBottom: 0,
+            borderWidth: 1,
+            borderRadius: 5,
+            borderColor: dark ? colors.background : '#ddd',
+            overflow: 'hidden',
+            backgroundColor: colors.background
+          },
+          bankingItem:{
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 10
+          },
+          bankingImage:{
+              width: 50, 
+              height: 50,
+              marginRight: 10,
+              resizeMode: 'contain',
+          },
+          bankingInput:{
+            height: 40,
+            width: '100%',
+            borderWidth: 0.5,
+            padding: 10,
+            borderColor: 'gray',
+            borderRadius: 5,
+            marginTop: 5,
+            marginBottom: 5,
+            color: colors.text,
+            backgroundColor: colors.background
+          },
+      });
     
     
     useEffect(() =>{
@@ -129,19 +166,19 @@ export default function AddBankScreen({ navigation }) {
             style={[styles(dark, colors).container, {margin: 4, marginBottom: 54}]}
         >
                 <TextInput
-                    style={styles(dark, colors).bankingInput}
+                    style={stylesInternal.bankingInput}
                     placeholder='Search'
                     placeholderTextColor= {colors.text}
                     value={search}
                     onChangeText={updateSearch}
                 />
-                <View style={styles(dark, colors).bankingContainer}>
+                <View style={stylesInternal.bankingContainer}>
                     <FlatList data={bankData} renderItem={({item, index}) =>{
                         return (
-                            <TouchableOpacity onPress={()=>selectItem(item)} style={styles(dark, colors).bankingItem}>
+                            <TouchableOpacity onPress={()=>selectItem(item)} style={stylesInternal.bankingItem}>
                                 <Image                                   
                                     source={{ uri: item.logo }}
-                                    style={styles(dark, colors).bankingImage}
+                                    style={stylesInternal.bankingImage}
                                 />
                                 <Text style={styles(dark, colors).text} key={index}>{item.name}</Text>
                             </TouchableOpacity>)
