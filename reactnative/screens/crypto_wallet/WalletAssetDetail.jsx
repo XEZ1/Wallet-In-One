@@ -1,6 +1,6 @@
 import {Button, Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, View, ScrollView} from "react-native";
 import { useRoute } from "@react-navigation/native";
-import React from "react";
+import React, {useEffect, useState} from "react";
 //import {LineChart} from "react-native-chart-kit";
 import getCryptoIcon from "./icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
@@ -17,10 +17,11 @@ export default function WalletAssetDetail(props) {
   const {dark, colors, setScheme} = useTheme();
   const route = useRoute();
   const { item, removeWallet } = props.route.params;
+  const [ graphData, setGraphData ] = useState([]);
 
   const {width: SIZE} = Dimensions.get('window');
 
-  const data = [
+  const data2 = [
     {x: 1453075200, y: 1.47},
     {x: 1453161600, y: 1.37},
     {x: 1453248000, y: 1.53},
@@ -37,7 +38,43 @@ export default function WalletAssetDetail(props) {
     {x: 1454198400, y: 2.2},
   ];
 
-  const points = monotoneCubicInterpolation({data, range: 40});
+  useEffect(() => {
+    let points = [];
+    let balance = item.balance;
+
+    for (let i = 0; i < item.transactions.length; i++) {
+      let point = {x: item.transactions.at(i).time, y: balance}
+      balance -= item.transactions.at(i).value
+      points = [point, ...points]
+    }
+    setGraphData(points)
+
+    }, []);
+
+/*
+  useEffect(() => {
+    const e = item.transactions.map(item => {
+      return {
+        x: item.time,
+        y: item.value
+      }
+    })
+    setGraphData(e);
+  }, []);
+
+  (function calcCorrect() {
+    let balance = item.balance;
+
+    for (let i = 0; i < item.transactions.length; i++) {
+      balance -= item.transactions.at(i).value;
+      console.log(balance)
+    }
+
+  })()
+*/
+
+
+  //const points = monotoneCubicInterpolation({graphData, range: 40});
 
   const formatPrice = value => {
     'worklet';
@@ -92,7 +129,7 @@ export default function WalletAssetDetail(props) {
       <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
         <ChartPathProvider
           data={{
-            points,
+            points: graphData,
             smoothingStrategy: 'bezier',
           }}>
           <ChartPath height={SIZE / 2} stroke={colors.text} width={SIZE * 0.85} strokeWidth="5" selectedStrokeWidth="5" selectedOpacity={0.4}/>
