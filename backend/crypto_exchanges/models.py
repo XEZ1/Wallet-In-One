@@ -9,8 +9,9 @@ from django.core.validators import MinValueValidator
 class Token(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     asset = models.CharField(max_length=5, unique=True)
-    free = models.FloatField()
-    locked = models.FloatField()
+    free = models.FloatField(validators=[MinValueValidator(0.0)])
+    locked = models.FloatField(validators=[MinValueValidator(0.0)])
+
 
 # Crypto exchange account model
 class CryptoExchangeAccount(models.Model):
