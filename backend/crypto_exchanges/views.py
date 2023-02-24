@@ -409,34 +409,20 @@ class UpdateAllTokens(APIView):
             platform = account.crypto_exchange
             counter += 1
             account.delete()
+            request.data['api_key'] = api_key
+            request.data['secret_key'] = secret_key
+            response = 0
             if platform == 'Binance':
-                request.data['api_key'] = api_key
-                request.data['secret_key'] = secret_key
                 response = BinanceView()
-                response.post(request)
             elif platform == 'Huobi':
-                request.data['api_key'] = api_key
-                request.data['secret_key'] = secret_key
                 response = HuobiView()
-                response.post(request)
             elif platform == 'GateIo':
-                request.data['api_key'] = api_key
-                request.data['secret_key'] = secret_key
                 response = GateioView()
-                response.post(request)
             elif platform == 'CoinList':
-                request.data['api_key'] = api_key
-                request.data['secret_key'] = secret_key
                 response = CoinListView()
-                response.post(request)
             elif platform == 'CoinBase':
-                request.data['api_key'] = api_key
-                request.data['secret_key'] = secret_key
                 response = CoinBaseView()
-                response.post(request)
             elif platform == 'Kraken':
-                request.data['api_key'] = api_key
-                request.data['secret_key'] = secret_key
                 response = KrakenView()
-                response.post(request)
+            response.post(request)
         return Response({'message': 'Success. Data was updated successfully'}, status=200)
