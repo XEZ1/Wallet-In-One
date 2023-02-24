@@ -35,7 +35,6 @@ export default function CryptoExchanges({ navigation }) {
     },
     button: {
       padding: 20,
-      backgroundColor: 'lightgray',
       borderRadius: 10,
       marginVertical: 10,
       backgroundColor: colors.primary,

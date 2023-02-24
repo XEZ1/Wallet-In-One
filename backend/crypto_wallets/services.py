@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import requests
+from crypto_wallets.models import CryptoWallet
 
 API_KEY = "G___EAU7R8HuOi9HGRarUuX0xOujt6QQ"
 
@@ -43,3 +44,23 @@ def fetch_balance(address, cryptocurrency):
         r = requests.get(url=url)
         response = r.json()
         return response['balance']
+
+
+def getCryptoPrice(symbol):
+    url = f'https://min-api.cryptocompare.com/data/price?fsym={symbol}&tsyms=GBP'
+    r = requests.get(url=url)
+    response = r.json()
+    price = float(response['GBP'])
+    return price
+
+def total_user_balance_crypto(user):
+    wallets = CryptoWallet.objects.filter(user=user)
+    if wallets.exists():
+        return round(sum(getCryptoPrice(a.symbol)*a.balance for a in wallets), 2) 
+    else:
+        return 0
+
+def chart_breakdown_crypto(user):
+    wallets = CryptoWallet.objects.filter(user=user)
+    if wallets.exists():
+        return [{'x': a.cryptocurrency, 'y': round(getCryptoPrice(a.symbol)*a.balance,2)} for a in wallets]
