@@ -23,10 +23,7 @@ import BankStackNavigator from "./screens/banking/BankStackNavigator";
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';
-import CryptoWalletStackNavigator from "./screens/crypto_wallet/CryptoWalletStackNavigator";
-import CryptoExchangesStackNavigator from './screens/cryptoExchanges/CryptoExchangesStackNavigator';
-
-
+import CryptoStackNavigator from "./screens/crypto_wallet/CryptoStackNavigator";
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { ThemeProvider, defaultTheme } from 'reactnative/src/theme/ThemeProvider';
@@ -35,6 +32,10 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { setStatusBarHidden } from 'expo-status-bar';
+
+
+
+import UpdateCrypto from './screens/cryptoExchanges/Update';
 
 
 const Tab = createBottomTabNavigator();
@@ -74,21 +75,22 @@ export default function Navigation() {
           {/* vvvvv Temporary (will be moved to account screen) vvvvv */}
           <Tab.Screen
             name="Crypto Wallets"
-            component={CryptoWalletStackNavigator}
+            component={CryptoStackNavigator}
             options={{
               //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Crypto wallet</Text>),
               tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><MaterialCommunityIcons name="ethereum" size= {30}/></Text>)
             }}
           />
-          {/* vvvvv Temporary (will be moved to account screen) vvvvv */}
+
           <Tab.Screen
-            name="Crypto Exchanges"
-            component={CryptoExchangesStackNavigator}
+            name="Update"
+            component={UpdateCrypto}
             options={{
               //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Crypto wallet</Text>),
               tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><MaterialCommunityIcons name="ethereum" size= {30}/></Text>)
             }}
           />
+          
           <Tab.Screen
             name="Bank"
             component={BankStackNavigator}

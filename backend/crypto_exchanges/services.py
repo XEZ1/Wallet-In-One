@@ -1,19 +1,13 @@
 import requests
 import time
 import hmac
-import hashlib
-import base64
-from hashlib import sha256
-from base64 import b64encode
-from urllib.parse import urlencode
+from hashlib import sha256, sha512
+from base64 import b64encode, b64decode
 from datetime import datetime, timezone
-from urllib.parse import quote_plus
-import krakenex
-from pykrakenapi import KrakenAPI
-
-from requests import Response
+from urllib.parse import quote_plus, urlencode
 
 
+# Class was implemented according to: ""
 class BinanceFetcher:
 
     def __init__(self, api_key, secret_key):
@@ -29,12 +23,13 @@ class BinanceFetcher:
         return response.json()
 
     def hash(self, timestamp):
-        return hmac.new(self.secret_key.encode('utf-8'), timestamp.encode('utf-8'), hashlib.sha256).hexdigest()
+        return hmac.new(self.secret_key.encode('utf-8'), timestamp.encode('utf-8'), sha256).hexdigest()
 
     def current_time(self):
         return round(time.time() * 1000)
 
 
+# Class was implemented according to: ""
 class HuobiFetcher:
 
     def __init__(self, api_key, secret_key):
@@ -97,6 +92,7 @@ class HuobiFetcher:
             return response.json()['data']['list']
 
 
+# Class was implemented according to: ""
 class GateioFetcher:
 
     def __init__(self, api_key, secret_key):
@@ -123,14 +119,15 @@ class GateioFetcher:
     # https://www.gate.io/docs/developers/apiv4/en/#authentication
     def gen_sign(self, method, url, query_string=None, payload_string=None):
         timestamp = time.time()
-        message = hashlib.sha512()
+        message = sha512()
         message.update((payload_string or "").encode('utf-8'))
         hashed_payload = message.hexdigest()
         path = '%s\n%s\n%s\n%s\n%s' % (method, url, query_string or "", hashed_payload, timestamp)
-        signature = hmac.new(self.secret_key.encode('utf-8'), path.encode('utf-8'), hashlib.sha512).hexdigest()
+        signature = hmac.new(self.secret_key.encode('utf-8'), path.encode('utf-8'), sha512).hexdigest()
         return {'KEY': self.api_key, 'Timestamp': str(timestamp), 'SIGN': signature}
 
 
+# Class was implemented according to: ""
 class CoinListFetcher:
 
     def __init__(self, api_key, secret_key):
@@ -146,7 +143,7 @@ class CoinListFetcher:
         method = 'GET'
 
         prehashed = self.prehash(timestamp, method, path, body)
-        secret = base64.b64decode(self.secret_key)
+        secret = b64decode(self.secret_key)
         signature = self.sha265hmac(prehashed, secret)
 
         headers = {
@@ -172,7 +169,7 @@ class CoinListFetcher:
             method = 'GET'
 
             prehashed = self.prehash(timestamp, method, path, body)
-            secret = base64.b64decode(self.secret_key)
+            secret = b64decode(self.secret_key)
             signature = self.sha265hmac(prehashed, secret)
 
             headers = {
@@ -188,44 +185,92 @@ class CoinListFetcher:
         return to_return
 
     def sha265hmac(self, data, key):
-        h = hmac.new(key, data.encode('utf-8'), digestmod=hashlib.sha256)
-        return base64.b64encode(h.digest()).decode('utf-8')
+        h = hmac.new(key, data.encode('utf-8'), digestmod=sha256)
+        return b64encode(h.digest()).decode('utf-8')
 
     def prehash(self, timestamp, method, path, body):
         return timestamp + method.upper() + path + (body or '')
 
 
+# Class was implemented according to: ""
+# Create custom authentication for Coinbase API
+class CoinBaseAuthorisation(requests.auth.AuthBase):
+    def __init__(self, api_key, secret_key):
+        self.api_key = api_key
+        self.secret_key = secret_key.encode('utf-8')  # Convert string to bytes
+        self.timestamp = str(int(time.time()))
+
+    # A template for this callable hook was taken from the coinbase API documentation
+    def __call__(self, request):
+        # The hook should be callable
+        message = self.timestamp + request.method + request.path_url + (request.body or '')
+        signature = self.signature(message)  # Convert message to bytes
+
+        # Add headers
+        request.headers.update({
+            'CB-ACCESS-SIGN': signature,
+            'CB-ACCESS-TIMESTAMP': self.timestamp,
+            'CB-ACCESS-KEY': self.api_key,
+        })
+        return request
+
+    def signature(self, message):
+        return hmac.new(self.secret_key, message.encode(), sha256).hexdigest()  # Convert string to bytes
+
+
+class CoinBaseFetcher:
+    def __init__(self, api_key, secret_key):
+        self.api_key = api_key
+        self.secret_key = secret_key
+
+    def get_account_data(self):
+        api_url = 'https://api.coinbase.com/v2/'
+        auth = CoinBaseAuthorisation(self.api_key, self.secret_key)
+
+        # Get current user
+        response = requests.get(api_url + 'accounts', auth=auth)
+
+        if response.status_code == 400 or response.status_code == 401 or response.status_code == 402 \
+                or response.status_code == 403 or response.status_code == 404 or response.status_code == 405:
+            return response.json()
+
+        data_to_return = []
+
+        data = response.json()['data']
+        for coin in data:
+            data_to_return.append(coin['balance'])
+
+        return data_to_return
+
+
+# Class was implemented according to: ""
 class KrakenFetcher:
     def __init__(self, api_key, secret_key):
         self.api_key = api_key
         self.secret_key = secret_key
 
+    # This method of getting the signature was taken from the API documentation and slightly modified
+    def signature(self, urlpath, data, secret):
+        post_data = urlencode(data)
+        encoded = (str(data['nonce']) + post_data).encode()
+        message = urlpath.encode() + sha256(encoded).digest()
+        mac = hmac.new(b64decode(secret), message, sha512)
+        sig_digest = b64encode(mac.digest())
+        return sig_digest.decode()
+
+    # Attaches auth headers and returns results of a POST request
     def get_account_data(self):
-        api = krakenex.API(self.api_key, self.secret_key)
-        kraken = KrakenAPI(api)
+        # Construct the request and print the result
+        url = 'https://api.kraken.com'
+        path = '/0/private/Balance'
+        timestamp = {"nonce": str(int(1000 * time.time()))}
 
-        # Fetch user assets data
-        user_assets = kraken.get_account_balance()
+        headers = {
+            'API-Key': self.api_key,
+            'API-Sign': self.signature(path, timestamp, self.secret_key),
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
 
-        return user_assets
+        response = requests.post((url + path), headers=headers, data=timestamp)
 
-
-class CoinbaseFetcher:
-
-    def __init__(self, api_key, secret_key):
-        self.api_key = api_key
-        self.secret_key = secret_key
-
-    def get_account_data(self):
-        endpoint = "https://api.coinbase.com/api"
-        timestamp = f"timestamp={self.current_time()}"
-        request_url = f"{endpoint}/v3/account?{timestamp}&signature={self.hash(timestamp)}"
-        headers = {'X-MBX-APIKEY': self.api_key}
-        response = requests.get(url=request_url, headers=headers)
         return response.json()
-
-    def hash(self, timestamp):
-        return hmac.new(self.secret_key.encode('utf-8'), timestamp.encode('utf-8'), hashlib.sha256).hexdigest()
-
-    def current_time(self):
-        return round(time.time() * 1000)

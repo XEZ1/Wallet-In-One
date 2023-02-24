@@ -55,7 +55,7 @@ export default function CryptoExchanges({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Pressable onPress={() => navigation.navigate('Crypto exchanges')}>
+        <Pressable onPress={() => navigation.goBack()}>
           <Text style={styles.backArrow}>←</Text>
         </Pressable>
         <Text style={styles.title}>
@@ -87,16 +87,16 @@ export default function CryptoExchanges({ navigation }) {
         <Text style={styles.buttonText}>Coinlist</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Kraken')}
-        style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-      >
-        <Text style={styles.buttonText}>Kraken</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
         onPress={() => navigation.navigate('Coinbase')}
         style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
       >
         <Text style={styles.buttonText}>Coinbase</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Kraken')}
+        style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+      >
+        <Text style={styles.buttonText}>Kraken</Text>
       </TouchableOpacity>
     </View>
   );
