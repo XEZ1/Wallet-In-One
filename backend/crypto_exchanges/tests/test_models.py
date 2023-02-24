@@ -44,12 +44,12 @@ class TokenModelTestCase(TestCase):
         self.token.asset = None
         self._assert_token_is_invalid(self.token)
 
-    def test_asset_can_be_50_chars(self):
-        self.token.asset = 'Q' * 50
+    def test_asset_can_be_5_chars(self):
+        self.token.asset = 'Q' * 5
         self._assert_token_is_valid(self.token)
 
-    def test_asset_cannot_exceed_50_chars(self):
-        self.token.asset = 'Q' * 51
+    def test_asset_cannot_exceed_5_chars(self):
+        self.token.asset = 'Q' * 6
         self._assert_token_is_invalid(self.token)
 
     def test_free_cannot_be_negative(self):
