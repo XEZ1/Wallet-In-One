@@ -23,6 +23,13 @@ def get_timestamp(date_time):
     return datetime.timestamp(dt)
 
 
+def normalise_value(cryptocurrency, value):
+    if cryptocurrency == 'Bitcoin':
+        return value / 100_000_000
+    else:
+        return value
+
+
 @DeprecationWarning
 def fetch_balance(address, cryptocurrency):
     # address = 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh'

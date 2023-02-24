@@ -16,27 +16,10 @@ export default function WalletAssetDetail(props) {
 
   const {dark, colors, setScheme} = useTheme();
   const route = useRoute();
-  const { item, removeWallet } = props.route.params;
+  const { item, value, removeWallet } = props.route.params;
   const [ graphData, setGraphData ] = useState([]);
 
   const {width: SIZE} = Dimensions.get('window');
-
-  const data2 = [
-    {x: 1453075200, y: 1.47},
-    {x: 1453161600, y: 1.37},
-    {x: 1453248000, y: 1.53},
-    {x: 1453334400, y: 1.54},
-    {x: 1453420800, y: 1.52},
-    {x: 1453507200, y: 2.03},
-    {x: 1453593600, y: 2.1},
-    {x: 1453680000, y: 2.5},
-    {x: 1453766400, y: 2.3},
-    {x: 1453852800, y: 2.42},
-    {x: 1453939200, y: 2.55},
-    {x: 1454025600, y: 2.41},
-    {x: 1454112000, y: 2.43},
-    {x: 1454198400, y: 2.2},
-  ];
 
   useEffect(() => {
     let points = [];
@@ -51,35 +34,12 @@ export default function WalletAssetDetail(props) {
 
     }, []);
 
-/*
-  useEffect(() => {
-    const e = item.transactions.map(item => {
-      return {
-        x: item.time,
-        y: item.value
-      }
-    })
-    setGraphData(e);
-  }, []);
-
-  (function calcCorrect() {
-    let balance = item.balance;
-
-    for (let i = 0; i < item.transactions.length; i++) {
-      balance -= item.transactions.at(i).value;
-      console.log(balance)
-    }
-
-  })()
-*/
-
-
-  //const points = monotoneCubicInterpolation({graphData, range: 40});
 
   const formatPrice = value => {
     'worklet';
+    if (value === 'undefined') return `0 ${item.symbol}`;
     const price = (value === '') ? Number(item.balance) : Number(value);
-    return `${price.toPrecision(5)} ${item.symbol}`;
+    return `${price} ${item.symbol}`;
   }
 
   const formatDate = value => {
@@ -120,7 +80,7 @@ export default function WalletAssetDetail(props) {
         <Text />
 
         <Text style={{fontWeight: "700", color: colors.text}}>Value</Text>
-        <Text style={{color: colors.text}}>£0.00 (Not Implemented)</Text>
+        <Text style={{color: colors.text}}>£{value}</Text>
         {/* ▲ 0.00% */}
 
       </View>
@@ -142,30 +102,6 @@ export default function WalletAssetDetail(props) {
           <ChartXLabel style={{color: colors.text}} format={formatDate} />
         </ChartPathProvider>
 
-        {/* Old Chart
-        <LineChart
-          data={data}
-          width={Dimensions.get("window").width * 0.8}
-          height={120}
-          style={{ paddingRight: 0, paddingBottom: 3}}
-          chartConfig={{
-            fillShadowGradientFrom: "#000",
-            fillShadowGradientTo: colors.text,
-            fillShadowGradientOpacity: 0,
-            backgroundGradientFromOpacity: 0,
-            backgroundGradientToOpacity: 0,
-            //color: (opacity = 1) => `rgb(0, 0, 0)`,
-            color: (opacity = 1) => colors.primary,
-            propsForDots: {
-              r: "0",
-            },
-          }}
-          withInnerLines={false}
-          withHorizontalLabels={false}
-          withOuterLines={false}
-          bezier
-        />
-        */}
       </View>
 
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>

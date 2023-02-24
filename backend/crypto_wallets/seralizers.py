@@ -1,16 +1,13 @@
 from rest_framework import serializers
-from accounts.models import User
 from crypto_wallets.models import CryptoWallet, CryptoWalletTransaction
-from rest_framework.fields import CurrentUserDefault
-
-from crypto_wallets.services import fetch_balance, CryptoWalletService, get_timestamp
+from crypto_wallets.services import CryptoWalletService, get_timestamp, normalise_value
 
 
 class WalletTransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CryptoWalletTransaction
-        fields = ('value', 'time')
+        fields = ('id', 'value', 'time')
 
 
 class WalletSerializer(serializers.ModelSerializer):
@@ -24,17 +21,18 @@ class WalletSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-        crypto_wallet_service = CryptoWalletService(validated_data['cryptocurrency'], validated_data['address'])
+        cryptocurrency = validated_data['cryptocurrency']
+        crypto_wallet_service = CryptoWalletService(cryptocurrency, validated_data['address'])
         crypto_wallet = CryptoWallet.objects.create(
             **validated_data,
-            balance=crypto_wallet_service.balance
+            balance=normalise_value(cryptocurrency, crypto_wallet_service.balance)
         )
         crypto_wallet.save()
         for transaction in crypto_wallet_service.transactions:
             crypto_wallet_transaction = CryptoWalletTransaction.objects.create(
                 crypto_wallet=crypto_wallet,
-                value=transaction['balance_change'],
-                time=get_timestamp(transaction['time'])  # Is this correct?
+                value=normalise_value(cryptocurrency, transaction['balance_change']),
+                time=get_timestamp(transaction['time'])
             )
             crypto_wallet_transaction.save()
         return crypto_wallet
