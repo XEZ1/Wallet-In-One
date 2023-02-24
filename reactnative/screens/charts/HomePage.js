@@ -15,6 +15,7 @@ export default function HomePage({ navigation }) {
   const {dark, colors, setScheme} = useTheme();
   const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed ] = useState(false)
+  const isFocused = useIsFocused()
   
   // Uncomment to show bank data from backend
 
@@ -28,8 +29,8 @@ export default function HomePage({ navigation }) {
           setPressed(false)
         }
       }
-      fetchData()
-  }, [])
+      if(isFocused){fetchData()}
+  }, [isFocused])
   
   const handlePressIn = (event, datapoint) => {
     if (pressed){
