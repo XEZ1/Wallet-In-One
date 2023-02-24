@@ -28,7 +28,7 @@ def normalise_value(cryptocurrency, value):
     if cryptocurrency == 'Bitcoin':
         return value / 100_000_000
     else:
-        return value
+        return value / 100_000_000
 
 
 @DeprecationWarning
