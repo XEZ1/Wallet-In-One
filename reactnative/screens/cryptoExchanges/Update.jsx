@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, Pressable, View, Text, TextInput, Button, Alert } from 'react-native';
+import { StyleSheet, Pressable, View, Text, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
 import * as SecureStore from "expo-secure-store";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import { Ionicons } from '@expo/vector-icons';
+
 
 export default function UpdateCrypto({ navigation }) {
   const {dark, colors, setScheme} = useTheme();
@@ -57,8 +59,15 @@ export default function UpdateCrypto({ navigation }) {
       marginBottom: 10,
       color: colors.text,
       backgroundColor: colors.background
-      
     },
+    refreshButton: {
+        position: 'absolute',
+        top: 20,
+        right: 20,
+        backgroundColor: 'red',
+        borderRadius: 50,
+        padding: 10,
+      },
   });
   
   return (
@@ -67,15 +76,10 @@ export default function UpdateCrypto({ navigation }) {
         <Pressable onPress={() => navigation.goBack()}>
           <Text style={styles.backArrow}>←</Text>
         </Pressable>
-        <Text style={styles.title}>Update:</Text>
       </View>
-      <Button 
-        title="Update" 
-        onPress={handleSubmit} 
-        color= {colors.primary}
-        backgroundColor='#FFFF00'
-        buttonStyle={{ borderRadius: 20 }} 
-      />
+      <TouchableOpacity onPress={handleSubmit} style={styles.refreshButton}>
+        <Ionicons name="refresh-outline" size={30} color="white" />
+      </TouchableOpacity>
     </View>
   );
 }

@@ -10,10 +10,13 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert,
 } from "react-native";
 import useCryptoWallet from "./useCryptoWallet";
 import WalletAsset from "./WalletAsset";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import { Ionicons } from '@expo/vector-icons';
+import * as SecureStore from "expo-secure-store";
 
 export default function CryptoWallet(props) {
   const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
@@ -67,15 +70,50 @@ export default function CryptoWallet(props) {
       fontWeight: 'bold',
       color: colors.text,
     },
+    refreshButton: {
+      position: 'absolute',
+      top: 0,
+      right: 10,
+      backgroundColor: colors.primary,
+      borderRadius: 30,
+      padding: 10,
+    },
   });
 
   useEffect(() => {
     fetchWallets();
   }, []);
 
+  const handleSubmit = async () => {
+    
+    try {
+      const response = await fetch('http://10.0.2.2:8000/crypto-exchanges/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+        },
+        body: JSON.stringify({ }),
+      });
+      const data = await response.json();
+      const statusCode = response.status;
+      if (statusCode == 200) {
+        Alert.alert('Success', 'updated account data successfully!');
+      } else {
+        Alert.alert('Error', data["error"]);
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'An error occurred while updating account info.');
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView>
+        <TouchableOpacity onPress={handleSubmit} style={styles.refreshButton}>
+          <Ionicons name="refresh-outline" size={25} color="white" />
+        </TouchableOpacity>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View
             style={{
@@ -84,7 +122,9 @@ export default function CryptoWallet(props) {
               justifyContent: "center",
             }}
           >
-            <Text style={[styles.cryptoWalletTitle, {color: colors.text}]}>Cryptocurrency</Text>
+            <View style={{ marginRight: 20 }}>
+              <Text style={[styles.cryptoWalletTitle, {color: colors.text}]}>Cryptocurrency</Text>
+            </View>
           </View>
         </View>
 
