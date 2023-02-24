@@ -18,7 +18,7 @@ class TokenSerializer(serializers.ModelSerializer):
         return token
 
 
-# Crypto exchange account serialiser
+# Crypto exchange account serializer
 class CryptoExchangeAccountSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 

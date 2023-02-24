@@ -19,7 +19,7 @@ class TokenModelTestCase(TestCase):
     def setUp(self):
         super(TestCase, self).setUp()
 
-        self.user = User.objects.get(id=2)
+        self.user = User.objects.get(id=1)
 
         self.token = Token(user=self.user,
                            asset="ETH",
