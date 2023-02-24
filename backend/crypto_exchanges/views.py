@@ -1,3 +1,5 @@
+from urllib.request import Request
+
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -24,14 +26,14 @@ class BinanceView(APIView):
         binance_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user,
-                                                     crypto_exchange=self.request.data['crypto_exchange'],
-                                                     api_key=self.request.data['api_key'],
-                                                     secret_key=self.request.data['secret_key'])):
+        if bool(CryptoExchangeAccount.objects.filter(user=request.user,
+                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     api_key=request.data['api_key'],
+                                                     secret_key=request.data['secret_key'])):
             return Response({'error': 'This binance account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Binance API
-        service = BinanceFetcher(self.request.data['api_key'], self.request.data['secret_key'])
+        service = BinanceFetcher(request.data['api_key'], request.data['secret_key'])
 
         # Get the user's account information
         data = service.get_account_data()
@@ -54,15 +56,15 @@ class BinanceView(APIView):
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=self.request.user, asset=coin['asset'])):
-                token = Token.objects.get(user=self.request.user, asset=coin['asset'])
+            if bool(Token.objects.filter(user=request.user, asset=coin['asset'])):
+                token = Token.objects.get(user=request.user, asset=coin['asset'])
                 token.free += float(coin['free'])
                 token.locked += float(coin['locked'])
                 token.save()
 
             else:
                 token = Token()
-                token.user = self.request.user
+                token.user = request.user
                 token.asset = coin['asset']
                 token.free = float(coin['free'])
                 token.locked = float(coin['locked'])
@@ -85,14 +87,14 @@ class HuobiView(APIView):
         huobi_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user,
-                                                     crypto_exchange=self.request.data['crypto_exchange'],
-                                                     api_key=self.request.data['api_key'],
-                                                     secret_key=self.request.data['secret_key'])):
+        if bool(CryptoExchangeAccount.objects.filter(user=request.user,
+                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     api_key=request.data['api_key'],
+                                                     secret_key=request.data['secret_key'])):
             return Response({'error': 'This huobi account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Huobi API
-        service = HuobiFetcher(self.request.data['api_key'], self.request.data['secret_key'])
+        service = HuobiFetcher(request.data['api_key'], request.data['secret_key'])
 
         # Making sure the api and secret keys are valid before saving the huobi account and
         # Get the user's account information
@@ -144,14 +146,14 @@ class HuobiView(APIView):
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=self.request.user, asset=coin['currency'].upper())):
-                token = Token.objects.get(user=self.request.user, asset=coin['currency'].upper())
+            if bool(Token.objects.filter(user=request.user, asset=coin['currency'].upper())):
+                token = Token.objects.get(user=request.user, asset=coin['currency'].upper())
                 token.free += float(coin['balance'])
                 token.save()
 
             else:
                 token = Token()
-                token.user = self.request.user
+                token.user = request.user
                 token.asset = coin['currency'].upper()
                 token.free = float(coin['balance'])
                 token.locked = float(coin['debt'])
@@ -172,14 +174,14 @@ class GateioView(APIView):
         gateio_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user,
-                                                     crypto_exchange=self.request.data['crypto_exchange'],
-                                                     api_key=self.request.data['api_key'],
-                                                     secret_key=self.request.data['secret_key'])):
+        if bool(CryptoExchangeAccount.objects.filter(user=request.user,
+                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     api_key=request.data['api_key'],
+                                                     secret_key=request.data['secret_key'])):
             return Response({'error': 'This gateio account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Gateio API
-        service = GateioFetcher(self.request.data['api_key'], self.request.data['secret_key'])
+        service = GateioFetcher(request.data['api_key'], request.data['secret_key'])
 
         # Get the user's account information
         data = service.get_account_data()
@@ -202,15 +204,15 @@ class GateioView(APIView):
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=self.request.user, asset=coin['currency'])):
-                token = Token.objects.get(user=self.request.user, asset=coin['currency'])
+            if bool(Token.objects.filter(user=request.user, asset=coin['currency'])):
+                token = Token.objects.get(user=request.user, asset=coin['currency'])
                 token.free += float(coin['available'])
                 token.locked += float(coin['locked'])
                 token.save()
 
             else:
                 token = Token()
-                token.user = self.request.user
+                token.user = request.user
                 token.asset = coin['currency']
                 token.free = float(coin['available'])
                 token.locked = float(coin['locked'])
@@ -231,19 +233,17 @@ class CoinListView(APIView):
         coinlist_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user,
-                                                     crypto_exchange=self.request.data['crypto_exchange'],
-                                                     api_key=self.request.data['api_key'],
-                                                     secret_key=self.request.data['secret_key'])):
+        if bool(CryptoExchangeAccount.objects.filter(user=request.user,
+                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     api_key=request.data['api_key'],
+                                                     secret_key=request.data['secret_key'])):
             return Response({'error': 'This coinlist account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Coinlist API
-        service = CoinListFetcher(self.request.data['api_key'], self.request.data['secret_key'])
+        service = CoinListFetcher(request.data['api_key'], request.data['secret_key'])
 
         # Get the user's account information
         data = service.get_account_data()
-
-        print(data)
 
         # Making sure the api and secret keys are valid before saving the coinlist account
         if 'status' in data and (data['status'] != 'ok' or data['status'] != '200'):
@@ -263,15 +263,15 @@ class CoinListView(APIView):
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=self.request.user, asset=coin[0])):
-                token = Token.objects.get(user=self.request.user, asset=coin[0])
+            if bool(Token.objects.filter(user=request.user, asset=coin[0])):
+                token = Token.objects.get(user=request.user, asset=coin[0])
                 token.free += float(coin[1])
                 token.locked += float(0)
                 token.save()
 
             else:
                 token = Token()
-                token.user = self.request.user
+                token.user = request.user
                 token.asset = coin[0]
                 token.free = float(coin[1])
                 token.locked = float(0)
@@ -292,14 +292,14 @@ class CoinBaseView(APIView):
         coinbase_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user,
-                                                     crypto_exchange=self.request.data['crypto_exchange'],
-                                                     api_key=self.request.data['api_key'],
-                                                     secret_key=self.request.data['secret_key'])):
+        if bool(CryptoExchangeAccount.objects.filter(user=request.user,
+                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     api_key=request.data['api_key'],
+                                                     secret_key=request.data['secret_key'])):
             return Response({'error': 'This coinbase account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Coinbase API
-        service = CoinBaseFetcher(self.request.data['api_key'], self.request.data['secret_key'])
+        service = CoinBaseFetcher(request.data['api_key'], request.data['secret_key'])
 
         # Get the user's account information
         data = service.get_account_data()
@@ -322,15 +322,15 @@ class CoinBaseView(APIView):
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=self.request.user, asset=coin['currency'])):
-                token = Token.objects.get(user=self.request.user, asset=coin['currency'])
+            if bool(Token.objects.filter(user=request.user, asset=coin['currency'])):
+                token = Token.objects.get(user=request.user, asset=coin['currency'])
                 token.free += float(coin['amount'])
                 token.locked += float(0)
                 token.save()
 
             else:
                 token = Token()
-                token.user = self.request.user
+                token.user = request.user
                 token.asset = coin['currency']
                 token.free = float(coin['amount'])
                 token.locked = float(0)
@@ -351,14 +351,14 @@ class KrakenView(APIView):
         kraken_account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=self.request.user,
-                                                     crypto_exchange=self.request.data['crypto_exchange'],
-                                                     api_key=self.request.data['api_key'],
-                                                     secret_key=self.request.data['secret_key'])):
+        if bool(CryptoExchangeAccount.objects.filter(user=request.user,
+                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     api_key=request.data['api_key'],
+                                                     secret_key=request.data['secret_key'])):
             return Response({'error': 'This kraken account has already been added'}, status=400)
 
         # Use the provided API key and secret key to connect to the Kraken API
-        service = KrakenFetcher(self.request.data['api_key'], self.request.data['secret_key'])
+        service = KrakenFetcher(request.data['api_key'], request.data['secret_key'])
 
         # Get the user's account information
         data = service.get_account_data()
@@ -381,18 +381,63 @@ class KrakenView(APIView):
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=self.request.user, asset=coin[0])):
-                token = Token.objects.get(user=self.request.user, asset=coin[0])
+            if bool(Token.objects.filter(user=request.user, asset=coin[0])):
+                token = Token.objects.get(user=request.user, asset=coin[0])
                 token.free += float(coin[1])
                 token.locked += float(0)
                 token.save()
 
             else:
                 token = Token()
-                token.user = self.request.user
+                token.user = request.user
                 token.asset = coin[0]
                 token.free = float(coin[1])
                 token.locked = float(0)
                 token.save()
 
         return Response(filtered_data, status=200)
+
+
+class UpdateAllTokens(APIView):
+    def post(self, request):
+        Token.objects.all().delete()
+        counter = 1
+        fixed_accounts = CryptoExchangeAccount.objects.all()
+        for account in fixed_accounts:
+            api_key = account.api_key
+            secret_key = account.secret_key
+            platform = account.crypto_exchange
+            counter += 1
+            account.delete()
+            match platform:
+                case 'Binance':
+                    request.data['api_key'] = api_key
+                    request.data['secret_key'] = secret_key
+                    response = BinanceView()
+                    response.post(request)
+                case 'Huobi':
+                    request.data['api_key'] = api_key
+                    request.data['secret_key'] = secret_key
+                    response = HuobiView()
+                    response.post(request)
+                case 'GateIo':
+                    request.data['api_key'] = api_key
+                    request.data['secret_key'] = secret_key
+                    response = GateioView()
+                    response.post(request)
+                case 'CoinList':
+                    request.data['api_key'] = api_key
+                    request.data['secret_key'] = secret_key
+                    response = CoinListView()
+                    response.post(request)
+                case 'CoinBase':
+                    request.data['api_key'] = api_key
+                    request.data['secret_key'] = secret_key
+                    response = CoinBaseView()
+                    response.post(request)
+                case 'Kraken':
+                    request.data['api_key'] = api_key
+                    request.data['secret_key'] = secret_key
+                    response = KrakenView()
+                    response.post(request)
+        return Response({'message': 'Success. Data was updated successfully'}, status=200)
