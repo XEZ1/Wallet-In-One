@@ -12,6 +12,7 @@ class Token(models.Model):
     free = models.FloatField()
     locked = models.FloatField()
 
+
 # Crypto exchange account model
 class CryptoExchangeAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
