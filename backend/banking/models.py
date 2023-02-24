@@ -80,7 +80,7 @@ class Account(models.Model):
     def account_balance(self):
         latest_balance = Balance.objects.filter(account=self, amount_currency="GBP").order_by('date').first()
         if latest_balance == None:
-            return 0
+            return Money('0.0', 'GBP')
         else:
             return latest_balance.amount
 
