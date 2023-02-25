@@ -11,6 +11,7 @@ const PlaidComponent = ({ navigation }) => {
   const [list, setList] = useState()
   const [institution_name, setInstitutionName] = useState()
   const [institution_id, setInstitutionID] = useState()
+  const [access_token, setAccessToken] = useState()
 
   const addAccount = async (account, success) => {
     await fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
@@ -25,6 +26,7 @@ const PlaidComponent = ({ navigation }) => {
         name: account.meta.name,
         institution_name: success.metadata.institution.name,
         institution_id: success.metadata.institution.id,
+        access_token: access_token,
       }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
     .then((data) => console.log(data))
@@ -41,8 +43,6 @@ const PlaidComponent = ({ navigation }) => {
   }).then(async (res) => setList(await res.json()))};
 
   const initiatePlaidLink = async () => {
-    let access_token = await SecureStore.getItemAsync('access_token')
-    console.log(access_token)
     // if(access_token == null)
     // {
       let token = await SecureStore.getItemAsync('token')
@@ -76,7 +76,7 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({ public_token: publicToken }),
     });
     const data = await response.json();
-    await SecureStore.setItemAsync('access_token', data.access_token)
+    setAccessToken(data.access_token)
   }
 
   const getBalance = async (accessToken) => {
@@ -103,13 +103,14 @@ const PlaidComponent = ({ navigation }) => {
       onExit={(exit) => console.log(exit)}
       onSuccess={async (success) => {
         let account_list = success.metadata.accounts
-        let access_token = await SecureStore.getItemAsync('access_token')
-        if(access_token == null){
-          getAccessToken(success.publicToken)
-          getBalance(access_token)
-          console.log("krishna")
-        }
-        getBalance(access_token)
+        // let access_token = await SecureStore.getItemAsync('access_token')
+        // if(access_token == null){
+        await getAccessToken(success.publicToken)
+        console.log(access_token)
+          // getBalance(access_token)
+          // console.log("krishna")
+        // }
+        // getBalance(access_token)
         console.log("krishna")
         console.log(success.metadata.accounts[0].meta)
         console.log(success.publicToken)

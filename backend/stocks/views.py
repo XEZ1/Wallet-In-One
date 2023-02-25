@@ -16,6 +16,7 @@ from .models import StockAccount
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
 from plaid.model.accounts_balance_get_request import AccountsBalanceGetRequest
 from flask import jsonify
+from plaid.model.accounts_get_request import AccountsGetRequest
 
 PLAID_CLIENT_ID = '63ef90fc73e3070014496336'
 PLAID_SECRET = 'a57f2537ac53e9842da752b987bb5b'
@@ -47,6 +48,7 @@ def initiate_plaid_link(request):
             client_name="KCL",
             language='en',
             country_codes=list(map(lambda x: CountryCode(x), ['US','CA'])),
+            #institution_id="ins_117181",
             user=LinkTokenCreateRequestUser(
                 client_user_id=str(request.user.id)
             )
@@ -100,10 +102,10 @@ def get_balance(request):
     api_client = plaid.ApiClient(configuration)
     client = plaid_api.PlaidApi(api_client)
     try:
-        request = AccountsBalanceGetRequest(
+        request = AccountsGetRequest(
             access_token=request.data.get('access_token')
         )
-        response = client.accounts_balance_get(request)
+        response = client.accounts_get(request)
         print(response.to_dict())
         return Response(response.to_dict())
     except plaid.ApiException as e:
