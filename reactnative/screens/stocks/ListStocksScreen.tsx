@@ -5,9 +5,11 @@ import {
   ToastAndroid,
   Platform,
   Alert,
+  StyleSheet,
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
+import { FlatList } from 'react-native-gesture-handler';
 
 const SuccessComponent = () => {
     const [data, setData] = useState(null);
@@ -32,16 +34,42 @@ const SuccessComponent = () => {
             <Text>Accounts</Text>
           </View>
           <View>
-            <Text>
-                {
-                  JSON.stringify(list)
-                }
-            </Text>
+            <FlatList data={list} renderItem={({item, index}) =>{
+              return (
+                <View style={[styles.item, {backgroundColor: 'red'}]}>
+                  <View style={styles.row}>
+                    <Text style={styles.name}>{item.name} - </Text>
+                    <Text style={styles.ins_name}>{item.institution_name}</Text>
+                  </View>
+                </View>
+              )
+            }}
+            ListEmptyComponent={<Text>{'\nYou have no stock accounts\n'}</Text>}
+            />
           </View>
         </View>
       );
     };
 
+  const styles = StyleSheet.create({
+      item:{
+        padding: 20,
+        borderRadius: 10,
+      },
+      row:{
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+      },
+      name:{
+        color: "white",
+        fontWeight: 'bold',
+        fontSize: 21,
+      },
+      ins_name:{
+        color: "white",
+        fontSize: 18,
+      }
+    });
 
 
 export default SuccessComponent;
