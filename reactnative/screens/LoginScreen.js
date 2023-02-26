@@ -34,11 +34,12 @@ export default function SignUpScreen({ navigation }) {
         Alert.alert("Error", "Login Error");
       }
     } else {
-      sendNotification();
+      console.log("Login Successful")
+      sendLogInNotification();
     }
   };
 
-  const sendNotification = async () => {
+  const sendLogInNotification = async () => {
     await Notifications.requestPermissionsAsync();
     await Notifications.presentNotificationAsync({
       title: "Login Successful",
