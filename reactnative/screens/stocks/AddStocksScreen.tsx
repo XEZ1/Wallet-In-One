@@ -12,6 +12,7 @@ const PlaidComponent = ({ navigation }) => {
   const [institution_name, setInstitutionName] = useState()
   const [institution_id, setInstitutionID] = useState()
   const [access_token, setAccessToken] = useState()
+  let test = ''
 
   const addAccount = async (account, success) => {
     await fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
@@ -26,7 +27,7 @@ const PlaidComponent = ({ navigation }) => {
         name: account.meta.name,
         institution_name: success.metadata.institution.name,
         institution_id: success.metadata.institution.id,
-        access_token: access_token,
+        access_token: test,
       }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
     .then((data) => console.log(data))
@@ -76,7 +77,8 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({ public_token: publicToken }),
     });
     const data = await response.json();
-    setAccessToken(data.access_token)
+    test = data.access_token
+    // setAccessToken(data.access_token)
   }
 
   const getBalance = async (accessToken) => {
@@ -95,7 +97,7 @@ const PlaidComponent = ({ navigation }) => {
 
   return (
     <>
-      <Button title="Connect with Plaid" onPress={initiatePlaidLink} />
+      <Button title="Add Stock Account" onPress={initiatePlaidLink} />
       {list ? (<Text>{JSON.stringify(list)}</Text>):''}
       <PlaidLink
       linkToken={linkToken}
@@ -106,7 +108,7 @@ const PlaidComponent = ({ navigation }) => {
         // let access_token = await SecureStore.getItemAsync('access_token')
         // if(access_token == null){
         await getAccessToken(success.publicToken)
-        console.log(access_token)
+        console.log(test)
           // getBalance(access_token)
           // console.log("krishna")
         // }

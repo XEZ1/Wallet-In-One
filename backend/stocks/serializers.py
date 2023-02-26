@@ -8,7 +8,13 @@ class AddStockAccount(serializers.ModelSerializer):
         model = StockAccount
         fields = ['account_id', 'name', 'user', 'institution_name', 'institution_id', 'access_token']
 
-        def create(self, validated_data):
-            account = StockAccount.objects.create(**validated_data)
-            account.save()
-            return account
+    def validate(self, attrs):
+        super().validate(attrs)
+        if StockAccount.objects.filter(name=attrs['name'], institution_name=attrs['institution_id']).exists():
+            raise serializers.ValidationError('Account already exists')
+        return attrs
+
+    def create(self, validated_data):
+        account = StockAccount.objects.create(**validated_data)
+        account.save()
+        return account
