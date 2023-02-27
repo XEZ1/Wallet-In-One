@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
-from accounts.models import Transaction, Location
+from stocks.models import Transaction, Location
 from django.db import models
 # from django.contrib.postgres.fields import ArrayField
 
@@ -9,7 +9,7 @@ class TransactionModelTestCase(TestCase):
     """Tests for transaction model."""
 
     fixtures = [
-        'accounts/fixtures/transaction.json',
+        'stocks/fixtures/transaction.json',
     ]
 
     def setUp(self):

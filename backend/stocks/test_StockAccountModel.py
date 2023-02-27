@@ -2,7 +2,6 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from stocks.models import StockAccount
-from accounts.models import User
 
 
 class StockAccountModelTestCase(TestCase):
