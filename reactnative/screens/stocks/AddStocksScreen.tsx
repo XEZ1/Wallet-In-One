@@ -11,8 +11,8 @@ const PlaidComponent = ({ navigation }) => {
   const [list, setList] = useState()
   const [institution_name, setInstitutionName] = useState()
   const [institution_id, setInstitutionID] = useState()
-  const [access_token, setAccessToken] = useState()
-  let test = ''
+  //const [access_token, setAccessToken] = useState()
+  let access_token = ''
   let balance = ''
 
   const addAccount = async (account, success) => {
@@ -28,7 +28,7 @@ const PlaidComponent = ({ navigation }) => {
         name: account.meta.name,
         institution_name: success.metadata.institution.name,
         institution_id: success.metadata.institution.id,
-        access_token: test,
+        access_token: access_token,
         balance: balance,
       }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
@@ -79,7 +79,7 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({ public_token: publicToken }),
     });
     const data = await response.json();
-    test = data.access_token
+    access_token = data.access_token
     // setAccessToken(data.access_token)
   }
 
@@ -111,11 +111,11 @@ const PlaidComponent = ({ navigation }) => {
         // let access_token = await SecureStore.getItemAsync('access_token')
         // if(access_token == null){
         await getAccessToken(success.publicToken)
-        console.log(test)
+        console.log(access_token)
           // getBalance(access_token)
           // console.log("krishna")
         // }
-        await getBalance(test)
+        await getBalance(access_token)
         console.log("krishna")
         console.log(success.metadata.accounts[0].meta)
         console.log(success.publicToken)

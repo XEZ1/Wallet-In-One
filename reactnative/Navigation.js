@@ -119,8 +119,8 @@ export default function Navigation() {
             }}
           />
 
-          <Tab.Screen name="Test" component={PlaidComponent} />
-          <Tab.Screen name="sc" component={SuccessComponent} />
+          <Tab.Screen name="Stocks" component={PlaidComponent} />
+          <Tab.Screen name="Stock List" component={SuccessComponent} />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
