@@ -47,7 +47,7 @@ def initiate_plaid_link(request):
             products=products,
             client_name="KCL",
             language='en',
-            country_codes=list(map(lambda x: CountryCode(x), ['US','CA'])),
+            country_codes=list(map(lambda x: CountryCode(x), ['US'])),
             #institution_id="ins_117181",
             user=LinkTokenCreateRequestUser(
                 client_user_id=str(request.user.id)

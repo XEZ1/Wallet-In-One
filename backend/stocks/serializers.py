@@ -10,7 +10,7 @@ class AddStockAccount(serializers.ModelSerializer):
 
     def validate(self, attrs):
         super().validate(attrs)
-        if StockAccount.objects.filter(name=attrs['name'], institution_name=attrs['institution_id']).exists():
+        if StockAccount.objects.filter(name=attrs['name'], institution_id=attrs['institution_id']).exists():
             raise serializers.ValidationError('Account already exists')
         return attrs
 
