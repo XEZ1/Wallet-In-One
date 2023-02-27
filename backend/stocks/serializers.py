@@ -6,7 +6,7 @@ class AddStockAccount(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = StockAccount
-        fields = ['account_id', 'name', 'user', 'institution_name', 'institution_id', 'access_token']
+        fields = ['account_id', 'name', 'user', 'institution_name', 'institution_id', 'access_token', 'balance']
 
     def validate(self, attrs):
         super().validate(attrs)

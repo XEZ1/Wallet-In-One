@@ -39,7 +39,7 @@ const SuccessComponent = () => {
                 <View style={[styles.item, {backgroundColor: 'red'}]}>
                   <View style={styles.row}>
                     <Text style={styles.name}>{item.name} - </Text>
-                    <Text style={styles.ins_name}>{item.institution_name}</Text>
+                    <Text style={styles.ins_name}>{item.institution_name} - £{item.balance}</Text>
                   </View>
                 </View>
               )

@@ -13,6 +13,7 @@ const PlaidComponent = ({ navigation }) => {
   const [institution_id, setInstitutionID] = useState()
   const [access_token, setAccessToken] = useState()
   let test = ''
+  let balance = ''
 
   const addAccount = async (account, success) => {
     await fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
@@ -28,6 +29,7 @@ const PlaidComponent = ({ navigation }) => {
         institution_name: success.metadata.institution.name,
         institution_id: success.metadata.institution.id,
         access_token: test,
+        balance: balance,
       }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
     .then((data) => console.log(data))
@@ -92,6 +94,7 @@ const PlaidComponent = ({ navigation }) => {
     });
     const data = await response.json();
     console.log(data)
+    balance = data.accounts[0].balances.current
   }
 
 
@@ -112,7 +115,7 @@ const PlaidComponent = ({ navigation }) => {
           // getBalance(access_token)
           // console.log("krishna")
         // }
-        // getBalance(access_token)
+        await getBalance(test)
         console.log("krishna")
         console.log(success.metadata.accounts[0].meta)
         console.log(success.publicToken)
