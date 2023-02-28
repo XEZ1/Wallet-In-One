@@ -79,7 +79,10 @@ class Account(models.Model):
 
     def account_balance(self):
         latest_balance = Balance.objects.filter(account=self, amount_currency="GBP").order_by('date').first()
-        return latest_balance.amount
+        if latest_balance == None:
+            return Money('0.0', 'GBP')
+        else:
+            return latest_balance.amount
 
 class Transaction(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='transactions')
