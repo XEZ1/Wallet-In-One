@@ -17,26 +17,12 @@ from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchan
 from plaid.model.accounts_balance_get_request import AccountsBalanceGetRequest
 from flask import jsonify
 from plaid.model.accounts_get_request import AccountsGetRequest
-
-PLAID_CLIENT_ID = '63ef90fc73e3070014496336'
-PLAID_SECRET = 'a57f2537ac53e9842da752b987bb5b'
-PLAID_ENV = 'sandbox'  # Change to 'development' or 'production' in production environment
+from .services import setUpClient
 
 @api_view(['POST'])
 @csrf_exempt
 def initiate_plaid_link(request):
-    host = plaid.Environment.Sandbox
-    configuration = plaid.Configuration(
-    host=host,
-    api_key={
-        'clientId': PLAID_CLIENT_ID,
-        'secret': PLAID_SECRET,
-        'plaidVersion': '2020-09-14'
-    }
-    )
-
-    api_client = plaid.ApiClient(configuration)
-    client = plaid_api.PlaidApi(api_client)
+    client = setUpClient()
     prods = ['auth', 'transactions']
     products = []
     for product in prods:
@@ -65,18 +51,7 @@ def initiate_plaid_link(request):
 @api_view(['POST'])
 def get_access_token(request):
     public_token = request.data.get('public_token')
-    host = plaid.Environment.Sandbox
-    configuration = plaid.Configuration(
-    host=host,
-    api_key={
-        'clientId': PLAID_CLIENT_ID,
-        'secret': PLAID_SECRET,
-        'plaidVersion': '2020-09-14'
-    }
-    )
-
-    api_client = plaid.ApiClient(configuration)
-    client = plaid_api.PlaidApi(api_client)
+    client = setUpClient()
     try:
         exchange_request = ItemPublicTokenExchangeRequest(
             public_token=public_token)
@@ -89,24 +64,12 @@ def get_access_token(request):
     
 @api_view(['POST'])
 def get_balance(request):
-    host = plaid.Environment.Sandbox
-    configuration = plaid.Configuration(
-    host=host,
-    api_key={
-        'clientId': PLAID_CLIENT_ID,
-        'secret': PLAID_SECRET,
-        'plaidVersion': '2020-09-14'
-    }
-    )
-
-    api_client = plaid.ApiClient(configuration)
-    client = plaid_api.PlaidApi(api_client)
+    client = setUpClient()
     try:
         request = AccountsGetRequest(
             access_token=request.data.get('access_token')
         )
         response = client.accounts_get(request)
-        print(response.to_dict())
         return Response(response.to_dict())
     except plaid.ApiException as e:
         return json.loads(e.body)
