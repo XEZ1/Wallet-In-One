@@ -1,48 +1,56 @@
 import {Button, Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, View, ScrollView} from "react-native";
 import { useRoute } from "@react-navigation/native";
-import React from "react";
-import {LineChart} from "react-native-chart-kit";
+import React, {useEffect, useState} from "react";
+//import {LineChart} from "react-native-chart-kit";
 import getCryptoIcon from "./icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import { LineChart } from 'react-native-wagmi-charts';
+import WalletAsset from "./WalletAsset";
 
 export default function WalletAssetDetail(props) {
 
   const {dark, colors, setScheme} = useTheme();
   const route = useRoute();
-  const { item, removeWallet } = props.route.params;
-  const data = {
-    datasets: [
-      {
-        data: [
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-        ],
-      },
-    ],
-  };
+  const { item, value, removeWallet } = props.route.params;
+  const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
+
+  const {width: SIZE} = Dimensions.get('window');
+
+  useEffect(() => {
+    let points = [];
+    let balance = item.balance;
+
+    for (let i = 0; i < item.transactions.length; i++) {
+      let point = {timestamp: item.transactions[i].time * 1000, value: balance}
+      balance -= item.transactions[i].value
+      points = [point, ...points]
+    }
+    setGraphData(points)
+
+    }, []);
+
+
+  const data = graphData
+
+  const formatPrice = value => {
+    'worklet';
+    if (value === 'undefined') return `0 ${item.symbol}`;
+    const price = (value === '') ? Number(item.balance) : Number(value);
+    return `${price} ${item.symbol}`;
+  }
+
+  const formatDate = value => {
+    'worklet';
+    const date = (value === '') ? new Date() : new Date(Number(value * 1000));
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    };
+    return date.toLocaleString("en-JP", options);
+  }
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: colors.background, paddingHorizontal: 30}}>
@@ -64,43 +72,48 @@ export default function WalletAssetDetail(props) {
         <Text />
 
         <Text style={{fontWeight: "700", color: colors.text}}>Balance</Text>
-        <Text style={{color: colors.text}}>{item.value} {item.symbol}</Text>
+        <Text style={{color: colors.text}}>{item.balance} {item.symbol}</Text>
         <Text />
 
         <Text style={{fontWeight: "700", color: colors.text}}>Value</Text>
-        <Text style={{color: colors.text}}>£0.00 ▲ 0.00% (Not Implemented)</Text>
+        <Text style={{color: colors.text}}>£{value}</Text>
+        {/* ▲ 0.00% */}
 
       </View>
 
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Graph</Text>
-      <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
-        <LineChart
-          data={data}
-          width={Dimensions.get("window").width * 0.8}
-          height={120}
-          style={{ paddingRight: 0, paddingBottom: 3}}
-          chartConfig={{
-            fillShadowGradientFrom: "#000",
-            fillShadowGradientTo: colors.text,
-            fillShadowGradientOpacity: 0,
-            backgroundGradientFromOpacity: 0,
-            backgroundGradientToOpacity: 0,
-            //color: (opacity = 1) => `rgb(0, 0, 0)`,
-            color: (opacity = 1) => colors.primary,
-            propsForDots: {
-              r: "0",
-            },
-          }}
-          withInnerLines={false}
-          withHorizontalLabels={false}
-          withOuterLines={false}
-          bezier
-        />
-      </View>
+      {graphData.length <= 2 ? (
+        <Text>Not enough data to display graph.</Text>
+      ) : (
+        <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
+          <LineChart.Provider data={data}>
+            <LineChart height={SIZE / 2} width={SIZE * 0.85}>
+              <LineChart.Path color={colors.text}/>
+              <LineChart.CursorCrosshair color={colors.text}>
+
+                <LineChart.Tooltip textStyle={{color: colors.text}}>
+                  <LineChart.PriceText precision={10} style={{color: colors.text}} />
+                </LineChart.Tooltip>
+
+                <LineChart.Tooltip position="bottom" >
+                  <LineChart.DatetimeText style={{color: colors.text}} />
+                </LineChart.Tooltip>
+
+              </LineChart.CursorCrosshair>
+            </LineChart>
+          </LineChart.Provider>
+        </View>
+      )
+
+      }
+
 
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
       <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
-        <Text style= {{color: colors.text}}>⚠ Transaction history not implemented.</Text>
+        {/* Text if no transactions */}
+        {
+          item.transactions.map((t)=> <CryptoWalletTransaction key={t.id} transaction={t} symbol={item.symbol}/>)
+        }
       </View>
 
       <Pressable
@@ -115,6 +128,27 @@ export default function WalletAssetDetail(props) {
   );
 }
 
+function CryptoWalletTransaction(props) {
+
+  const {dark, colors, setScheme} = useTheme();
+
+  const date = new Date(Number(props.transaction.time * 1000))
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+  };
+  const f_date = date.toLocaleString("en-JP", options);
+
+  return (
+    <View style={styles.transaction}>
+      <Text style={{color: colors.text}}>{props.transaction.value} {props.symbol}</Text>
+      <Text style={{color: colors.text}}>{f_date}</Text>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   backArrow: {
@@ -125,7 +159,7 @@ const styles = StyleSheet.create({
   walletAsset: {
     backgroundColor: "#e5e5e5",
     borderRadius: 10,
-    padding: 20,
+    //paddingVertical: 20,
   },
   walletAssetTitle: {
     fontWeight: "700",
@@ -140,5 +174,8 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 30,
     borderRadius: 5,
+  },
+  transaction: {
+    paddingVertical: 5,
   }
 });
