@@ -93,8 +93,8 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({ access_token: accessToken }),
     });
     const data = await response.json();
-    console.log(data)
-    balance = data.accounts[0].balances.current
+    console.log(data.accounts[0].balances)
+    balance = parseFloat(data.accounts[0].balances.current).toFixed(2) 
   }
 
 

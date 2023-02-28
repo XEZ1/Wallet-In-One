@@ -1,7 +1,4 @@
-from django.shortcuts import render
 import plaid
-import requests
-from plaid.api import plaid_api
 from plaid.model.link_token_create_request import LinkTokenCreateRequest
 from plaid.model.link_token_create_request_user import LinkTokenCreateRequestUser
 import json
@@ -23,7 +20,7 @@ from .services import setUpClient
 @csrf_exempt
 def initiate_plaid_link(request):
     client = setUpClient()
-    prods = ['auth', 'transactions']
+    prods = ['investments', 'transactions']
     products = []
     for product in prods:
         products.append(Products(product))
