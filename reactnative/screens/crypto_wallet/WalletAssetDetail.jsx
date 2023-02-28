@@ -82,25 +82,31 @@ export default function WalletAssetDetail(props) {
       </View>
 
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Graph</Text>
+      {graphData.length <= 2 ? (
+        <Text>Not enough data to display graph.</Text>
+      ) : (
+        <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
+          <LineChart.Provider data={data}>
+            <LineChart height={SIZE / 2} width={SIZE * 0.85}>
+              <LineChart.Path color={colors.text}/>
+              <LineChart.CursorCrosshair color={colors.text}>
 
-      <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
-        <LineChart.Provider data={data}>
-          <LineChart height={SIZE / 2} width={SIZE * 0.85}>
-            <LineChart.Path color={colors.text}/>
-            <LineChart.CursorCrosshair color={colors.text}>
+                <LineChart.Tooltip textStyle={{color: colors.text}}>
+                  <LineChart.PriceText precision={10} style={{color: colors.text}} />
+                </LineChart.Tooltip>
 
-              <LineChart.Tooltip textStyle={{color: colors.text}}>
-                <LineChart.PriceText precision={10} style={{color: colors.text}} />
-              </LineChart.Tooltip>
+                <LineChart.Tooltip position="bottom" >
+                  <LineChart.DatetimeText style={{color: colors.text}} />
+                </LineChart.Tooltip>
 
-              <LineChart.Tooltip position="bottom" >
-                <LineChart.DatetimeText style={{color: colors.text}} />
-              </LineChart.Tooltip>
+              </LineChart.CursorCrosshair>
+            </LineChart>
+          </LineChart.Provider>
+        </View>
+      )
 
-            </LineChart.CursorCrosshair>
-          </LineChart>
-        </LineChart.Provider>
-      </View>
+      }
+
 
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
       <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
