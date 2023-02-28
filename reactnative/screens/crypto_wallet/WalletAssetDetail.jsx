@@ -4,12 +4,7 @@ import React, {useEffect, useState} from "react";
 //import {LineChart} from "react-native-chart-kit";
 import getCryptoIcon from "./icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
-import {
-  ChartDot,
-  ChartPath,
-  ChartPathProvider, ChartXLabel, ChartYLabel,
-  monotoneCubicInterpolation,
-} from '@rainbow-me/animated-charts';
+import { LineChart } from 'react-native-wagmi-charts';
 import WalletAsset from "./WalletAsset";
 
 export default function WalletAssetDetail(props) {
@@ -17,7 +12,7 @@ export default function WalletAssetDetail(props) {
   const {dark, colors, setScheme} = useTheme();
   const route = useRoute();
   const { item, value, removeWallet } = props.route.params;
-  const [ graphData, setGraphData ] = useState([]);
+  const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
 
   const {width: SIZE} = Dimensions.get('window');
 
@@ -26,14 +21,16 @@ export default function WalletAssetDetail(props) {
     let balance = item.balance;
 
     for (let i = 0; i < item.transactions.length; i++) {
-      let point = {x: item.transactions.at(i).time, y: balance}
-      balance -= item.transactions.at(i).value
+      let point = {timestamp: item.transactions[i].time * 1000, value: balance}
+      balance -= item.transactions[i].value
       points = [point, ...points]
     }
     setGraphData(points)
 
     }, []);
 
+
+  const data = graphData
 
   const formatPrice = value => {
     'worklet';
@@ -54,7 +51,6 @@ export default function WalletAssetDetail(props) {
     };
     return date.toLocaleString("en-JP", options);
   }
-
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: colors.background, paddingHorizontal: 30}}>
@@ -86,29 +82,31 @@ export default function WalletAssetDetail(props) {
       </View>
 
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Graph</Text>
-      <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
-        <ChartPathProvider
-          data={{
-            points: graphData,
-            smoothingStrategy: 'bezier',
-          }}>
-          <ChartPath height={SIZE / 2} stroke={colors.text} width={SIZE * 0.85} strokeWidth="5" selectedStrokeWidth="5" selectedOpacity={0.4}/>
-          <ChartDot
-            style={{
-              backgroundColor: colors.text,
-            }}
-          />
-          <ChartYLabel style={{color: colors.text}} format={formatPrice} />
-          <ChartXLabel style={{color: colors.text}} format={formatDate} />
-        </ChartPathProvider>
 
+      <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
+        <LineChart.Provider data={data}>
+          <LineChart height={SIZE / 2} width={SIZE * 0.85}>
+            <LineChart.Path color={colors.text}/>
+            <LineChart.CursorCrosshair color={colors.text}>
+
+              <LineChart.Tooltip textStyle={{color: colors.text}}>
+                <LineChart.PriceText precision={10} style={{color: colors.text}} />
+              </LineChart.Tooltip>
+
+              <LineChart.Tooltip position="bottom" >
+                <LineChart.DatetimeText style={{color: colors.text}} />
+              </LineChart.Tooltip>
+
+            </LineChart.CursorCrosshair>
+          </LineChart>
+        </LineChart.Provider>
       </View>
 
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
       <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
         {/* Text if no transactions */}
         {
-          item.transactions.map((t)=> <CryptoWalletTransaction id={t.id} transaction={t} symbol={item.symbol}/>)
+          item.transactions.map((t)=> <CryptoWalletTransaction key={t.id} transaction={t} symbol={item.symbol}/>)
         }
       </View>
 
