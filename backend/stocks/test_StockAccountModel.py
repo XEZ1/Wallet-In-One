@@ -13,6 +13,7 @@ class StockAccountModelTestCase(TestCase):
 
     def setUp(self):
         self.stock = StockAccount.objects.get(account_id='1')
+        self.stock.balance = 100
 
     def _assert_stock_is_valid(self, stock):
         try:

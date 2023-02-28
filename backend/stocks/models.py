@@ -10,7 +10,7 @@ class StockAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
     institution_id = models.CharField(max_length=1024, blank=False)
     institution_name = models.CharField(max_length=1024, blank=False)
-    balance = MoneyField(default_currency='GBP', decimal_places=2, max_digits=11)
+    balance = MoneyField(default_currency='GBP', decimal_places=2, max_digits=11, blank=True, null=True)
 
 
 class Location(models.Model):
