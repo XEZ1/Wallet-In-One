@@ -12,6 +12,12 @@ class StockAccount(models.Model):
     institution_name = models.CharField(max_length=1024, blank=False)
     balance = MoneyField(default_currency='GBP', decimal_places=2, max_digits=11, blank=True, null=True)
 
+class Stock(models.Model):
+    account_id = models.CharField(max_length=1024, primary_key=True, unique=True, blank=False)
+    institution_price = MoneyField(default_currency='GBP', decimal_places=2, max_digits=11, blank=True, null=True)
+    name = models.CharField(max_length=1024, blank=False)
+    ticker_symbol = models.CharField(max_length=1024, blank=False)
+    quantity = models.IntegerField(max_length=1000000)
 
 class Location(models.Model):
     address = models.CharField(max_length=100, default=None, blank=True, null=True)
