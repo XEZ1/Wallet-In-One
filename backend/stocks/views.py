@@ -11,10 +11,11 @@ from rest_framework import generics, permissions
 from .serializers import AddStockAccount
 from .models import StockAccount
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
-from plaid.model.accounts_balance_get_request import AccountsBalanceGetRequest
 from flask import jsonify
 from plaid.model.accounts_get_request import AccountsGetRequest
 from .services import setUpClient
+from plaid.model.institutions_get_by_id_request import InstitutionsGetByIdRequest
+from plaid.model.investments_holdings_get_request import InvestmentsHoldingsGetRequest
 
 @api_view(['POST'])
 @csrf_exempt
@@ -67,6 +68,17 @@ def get_balance(request):
             access_token=request.data.get('access_token')
         )
         response = client.accounts_get(request)
+        return Response(response.to_dict())
+    except plaid.ApiException as e:
+        return json.loads(e.body)
+
+@api_view(['POST'])
+def get_stocks(request):
+    client = setUpClient()
+    try:
+        request = InvestmentsHoldingsGetRequest(access_token=request.data.get('access_token'))
+        response = client.investments_holdings_get(request)
+        
         return Response(response.to_dict())
     except plaid.ApiException as e:
         return json.loads(e.body)

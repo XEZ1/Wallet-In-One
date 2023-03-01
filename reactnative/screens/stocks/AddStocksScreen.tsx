@@ -97,6 +97,18 @@ const PlaidComponent = ({ navigation }) => {
     balance = parseFloat(data.accounts[0].balances.current).toFixed(2) 
   }
 
+  const getStocks = async (accessToken) => {
+    const response = await fetch('http://10.0.2.2:8000/stocks/get_stocks/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+      body: JSON.stringify({ access_token: accessToken }),
+    });
+    const data = await response.json();
+    console.log(data)
+  }
 
   return (
     <>
@@ -117,6 +129,7 @@ const PlaidComponent = ({ navigation }) => {
         // }
         await getBalance(access_token)
         console.log("krishna")
+        await getStocks(access_token)
         console.log(success.metadata.accounts[0].meta)
         console.log(success.publicToken)
         // await fetch(`http://10.0.2.2:8080/api/exchange_public_token`, {
