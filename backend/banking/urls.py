@@ -11,4 +11,5 @@ urlpatterns = [
     path('transactions/', views.TransactionList.as_view(), name='transactions'),
     path('delete_everything/', views.delete_everything, name='delete_everything'), # View only for debugging purposes
     path('get_total_balance/', views.get_total_balance, name='get_total_balance'),
-]
+    path('delete_account/<str:account_id>/', views.delete_account, name='delete_account'),
+]   
