@@ -38,6 +38,8 @@ class Account(models.Model):
     institution_logo = models.CharField(max_length=1024)
     color = models.CharField(blank=True, default='',max_length=40)
 
+    disabled = models.BooleanField(default=False)
+
     # Updates transactions if they haven't been updated for 24 hours
     def can_update(self):
         if (self.last_update == None or timezone.now().date() > self.last_update.date()):
@@ -58,7 +60,7 @@ class Account(models.Model):
                     id = t['internalTransactionId'],
                     time = t.get('bookingDateTime') or t.get('bookingDate'),
                     amount = Money(t['transactionAmount']['amount'], t['transactionAmount']['currency']),
-                    info = t['remittanceInformationUnstructured'],
+                    info = t.get('remittanceInformationUnstructured') or ' '.join(t['remittanceInformationUnstructuredArray']),
                 ).save()
 
     def add_balances(self, data):
