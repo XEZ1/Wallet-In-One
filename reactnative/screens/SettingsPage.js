@@ -12,6 +12,7 @@ import { logout } from '../authentication';
 import { useContext } from 'react';
 import { userContext } from '../data';
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import { sendNotification,sendThemeNotification } from "./SendNotification";
   
 export default function SettingsPage ({ navigation }) {
   const [notifications, setNotifications] = useState(false);
@@ -38,17 +39,22 @@ export default function SettingsPage ({ navigation }) {
       loadDarkModeSettings();
   }, []);
 
-  //Toggle and save notif setting
+  //Toggle and save notification setting
   const toggleNotifications = async () => {
       setNotifications(previousState => !previousState);
+      const notificationSettings = (!notifications).toString();
       await AsyncStorage.setItem('notificationSettings', (!notifications).toString());
+      sendNotification(notificationSettings);
   };
+
 
 
   //Toggle and save theme setting
   const toggleTheme = async () => {
       dark ? setScheme('light') : setScheme('dark');
       await AsyncStorage.setItem('darkModeSettings', (!dark).toString());
+      const notificationSettings = notifications.toString();
+      sendThemeNotification(notificationSettings);
   };
 
 

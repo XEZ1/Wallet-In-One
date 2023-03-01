@@ -7,21 +7,21 @@ describe('<StartScreen />', () => {
 
     it('about us button test', () => {
         const navigate = jest.fn();
-        const { getByText } = render(<NavigationContainer><StartScreen navigation={{ navigate }} /> </NavigationContainer>);
+        const { getByText } = render(<StartScreen navigation={{ navigate }} />);
         fireEvent.press(getByText('About Us'));
         expect(navigate).toHaveBeenCalledWith('About Us');
     });
 
     it('sign up button test', () => {
         const navigate = jest.fn();
-        const { getByText } = render(<NavigationContainer><StartScreen navigation={{ navigate }} /> </NavigationContainer>);
+        const { getByText } = render(<StartScreen navigation={{ navigate }} />);
         fireEvent.press(getByText('Sign Up'));
         expect(navigate).toHaveBeenCalledWith('Sign Up');
     });
 
     it('login button test', () => {
         const navigate = jest.fn();
-        const { getByText } = render(<NavigationContainer><StartScreen navigation={{ navigate }} /> </NavigationContainer>);
+        const { getByText } = render(<StartScreen navigation={{ navigate }} />);
         fireEvent.press(getByText('Log In'));
         expect(navigate).toHaveBeenCalledWith('Login');
     });

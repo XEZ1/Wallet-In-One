@@ -44,5 +44,5 @@ export const styles = (dark, colors) => StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 5,
     backgroundColor: colors.primary,
-  }
+  },
 });

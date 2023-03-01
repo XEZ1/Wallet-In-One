@@ -16,7 +16,8 @@ export default function HomePage({ navigation }) {
   const [baseData, setBaseData ] = useState(fixture);
   const {dark, colors, setScheme} = useTheme();
   const [data, setNewData] = useState(baseData.all);
-  const [pressed, setPressed ] = useState(false)
+  const [pressed, setPressed ] = useState(false);
+  const isFocused = useIsFocused()
 
   const stylesInternal = StyleSheet.create({
     victoryLabelSmall: {
@@ -34,6 +35,9 @@ export default function HomePage({ navigation }) {
       fill: colors.text,
     },
   });
+  
+  // Uncomment to show bank data from backend
+
 
   useEffect(() =>{
     const fetchData = async () => {
@@ -45,8 +49,8 @@ export default function HomePage({ navigation }) {
           setPressed(false)
         }
       }
-      fetchData()
-  }, [])
+      if(isFocused){fetchData()}
+  }, [isFocused])
   
   const handlePressIn = (event, datapoint) => {
     if (pressed){
