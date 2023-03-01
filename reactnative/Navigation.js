@@ -32,6 +32,7 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { ThemeProvider, defaultTheme } from 'reactnative/src/theme/ThemeProvider';
 
 import SuccessComponent from './screens/stocks/ListStocksScreen';
+import StockStackNavigator from './screens/stocks/StockStackNavigator';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -120,7 +121,7 @@ export default function Navigation() {
           />
 
           <Tab.Screen name="Stocks" component={PlaidComponent} />
-          <Tab.Screen name="Stock List" component={SuccessComponent} />
+          <Tab.Screen name="Stock List" component={StockStackNavigator} />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
