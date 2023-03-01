@@ -16,6 +16,7 @@ from plaid.model.accounts_get_request import AccountsGetRequest
 from .services import setUpClient
 from plaid.model.institutions_get_by_id_request import InstitutionsGetByIdRequest
 from plaid.model.investments_holdings_get_request import InvestmentsHoldingsGetRequest
+from rest_framework import status
 
 @api_view(['POST'])
 @csrf_exempt
@@ -93,3 +94,13 @@ def listAccounts(request):
     accounts = StockAccount.objects.filter(user=request.user)
     serializer = AddStockAccount(accounts, many=True)
     return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+def deleteAccount(request):
+    stock_account = StockAccount.objects.get(account_id=request.data.get('account_id'))
+    if stock_account.user != request.user:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    stock_account.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+    

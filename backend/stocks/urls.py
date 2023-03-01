@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import initiate_plaid_link, addAccount, listAccounts, get_access_token, get_balance, get_stocks
+from .views import initiate_plaid_link, addAccount, listAccounts, get_access_token, get_balance, get_stocks, deleteAccount
 
 urlpatterns = [
     path('initiate_plaid_link/', initiate_plaid_link),
@@ -7,5 +7,6 @@ urlpatterns = [
     path('list_accounts/', listAccounts),
     path('get_access_token/', get_access_token),
     path('get_balance/', get_balance),
-    path('get_stocks/', get_stocks)
+    path('get_stocks/', get_stocks),
+    path('delete_account/', deleteAccount)
 ]
