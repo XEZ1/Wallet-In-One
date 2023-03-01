@@ -12,13 +12,11 @@ export const styles = (dark, colors) => StyleSheet.create({
     paddingVertical: 10,
     color: colors.text,
   },
-  button: {
-    width: "75%",
-    borderRadius: 25,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize:  30,
-    color: colors.text,
+  buttonWide: {
+    padding: 20,
+    borderRadius: 10,
+    marginVertical: 10,
+    backgroundColor: colors.primary,
   },
   text: {
     color: colors.text,
@@ -44,5 +42,15 @@ export const styles = (dark, colors) => StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 5,
     backgroundColor: colors.primary,
+  },
+  input: {
+    height: 40,
+    width: '100%',
+    borderWidth: 0.5,
+    padding: 10,
+    borderColor: 'gray',
+    borderRadius: 5,
+    marginTop: 5,
+    marginBottom: 5,
   },
 });

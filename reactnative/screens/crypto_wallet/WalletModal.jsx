@@ -126,7 +126,7 @@ export function WalletConnector(props) {
         </View>
 
         <TextInput
-          style={[stylesInternal.input, {color: colors.text}, {backgroundColor: colors.background}]}
+          style={[styles(dark, colors).input, {color: colors.text}, {backgroundColor: colors.background}]}
           onChangeText={(text) => setAddress(text)}
           placeholderTextColor= {colors.text}
           placeholder="Wallet Address"

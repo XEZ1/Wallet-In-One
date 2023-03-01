@@ -6,8 +6,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Appearance,
   AsyncStorage
 } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 import { logout } from '../authentication';
 import { useContext } from 'react';
 import { userContext } from '../data';
@@ -20,24 +22,35 @@ export default function SettingsPage ({ navigation }) {
   const [user, setUser] = useContext(userContext)
 
   const {dark, colors, setScheme} = useTheme();
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(false);
 
   //Load notification setting
   useEffect(() => {
-      async function loadNotificationSettings() {
-        const savedSettings = await AsyncStorage.getItem('notificationSettings');
-        setNotifications(savedSettings === 'true');
+      async function loadNotificationSetting() {
+        try {
+          const savedNotificationSetting = await AsyncStorage.getItem('notificationSetting');
+          setNotifications(savedNotificationSetting === 'true');
+        } catch(e) {
+          console.warn("Couldn't load notification setting")
+        }
       }
-      loadNotificationSettings();
+      loadNotificationSetting();
   }, []);
 
-  //Load Dark mode setting
   useEffect(() => {
+      // Load user's saved dark mode setting on component mount
       async function loadDarkModeSettings() {
         const savedDarkModeSettings = await AsyncStorage.getItem('darkModeSettings');
-
+        setIsDarkModeEnabled(savedDarkModeSettings === 'true');
+        if (savedDarkModeSettings === 'true') {
+            setScheme('dark');
+        } else {
+            setScheme('light');
+        }
       }
       loadDarkModeSettings();
-  }, []);
+    }, []);
+
 
   //Toggle and save notification setting
   const toggleNotifications = async () => {
@@ -45,6 +58,7 @@ export default function SettingsPage ({ navigation }) {
       const notificationSettings = (!notifications).toString();
       await AsyncStorage.setItem('notificationSettings', (!notifications).toString());
       sendNotification(notificationSettings);
+
   };
 
 
@@ -52,9 +66,13 @@ export default function SettingsPage ({ navigation }) {
   //Toggle and save theme setting
   const toggleTheme = async () => {
       dark ? setScheme('light') : setScheme('dark');
-      await AsyncStorage.setItem('darkModeSettings', (!dark).toString());
+
+      setIsDarkModeEnabled(previousState => !previousState);
+      await AsyncStorage.setItem('darkModeSettings', (!isDarkModeEnabled).toString());
+
       const notificationSettings = notifications.toString();
       sendThemeNotification(notificationSettings);
+
   };
 
 
@@ -88,7 +106,7 @@ export default function SettingsPage ({ navigation }) {
           trackColor={{ false: "#767577", true: "#81b0ff" }}
           thumbColor={dark ? colors.primary : "#f4f3f4"}
           onValueChange={toggleTheme}
-          value={dark}
+          value={isDarkModeEnabled}
         />
       </View>
 
