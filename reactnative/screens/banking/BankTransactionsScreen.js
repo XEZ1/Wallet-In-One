@@ -5,6 +5,7 @@ import { auth_get} from '../../authentication'
 import { useIsFocused } from '@react-navigation/native';
 import Loading from './Loading'
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 function BankTransactionsScreen({ route, navigation }) {
   const [ isLoading, setIsLoading ] = useState(true)
@@ -42,7 +43,7 @@ function BankTransactionsScreen({ route, navigation }) {
     return  date.toLocaleTimeString();
   };
 
-  const styles = StyleSheet.create({
+  const stylesInternal = StyleSheet.create({
     container: {
       width: '100%',
       paddingBottom: 0,
@@ -50,6 +51,7 @@ function BankTransactionsScreen({ route, navigation }) {
       borderRadius: 5,
       borderColor: dark ? colors.background : '#ddd',
       overflow: 'hidden',
+      backgroundColor: colors.background,
     },
     row:{
       flexDirection: 'row',
@@ -57,9 +59,6 @@ function BankTransactionsScreen({ route, navigation }) {
     },
     olditem:{
       padding: 20,
-    },
-    text:{
-      color: colors.text
     },
     item: {
       flexDirection: 'row',
@@ -127,15 +126,15 @@ function BankTransactionsScreen({ route, navigation }) {
   const TransactionItem = ({ item, name, date, amount, time, last}) => {
     const amountColor = amount >= 0 ? 'green' : 'red';
     return (
-      <View style={[styles.item,last ? {} : {borderBottomWidth: 1, borderBottomColor: 'lightgray'}]}>
-        <View style={styles.leftContainer}>
+      <View style={[stylesInternal.item,last ? {} : {borderBottomWidth: 1, borderBottomColor: 'lightgray'}]}>
+        <View style={stylesInternal.leftContainer}>
           <ScrollView horizontal={true}>
-            <Text style={styles.name}>{name}</Text>
+            <Text style={stylesInternal.name}>{name}</Text>
           </ScrollView>
-          <Text style={styles.date}>{date} at {time}</Text>
+          <Text style={stylesInternal.date}>{date} at {time}</Text>
         </View>
-        <View style={styles.rightContainer}>
-          <Text style={[styles.amount, { color: amountColor }]}>{item.formatted_amount.string}</Text>
+        <View style={stylesInternal.rightContainer}>
+          <Text style={[stylesInternal.amount, { color: amountColor }]}>{item.formatted_amount.string}</Text>
         </View>
       </View>
     );
@@ -147,14 +146,14 @@ function BankTransactionsScreen({ route, navigation }) {
   
   return (
     <View style={{flex:1,  margin: 4, marginBottom: 54}} >
-              <View style={[styles.container, {backgroundColor: colors.background}]}>
+              <View style={[stylesInternal.container]}>
                   <SectionList 
-                    ListEmptyComponent={<View style={styles.padding}><Text style={styles.text}>{'\nYou have no bank accounts\n'}</Text></View>}
+                    ListEmptyComponent={<View style={stylesInternal.padding}><Text style={styles(dark, colors).text}>{'\nYou have no bank accounts\n'}</Text></View>}
                     sections={groupData(bankData)} 
-                    renderSectionHeader={({section: {title}}) => (<Text style={styles.header}>{title}</Text>)}
+                    renderSectionHeader={({section: {title}}) => (<Text style={stylesInternal.header}>{title}</Text>)}
                     renderItem={({item, index, section}) =>{
                       return (
-                        <View style={styles.padding}>
+                        <View style={stylesInternal.padding}>
                         <TransactionItem
                           item={item}
                           name={item.info}
