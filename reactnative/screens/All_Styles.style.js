@@ -36,6 +36,18 @@ export const styles = (dark, colors) => StyleSheet.create({
     paddingVertical: 10,
     color: colors.primary,
   },
+  button: {
+    width: "75%",
+    borderRadius: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginTop: '4%',
+    paddingHorizontal: "12%",
+    paddingVertical: "2%",
+    fontSize:  20,
+    backgroundColor: colors.primary,
+    color: colors.text,
+  },
   smallButton: {
     marginTop: 10,
     padding: 10,
