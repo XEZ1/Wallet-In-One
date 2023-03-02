@@ -6,7 +6,8 @@ import {
   Platform,
   Alert,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
@@ -30,14 +31,14 @@ const SuccessComponent = (props) => {
         if(isFocused){listAccounts()}
       }, [isFocused])
     return (
-        <View>
+        <ScrollView>
           <View>
             <Text>Accounts</Text>
           </View>
           <View>
             <FlatList data={list} renderItem={({item, index}) =>{
               return (
-                <TouchableOpacity style={[styles.item, {backgroundColor: 'red'}]} onPress={()=> props.navigation.navigate('StockAsset', {accountID: item.account_id}) }>
+                <TouchableOpacity style={[styles.item, {backgroundColor: 'red'}]} onPress={()=> props.navigation.navigate('StockAsset', {accountID: item.account_id, accessToken: item.access_token}) }>
                   <View style={styles.row}>
                     <Text style={styles.name}>{item.name} - </Text>
                     <Text style={styles.ins_name}>{item.institution_name} - £{item.balance}</Text>
@@ -48,7 +49,7 @@ const SuccessComponent = (props) => {
             ListEmptyComponent={<Text>{'\nYou have no stock accounts\n'}</Text>}
             />
           </View>
-        </View>
+        </ScrollView>
       );
     };
 

@@ -18,3 +18,14 @@ class AddStockAccount(serializers.ModelSerializer):
         account = StockAccount.objects.create(**validated_data)
         account.save()
         return account
+    
+# class AddStock(serializers.ModelSerializer):
+
+#     class Meta:
+#        model = Stock
+#        fields = ['account_id', 'name', 'institution_price', 'ticker_symbol', 'quantity', 'stockAccount']
+
+#     def create(self, validated_data):
+#         stock = Stock.objects.create(**validated_data)
+#         stock.save()
+#         return stock

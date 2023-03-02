@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 import plaid
 from plaid.model.link_token_create_request import LinkTokenCreateRequest
 from plaid.model.link_token_create_request_user import LinkTokenCreateRequestUser
@@ -95,6 +96,25 @@ def listAccounts(request):
     serializer = AddStockAccount(accounts, many=True)
     return Response(serializer.data)
 
+
+
+# @api_view(['POST'])
+# def addStock(request):
+#     stockAccount = StockAccount.objects.get(institution_name='Chase')
+#     data = {
+#         'account_id': request.data.get('account_id'),
+#         'name': request.data.get('name'),
+#         'institution_price': request.data.get('institution_price'),
+#         'ticker_symbol': request.data.get('ticker_symbol'),
+#         'quantity': request.data.get('quantity'),
+#         'stockAccount': stockAccount
+#     }
+#     serializer = AddStock(data=data)
+#     print(StockAccount.objects.all())
+#     if serializer.is_valid():
+#         serializer.save()
+#         return JsonResponse(serializer.data, status=201)
+#     return JsonResponse(serializer.errors, status=400)
 
 @api_view(['DELETE'])
 def deleteAccount(request):
