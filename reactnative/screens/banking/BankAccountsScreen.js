@@ -144,31 +144,31 @@ export default function BankAccountsScreen({ navigation }) {
   );
 
   function BankAccount(item, index) {
-    var mainStyle = [styles.item, { backgroundColor: item.color }]
+    var mainStyle = [stylesInternal.item, { backgroundColor: item.color }]
     if (item.disabled){
-      mainStyle.push(styles.item_error)
+      mainStyle.push(stylesInternal.item_error)
     }
 
     return (
       <>
       <TouchableOpacity style={mainStyle} key={index} onPress={ () => {  navigation.navigate('Bank Transactions', { accountID: item.id })}}>
-        <View style={styles.row}>
+        <View style={stylesInternal.row}>
           <Image
             source={{ uri: item.institution_logo }}
             style={{ width: 70, height: 70, marginRight: 10, resizeMode: 'contain', borderRadius: 10 }} />
           <View style={{ borderRadius: 10 }}>
-            <Text style={styles.name}>{item.institution_name}</Text>
-            <Text style={styles.iban}>{item.iban}</Text>
-            <Text style={styles.amount}>{item.balance.string}</Text>
+            <Text style={stylesInternal.name}>{item.institution_name}</Text>
+            <Text style={stylesInternal.iban}>{item.iban}</Text>
+            <Text style={stylesInternal.amount}>{item.balance.string}</Text>
           </View>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.closeButton} onPress={() => deleteAccount(item.id)}>
-        <FontAwesome style={styles.closeButtonText} name="close" size= {20}/>
+      <TouchableOpacity style={stylesInternal.closeButton} onPress={() => deleteAccount(item.id)}>
+        <FontAwesome style={stylesInternal.closeButtonText} name="close" size= {20}/>
       </TouchableOpacity>
       {item.disabled?(
-      <TouchableOpacity style={styles.closeButton2} onPress={() => Alert.alert('Warning','This account is not connected anymore. Please delete and readd this account.') }>
-        <FontAwesome style={styles.closeButtonText} name="exclamation" size= {20}/>
+      <TouchableOpacity style={stylesInternal.closeButton2} onPress={() => Alert.alert('Warning','This account is not connected anymore. Please delete and readd this account.') }>
+        <FontAwesome style={stylesInternal.closeButtonText} name="exclamation" size= {20}/>
       </TouchableOpacity>):(<></>)}
       
     </>

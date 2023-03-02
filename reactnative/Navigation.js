@@ -29,13 +29,11 @@ import CryptoExchangesStackNavigator from './screens/cryptoExchanges/CryptoExcha
 
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-import { ThemeProvider, defaultTheme } from 'reactnative/src/theme/ThemeProvider';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { setStatusBarHidden } from 'expo-status-bar';
-
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
