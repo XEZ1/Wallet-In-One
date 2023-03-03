@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
-  Pressable,
   TouchableOpacity,
   Dimensions,
-  Button,
-  FlatList,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -13,13 +10,11 @@ import {
   Alert,
 } from "react-native";
 import useCryptoWallet from "./useCryptoWallet";
-import WalletAsset from "./WalletAsset";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
 
 export default function AddCryptoScreen(props) {
-  const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
+  const { connectWallet} = useCryptoWallet();
   const {dark, colors, setScheme} = useTheme();
 
   const styles = StyleSheet.create({
@@ -72,33 +67,6 @@ export default function AddCryptoScreen(props) {
     }
   });
 
-  useEffect(() => {
-    fetchWallets();
-  }, []);
-
-  const handleSubmit = async () => {
-    
-    try {
-      const response = await fetch('http://10.0.2.2:8000/crypto-exchanges/update', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-        },
-        body: JSON.stringify({ }),
-      });
-      const data = await response.json();
-      const statusCode = response.status;
-      if (statusCode == 200) {
-        Alert.alert('Success', 'updated account data successfully!');
-      } else {
-        Alert.alert('Error', data["error"]);
-      }
-    } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'An error occurred while updating account info.');
-    }
-  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>

@@ -50,7 +50,7 @@ export default function MainStackNavigator() {
       />
       
       <Stack.Screen 
-        name="Wallets"
+        name="Crypto Wallets & Exchanges"
         component={CryptoWallet}
         options={({ navigation }) => ({
           headerRight: () => (

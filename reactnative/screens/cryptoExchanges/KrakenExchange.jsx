@@ -46,12 +46,6 @@ export default function KrakenCredentials({ navigation }) {
       fontSize: 25,
       color: colors.text,
     },
-    backArrow: {
-      fontWeight: "900",
-      fontSize: 30,
-      marginRight: 10,
-      color: colors.text,
-    },
     input:{
       height: 40,
       width: '100%',
@@ -70,9 +64,6 @@ export default function KrakenCredentials({ navigation }) {
   return (
     <View style={{ padding: 20, backgroundColor:colors.background, flex: 1 }}>
       <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
-        <Pressable onPress={() => navigation.goBack()}>
-          <Text style={styles.backArrow}>←</Text>
-        </Pressable>
         <Text style={styles.title}>Kraken Credentials:</Text>
       </View>
       <Text style={{ fontSize: 20, marginBottom: 10, color: colors.text }}>API Key:</Text>

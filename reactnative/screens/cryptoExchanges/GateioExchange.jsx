@@ -57,9 +57,6 @@ export default function GateioCredentials({ navigation }) {
   return (
     <View style={{ padding: 20, backgroundColor:colors.background, flex: 1 }}>
       <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
-        <Pressable onPress={() => navigation.navigate("Crypto exchanges")}>
-        <Text style={styles(dark, colors).backArrow}>←</Text>
-        </Pressable>
         <Text style={stylesInternal.title}>Gateio Credentials:</Text>
       </View>
       <Text style={stylesInternal.text}>API Key:</Text>
