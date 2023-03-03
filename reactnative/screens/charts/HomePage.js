@@ -55,6 +55,7 @@ export default function HomePage({ navigation }) {
   const handlePressIn = (event, datapoint) => {
     if (pressed){
       setNewData(baseData.all)
+      // navigation.navigate("Bank Transactions", { data: datapoint });
     }
     else{
       const dataPoint = data[datapoint.index];
