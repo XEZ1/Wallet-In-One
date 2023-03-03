@@ -19,7 +19,7 @@ LogBox.ignoreLogs([
 
 const Stack = createStackNavigator();
 
-export default function CryptoWalletStackNavigator() {
+export default function CryptoStackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Wallets" component={CryptoWallet} />

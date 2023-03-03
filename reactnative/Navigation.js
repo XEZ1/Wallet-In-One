@@ -23,12 +23,10 @@ import AddBankScreen from './screens/banking/AddBankScreen'
 import BankAccountsScreen from './screens/banking/BankAccountsScreen'
 import BankTransactionsScreen from './screens/banking/BankTransactionsScreen'
 import BankStackNavigator from "./screens/banking/BankStackNavigator";
+import CryptoStackNavigator from './screens/crypto_wallet/CryptoStackNavigator';
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';
-import CryptoWalletStackNavigator from "./screens/crypto_wallet/CryptoWalletStackNavigator";
-import CryptoExchangesStackNavigator from './screens/cryptoExchanges/CryptoExchangesStackNavigator';
-
 
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'

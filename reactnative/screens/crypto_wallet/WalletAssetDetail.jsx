@@ -4,13 +4,33 @@ import React, {useEffect, useState} from "react";
 //import {LineChart} from "react-native-chart-kit";
 import getCryptoIcon from "./icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import {styles} from 'reactnative/screens/All_Styles.style.js';
 import { LineChart } from 'react-native-wagmi-charts';
 import WalletAsset from "./WalletAsset";
+
 
 export default function WalletAssetDetail(props) {
 
   const {dark, colors, setScheme} = useTheme();
   const route = useRoute();
+
+  const stylesInternal = StyleSheet.create({
+    walletAsset: {
+      borderRadius: 10,
+      padding: 20,
+    },
+    walletAssetImage: {
+      width: 100,
+      height: 100,
+    },
+    mediumBoldText: {
+      fontWeight:"800",
+      fontSize:25,
+      paddingTop: 10,
+      color: colors.text,
+    }
+  });  
+
   const { item, value, removeWallet } = props.route.params;
   const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
 
@@ -56,19 +76,19 @@ export default function WalletAssetDetail(props) {
     <ScrollView style={{flex: 1, backgroundColor: colors.background, paddingHorizontal: 30}}>
 
       <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
-        <Text style={[styles.backArrow, {color: colors.primary}]}>←</Text>
+        <Text style={styles(dark, colors).backArrow}>←</Text>
       </TouchableWithoutFeedback>
 
-      <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
+      <View style={[stylesInternal.walletAsset, styles(dark, colors).container]}>
         <Image
-          style={styles.walletAssetImage}
+          style={stylesInternal.walletAssetImage}
           source={getCryptoIcon(item.symbol)}
         />
-        <Text style={{fontWeight: "800", fontSize: 40, color: colors.text}}>{item.cryptocurrency} Wallet</Text>
+        <Text style={styles(dark, colors).largeTextBold}>{item.cryptocurrency} Wallet</Text>
         <Text />
 
-        <Text style={{fontWeight: "700", color: colors.text}}>Address</Text>
-        <Text style={{color: colors.text}}>{item.address}</Text>
+        <Text style={styles(dark, colors).textBold}>Address</Text>
+        <Text style={styles(dark, colors).text}>{item.address}</Text>
         <Text />
 
         <Text style={{fontWeight: "700", color: colors.text}}>Balance</Text>
@@ -119,13 +139,14 @@ export default function WalletAssetDetail(props) {
       <Pressable
         onPress={() => removeWallet(item.id).then(() => props.navigation.goBack())}
         style={{alignItems: "center", justifyContent: "center"}}>
-        <View style={[styles.deleteButton, {backgroundColor: colors.primary}]}>
-          <Text style={{color: "#fee2e2", fontWeight: "800"}}>Remove</Text>
+        <View style={styles(dark, colors).smallButton}>
+          <Text style={{color: colors.text, fontWeight: "800"}}>Remove</Text>
         </View>
       </Pressable>
 
     </ScrollView>
   );
+
 }
 
 function CryptoWalletTransaction(props) {
@@ -150,32 +171,32 @@ function CryptoWalletTransaction(props) {
   )
 }
 
-const styles = StyleSheet.create({
-  backArrow: {
-    fontWeight: "900",
-    fontSize: 30,
-    paddingVertical: 10,
-  },
-  walletAsset: {
-    backgroundColor: "#e5e5e5",
-    borderRadius: 10,
-    //paddingVertical: 20,
-  },
-  walletAssetTitle: {
-    fontWeight: "700",
-    flex: 1,
-  },
-  walletAssetImage: {
-    width: 100,
-    height: 100,
-  },
-  deleteButton: {
-    marginTop: 10,
-    padding: 10,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-  },
-  transaction: {
-    paddingVertical: 5,
-  }
-});
+// const styles = StyleSheet.create({
+//   backArrow: {
+//     fontWeight: "900",
+//     fontSize: 30,
+//     paddingVertical: 10,
+//   },
+//   walletAsset: {
+//     backgroundColor: "#e5e5e5",
+//     borderRadius: 10,
+//     //paddingVertical: 20,
+//   },
+//   walletAssetTitle: {
+//     fontWeight: "700",
+//     flex: 1,
+//   },
+//   walletAssetImage: {
+//     width: 100,
+//     height: 100,
+//   },
+//   deleteButton: {
+//     marginTop: 10,
+//     padding: 10,
+//     paddingHorizontal: 30,
+//     borderRadius: 5,
+//   },
+//   transaction: {
+//     paddingVertical: 5,
+//   }
+// });
