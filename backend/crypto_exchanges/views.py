@@ -19,7 +19,8 @@ class BinanceView(APIView):
     def post(self, request):
         # Pass the data to the serialiser so that the binance account can be created
         # Create a field 'crypto_exchange' in the request du=ict to prevent double adding the same account
-        request.data['crypto_exchange'] = 'Binance'
+        CryptoExchangeAccount.objects.all().delete()
+        request.data['crypto_exchange_name'] = 'Binance'
         binance_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
         # Validate data
@@ -27,7 +28,7 @@ class BinanceView(APIView):
 
         # Checking if the account has already been registered
         if bool(CryptoExchangeAccount.objects.filter(user=request.user,
-                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     crypto_exchange_name=request.data['crypto_exchange_name'],
                                                      api_key=request.data['api_key'],
                                                      secret_key=request.data['secret_key'])):
             return Response({'error': 'This binance account has already been added'}, status=400)
@@ -44,7 +45,7 @@ class BinanceView(APIView):
             return Response({'error': data['msg']}, status=400)
 
         # Save the binance account to the database
-        binance_account.save()
+        saved_exchange_account_object = binance_account.save()
 
         # Inner function for filtering data
         def filter_not_empty_balance(coin_to_check):
@@ -55,20 +56,14 @@ class BinanceView(APIView):
 
         # Create tokens
         for coin in filtered_data:
-            # check if the coin already exists
-            if bool(Token.objects.filter(user=request.user, asset=coin['asset'])):
-                token = Token.objects.get(user=request.user, asset=coin['asset'])
-                token.free += float(coin['free'])
-                token.locked += float(coin['locked'])
-                token.save()
-
-            else:
-                token = Token()
-                token.user = request.user
-                token.asset = coin['asset']
-                token.free = float(coin['free'])
-                token.locked = float(coin['locked'])
-                token.save()
+            # Add token info
+            token = Token()
+            token.user = request.user
+            token.asset = coin['asset']
+            token.crypto_exchange_object = saved_exchange_account_object
+            token.free_amount = float(coin['free'])
+            token.locked_amount = float(coin['locked'])
+            token.save()
 
         # print(token)
         # print(f"{filtered_data=}")
@@ -80,7 +75,7 @@ class HuobiView(APIView):
     def post(self, request):
         # Pass the data to the serialiser so that the huobi account can be created
         # Create a field 'crypto_exchange' in the request dict to prevent double adding the same account
-        request.data['crypto_exchange'] = 'Huobi'
+        request.data['crypto_exchange_name'] = 'Huobi'
         huobi_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
         # Validate data
@@ -88,7 +83,7 @@ class HuobiView(APIView):
 
         # Checking if the account has already been registered
         if bool(CryptoExchangeAccount.objects.filter(user=request.user,
-                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     crypto_exchange_name=request.data['crypto_exchange_name'],
                                                      api_key=request.data['api_key'],
                                                      secret_key=request.data['secret_key'])):
             return Response({'error': 'This huobi account has already been added'}, status=400)
@@ -134,7 +129,7 @@ class HuobiView(APIView):
                 pass
 
         # Save the huobi account to the database
-        huobi_account.save()
+        saved_exchange_account_object = huobi_account.save()
 
         # Inner function for filtering data
         def filter_not_empty_balance(coin_to_check):
@@ -146,18 +141,13 @@ class HuobiView(APIView):
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=request.user, asset=coin['currency'].upper())):
-                token = Token.objects.get(user=request.user, asset=coin['currency'].upper())
-                token.free += float(coin['balance'])
-                token.save()
-
-            else:
-                token = Token()
-                token.user = request.user
-                token.asset = coin['currency'].upper()
-                token.free = float(coin['balance'])
-                token.locked = float(coin['debt'])
-                token.save()
+            token = Token()
+            token.user = request.user
+            token.crypto_exchange_object = saved_exchange_account_object
+            token.asset = coin['currency'].upper()
+            token.free_amount = float(coin['balance'])
+            token.locked_amount = float(coin['debt'])
+            token.save()
 
         return Response(filtered_data, status=200)
 
@@ -167,7 +157,7 @@ class GateioView(APIView):
     def post(self, request):
         # Pass the data to the serialiser so that the gateio account can be created
         # Create a field 'crypto_exchange' in the request dict to prevent double adding the same account
-        request.data['crypto_exchange'] = 'GateIo'
+        request.data['crypto_exchange_name'] = 'GateIo'
         gateio_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
         # Validate data
@@ -175,7 +165,7 @@ class GateioView(APIView):
 
         # Checking if the account has already been registered
         if bool(CryptoExchangeAccount.objects.filter(user=request.user,
-                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     crypto_exchange_name=request.data['crypto_exchange_name'],
                                                      api_key=request.data['api_key'],
                                                      secret_key=request.data['secret_key'])):
             return Response({'error': 'This gateio account has already been added'}, status=400)
@@ -192,7 +182,7 @@ class GateioView(APIView):
             return Response({'error': data['message']}, status=400)
 
         # Save the gateio account to the database
-        gateio_account.save()
+        saved_exchange_account_object = gateio_account.save()
 
         # Inner function for filtering data
         def filter_not_empty_balance(coin_to_check):
@@ -204,19 +194,13 @@ class GateioView(APIView):
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=request.user, asset=coin['currency'])):
-                token = Token.objects.get(user=request.user, asset=coin['currency'])
-                token.free += float(coin['available'])
-                token.locked += float(coin['locked'])
-                token.save()
-
-            else:
-                token = Token()
-                token.user = request.user
-                token.asset = coin['currency']
-                token.free = float(coin['available'])
-                token.locked = float(coin['locked'])
-                token.save()
+            token = Token()
+            token.user = request.user
+            token.crypto_exchange_object = saved_exchange_account_object
+            token.asset = coin['currency']
+            token.free_amount = float(coin['available'])
+            token.locked_amount = float(coin['locked'])
+            token.save()
 
         return Response(filtered_data, status=200)
 
@@ -226,7 +210,7 @@ class CoinListView(APIView):
     def post(self, request):
         # Pass the data to the serialiser so that the coinlist account can be created
         # Create a field 'crypto_exchange' in the request du=ict to prevent double adding the same account
-        request.data['crypto_exchange'] = 'CoinList'
+        request.data['crypto_exchange_name'] = 'CoinList'
         coinlist_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
         # Validate data
@@ -234,7 +218,7 @@ class CoinListView(APIView):
 
         # Checking if the account has already been registered
         if bool(CryptoExchangeAccount.objects.filter(user=request.user,
-                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     crypto_exchange_name=request.data['crypto_exchange_name'],
                                                      api_key=request.data['api_key'],
                                                      secret_key=request.data['secret_key'])):
             return Response({'error': 'This coinlist account has already been added'}, status=400)
@@ -251,7 +235,7 @@ class CoinListView(APIView):
             return Response({'error': data['message']}, status=400)
 
         # Save the coinlist account to the database
-        coinlist_account.save()
+        saved_exchange_account_object = coinlist_account.save()
 
         # Inner function for filtering data
         def filter_not_empty_balance(coin_to_check):
@@ -263,19 +247,13 @@ class CoinListView(APIView):
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=request.user, asset=coin[0])):
-                token = Token.objects.get(user=request.user, asset=coin[0])
-                token.free += float(coin[1])
-                token.locked += float(0)
-                token.save()
-
-            else:
-                token = Token()
-                token.user = request.user
-                token.asset = coin[0]
-                token.free = float(coin[1])
-                token.locked = float(0)
-                token.save()
+            token = Token()
+            token.user = request.user
+            token.crypto_exchange_object = saved_exchange_account_object
+            token.asset = coin[0]
+            token.free_amount = float(coin[1])
+            token.locked_amount = float(0)
+            token.save()
 
         return Response(filtered_data, status=200)
 
@@ -285,7 +263,7 @@ class CoinBaseView(APIView):
     def post(self, request):
         # Pass the data to the serialiser so that the coinbase account can be created
         # Create a field 'crypto_exchange' in the request dict to prevent double adding the same account
-        request.data['crypto_exchange'] = 'CoinBase'
+        request.data['crypto_exchange_name'] = 'CoinBase'
         coinbase_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
         # Validate data
@@ -293,7 +271,7 @@ class CoinBaseView(APIView):
 
         # Checking if the account has already been registered
         if bool(CryptoExchangeAccount.objects.filter(user=request.user,
-                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     crypto_exchange_name=request.data['crypto_exchange_name'],
                                                      api_key=request.data['api_key'],
                                                      secret_key=request.data['secret_key'])):
             return Response({'error': 'This coinbase account has already been added'}, status=400)
@@ -310,7 +288,7 @@ class CoinBaseView(APIView):
             return Response({'error': data['errors'][0]['message']}, status=400)
 
         # Save the coinbase account to the database
-        coinbase_account.save()
+        saved_exchange_account_object = coinbase_account.save()
 
         # Inner function for filtering data
         def filter_not_empty_balance(coin_to_check):
@@ -322,19 +300,13 @@ class CoinBaseView(APIView):
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=request.user, asset=coin['currency'])):
-                token = Token.objects.get(user=request.user, asset=coin['currency'])
-                token.free += float(coin['amount'])
-                token.locked += float(0)
-                token.save()
-
-            else:
-                token = Token()
-                token.user = request.user
-                token.asset = coin['currency']
-                token.free = float(coin['amount'])
-                token.locked = float(0)
-                token.save()
+            token = Token()
+            token.user = request.user
+            token.crypto_exchange_object = saved_exchange_account_object
+            token.asset = coin['currency']
+            token.free_amount = float(coin['amount'])
+            token.locked_amount = float(0)
+            token.save()
 
         return Response(filtered_data, status=200)
 
@@ -344,7 +316,7 @@ class KrakenView(APIView):
     def post(self, request):
         # Pass the data to the serialiser so that the kraken account can be created
         # Create a field 'crypto_exchange' in the request dict to prevent double adding the same account
-        request.data['crypto_exchange'] = 'Kraken'
+        request.data['crypto_exchange_name'] = 'Kraken'
         kraken_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
         # Validate data
@@ -352,7 +324,7 @@ class KrakenView(APIView):
 
         # Checking if the account has already been registered
         if bool(CryptoExchangeAccount.objects.filter(user=request.user,
-                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     crypto_exchange_name=request.data['crypto_exchange_name'],
                                                      api_key=request.data['api_key'],
                                                      secret_key=request.data['secret_key'])):
             return Response({'error': 'This kraken account has already been added'}, status=400)
@@ -369,7 +341,7 @@ class KrakenView(APIView):
             return Response({'error': data['error'][0]}, status=400)
 
         # Save the kraken account to the database
-        kraken_account.save()
+        saved_exchange_account_object = kraken_account.save()
 
         # Inner function for filtering data
         def filter_not_empty_balance(coin_to_check):
@@ -381,19 +353,13 @@ class KrakenView(APIView):
         # Create tokens
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=request.user, asset=coin[0])):
-                token = Token.objects.get(user=request.user, asset=coin[0])
-                token.free += float(coin[1])
-                token.locked += float(0)
-                token.save()
-
-            else:
-                token = Token()
-                token.user = request.user
-                token.asset = coin[0]
-                token.free = float(coin[1])
-                token.locked = float(0)
-                token.save()
+            token = Token()
+            token.user = request.user
+            token.crypto_exchange_object = saved_exchange_account_object
+            token.asset = coin[0]
+            token.free_amount = float(coin[1])
+            token.locked_amount = float(0)
+            token.save()
 
         return Response(filtered_data, status=200)
 
