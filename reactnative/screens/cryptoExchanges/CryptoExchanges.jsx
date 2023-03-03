@@ -9,13 +9,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 
 export default function CryptoExchanges({ navigation }) {
 
   const {dark, colors, setScheme} = useTheme();
 
-  const styles = StyleSheet.create({
+  const stylesInternal = StyleSheet.create({
     container: {
       paddingHorizontal: 20,
       paddingTop: 20,
@@ -29,61 +30,41 @@ export default function CryptoExchanges({ navigation }) {
       alignItems: 'center',
       marginBottom: 20,
     },
-    title: {
-      fontSize: 25,
-      color: colors.text,
-    },
-    button: {
-      padding: 20,
-      borderRadius: 10,
-      marginVertical: 10,
-      backgroundColor: colors.primary,
-    },
-    buttonText: {
-      textAlign: 'center',
-      fontWeight: 'bold',
-      color: colors.text,
-    },
-    backArrow: {
-      fontWeight: '900',
-      fontSize: 30,
-      marginRight: 10,
-      color: colors.text,
-    },
   });
 
   return (
-    <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Pressable onPress={() => navigation.goBack()}>
-          <Text style={styles.backArrow}>←</Text>
+    <View style={stylesInternal.container}>
+      <View style={stylesInternal.titleContainer}>
+        <Pressable onPress={() => navigation.navigate('Crypto exchanges')}>
+          <Text style={styles(dark, colors).backArrow}>←</Text>
         </Pressable>
-        <Text style={styles.title}>
+        <Text style={[styles(dark, colors).textBold, {fontSize: 25}]}>
           Add a cryptocurrency account from an exchange:
         </Text>
       </View>
       <TouchableOpacity
         onPress={() => navigation.navigate('Binance')}
-        style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+        style={[styles(dark, colors).buttonWide, { width: Dimensions.get('window').width - 40 }]}
       >
-        <Text style={styles.buttonText}>Binance</Text>
+        <Text style={[styles(dark, colors).textBold, {textAlign: 'center'}]}>Binance</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigation.navigate('Huobi')}
-        style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+        style={[styles(dark, colors).buttonWide, { width: Dimensions.get('window').width - 40 }]}
       >
-        <Text style={styles.buttonText}>Huobi</Text>
+        <Text style={[styles(dark, colors).textBold, {textAlign: 'center'}]}>Huobi</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigation.navigate('Gateio')}
-        style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+        style={[styles(dark, colors).buttonWide, { width: Dimensions.get('window').width - 40 }]}
       >
-        <Text style={styles.buttonText}>Gateio</Text>
+        <Text style={[styles(dark, colors).textBold, {textAlign: 'center'}]}>Gateio</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigation.navigate('CoinList')}
-        style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+        style={[styles(dark, colors).buttonWide, { width: Dimensions.get('window').width - 40 }]}
       >
+        <Text style={[styles(dark, colors).textBold, {textAlign: 'center'}]}>Coinlist</Text>
         <Text style={styles.buttonText}>Coinlist</Text>
       </TouchableOpacity>
       <TouchableOpacity

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Pressable, View, Text, TextInput, Button, Alert } from 'react-native';
 import * as SecureStore from "expo-secure-store";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 export default function HuobiCredentials({ navigation }) {
   const [apiKey, setApiKey] = useState('');
@@ -36,7 +37,7 @@ export default function HuobiCredentials({ navigation }) {
     }
   };
 
-  const styles = StyleSheet.create({
+  const stylesInternal = StyleSheet.create({
     titleContainer: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -46,6 +47,7 @@ export default function HuobiCredentials({ navigation }) {
       fontSize: 25,
       color: colors.text,
     },
+
     backArrow: {
       fontWeight: "900",
       fontSize: 30,
@@ -62,31 +64,29 @@ export default function HuobiCredentials({ navigation }) {
       marginTop: 5,
       marginBottom: 10,
       color: colors.text,
-      backgroundColor: colors.background
-      
     },
   });
   
   return (
     <View style={{ padding: 20, backgroundColor:colors.background, flex: 1 }}>
       <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
-        <Pressable onPress={() => navigation.goBack()}>
-          <Text style={styles.backArrow}>←</Text>
+        <Pressable onPress={() => navigation.navigate("Crypto exchanges")}>
+        <Text style={styles(dark, colors).backArrow}>←</Text>
         </Pressable>
-        <Text style={styles.title}>Huobi Credentials:</Text>
+        <Text style={stylesInternal.title}>Huobi Credentials:</Text>
       </View>
-      <Text style={{ fontSize: 20, marginBottom: 10, color: colors.text }}>API Key:</Text>
+      <Text style={stylesInternal.text}>API Key:</Text>
       <TextInput 
         value={apiKey} 
         onChangeText={setApiKey} 
-        style={styles.input} 
+        style={styles(dark, colors).input}
       />
-      <Text style={{ fontSize: 20, marginBottom: 10, color: colors.text }}>Secret Key:</Text>
+      <Text style={stylesInternal.text}>Secret Key:</Text>
       <TextInput 
         value={secretKey} 
         onChangeText={setSecretKey} 
         secureTextEntry 
-        style={styles.input}  
+        style={styles(dark, colors).input}
       />
       <Button 
         title="Submit" 

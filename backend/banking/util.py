@@ -4,8 +4,12 @@ from io import BytesIO
 
 def main_image_color(url):
     response= requests.get(url)
-    image = Image.open(BytesIO(response.content))
-    image = image.convert('RGB')
+    rgba_image = Image.open(BytesIO(response.content))
+
+    rgb_image = Image.new("RGB", rgba_image.size, (255, 255, 255))
+    rgb_image.paste(rgba_image, mask=rgba_image.split()[3])
+
+    image = rgb_image
 
     color_count = {}
 

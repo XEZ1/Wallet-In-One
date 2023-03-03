@@ -13,6 +13,7 @@ exports[`<HomePage /> snapshot test 1`] = `
   }
   style={
     Object {
+      "backgroundColor": "white",
       "flex": 1,
     }
   }

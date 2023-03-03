@@ -15,12 +15,24 @@ import {
 import useCryptoWallet from "./useCryptoWallet";
 import WalletAsset from "./WalletAsset";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import {styles} from 'reactnative/screens/All_Styles.style.js'
 import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
 
 export default function CryptoWallet(props) {
   const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
   const {dark, colors, setScheme} = useTheme();
+
+  const stylesInternal = StyleSheet.create({
+    walletList: {
+      marginHorizontal: 10,
+      marginVertical: 30,
+    },
+    view: {
+      flexDirection: "row",
+      alignItems: "center",
+    }
+  });
 
   const styles = StyleSheet.create({
     cryptoWalletTitle: {
@@ -85,7 +97,7 @@ export default function CryptoWallet(props) {
   }, []);
 
   const handleSubmit = async () => {
-    
+
     try {
       const response = await fetch('http://10.0.2.2:8000/crypto-exchanges/update', {
         method: 'POST',
@@ -109,8 +121,9 @@ export default function CryptoWallet(props) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView style={styles(dark, colors).container}>
       <ScrollView>
+        <View style={stylesInternal.view}>
         <TouchableOpacity onPress={handleSubmit} style={styles.refreshButton}>
           <Ionicons name="refresh-outline" size={25} color="white" />
         </TouchableOpacity>
@@ -122,6 +135,8 @@ export default function CryptoWallet(props) {
               justifyContent: "center",
             }}
           >
+            <Text style={[styles(dark, colors).backArrow, {position: "absolute"}]}>←</Text>
+            <Text style={[styles(dark, colors).largeTextBold, {alignSelf: "center", paddingVertical: 10}]}>Crypto Wallets</Text>
             <View style={{ marginRight: 20 }}>
               <Text style={[styles.cryptoWalletTitle, {color: colors.text}]}>Cryptocurrency</Text>
             </View>
@@ -155,7 +170,7 @@ export default function CryptoWallet(props) {
             <Text style={styles.buttonText}>Add Wallet</Text>
         </TouchableOpacity>
 
-        <View style={[styles.walletList]}>
+        <View style={[stylesInternal.walletList]}>
         {
           wallets.map((item)=> <WalletAsset key={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
         }

@@ -10,8 +10,84 @@ import {
     div,
   } from "react-native";
 import React from "react";
+import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 
 export default function DeveloperInfoScreen ({ navigation }) {
+
+    const {dark, colors, setScheme} = useTheme();
+
+    const styles = StyleSheet.create({
+        aboutUs: {
+            backgroundColor: colors.primary,
+            color: 'black',
+            width: "60%",
+            borderRadius: 25,
+            textAlign: 'center',
+            fontWeight: 'bold',
+            padding: "2%",
+            fontSize:  20,
+            alignSelf: 'center',
+        },
+        developerName: {
+            fontSize: 18,
+            color: "#fff",
+            textTransform: "uppercase",
+            fontWeight: "500",
+            marginLeft: '-57%',
+            alignSelf: "center",
+        },
+        developerPage: {
+            marginTop: 20,
+        },
+        background: {
+            width: '100%',
+            height: '100%'
+        },
+        iconStyle: {
+            width: "100%",
+            height: 50,
+            aspectRatio: 1,
+        },
+        buttonStyle: {
+            borderRadius: 5,
+            paddingVertical: -10,
+            paddingHorizontal: 28,
+            marginRight: '60%',
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginVertical: 15,
+        },
+        meetTheTeam: {
+            fontSize: 18,
+            color: "#fff",
+            textTransform: "uppercase",
+            fontWeight: "500",
+            marginVertical: 15,
+            alignSelf: "center",
+        },
+        developersPara: {
+            color: "#fff",
+        },
+        paraStyle: {
+            fontSize: 16,
+            color: colors.primary,
+            paddingBottom: 25,
+        },
+        textBoxLayout: {
+            backgroundColor: colors.primary,
+            paddingHorizontal: 30,
+            marginVertical: 30,
+        },
+        logo:{
+            width: 290,
+            height: 280,
+            marginTop: '-10%',
+            marginBottom: '-15%',
+            alignSelf:'center'
+        },
+    })
+
     return (
         <ImageBackground
             source={require('reactnative/assets/background.png')}
@@ -181,77 +257,3 @@ export default function DeveloperInfoScreen ({ navigation }) {
         </ImageBackground>
     )
 }
-
-const styles = StyleSheet.create({
-    aboutUs: {
-        backgroundColor: 'red',
-        color: 'black',
-        width: "60%",
-        borderRadius: 25,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        padding: "2%",
-        fontSize:  20,
-        //marginTop: '-4%',
-        alignSelf: 'center',
-    },
-    developerName: {
-        fontSize: 18,
-        color: "#fff",
-        textTransform: "uppercase",
-        fontWeight: "500",
-        marginLeft: '-57%',
-        alignSelf: "center",
-    },
-    developerPage: {
-        marginTop: 20,
-    },
-    background: {
-        width: '100%',
-        height: '100%'
-    },
-    iconStyle: {
-        width: "100%",
-        height: 50,
-        aspectRatio: 1,
-    },
-    buttonStyle: {
-        borderRadius: 5,
-        paddingVertical: -10,
-        paddingHorizontal: 28,
-        marginRight: '60%',
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        marginVertical: 15,
-    },
-
-    meetTheTeam: {
-        fontSize: 18,
-        color: "#fff",
-        textTransform: "uppercase",
-        fontWeight: "500",
-        marginVertical: 15,
-        alignSelf: "center",
-    },
-    developersPara: {
-        color: "#fff",
-    },
-    paraStyle: {
-        fontSize: 16,
-        color: "red",
-        paddingBottom: 25,
-    },
-    textBoxLayout: {
-        backgroundColor: "red",
-        paddingHorizontal: 30,
-        marginVertical: 30,
-    },
-    logo:{
-        width: 290,
-        height: 280,
-        marginTop: '-10%',
-        marginBottom: '-15%',
-        alignSelf:'center'
-    },
-})
