@@ -16,7 +16,7 @@ class CryptoExchangeAccount(models.Model):
 class Token(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     crypto_exchange_object = models.ForeignKey(CryptoExchangeAccount, on_delete=models.CASCADE)
-    asset = models.CharField(max_length=5, unique=True)
+    asset = models.CharField(max_length=5)
     free_amount = models.FloatField(validators=[MinValueValidator(0.0)])
     locked_amount = models.FloatField(validators=[MinValueValidator(0.0)])
 
