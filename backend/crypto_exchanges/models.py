@@ -10,6 +10,7 @@ class CryptoExchangeAccount(models.Model):
     crypto_exchange_name = models.CharField(max_length=255)
     api_key = models.CharField(max_length=255)
     secret_key = models.CharField(max_length=255)
+    how_much_money_on_it = models.FloatField(validators=[MinValueValidator(0.0)])
     created_at = models.DateTimeField(auto_now_add=True)
 
 # Token model
