@@ -22,6 +22,7 @@ import CoinListCredentials from "../cryptoExchanges/CoinlistExchange";
 import CoinbaseCredentials from "../cryptoExchanges/CoinbaseExchange";
 import KrakenCredentials from "../cryptoExchanges/KrakenExchange";
 import CryptoExchanges from "../cryptoExchanges/CryptoExchanges";
+import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 
 const Stack = createStackNavigator();
 
@@ -77,6 +78,7 @@ export default function MainStackNavigator() {
       <Stack.Screen name="CoinList" component={CoinListCredentials} />
       <Stack.Screen name="Coinbase" component={CoinbaseCredentials} />
       <Stack.Screen name="Kraken" component={KrakenCredentials} />
+  
     </Stack.Navigator>
   );
 }

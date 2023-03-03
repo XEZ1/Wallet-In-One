@@ -61,6 +61,7 @@ class GenericCryptoExchanges(APIView):
     def get(self, request):
         crypto_exchange_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
         serializer = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
+        print(f'Us: {Response(serializer.data)}')
         return Response(serializer.data)
 
     @abstractmethod

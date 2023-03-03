@@ -13,13 +13,16 @@ import {
   Alert,
 } from "react-native";
 import useCryptoWallet from "./useCryptoWallet";
+import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
 import WalletAsset from "./WalletAsset";
+import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
 
 export default function CryptoWallet(props) {
   const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
+  const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
   const {dark, colors, setScheme} = useTheme();
 
   const styles = StyleSheet.create({
@@ -83,6 +86,7 @@ export default function CryptoWallet(props) {
 
   useEffect(() => {
     fetchWallets();
+    fetchExchanges();
   }, []);
 
   const handleSubmit = async () => {
@@ -132,6 +136,12 @@ export default function CryptoWallet(props) {
         <View style={[styles.walletList]}>
         {
           wallets.map((item)=> <WalletAsset key={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
+        }
+        </View>
+
+        <View style={[styles.walletList]}>
+        {
+          exchanges.map((item)=> <ExchangeAsset key={item.id} item={item} navigation={props.navigation} />)
         }
         </View>
 

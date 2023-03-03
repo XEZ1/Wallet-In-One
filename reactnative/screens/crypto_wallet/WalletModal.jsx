@@ -130,7 +130,7 @@ export function WalletConnector(props) {
           title="Connect Wallet"
           onPress={() =>
             connectWallet(cryptocurrency, symbol, address)
-              .then(() => props.navigation.navigate("Wallets"))
+              .then(() => props.navigation.navigate("Crypto Wallets & Exchanges"))
           }
         />
       </View>
