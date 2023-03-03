@@ -18,6 +18,8 @@ import BinanceCredentials from "../cryptoExchanges/BinanceExchange";
 import HuobiCredentials from "../cryptoExchanges/HuobiExchange";
 import GateioCredentials from "../cryptoExchanges/GateioExchange";
 import CoinListCredentials from "../cryptoExchanges/CoinlistExchange";
+import CoinbaseCredentials from "../cryptoExchanges/CoinbaseExchange";
+import KrakenCredentials from "../cryptoExchanges/KrakenExchange";
 import CryptoExchanges from "../cryptoExchanges/CryptoExchanges";
 
 const Stack = createStackNavigator();
@@ -55,6 +57,8 @@ export default function MainStackNavigator() {
       <Stack.Screen name="Huobi" component={HuobiCredentials} />
       <Stack.Screen name="Gateio" component={GateioCredentials} />
       <Stack.Screen name="CoinList" component={CoinListCredentials} />
+      <Stack.Screen name="Coinbase" component={CoinbaseCredentials} />
+      <Stack.Screen name="Kraken" component={KrakenCredentials} />
     </Stack.Navigator>
   );
 }

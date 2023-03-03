@@ -19,7 +19,6 @@ class BinanceView(APIView):
     def post(self, request):
         # Pass the data to the serialiser so that the binance account can be created
         # Create a field 'crypto_exchange' in the request du=ict to prevent double adding the same account
-        CryptoExchangeAccount.objects.all().delete()
         request.data['crypto_exchange_name'] = 'Binance'
         binance_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
@@ -372,7 +371,7 @@ class UpdateAllTokens(APIView):
         for account in fixed_accounts:
             api_key = account.api_key
             secret_key = account.secret_key
-            platform = account.crypto_exchange
+            platform = account.crypto_exchange_name
             counter += 1
             account.delete()
             request.data['api_key'] = api_key
