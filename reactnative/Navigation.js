@@ -73,9 +73,10 @@ export default function Navigation() {
             }}
           />
           <Tab.Screen
-            name="Main Account"
+            name="All Accounts"
             component={MainStackNavigator}
             options={{
+              headerShown: false,
               //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Home</Text>),
               tabBarIcon: ({ focused }) => (
                 <Text style={{ color: focused ? colors.primary : colors.text }}>

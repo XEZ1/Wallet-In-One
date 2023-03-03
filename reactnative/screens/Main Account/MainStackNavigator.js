@@ -20,11 +20,26 @@ import GateioCredentials from "../cryptoExchanges/GateioExchange";
 import CoinListCredentials from "../cryptoExchanges/CoinlistExchange";
 import CryptoExchanges from "../cryptoExchanges/CryptoExchanges";
 
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+
 const Stack = createStackNavigator();
 
 export default function MainStackNavigator() {
+
+  const {dark, colors, setScheme} = useTheme();
+
   return (
-    <Stack.Navigator initialRouteName="Main Account">
+    <Stack.Navigator
+      initialRouteName="Main Account"
+      screenOptions={
+        {
+          headerStyle: {backgroundColor: colors.background},
+          headerTitleStyle: {color: colors.text},
+          tabBarStyle: {backgroundColor: colors.background},
+          tabBarShowLabel: false,
+          tabBarHideOnKeyboard: true,
+        }}
+    >
       <Stack.Screen name="Accounts" component={MainAccountPage} />
       <Stack.Screen
         name="Bank Accounts"

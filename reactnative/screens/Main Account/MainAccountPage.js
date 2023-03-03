@@ -1,30 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import { styles } from 'reactnative/screens/All_Styles.style.js';
 
 
 export default function MainAccountPage({ navigation }) {
+    const { dark, colors, setScheme } = useTheme();
 
     return (
 
-        <View style={styles.container}>
+        <View style={[styles(dark, colors).container, {alignItems: 'center', justifyContent: 'flex-start'}]}>
             <StatusBar style="auto" />
             <TouchableOpacity onPress={() => navigation.navigate("Bank Accounts")}>
-                <View style={styles.cards}>
+                <View style={stylesInternal.cards}>
                     <Text>Bank Account(s)</Text>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("Wallets")}>
-                <View style={styles.cards}>
+                <View style={stylesInternal.cards}>
                     <Text>Crypto Wallet(s)</Text>
                 </View>
             </TouchableOpacity >
             <TouchableOpacity onPress={() => navigation.navigate("Crypto exchanges")}>
-                <View style={styles.cards}>
+                <View style={stylesInternal.cards}>
                     <Text>Crypto Exchange(s)</Text>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity >
-                <View style={styles.cards}>
+                <View style={stylesInternal.cards}>
                     <Text>Stock Accounts(s)</Text>
                 </View>
             </TouchableOpacity>
@@ -33,14 +36,7 @@ export default function MainAccountPage({ navigation }) {
 }
 
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-    },
-
+const stylesInternal = StyleSheet.create({
     cards: {
         backgroundColor: '#fff',
         padding: 40,

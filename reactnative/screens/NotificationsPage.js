@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { useTheme} from "../src/theme/ThemeProvider"
+import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import { styles } from 'reactnative/screens/All_Styles.style.js'
 
 export default function NotificationsPage({ navigation }) {
     const { dark, colors, setScheme } = useTheme();
@@ -49,37 +50,26 @@ export default function NotificationsPage({ navigation }) {
         date: '2020-10-07',
         }];
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: colors.background,
-        },
+    const stylesInternal = StyleSheet.create({
         item: {
-            backgroundColor: colors.card,
             padding: 20,
             marginVertical: 8,
             marginHorizontal: 16,
         },
-        title: {
-            fontSize: 32,
-        },
-        date: {
-            fontSize: 16,
-        },
-        description: {
-            fontSize: 16,
-        },
     });
 
     return (
-        <View style={styles.container}>
+        <View style={styles(dark, colors).container}>
             <FlatList
                 data={notifications}
                 renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Notification', { notification: item })}>
-                        <Text style={styles.title}>{item.title}</Text>
-                        <Text style={styles.date}>{item.date}</Text>
-                        <Text style={styles.description}>{item.description}</Text>
+                    <TouchableOpacity
+                        style={stylesInternal.item}
+                        onPress={() => navigation.navigate('Notification', { notification: item })}
+                    >
+                        <Text style={[styles(dark, colors).text, {fontSize: 28}]}>{item.title}</Text>
+                        <Text style={styles(dark, colors).text}>{item.date}</Text>
+                        <Text style={styles(dark, colors).text}>{item.description}</Text>
                     </TouchableOpacity>
                 )}
                 keyExtractor={item => item.id}
