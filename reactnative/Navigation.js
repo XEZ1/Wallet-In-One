@@ -5,16 +5,19 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useContext, useEffect } from 'react';
 import { Text } from 'react-native';
 
-import HomePage from './screens/charts/HomePage';
+
+
+import MainStackNavigator from "./screens/Main Account/MainStackNavigator";
 
 // Screens
 import StartScreen from './screens/pre_logged_in/StartScreen';
 import SignUpScreen from './screens/pre_logged_in/SignUpScreen';
 import LoginScreen from './screens/LoginScreen';
-
+import HomePage from './screens/charts/HomePage';
 import SettingsPage from './screens/SettingsPage';
 import AboutUsScreen from './screens/pre_logged_in/AboutUsScreen';
 import DeveloperInfoScreen from './screens/pre_logged_in/DeveloperInfoScreen';
+import NotificationsPage from "./screens/NotificationsPage";
 
 import AddBankScreen from './screens/banking/AddBankScreen'
 import BankAccountsScreen from './screens/banking/BankAccountsScreen'
@@ -23,20 +26,17 @@ import BankStackNavigator from "./screens/banking/BankStackNavigator";
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';
-import CryptoStackNavigator from "./screens/crypto_wallet/CryptoStackNavigator";
+import CryptoWalletStackNavigator from "./screens/crypto_wallet/CryptoWalletStackNavigator";
+import CryptoExchangesStackNavigator from './screens/cryptoExchanges/CryptoExchangesStackNavigator';
+
+
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-import { ThemeProvider, defaultTheme } from 'reactnative/src/theme/ThemeProvider';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { setStatusBarHidden } from 'expo-status-bar';
-
-
-
-import UpdateCrypto from './screens/cryptoExchanges/Update';
-
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -72,34 +72,30 @@ export default function Navigation() {
               tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="home" size={30}/></Text>),
             }}
           />
-          {/* vvvvv Temporary (will be moved to account screen) vvvvv */}
           <Tab.Screen
-            name="Crypto Wallets"
-            component={CryptoStackNavigator}
+            name="Main Account"
+            component={MainStackNavigator}
             options={{
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Crypto wallet</Text>),
-              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><MaterialCommunityIcons name="ethereum" size= {30}/></Text>)
+              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Home</Text>),
+              tabBarIcon: ({ focused }) => (
+                <Text style={{ color: focused ? colors.primary : colors.text }}>
+                  <AntDesign name="user" size={30} />
+                </Text>
+              ),
             }}
           />
           <Tab.Screen
-            name="Bank"
-            component={BankStackNavigator}
+            name="Notifications"
+            component={NotificationsPage}
             options={{
-              headerShown: false,
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Bank</Text>),
-              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="bank" size= {30}/></Text>)
-          }}
-          />
-
-          <Tab.Screen
-            name="All Bank Transactions"
-            component={BankTransactionsScreen}
-            options={{
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Bank Tranasactions</Text>),
-              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="creditcard" size= {30}/></Text>)
+              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Home</Text>),
+              tabBarIcon: ({ focused }) => (
+                <Text style={{ color: focused ? colors.primary : colors.text }}>
+                  <AntDesign name="notification" size={30} />
+                </Text>
+              ),
             }}
           />
-
           <Tab.Screen
             name="Settings"
             component={SettingsPage}
@@ -138,6 +134,7 @@ export default function Navigation() {
             component={DeveloperInfoScreen}
             options={{headerShown: false}}
           />
+
         </Stack.Navigator>
       )}
     </NavigationContainer>
