@@ -8,9 +8,10 @@ from .models import *
 class TokenAdmin(admin.ModelAdmin):
     list_display = [
         'user',
+        'crypto_exchange_object',
         'asset',
-        'free',
-        'locked'
+        'free_amount',
+        'locked_amount'
     ]
 
 
@@ -18,7 +19,7 @@ class TokenAdmin(admin.ModelAdmin):
 class CryptoExchangeAdmin(admin.ModelAdmin):
     list_display = [
         'user',
-        'crypto_exchange',
+        'crypto_exchange_name',
         'api_key',
         'secret_key',
         'created_at'

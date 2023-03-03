@@ -1,403 +1,333 @@
-from urllib.request import Request
+from abc import ABC, ABCMeta, abstractmethod
 
-from django.shortcuts import render
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from crypto_exchanges.models import Token, CryptoExchangeAccount
-from crypto_exchanges.serializers import TokenSerializer, CryptoExchangeAccountSerializer
-
+from crypto_exchanges.serializers import CryptoExchangeAccountSerializer
 from crypto_exchanges.services import *
 
 
 # Create your views here.
 
+# Generic class for crypto exchanges
+class GenericCryptoExchanges(APIView):
+    __metaclass__ = ABCMeta
 
-# Binance
-class BinanceView(APIView):
+    def __init__(self, crypto_exchange_name, fetcher, **kwargs):
+        super().__init__(**kwargs)
+        self.crypto_exchange_name = crypto_exchange_name
+        self.fetcher = fetcher
+
+    # Function to check for error in the API call
+    @abstractmethod
+    def check_for_errors_from_the_response_to_the_api_call(self, data, service):
+        if self.fetcher == BinanceFetcher:
+            if 'msg' in data:
+                # encountering an error while retrieving data
+                return Response({'error': data['msg']}, status=400)
+        elif self.fetcher == HuobiFetcher:
+            pass
+        elif self.fetcher == GateioFetcher:
+            if 'label' and 'message' in data:
+                # encountering an error while retrieving data
+                return Response({'error': data['message']}, status=400)
+        elif self.fetcher == CoinListFetcher:
+            if 'status' in data and (data['status'] != 'ok' or data['status'] != '200'):
+                # encountering an error while retrieving data
+                return Response({'error': data['message']}, status=400)
+        elif self.fetcher == CoinBaseFetcher:
+            if 'errors' in data:
+                # encountering an error while retrieving data
+                return Response({'error': data['errors'][0]['message']}, status=400)
+        elif self.fetcher == KrakenFetcher:
+            if 'error' in data and 'result' not in data:
+                # encountering an error while retrieving data
+                return Response({'error': data['error'][0]}, status=400)
+
+    # Inner function for filtering data
+    @abstractmethod
+    def filter_not_empty_balance(self, coin_to_check):
+        pass
+
+    @abstractmethod
+    def get_data_unified(self, data):
+        pass
+
+    @abstractmethod
+    def save_coins(self, filtered_data, request, saved_exchange_account_object):
+        pass
+
+    def get(self, request):
+        crypto_exchange_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
+        serializer = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
+        print(f'Us: {Response(serializer.data)}')
+        return Response(serializer.data)
+
+    @abstractmethod
     def post(self, request):
         # Pass the data to the serialiser so that the binance account can be created
-        # Create a field 'crypto_exchange' in the request du=ict to prevent double adding the same account
-        request.data['crypto_exchange'] = 'Binance'
-        binance_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
+        # Create a field 'crypto_exchange' in the request dict to prevent double adding the same account
+        request.data['crypto_exchange_name'] = self.crypto_exchange_name
+
+        # Create an account
+        account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
 
         # Validate data
-        binance_account.is_valid(raise_exception=True)
+        account.is_valid(raise_exception=True)
 
         # Checking if the account has already been registered
         if bool(CryptoExchangeAccount.objects.filter(user=request.user,
-                                                     crypto_exchange=request.data['crypto_exchange'],
+                                                     crypto_exchange_name=request.data['crypto_exchange_name'],
                                                      api_key=request.data['api_key'],
                                                      secret_key=request.data['secret_key'])):
-            return Response({'error': 'This binance account has already been added'}, status=400)
+            return Response({'error': f'This account from {self.crypto_exchange_name} has already been added'},
+                            status=400)
 
         # Use the provided API key and secret key to connect to the Binance API
-        service = BinanceFetcher(request.data['api_key'], request.data['secret_key'])
+        service = self.fetcher(request.data['api_key'], request.data['secret_key'])
 
         # Get the user's account information
-        data = service.get_account_data()
+        if self.fetcher == HuobiFetcher:
+            # For some reason only every 4th/5th request is successful, thus it was decided to add this awful construct.
+            # It is hard to explain why 4 requests fall while having the same input data, it seems like huobi API is
+            # Encountering some internal server issues.
+            success = False
+            counter = 0
+            while not success:
+                try:
+                    self.account_ids = service.get_account_IDs()
+                    if self.account_ids['status'] == 'ok':
+                        success = True
+                    # Internal huobi_api error
+                    elif self.account_ids['status'] == 'error' and self.account_ids[
+                        'err-msg'] == 'Signature not valid: Verification failure [校验失败]':
+                        raise TypeError
+                    else:
+                        return Response({'error': self.account_ids['err-msg']}, status=400)
+                except TypeError:
+                    counter += 1
+                    if counter == 20:
+                        return Response({'error': 'Huobi API is currently experiencing some issues. Please try later.'},
+                                        status=503)
 
-        # Making sure the api and secret keys are valid before saving the binance account
-        if 'msg' in data:
-            # encountering an error while retrieving data
-            return Response({'error': data['msg']}, status=400)
+            success = False
+            while not success:
+                try:
+                    data = service.get_account_data(self.account_ids)
+                    success = True
+                except TypeError:
+                    pass
+                except Exception:
+                    pass
+        else:
+            data = service.get_account_data()
+
+        # Making sure the api and secret keys are valid before saving the account
+        checker: Response = self.check_for_errors_from_the_response_to_the_api_call(data, service)
+        if checker:
+            return checker
 
         # Save the binance account to the database
-        binance_account.save()
+        saved_exchange_account_object = account.save()
 
-        # Inner function for filtering data
-        def filter_not_empty_balance(coin_to_check):
-            return float(coin_to_check['free']) > 0
+        filtered_data = list(filter(self.filter_not_empty_balance, self.get_data_unified(data)))
 
-        # Return the account information to the user
-        filtered_data = list(filter(filter_not_empty_balance, data['balances']))
+        self.save_coins(filtered_data, request, saved_exchange_account_object)
 
-        # Create tokens
-        for coin in filtered_data:
-            # check if the coin already exists
-            if bool(Token.objects.filter(user=request.user, asset=coin['asset'])):
-                token = Token.objects.get(user=request.user, asset=coin['asset'])
-                token.free += float(coin['free'])
-                token.locked += float(coin['locked'])
-                token.save()
-
-            else:
-                token = Token()
-                token.user = request.user
-                token.asset = coin['asset']
-                token.free = float(coin['free'])
-                token.locked = float(coin['locked'])
-                token.save()
-
-        # print(token)
-        # print(f"{filtered_data=}")
         return Response(filtered_data, status=200)
+
+
+    def get(self, request):
+        crypto_exchange_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
+        serialiser = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
+        return Response(serialiser.data)
+    def delete(self, request):
+        crypto_exchange_account = CryptoExchangeAccount.objects.get(id=request.data['id'])
+        if crypto_exchange_account.user != request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        serializer = CryptoExchangeAccountSerializer(crypto_exchange_account)
+        crypto_exchange_account.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Binance
+class BinanceView(GenericCryptoExchanges, ABC):
+    def __init__(self):
+        super().__init__('Binance', BinanceFetcher)
+
+    # Inner function for filtering data
+    def filter_not_empty_balance(self, coin_to_check):
+        super(BinanceView, self).filter_not_empty_balance(coin_to_check)
+        return float(coin_to_check['free']) > 0
+
+    def get_data_unified(self, data):
+        super(BinanceView, self).get_data_unified(data)
+        return data['balances']
+
+    def save_coins(self, filtered_data, request, saved_exchange_account_object):
+        super(BinanceView, self).save_coins(filtered_data, request, saved_exchange_account_object)
+        for coin in filtered_data:
+            # Add token info
+            token = Token()
+            token.user = request.user
+            token.asset = coin['asset']
+            token.crypto_exchange_object = saved_exchange_account_object
+            token.free_amount = float(coin['free'])
+            token.locked_amount = float(coin['locked'])
+            token.save()
+
+    def post(self, request):
+        return super(BinanceView, self).post(request)
 
 
 # Huobi
-class HuobiView(APIView):
-    def post(self, request):
-        # Pass the data to the serialiser so that the huobi account can be created
-        # Create a field 'crypto_exchange' in the request dict to prevent double adding the same account
-        request.data['crypto_exchange'] = 'Huobi'
-        huobi_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
+class HuobiView(GenericCryptoExchanges, ABC):
+    def __init__(self):
+        super().__init__('Huobi', HuobiFetcher)
 
-        # Validate data
-        huobi_account.is_valid(raise_exception=True)
+    # Inner function for filtering data
+    def filter_not_empty_balance(self, coin_to_check):
+        super(HuobiView, self).filter_not_empty_balance(coin_to_check)
+        return float(coin_to_check['balance']) > 0
 
-        # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=request.user,
-                                                     crypto_exchange=request.data['crypto_exchange'],
-                                                     api_key=request.data['api_key'],
-                                                     secret_key=request.data['secret_key'])):
-            return Response({'error': 'This huobi account has already been added'}, status=400)
+    def get_data_unified(self, data):
+        super(HuobiView, self).get_data_unified(data)
+        return data
 
-        # Use the provided API key and secret key to connect to the Huobi API
-        service = HuobiFetcher(request.data['api_key'], request.data['secret_key'])
-
-        # Making sure the api and secret keys are valid before saving the huobi account and
-        # Get the user's account information
-        # For some reason only every 4th/5th request is successful, thus it was decided to add this awful construct.
-        # It is hard to explain why 4 requests fall while having the same input data, it seems like huobi API is
-        # Encountering some internal server issues.
-        success = False
-        counter = 0
-        while not success:
-            try:
-                self.account_ids = service.get_account_IDs()
-                if self.account_ids['status'] == 'ok':
-                    success = True
-                # Internal huobi_api error
-                elif self.account_ids['status'] == 'error' and self.account_ids[
-                    'err-msg'] == 'Signature not valid: Verification failure [校验失败]':
-                    raise TypeError
-                else:
-                    return Response({'error': self.account_ids['err-msg']}, status=400)
-            except TypeError:
-                counter += 1
-                if counter == 20:
-                    return Response({'error': 'Huobi API is currently experiencing some issues. Please try later.'},
-                                    status=503)
-
-        # Now we have account IDs so we can retrieve the data from them
-        # Get the user's account information
-        # For some reason only every 4th/5th request is successful, thus it was decided to add this awful construct.
-        # It is hard to explain why 4 requests fall while having the same input data, it seems like huobi API is
-        # Encountering some internal server issues.
-        success = False
-        while not success:
-            try:
-                data = service.get_account_data(self.account_ids)
-                success = True
-            except TypeError:
-                pass
-
-        # Save the huobi account to the database
-        huobi_account.save()
-
-        # Inner function for filtering data
-        def filter_not_empty_balance(coin_to_check):
-            return float(coin_to_check['balance']) > 0
-
-        # Return the account information to the user
-        filtered_data = list(filter(filter_not_empty_balance, data))
-
-        # Create tokens
+    def save_coins(self, filtered_data, request, saved_exchange_account_object):
+        super(HuobiView, self).save_coins(filtered_data, request, saved_exchange_account_object)
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=request.user, asset=coin['currency'].upper())):
-                token = Token.objects.get(user=request.user, asset=coin['currency'].upper())
-                token.free += float(coin['balance'])
-                token.save()
+            token = Token()
+            token.user = request.user
+            token.crypto_exchange_object = saved_exchange_account_object
+            token.asset = coin['currency'].upper()
+            token.free_amount = float(coin['balance'])
+            token.locked_amount = float(coin['debt'])
+            token.save()
 
-            else:
-                token = Token()
-                token.user = request.user
-                token.asset = coin['currency'].upper()
-                token.free = float(coin['balance'])
-                token.locked = float(coin['debt'])
-                token.save()
-
-        return Response(filtered_data, status=200)
-
+    def post(self, request):
+        return super(HuobiView, self).post(request)
 
 # GateIo
-class GateioView(APIView):
-    def post(self, request):
-        # Pass the data to the serialiser so that the gateio account can be created
-        # Create a field 'crypto_exchange' in the request dict to prevent double adding the same account
-        request.data['crypto_exchange'] = 'GateIo'
-        gateio_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
+class GateioView(GenericCryptoExchanges, ABC):
+    def __init__(self):
+        super().__init__('GateIo', GateioFetcher)
 
-        # Validate data
-        gateio_account.is_valid(raise_exception=True)
+    # Inner function for filtering data
+    def filter_not_empty_balance(self, coin_to_check):
+        super(GateioView, self).filter_not_empty_balance(coin_to_check)
+        return float(coin_to_check['available']) > 0
 
-        # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=request.user,
-                                                     crypto_exchange=request.data['crypto_exchange'],
-                                                     api_key=request.data['api_key'],
-                                                     secret_key=request.data['secret_key'])):
-            return Response({'error': 'This gateio account has already been added'}, status=400)
+    def get_data_unified(self, data):
+        super(GateioView, self).get_data_unified(data)
+        return data
 
-        # Use the provided API key and secret key to connect to the Gateio API
-        service = GateioFetcher(request.data['api_key'], request.data['secret_key'])
-
-        # Get the user's account information
-        data = service.get_account_data()
-
-        # Making sure the api and secret keys are valid before saving the gateio account
-        if 'label' and 'message' in data:
-            # encountering an error while retrieving data
-            return Response({'error': data['message']}, status=400)
-
-        # Save the gateio account to the database
-        gateio_account.save()
-
-        # Inner function for filtering data
-        def filter_not_empty_balance(coin_to_check):
-            return float(coin_to_check['available']) > 0
-
-        # Return the account information to the user
-        filtered_data = list(filter(filter_not_empty_balance, data))
-
-        # Create tokens
+    def save_coins(self, filtered_data, request, saved_exchange_account_object):
+        super(GateioView, self).save_coins(filtered_data, request, saved_exchange_account_object)
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=request.user, asset=coin['currency'])):
-                token = Token.objects.get(user=request.user, asset=coin['currency'])
-                token.free += float(coin['available'])
-                token.locked += float(coin['locked'])
-                token.save()
+            token = Token()
+            token.user = request.user
+            token.crypto_exchange_object = saved_exchange_account_object
+            token.asset = coin['currency']
+            token.free_amount = float(coin['available'])
+            token.locked_amount = float(coin['locked'])
+            token.save()
 
-            else:
-                token = Token()
-                token.user = request.user
-                token.asset = coin['currency']
-                token.free = float(coin['available'])
-                token.locked = float(coin['locked'])
-                token.save()
-
-        return Response(filtered_data, status=200)
+    def post(self, request):
+        return super(GateioView, self).post(request)
 
 
 # CoinList
-class CoinListView(APIView):
-    def post(self, request):
-        # Pass the data to the serialiser so that the coinlist account can be created
-        # Create a field 'crypto_exchange' in the request du=ict to prevent double adding the same account
-        request.data['crypto_exchange'] = 'CoinList'
-        coinlist_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
+class CoinListView(GenericCryptoExchanges, ABC):
+    def __init__(self):
+        super().__init__('CoinList', CoinListFetcher)
 
-        # Validate data
-        coinlist_account.is_valid(raise_exception=True)
+    # Inner function for filtering data
+    def filter_not_empty_balance(self, coin_to_check):
+        super(CoinListView, self).filter_not_empty_balance(coin_to_check)
+        return float(coin_to_check[1]) > 0
 
-        # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=request.user,
-                                                     crypto_exchange=request.data['crypto_exchange'],
-                                                     api_key=request.data['api_key'],
-                                                     secret_key=request.data['secret_key'])):
-            return Response({'error': 'This coinlist account has already been added'}, status=400)
+    def get_data_unified(self, data):
+        super(CoinListView, self).get_data_unified(data)
+        return data['asset_balances'].items()
 
-        # Use the provided API key and secret key to connect to the Coinlist API
-        service = CoinListFetcher(request.data['api_key'], request.data['secret_key'])
-
-        # Get the user's account information
-        data = service.get_account_data()
-
-        # Making sure the api and secret keys are valid before saving the coinlist account
-        if 'status' in data and (data['status'] != 'ok' or data['status'] != '200'):
-            # encountering an error while retrieving data
-            return Response({'error': data['message']}, status=400)
-
-        # Save the coinlist account to the database
-        coinlist_account.save()
-
-        # Inner function for filtering data
-        def filter_not_empty_balance(coin_to_check):
-            return float(coin_to_check[1]) > 0
-
-        # Return the account information to the user
-        filtered_data = list(filter(filter_not_empty_balance, data['asset_balances'].items()))
-
-        # Create tokens
+    def save_coins(self, filtered_data, request, saved_exchange_account_object):
+        super(CoinListView, self).save_coins(filtered_data, request, saved_exchange_account_object)
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=request.user, asset=coin[0])):
-                token = Token.objects.get(user=request.user, asset=coin[0])
-                token.free += float(coin[1])
-                token.locked += float(0)
-                token.save()
+            token = Token()
+            token.user = request.user
+            token.crypto_exchange_object = saved_exchange_account_object
+            token.asset = coin[0]
+            token.free_amount = float(coin[1])
+            token.locked_amount = float(0)
+            token.save()
 
-            else:
-                token = Token()
-                token.user = request.user
-                token.asset = coin[0]
-                token.free = float(coin[1])
-                token.locked = float(0)
-                token.save()
-
-        return Response(filtered_data, status=200)
+    def post(self, request):
+        return super(CoinListView, self).post(request)
 
 
 # CoinBase
-class CoinBaseView(APIView):
-    def post(self, request):
-        # Pass the data to the serialiser so that the coinbase account can be created
-        # Create a field 'crypto_exchange' in the request dict to prevent double adding the same account
-        request.data['crypto_exchange'] = 'CoinBase'
-        coinbase_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
+class CoinBaseView(GenericCryptoExchanges, ABC):
+    def __init__(self):
+        super().__init__('CoinBase', CoinBaseFetcher)
 
-        # Validate data
-        coinbase_account.is_valid(raise_exception=True)
+    def filter_not_empty_balance(self, coin_to_check):
+        super(CoinBaseView, self).filter_not_empty_balance(coin_to_check)
+        return float(coin_to_check['amount']) > 0
 
-        # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=request.user,
-                                                     crypto_exchange=request.data['crypto_exchange'],
-                                                     api_key=request.data['api_key'],
-                                                     secret_key=request.data['secret_key'])):
-            return Response({'error': 'This coinbase account has already been added'}, status=400)
+    def get_data_unified(self, data):
+        super(CoinBaseView, self).get_data_unified(data)
+        return data
 
-        # Use the provided API key and secret key to connect to the Coinbase API
-        service = CoinBaseFetcher(request.data['api_key'], request.data['secret_key'])
-
-        # Get the user's account information
-        data = service.get_account_data()
-
-        # Making sure the api and secret keys are valid before saving the coinbase account
-        if 'errors' in data:
-            # encountering an error while retrieving data
-            return Response({'error': data['errors'][0]['message']}, status=400)
-
-        # Save the coinbase account to the database
-        coinbase_account.save()
-
-        # Inner function for filtering data
-        def filter_not_empty_balance(coin_to_check):
-            return float(coin_to_check['amount']) > 0
-
-        # Return the account information to the user
-        filtered_data = list(filter(filter_not_empty_balance, data))
-
-        # Create tokens
+    def save_coins(self, filtered_data, request, saved_exchange_account_object):
+        super(CoinBaseView, self).save_coins(filtered_data, request, saved_exchange_account_object)
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=request.user, asset=coin['currency'])):
-                token = Token.objects.get(user=request.user, asset=coin['currency'])
-                token.free += float(coin['amount'])
-                token.locked += float(0)
-                token.save()
+            token = Token()
+            token.user = request.user
+            token.crypto_exchange_object = saved_exchange_account_object
+            token.asset = coin['currency']
+            token.free_amount = float(coin['amount'])
+            token.locked_amount = float(0)
+            token.save()
 
-            else:
-                token = Token()
-                token.user = request.user
-                token.asset = coin['currency']
-                token.free = float(coin['amount'])
-                token.locked = float(0)
-                token.save()
-
-        return Response(filtered_data, status=200)
+    def post(self, request):
+        return super(CoinBaseView, self).post(request)
 
 
 # Kraken
-class KrakenView(APIView):
-    def post(self, request):
-        # Pass the data to the serialiser so that the kraken account can be created
-        # Create a field 'crypto_exchange' in the request dict to prevent double adding the same account
-        request.data['crypto_exchange'] = 'Kraken'
-        kraken_account = CryptoExchangeAccountSerializer(data=request.data, context={'request': request})
+class KrakenView(GenericCryptoExchanges, ABC):
+    def __init__(self):
+        super().__init__('Kraken', KrakenFetcher)
 
-        # Validate data
-        kraken_account.is_valid(raise_exception=True)
+    def filter_not_empty_balance(self, coin_to_check):
+        super(KrakenView, self).filter_not_empty_balance(coin_to_check)
+        return float(coin_to_check[1]) > 0
 
-        # Checking if the account has already been registered
-        if bool(CryptoExchangeAccount.objects.filter(user=request.user,
-                                                     crypto_exchange=request.data['crypto_exchange'],
-                                                     api_key=request.data['api_key'],
-                                                     secret_key=request.data['secret_key'])):
-            return Response({'error': 'This kraken account has already been added'}, status=400)
+    def get_data_unified(self, data):
+        super(KrakenView, self).get_data_unified(data)
+        return data['result'].items()
 
-        # Use the provided API key and secret key to connect to the Kraken API
-        service = KrakenFetcher(request.data['api_key'], request.data['secret_key'])
-
-        # Get the user's account information
-        data = service.get_account_data()
-
-        # Making sure the api and secret keys are valid before saving the kraken account
-        if 'error' in data and 'result' not in data:
-            # encountering an error while retrieving data
-            return Response({'error': data['error'][0]}, status=400)
-
-        # Save the kraken account to the database
-        kraken_account.save()
-
-        # Inner function for filtering data
-        def filter_not_empty_balance(coin_to_check):
-            return float(coin_to_check[1]) > 0
-
-        # Return the account information to the user
-        filtered_data = list(filter(filter_not_empty_balance, data['result'].items()))
-
-        # Create tokens
+    def save_coins(self, filtered_data, request, saved_exchange_account_object):
+        super(KrakenView, self).save_coins(filtered_data, request, saved_exchange_account_object)
         for coin in filtered_data:
             # check if the coin already exists
-            if bool(Token.objects.filter(user=request.user, asset=coin[0])):
-                token = Token.objects.get(user=request.user, asset=coin[0])
-                token.free += float(coin[1])
-                token.locked += float(0)
-                token.save()
+            token = Token()
+            token.user = request.user
+            token.crypto_exchange_object = saved_exchange_account_object
+            token.asset = coin[0]
+            token.free_amount = float(coin[1])
+            token.locked_amount = float(0)
+            token.save()
 
-            else:
-                token = Token()
-                token.user = request.user
-                token.asset = coin[0]
-                token.free = float(coin[1])
-                token.locked = float(0)
-                token.save()
-
-        return Response(filtered_data, status=200)
+    def post(self, request):
+        return super(KrakenView, self).post(request)
 
 
+# Update the existing tokens retrieved from crypto exchanges
 class UpdateAllTokens(APIView):
     def post(self, request):
         Token.objects.all().delete()
@@ -406,7 +336,7 @@ class UpdateAllTokens(APIView):
         for account in fixed_accounts:
             api_key = account.api_key
             secret_key = account.secret_key
-            platform = account.crypto_exchange
+            platform = account.crypto_exchange_name
             counter += 1
             account.delete()
             request.data['api_key'] = api_key

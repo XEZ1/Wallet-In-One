@@ -13,16 +13,11 @@ export default function MainAccountPage({ navigation }) {
                     <Text>Bank Account(s)</Text>
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("Wallets")}>
+            <TouchableOpacity onPress={() => navigation.navigate("Crypto Wallets & Exchanges")}>
                 <View style={styles.cards}>
-                    <Text>Crypto Wallet(s)</Text>
+                    <Text>Crypto Wallet(s) and Exchange(s)</Text>
                 </View>
             </TouchableOpacity >
-            <TouchableOpacity onPress={() => navigation.navigate("Crypto exchanges")}>
-                <View style={styles.cards}>
-                    <Text>Crypto Exchange(s)</Text>
-                </View>
-            </TouchableOpacity>
             <TouchableOpacity >
                 <View style={styles.cards}>
                     <Text>Stock Accounts(s)</Text>

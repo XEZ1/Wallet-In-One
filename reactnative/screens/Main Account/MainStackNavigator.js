@@ -12,13 +12,17 @@ import MainAccountPage from "./MainAccountPage";
 import CryptoWallet from "../crypto_wallet/CryptoWallet";
 import WalletAssetDetail from "../crypto_wallet/WalletAssetDetail";
 import { WalletConnector, WalletSelector } from "../crypto_wallet/WalletModal";
+import AddCryptoScreen from "../crypto_wallet/AddCryptoScreen"
 
 //Crypto Exchanges Screens
 import BinanceCredentials from "../cryptoExchanges/BinanceExchange";
 import HuobiCredentials from "../cryptoExchanges/HuobiExchange";
 import GateioCredentials from "../cryptoExchanges/GateioExchange";
 import CoinListCredentials from "../cryptoExchanges/CoinlistExchange";
+import CoinbaseCredentials from "../cryptoExchanges/CoinbaseExchange";
+import KrakenCredentials from "../cryptoExchanges/KrakenExchange";
 import CryptoExchanges from "../cryptoExchanges/CryptoExchanges";
+import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 
 const Stack = createStackNavigator();
 
@@ -45,16 +49,36 @@ export default function MainStackNavigator() {
         name="Bank Transactions"
         component={BankTransactionsScreen}
       />
-      <Stack.Screen name="Wallets" component={CryptoWallet} />
+      
+      <Stack.Screen 
+        name="Crypto Wallets & Exchanges"
+        component={CryptoWallet}
+        options={({ navigation }) => ({
+          headerRight: () => (
+            <TouchableOpacity 
+              style={{ marginRight: 15 }} 
+              onPress={() => navigation.navigate("Add Cryptocurrency Wallet or Account")}
+            >
+              <Text style={{ color: '#007AFF' }}>Add</Text>
+            </TouchableOpacity>
+          )
+      })}/>
+      <Stack.Screen 
+        name="Add Cryptocurrency Wallet or Account"
+        component={AddCryptoScreen} />
+
       <Stack.Screen name="WalletAssetDetail" component={WalletAssetDetail} />
       <Stack.Screen name="WalletSelector" component={WalletSelector} />
-      <Stack.Screen name="WalletConnector" component={WalletConnector} />
+      <Stack.Screen name="WalletConnector" component={WalletConnector} />  
 
       <Stack.Screen name="Crypto exchanges" component={CryptoExchanges} />
       <Stack.Screen name="Binance" component={BinanceCredentials} />
       <Stack.Screen name="Huobi" component={HuobiCredentials} />
       <Stack.Screen name="Gateio" component={GateioCredentials} />
       <Stack.Screen name="CoinList" component={CoinListCredentials} />
+      <Stack.Screen name="Coinbase" component={CoinbaseCredentials} />
+      <Stack.Screen name="Kraken" component={KrakenCredentials} />
+  
     </Stack.Navigator>
   );
 }

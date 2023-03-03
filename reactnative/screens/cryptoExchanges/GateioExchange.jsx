@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Pressable, View, Text, TextInput, Button, Alert } from 'react-native';
 import * as SecureStore from "expo-secure-store";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 export default function GateioCredentials({ navigation }) {
   const [apiKey, setApiKey] = useState('');
@@ -56,25 +57,20 @@ export default function GateioCredentials({ navigation }) {
   return (
     <View style={{ padding: 20, backgroundColor:colors.background, flex: 1 }}>
       <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
-        <Pressable onPress={() => navigation.navigate("Crypto exchanges")}>
-        <Text style={styles(dark, colors).backArrow}>←</Text>
-        <Pressable onPress={() => navigation.goBack()}>
-          <Text style={styles.backArrow}>←</Text>
-        </Pressable>
         <Text style={stylesInternal.title}>Gateio Credentials:</Text>
       </View>
       <Text style={stylesInternal.text}>API Key:</Text>
       <TextInput 
         value={apiKey} 
         onChangeText={setApiKey} 
-        style={styles(dark, colors).input}
+        style={styles(dark, colors).input} 
       />
       <Text style={stylesInternal.text}>Secret Key:</Text>
       <TextInput 
         value={secretKey} 
         onChangeText={setSecretKey} 
         secureTextEntry 
-        style={styles(dark, colors).input}
+        style={styles(dark, colors).input} 
       />
       <Button 
         title="Submit" 

@@ -6,6 +6,8 @@ from base64 import b64encode, b64decode
 from datetime import datetime, timezone
 from urllib.parse import quote_plus, urlencode
 
+from crypto_exchanges.models import Token, CryptoExchangeAccount
+
 
 # Class was implemented according to: ""
 class BinanceFetcher:
@@ -274,3 +276,41 @@ class KrakenFetcher:
         response = requests.post((url + path), headers=headers, data=timestamp)
 
         return response.json()
+
+
+# Test feature, code written by Krishna and modified by Ezzat, Michael
+class CurrentMarketPriceFetcher:
+    def __init__(self, user):
+        self.user = user
+
+    def get_crypto_price(self, symbol):
+        url = f'https://min-api.cryptocompare.com/data/price?fsym={symbol}&tsyms=GBP'
+        r = requests.get(url=url)
+        response = r.json()
+        try:
+            price = float(response['GBP'])
+        except KeyError:
+            price = 0.0
+        return price
+
+    def total_user_balance_crypto(self):
+        exchanges = CryptoExchangeAccount.objects.filter(user=self.user)
+        total_balance = 0
+        for exchange in exchanges:
+            tokens = Token.objects.filter(crypto_exchange_object=exchange)
+            total_balance += sum(self.get_crypto_price(token.asset) * (token.free_amount + token.locked_amount) for token in tokens)
+        return round(total_balance, 2)
+
+    def chart_breakdown_crypto_free(self):
+        exchanges = CryptoExchangeAccount.objects.filter(user=self.user)
+        if exchanges.exists():
+            tokens = Token.objects.filter(crypto_exchange_object__in=exchanges)
+            return [{'x': token.asset, 'y': round(self.get_crypto_price(token.asset) * token.free_amount, 2)}
+                    for token in tokens]
+
+    def chart_breakdown_crypto_locked(self):
+        exchanges = CryptoExchangeAccount.objects.filter(user=self.user)
+        if exchanges.exists():
+            tokens = Token.objects.filter(crypto_exchange_object=exchanges)
+            return [{'x': token.asset, 'y': round(self.get_crypto_price(token.asset) * token.locked_amount, 2)}
+                    for token in tokens]

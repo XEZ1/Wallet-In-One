@@ -8,7 +8,7 @@ class TokenSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Token
-        fields = ('user', 'asset', 'free', 'locked')
+        fields = ('user', 'crypto_exchange_object', 'asset', 'free_amount', 'locked_amount')
 
     def create(self, validated_data):
         token = Token.objects.create(
@@ -24,7 +24,7 @@ class CryptoExchangeAccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CryptoExchangeAccount
-        fields = ('user', 'crypto_exchange', 'api_key', 'secret_key', 'created_at')
+        fields = ('user', 'crypto_exchange_name', 'api_key', 'secret_key', 'created_at')
 
     def create(self, validated_data):
         crypto_exchange_account = CryptoExchangeAccount.objects.create(

@@ -47,21 +47,8 @@ export default function HuobiCredentials({ navigation }) {
       fontSize: 25,
       color: colors.text,
     },
-
-    backArrow: {
-      fontWeight: "900",
-      fontSize: 30,
-      marginRight: 10,
-      color: colors.text,
-    },
-    input:{
-      height: 40,
-      width: '100%',
-      borderWidth: 0.5,
-      padding: 10,
-      borderColor: 'gray',
-      borderRadius: 5,
-      marginTop: 5,
+    text: {
+      fontSize: 20,
       marginBottom: 10,
       color: colors.text,
     },
@@ -70,23 +57,20 @@ export default function HuobiCredentials({ navigation }) {
   return (
     <View style={{ padding: 20, backgroundColor:colors.background, flex: 1 }}>
       <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
-        <Pressable onPress={() => navigation.navigate("Crypto exchanges")}>
-        <Text style={styles(dark, colors).backArrow}>←</Text>
-        </Pressable>
         <Text style={stylesInternal.title}>Huobi Credentials:</Text>
       </View>
       <Text style={stylesInternal.text}>API Key:</Text>
       <TextInput 
         value={apiKey} 
         onChangeText={setApiKey} 
-        style={styles(dark, colors).input}
+        style={styles(dark, colors).input} 
       />
       <Text style={stylesInternal.text}>Secret Key:</Text>
       <TextInput 
         value={secretKey} 
         onChangeText={setSecretKey} 
         secureTextEntry 
-        style={styles(dark, colors).input}
+        style={styles(dark, colors).input}  
       />
       <Button 
         title="Submit" 

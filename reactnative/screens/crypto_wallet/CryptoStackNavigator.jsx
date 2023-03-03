@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import CryptoWallet from "./CryptoWallet";
+import AddCryptoScreen from "./AddCryptoScreen"
 import WalletAssetDetail from "./WalletAssetDetail";
 import {WalletConnector, WalletSelector} from "./WalletModal"
 import { LogBox } from 'react-native';
@@ -19,13 +20,29 @@ LogBox.ignoreLogs([
 
 const Stack = createStackNavigator();
 
-export default function CryptoWalletStackNavigator() {
+export default function CryptoStackNavigator() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Wallets" component={CryptoWallet} />
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="Wallets"
+        component={CryptoWallet}
+        options={({ navigation }) => ({
+          headerRight: () => (
+            <TouchableOpacity 
+              style={{ marginRight: 15 }} 
+              onPress={() => navigation.navigate('Add Cryptocurrency Wallet or Account')}
+            >
+              <Text style={{ color: '#007AFF' }}>Add</Text>
+            </TouchableOpacity>
+          )
+        })}/>
       <Stack.Screen name="WalletAssetDetail" component={WalletAssetDetail} />
       <Stack.Screen name="WalletSelector" component={WalletSelector} />
       <Stack.Screen name="WalletConnector" component={WalletConnector} />
+
+      <Stack.Screen 
+        name="Add Cryptocurrency Wallet or Account"
+        component={AddCryptoScreen} />
       
       <Stack.Screen name="Binance" component={BinanceCredentials} />
       <Stack.Screen name="Huobi" component={HuobiCredentials} />
