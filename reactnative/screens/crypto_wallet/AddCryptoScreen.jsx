@@ -137,6 +137,13 @@ export default function AddCryptoScreen(props) {
           </View>
         </View>
 
+        <TouchableOpacity
+            onPress={() => props.navigation.navigate("WalletSelector", {connectWallet: connectWallet})}
+            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+          >
+            <Text style={styles.buttonText}>Add Wallet</Text>
+        </TouchableOpacity>
+
         <View style={styles.container}>
           <View
             style={[
