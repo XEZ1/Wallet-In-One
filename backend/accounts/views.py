@@ -32,8 +32,8 @@ def graph_data(request):
     
     bank_data = chart_breakdown(request.user)
     crypto_data = chart_breakdown_crypto(request.user)
-    crypto_data_from_exchanges = CurrentMarketPriceFetcher(request.user)
-    crypto_data_from_exchanges_data = crypto_data_from_exchanges.chart_breakdown_crypto_free()
+    crypto_exchanges = CurrentMarketPriceFetcher(request.user)
+    crypto_data_from_exchanges = crypto_exchanges.chart_breakdown_crypto_free()
 
     if bank_data:
         data['all'].append({"x": "Banks", "y": total_user_balance(request.user).amount})
@@ -41,7 +41,7 @@ def graph_data(request):
     if crypto_data:
         data['all'].append({"x": "Cryptocurrency from wallets", "y": total_user_balance_crypto(request.user)})
         data['Cryptocurrency'] = crypto_data
-    if crypto_data_from_exchanges_data:
-        data['all'].append({"x": "Cryptocurrency from exchanges", "y": crypto_data_from_exchanges.total_user_balance_crypto()})
-        data['Cryptocurrency1'] = crypto_data_from_exchanges_data
+    if crypto_data_from_exchanges:
+        data['all'].append({"x": "Cryptocurrency from exchanges", "y": crypto_exchanges.total_user_balance_crypto()})
+        data['Cryptocurrency from exchanges'] = crypto_data_from_exchanges
     return Response(data)
