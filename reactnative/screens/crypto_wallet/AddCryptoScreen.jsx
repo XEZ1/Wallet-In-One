@@ -18,7 +18,7 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
 
-export default function CryptoWallet(props) {
+export default function AddCryptoScreen(props) {
   const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
   const {dark, colors, setScheme} = useTheme();
 
@@ -69,16 +69,7 @@ export default function CryptoWallet(props) {
       textAlign: 'center',
       fontWeight: 'bold',
       color: colors.text,
-    },
-    refreshButton: {
-      position: 'absolute',
-      top: 0,
-      right: 10,
-      backgroundColor: colors.primary,
-      borderRadius: 30,
-      padding: 10,
-      marginTop: 10
-    },
+    }
   });
 
   useEffect(() => {
@@ -112,9 +103,6 @@ export default function CryptoWallet(props) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView>
-        <TouchableOpacity onPress={handleSubmit} style={styles.refreshButton}>
-          <Ionicons name="refresh-outline" size={25} color="white" />
-        </TouchableOpacity>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View
             style={{
@@ -124,15 +112,85 @@ export default function CryptoWallet(props) {
             }}
           >
             <View style={{ marginRight: 20 }}>
-              <Text style={[styles.cryptoWalletTitle, {color: colors.text}]}>Cryptocurrency</Text>
+              <Text style={[styles.cryptoWalletTitle, {color: colors.text}]}>Add Cryptocurrency</Text>
             </View>
           </View>
         </View>
 
-        <View style={[styles.walletList]}>
-        {
-          wallets.map((item)=> <WalletAsset key={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
-        }
+        <View style={styles.container}>
+          <View
+            style={[
+              styles.titleContainer,
+              {
+                borderWidth: 1,
+                borderColor: colors.text,
+                padding: 10,
+                borderRadius: 10,
+                width: Dimensions.get('window').width - 40,
+                alignSelf: "center",
+              },
+            ]}
+          >
+            <Text style={styles.title}>
+              Add a cryptocurrency wallet from the blockchain:
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.container}>
+          <View
+            style={[
+              styles.titleContainer,
+              {
+                borderWidth: 1,
+                borderColor: colors.text,
+                padding: 10,
+                borderRadius: 10,
+                width: Dimensions.get('window').width - 40,
+                alignSelf: "center",
+              },
+            ]}
+          >
+            <Text style={styles.title}>
+              Add a cryptocurrency account from an exchange:
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('Binance')}
+            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+          >
+            <Text style={styles.buttonText}>Binance</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('Huobi')}
+            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+          >
+            <Text style={styles.buttonText}>Huobi</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('Gateio')}
+            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+          >
+            <Text style={styles.buttonText}>Gateio</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('CoinList')}
+            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+          >
+            <Text style={styles.buttonText}>Coinlist</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('Coinbase')}
+            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+          >
+            <Text style={styles.buttonText}>Coinbase</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('Kraken')}
+            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+          >
+            <Text style={styles.buttonText}>Kraken</Text>
+          </TouchableOpacity>
         </View>
 
       </ScrollView>
