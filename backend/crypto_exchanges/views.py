@@ -1,5 +1,6 @@
 from abc import ABC, ABCMeta, abstractmethod
 
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -56,6 +57,11 @@ class GenericCryptoExchanges(APIView):
     @abstractmethod
     def save_coins(self, filtered_data, request, saved_exchange_account_object):
         pass
+
+    def get(self, request):
+        crypto_exchange_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
+        serializer = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
+        return Response(serializer.data)
 
     @abstractmethod
     def post(self, request):
@@ -130,6 +136,18 @@ class GenericCryptoExchanges(APIView):
 
         return Response(filtered_data, status=200)
 
+
+    def get(self, request):
+        crypto_exchange_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
+        serialiser = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
+        return Response(serialiser.data)
+    def delete(self, request):
+        crypto_exchange_account = CryptoExchangeAccount.objects.get(id=request.data['id'])
+        if crypto_exchange_account.user != request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        serializer = CryptoExchangeAccountSerializer(crypto_exchange_account)
+        crypto_exchange_account.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Binance
 class BinanceView(GenericCryptoExchanges, ABC):
@@ -308,6 +326,7 @@ class KrakenView(GenericCryptoExchanges, ABC):
         return super(KrakenView, self).post(request)
 
 
+# Update the existing tokens retrieved from crypto exchanges
 class UpdateAllTokens(APIView):
     def post(self, request):
         Token.objects.all().delete()
