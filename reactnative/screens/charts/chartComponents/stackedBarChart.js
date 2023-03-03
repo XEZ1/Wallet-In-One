@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, ScrollView, Dimensions, View, TouchableOpacity } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 
@@ -10,7 +10,55 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 import {auth_get} from '../../../authentication'
 
+import stackedBarChart from "../../charts/stackedBarChartData.json";
 
+// Old stack bar chart being used for testing (retrieved from old commit)
+// const StackedBar = () => {
+
+//   const colors = [
+//     "#6a1b9a",
+//     "#00796b",
+//     "#c2185b",
+//     "#2196f3",
+//     "#009688",
+//     "#ffc107",
+//   ];
+//   const data = {
+//     labels: stackedBarChart.all.map((item) => item.type),
+//     legend: stackedBarChart.all.map((item) => item.type),
+//     data: stackedBarChart.all.map((item) => item.assets.map((asset) => asset.y)),
+//     barColors: ["#dfe4ea", "#ced6e0", "#a4b0be"],
+//   };
+//   console.log('test version:', data);
+
+//   return (
+//     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+//       <StackedBarChart
+//         data={data}
+//         width={Dimensions.get("window").width}
+//         height={220}
+//         yAxisLabel="£"
+//         chartConfig={{
+//           backgroundColor: "#ffffff",
+//           backgroundGradientFrom: "#ffffff",
+//           backgroundGradientTo: "#ffffff",
+//           decimalPlaces: 2, // optional, defaults to 2dp
+//           color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+//           labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+
+//           propsForDots: {
+//             r: "6",
+//             strokeWidth: "2",
+//             stroke: "#ffa726",
+//           },
+//         }}
+//         style={{
+//           marginVertical: 8,
+//         }}
+//       />
+//     </View>
+//   );
+// };
 
 export default function StackedChart({ navigation }) {
   const [baseData, setBaseData ] = useState(fixture)
@@ -26,8 +74,8 @@ export default function StackedChart({ navigation }) {
         const response = await auth_get('/graph_data/')
         console.log('fetch graph data', response.status)
         if (response.status == 200){
-          setBaseData(response.body)
-          setNewData(response.body.all)
+          console.log('source',response.body)
+          setNewData(response.body)
           setPressed(false)
         }
       }
@@ -35,59 +83,25 @@ export default function StackedChart({ navigation }) {
 
   }, [isFocused])
 
+  console.log('before:', data)
 
-  const handlePressIn = (event, datapoint) => {
-    if (pressed){
-      setNewData(baseData.all)
-    }
-    else{
-      const dataPoint = data[datapoint.index];
-      if (baseData[dataPoint.x]){
-        setNewData(baseData[dataPoint.x]);
-      }
-      else{
-        setNewData(baseData.all.filter((val) => val.x.match(dataPoint.x)));
-      }
-    }
-    setPressed(!pressed)
-  };
 
-  let value = 0;
-  data.forEach(jsonObj => {
-    value += jsonObj.y;
-  });
-  value = value.toFixed(2)
+  // const list = data.map(val => val.x);
+  // let spacing = list.length * 60;
+  const labels = ["Banks", "Cryptocurrency", "Stocks"] // ["Crypto-Wallets","Bank","Stocks","Crypto-Exchange"]
+  
+  function extract(name){
+    return name in data ? data[name].map(i=>i.y) : []
+  } 
 
-  const list = data.map(val => val.x);
-  const colours = ["pink", "turquoise", "lime", "#FA991C"];
-
-  let spacing = list.length * 60;
   const stackChartData = {
-    labels: ["Crypto-Wallets","Bank","Stocks","Crypto-Exchange"],
-    // legend: ["Bank", "Crypto", "Stocks", "Other"],
-    data: [
-      //map through the data and get the y value for each x value
-      data.map((val) => val.y),
-    ],
+    labels: labels,
+    data: labels.map(name => extract(name)),
     barColors: ["pink", "turquoise", "lime", "yellow"],
   };
-  if(value == 0){
-    return (
-      <ScrollView
-      contentContainerStyle={{
-        flexGrow : 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingBottom: 20,
-        backgroundColor: colors.background,
-      }}
-      style={styles.container}
-    >
-      <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
-      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text>
-      <Text style={[styles.amountText, {color: colors.text}]}>Connect your Wallets to See your Funds!</Text>
-      </ScrollView>
-    );
+
+  console.log("real version:    ", JSON.stringify(stackChartData))
+  if(false){
   }
   else{
 
@@ -125,7 +139,6 @@ export default function StackedChart({ navigation }) {
           }}
           style={{
             marginVertical: 8,
-
           }}
           // events={[
           //   {
@@ -136,6 +149,8 @@ export default function StackedChart({ navigation }) {
           //   },
           // ]}
         />
+
+        {/* <StackedBar/> */}
 
     </ScrollView>
   );
