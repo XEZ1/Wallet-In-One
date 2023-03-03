@@ -14,6 +14,7 @@ const PlaidComponent = ({ navigation }) => {
   //const [access_token, setAccessToken] = useState()
   let access_token = ''
   let balance = ''
+  let fetched_transaction_list = null
 
   const addAccount = async (account, success) => {
     await fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
@@ -61,7 +62,7 @@ const PlaidComponent = ({ navigation }) => {
       });
       const data = await response.json();
       setLinkToken(data.link_token);
-      console.log(linkToken);
+      // console.log(linkToken);
     // }
     // else{
     //   setLinkToken(access_token);
@@ -97,6 +98,57 @@ const PlaidComponent = ({ navigation }) => {
     balance = data.accounts[0].balances.current
   }
 
+  const getTransaction = async (accessToken) => {
+    const response = await fetch('http://10.0.2.2:8000/stocks/get_transaction/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+      body: JSON.stringify({ access_token: accessToken }),
+    });
+    const data = await response.json();
+    console.log("Get transaction data")
+    console.log(data)
+    fetched_transaction_list = data
+  }
+
+  const addTransaction = async (element) => {
+    await fetch('http://10.0.2.2:8000/stocks/add_transaction_account/', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+      body: JSON.stringify({
+        account_id: element.account_id,
+        transaction_id: element.transaction_id,
+        amount: element.amount,
+        category: element.category,
+        category_id: element.category_id,
+        date: element.date,
+        location: element.location,
+        name: element.name,
+        payment_channel: element.payment_channel,
+        pending: element.pending,
+        transaction_type: element.transaction_type,
+      }),
+    })
+    .then(res => res.json().then(data => ({status: res.status, body: data})))
+    .then((data) => console.log(data))
+    };
+
+  const listTransactions = async () => {
+
+    fetch('http://10.0.2.2:8000/stocks/list_transactions/', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+    }).then(async (res) => setList(await res.json()))};
+
 
   return (
     <>
@@ -112,13 +164,13 @@ const PlaidComponent = ({ navigation }) => {
         // if(access_token == null){
         await getAccessToken(success.publicToken)
         console.log(access_token)
-          // getBalance(access_token)
+          getBalance(access_token)
           // console.log("krishna")
         // }
         await getBalance(access_token)
-        console.log("krishna")
-        console.log(success.metadata.accounts[0].meta)
-        console.log(success.publicToken)
+        // console.log("krishna")
+        // console.log(success.metadata.accounts[0].meta)
+        // console.log(success.publicToken)
         // await fetch(`http://10.0.2.2:8080/api/exchange_public_token`, {
         //   method: "POST",
         //   headers: {
@@ -141,7 +193,14 @@ const PlaidComponent = ({ navigation }) => {
           // console.log(success.metadata.institution.id)
           addAccount(element, success)
         });
+        
+        await getTransaction(access_token)
+        console.log("fetched_transaction_list: ")
+        console.log(fetched_transaction_list)
+        // console.log(fetched_transaction_list.added[0].transaction_id)
+        fetched_transaction_list.added.forEach(element => {addTransaction(element)})
         // listAccounts()
+        listTransactions()
       }}
     />
     </>

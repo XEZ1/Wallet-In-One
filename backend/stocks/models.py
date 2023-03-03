@@ -13,17 +13,18 @@ class StockAccount(models.Model):
     balance = MoneyField(default_currency='GBP', decimal_places=2, max_digits=11)
 
 
-class Location(models.Model):
-    address = models.CharField(max_length=100, default=None, blank=True, null=True)
-    city = models.CharField(max_length=100, default=None, blank=True, null=True)
-    region = models.CharField(max_length=50, default=None, blank=True, null=True)
-    postal_code = models.CharField(max_length=100, default=None, blank=True, null=True)
-    country = models.CharField(max_length=50, default=None, blank=True, null=True)
-    lat = models.FloatField(default=None, blank=True, null=True)
-    lon = models.FloatField(default=None, blank=True, null=True)
-    store_number = models.CharField(max_length=100, default=None, blank=True, null=True)
+# class Location(models.Model):
+#     address = models.CharField(max_length=100, default=None, blank=True, null=True)
+#     city = models.CharField(max_length=100, default=None, blank=True, null=True)
+#     region = models.CharField(max_length=50, default=None, blank=True, null=True)
+#     postal_code = models.CharField(max_length=100, default=None, blank=True, null=True)
+#     country = models.CharField(max_length=50, default=None, blank=True, null=True)
+#     lat = models.FloatField(default=None, blank=True, null=True)
+#     lon = models.FloatField(default=None, blank=True, null=True)
+#     store_number = models.CharField(max_length=100, default=None, blank=True, null=True)
 
 class Transaction(models.Model):
+    # stock = models.ForeignKey(StockAccount, on_delete=models.CASCADE, blank=False)
     account_id = models.CharField(max_length=100, blank=False, null=False)
     amount = models.FloatField(blank=False,null=False) #  Positive values when money moves out of the account; negative values when money moves in.
     iso_currency_code = models.CharField(max_length=30, blank=False, null=True)
@@ -38,7 +39,7 @@ class Transaction(models.Model):
     datetime = models.DateTimeField(blank=True, null=True)
     authorized_date = models.DateField(blank=True, null=True)
     authorized_datetime = models.DateTimeField(blank=True, null=True)
-    location = models.ForeignKey(Location, on_delete = models.CASCADE)
+    location = models.JSONField(encoder=None)#models.ForeignKey(Location, on_delete = models.CASCADE)
     name = models.CharField(max_length=50, blank=False, null=False)
     merchant_name = models.CharField(max_length=50, blank=True, null=True)
     payment_channel = models.CharField(

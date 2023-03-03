@@ -11,12 +11,13 @@ from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import generics, permissions
-from .serializers import AddStockAccount
-from .models import StockAccount
+from .serializers import AddStockAccount, AddTransaction
+from .models import StockAccount,Transaction
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
 from plaid.model.accounts_balance_get_request import AccountsBalanceGetRequest
 from flask import jsonify
 from plaid.model.accounts_get_request import AccountsGetRequest
+from plaid.model.transactions_sync_request import TransactionsSyncRequest
 
 PLAID_CLIENT_ID = '63ef90fc73e3070014496336'
 PLAID_SECRET = 'a57f2537ac53e9842da752b987bb5b'
@@ -110,14 +111,51 @@ def get_balance(request):
         return Response(response.to_dict())
     except plaid.ApiException as e:
         return json.loads(e.body)
+    
+@api_view(['POST'])
+def get_transaction(request):
+    host = plaid.Environment.Sandbox
+    configuration = plaid.Configuration(
+    host=host,
+    api_key={
+        'clientId': PLAID_CLIENT_ID,
+        'secret': PLAID_SECRET,
+        'plaidVersion': '2020-09-14'
+    }
+    )
+
+    api_client = plaid.ApiClient(configuration)
+    client = plaid_api.PlaidApi(api_client)
+    try:
+        request = TransactionsSyncRequest(
+            access_token=request.data.get('access_token')
+        )
+        response = client.transactions_sync(request)
+        print(response.to_dict())
+        return Response(response.to_dict())
+    except plaid.ApiException as e:
+        return json.loads(e.body)
+
 
 class addAccount(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = AddStockAccount
     queryset = StockAccount.objects.all()
 
+class AddTransactions(generics.CreateAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = AddTransaction
+    queryset = Transaction.objects.all()
+
 @api_view(['GET'])
 def listAccounts(request):
     accounts = StockAccount.objects.filter(user=request.user)
     serializer = AddStockAccount(accounts, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def listTransactions(request):
+    print("list transactions function called.")
+    transactions = Transaction.objects.all()
+    serializer = AddTransaction(transactions, many=True)
     return Response(serializer.data)
