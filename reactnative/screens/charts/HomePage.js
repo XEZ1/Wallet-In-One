@@ -15,7 +15,6 @@ import {
   VictoryLabel,
   VictoryContainer,
 } from "victory-native";
-// import { StackedBarChart } from "react-native-chart-kit";
 
 import fixture from "../charts/chartData.json";
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
@@ -23,6 +22,7 @@ import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { auth_get } from "../../authentication";
 import PieChart from "./chartComponents/pieChart";
 import StackedChart from "./chartComponents/stackedBarChart";
+import { styles } from "reactnative/screens/All_Styles.style.js";
 
 export default function HomePage({ navigation }) {
   const [baseData, setBaseData] = useState(fixture);
@@ -31,6 +31,23 @@ export default function HomePage({ navigation }) {
   const [pressed, setPressed] = useState(false);
   const isFocused = useIsFocused();
   const [chartType, setChartType] = useState("pie"); // Default chart is pie chart
+
+  const stylesInternal = StyleSheet.create({
+    victoryLabelSmall: {
+      fontSize: 17,
+      fill: colors.text,
+    },
+    victoryLabelBig: {
+      fontSize: 27,
+      fontWeight: "700",
+      fill: colors.text,
+    },
+    victoryLabelBar: {
+      fontSize: 22,
+      fontWeight: "900",
+      fill: colors.text,
+    },
+  });
 
   // Uncomment to show bank data from backend
 
@@ -81,6 +98,7 @@ export default function HomePage({ navigation }) {
   if (value == 0) {
     return (
       <ScrollView
+        // <<<<<<< HEAD
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: "center",
@@ -126,8 +144,6 @@ export default function HomePage({ navigation }) {
           >
             <Text style={styles.chartTypeText}>Stacked Bar Chart</Text>
           </TouchableOpacity>
-
-
         </View>
         {chartType == "pie" ? <PieChart /> : <StackedChart />}
         <VictoryBar
