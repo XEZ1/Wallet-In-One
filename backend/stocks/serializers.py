@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import StockAccount,Transaction
+
+from .models import StockAccount,Transaction, Stock
+
 from rest_framework.fields import CurrentUserDefault
 
 class AddStockAccount(serializers.ModelSerializer):
@@ -19,7 +21,21 @@ class AddStockAccount(serializers.ModelSerializer):
         account.save()
         return account
     
+
 class AddTransaction(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = '__all__'
+
+class AddStock(serializers.ModelSerializer):
+
+    class Meta:
+       model = Stock
+       fields = ['account_id', 'name', 'institution_price', 'ticker_symbol', 'quantity', 'stockAccount']
+
+    
+    def create(self, validated_data):
+        stock = Stock.objects.create(**validated_data)
+        stock.save()
+        return stock
+

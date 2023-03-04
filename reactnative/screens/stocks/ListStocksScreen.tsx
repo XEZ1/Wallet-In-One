@@ -32,7 +32,7 @@ const SuccessComponent = (props) => {
         if(isFocused){listAccounts()}
       }, [isFocused])
     return (
-        <ScrollView>
+        <View>
           <View>
             <Text>Accounts</Text>
           </View>
@@ -50,7 +50,7 @@ const SuccessComponent = (props) => {
             ListEmptyComponent={<Text>{'\nYou have no stock accounts\n'}</Text>}
             />
           </View>
-        </ScrollView>
+        </View>
       );
     };
 
