@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
+import { api_url } from '../../authentication';
 
 export default function StockAsset({ route, navigation }){
     const isFocused = useIsFocused()
@@ -10,7 +11,7 @@ export default function StockAsset({ route, navigation }){
     const [stocks, setStocks] = useState()
 
     const deleteAccount = async () => {
-        const response = await fetch('http://10.0.2.2:8000/stocks/delete_account/', {
+        const response = await fetch(api_url + '/stocks/delete_account/', {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
@@ -25,14 +26,14 @@ export default function StockAsset({ route, navigation }){
 
     useEffect(() => {
         const listTransactions = async (stock) => {
-          await fetch(`http://10.0.2.2:8000/stocks/list_transactions/${stock}/`, {
+          await fetch(api_url + `/stocks/list_transactions/${stock}/`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
             },
           }).then(async (res) => setTransactions(await res.json()));
-          await fetch(`http://10.0.2.2:8000/stocks/list_stocks/${stock}/`, {
+          await fetch(api_url + `/stocks/list_stocks/${stock}/`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',

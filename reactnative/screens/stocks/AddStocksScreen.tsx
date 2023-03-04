@@ -3,6 +3,7 @@ import { Button, Text } from 'react-native';
 import { LinkSuccess, LinkExit} from 'react-native-plaid-link-sdk';
 import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
+import { api_url } from '../../authentication';
 
 const PlaidComponent = ({ navigation }) => {
   const [linkToken, setLinkToken] = useState<string | undefined>(undefined)
@@ -23,7 +24,7 @@ const PlaidComponent = ({ navigation }) => {
 
 
   const addAccount = async (account, success) => {
-    await fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
+    await fetch(api_url + '/stocks/add_stock_account/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -44,7 +45,7 @@ const PlaidComponent = ({ navigation }) => {
     
   const listAccounts = async () => {
 
-  fetch('http://10.0.2.2:8000/stocks/list_accounts/', {
+  fetch(api_url + '/stocks/list_accounts/', {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -56,7 +57,7 @@ const PlaidComponent = ({ navigation }) => {
     // if(access_token == null)
     // {
       let token = await SecureStore.getItemAsync('token')
-      const response = await fetch('http://10.0.2.2:8000/stocks/initiate_plaid_link/', {
+      const response = await fetch(api_url + '/stocks/initiate_plaid_link/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +78,7 @@ const PlaidComponent = ({ navigation }) => {
   };
 
   const getAccessToken = async (publicToken) => {
-    const response = await fetch('http://10.0.2.2:8000/stocks/get_access_token/', {
+    const response = await fetch(api_url + '/stocks/get_access_token/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -91,7 +92,7 @@ const PlaidComponent = ({ navigation }) => {
   }
 
   const getBalance = async (accessToken) => {
-    const response = await fetch('http://10.0.2.2:8000/stocks/get_balance/', {
+    const response = await fetch(api_url + '/stocks/get_balance/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -105,7 +106,7 @@ const PlaidComponent = ({ navigation }) => {
   }
 
   const getStocks = async (accessToken) => {
-    const response = await fetch('http://10.0.2.2:8000/stocks/get_stocks/', {
+    const response = await fetch(api_url + '/stocks/get_stocks/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -120,7 +121,7 @@ const PlaidComponent = ({ navigation }) => {
   }
 
   const addStock = async (stock, stockInfo) => {
-    await fetch('http://10.0.2.2:8000/stocks/add_stock/', {
+    await fetch(api_url + '/stocks/add_stock/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -139,7 +140,7 @@ const PlaidComponent = ({ navigation }) => {
   }
 
   const getTransaction = async (accessToken) => {
-    const response = await fetch('http://10.0.2.2:8000/stocks/get_transactions/', {
+    const response = await fetch(api_url + '/stocks/get_transactions/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -170,7 +171,7 @@ const PlaidComponent = ({ navigation }) => {
   //     }
 
   const addTransaction = async (element) => {
-    await fetch('http://10.0.2.2:8000/stocks/add_transaction_account/', {
+    await fetch(api_url + '/stocks/add_transaction_account/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

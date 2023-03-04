@@ -12,6 +12,7 @@ import {
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
+import { api_url } from '../../authentication';
 
 
 const SuccessComponent = (props) => {
@@ -22,7 +23,7 @@ const SuccessComponent = (props) => {
       useEffect(() => {
         const listAccounts = async () => {
 
-          await fetch('http://10.0.2.2:8000/stocks/list_accounts/', {
+          await fetch(api_url + '/stocks/list_accounts/', {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
