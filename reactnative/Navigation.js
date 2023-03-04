@@ -119,9 +119,7 @@ export default function Navigation() {
               tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="setting" size={30}/></Text>)
             }}
           />
-
-          <Tab.Screen name="Stocks" component={PlaidComponent} />
-          <Tab.Screen name="Stock List" component={StockStackNavigator} />
+          <Tab.Screen name="Stock List" component={StockStackNavigator} options={{headerShown: false}} />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
