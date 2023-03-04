@@ -195,21 +195,21 @@ export default function HomePage({ navigation }) {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  title: {
-    fontWeight: "900",
-    fontSize: 50,
-    alignSelf: "center",
-    paddingVertical: 10,
-  },
-  button: {
-    width: "75%",
-    borderRadius: 25,
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 30,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+//   title: {
+//     fontWeight: "900",
+//     fontSize: 50,
+//     alignSelf: "center",
+//     paddingVertical: 10,
+//   },
+//   button: {
+//     width: "75%",
+//     borderRadius: 25,
+//     textAlign: "center",
+//     fontWeight: "bold",
+//     fontSize: 30,
+//   },
+// });
