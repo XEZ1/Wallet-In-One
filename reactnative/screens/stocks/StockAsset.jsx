@@ -47,7 +47,7 @@ export default function StockAsset({ route, navigation }){
           </TouchableOpacity>
           <FlatList data={transactions} renderItem={({item, index}) =>{
             return (
-              <TouchableOpacity style={[styles.item, {backgroundColor: 'red'}]} >
+              <TouchableOpacity style={[styles.item, {backgroundColor: 'red'}]} onPress={()=> navigation.navigate('TransactionData', {id: item.id}) }>
                 <View style={styles.row}>
                   <Text style={styles.name}> Transaction </Text>
                   <Text style={styles.ins_name}> Hello World!</Text>

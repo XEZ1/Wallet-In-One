@@ -140,6 +140,13 @@ def listTransactions(request,stock):
     serializer = AddTransaction(transactions, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getTransaction(request, id):
+    transaction = Transaction.objects.get(id=id)
+    print(transaction)
+    serializer = AddTransaction(transaction, many=False)
+    return Response(serializer.data)
+
 
 # @api_view(['POST'])
 # def addStock(request):

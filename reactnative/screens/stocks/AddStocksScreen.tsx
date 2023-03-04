@@ -193,15 +193,7 @@ const PlaidComponent = ({ navigation }) => {
     .then((data) => console.log(data))
     };
 
-  const listTransactions = async () => {
-
-    fetch('http://10.0.2.2:8000/stocks/list_transactions/', {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-      },
-    }).then(async (res) => setList(await res.json()))};
+  
 
   return (
     <>
