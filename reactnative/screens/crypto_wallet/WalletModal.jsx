@@ -30,7 +30,6 @@ export function WalletSelector(props) {
       paddingTop: 20,
     },
     cryptoItem: {
-      backgroundColor: '#e5e5e5',
       width: '40%',
       padding: 10,
       margin: 10,
