@@ -60,8 +60,20 @@ export default function MainStackNavigator() {
         name="Bank Transactions"
         component={BankTransactionsScreen}
       />
-      <Stack.Screen name="Crypto Wallets" component={CryptoWallet} />
-      <Stack.Screen name="WalletAssetDetail" component={WalletAssetDetail} />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="Crypto Wallets"
+        component={CryptoWallet}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="WalletAssetDetail"
+        component={WalletAssetDetail}
+      />
       <Stack.Screen name="WalletSelector" component={WalletSelector} />
       <Stack.Screen name="WalletConnector" component={WalletConnector} />
 
