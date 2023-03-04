@@ -15,7 +15,7 @@ const PlaidComponent = ({ navigation }) => {
   //const [stocks, setStocks] = useState(null)
   let access_token = ''
   let balance = ''
-  // let stocks = null
+  let stocks = null
 
   const addAccount = async (account, success) => {
     await fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
@@ -109,29 +109,29 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({ access_token: accessToken }),
     });
     const data = await response.json();
-    // stocks = data.holdings
+    stocks = data.holdings
     console.log(data)
   }
 
-  // const addStock = async (stock) => {
-  //   await fetch('http://10.0.2.2:8000/stocks/add_stock/', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-  //     },
-  //     body: JSON.stringify({
-  //       account_id: stock.account_id,
-  //       institution_price: stock.institution_price,
-  //       quantity: stock.quantity,
-  //       name: 'test',
-  //       ticker_symbol: '$',
-  //       stockAccount: account_id
-  //     }),
-  //   }).then(res => res.json().then(data => ({status: res.status, body: data})) )
-  //   .then((data) => console.log(data))
-  // }
+  const addStock = async (stock) => {
+    await fetch('http://10.0.2.2:8000/stocks/add_stock/', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+      body: JSON.stringify({
+        account_id: stock.security_id,
+        institution_price: stock.institution_price,
+        quantity: stock.quantity,
+        name: 'test',
+        ticker_symbol: '$',
+        stockAccount: account_id
+      }),
+    }).then(res => res.json().then(data => ({status: res.status, body: data})) )
+    .then((data) => console.log(data))
+  }
 
   return (
     <>
@@ -177,11 +177,10 @@ const PlaidComponent = ({ navigation }) => {
           // console.log(success.metadata.institution.id)
           addAccount(element, success)
         });
-
-        // stocks.forEach(element => {
-        //   addStock(element)
-        //   console.log(element.quantity)
-        // })
+        stocks.forEach(element => {
+          addStock(element)
+          console.log(element.quantity)
+        })
         // listAccounts()
       }}
     />

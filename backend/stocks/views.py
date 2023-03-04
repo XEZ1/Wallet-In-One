@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import generics, permissions
-from .serializers import AddStockAccount
+from .serializers import AddStockAccount, AddStock
 from .models import StockAccount
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
 from flask import jsonify
@@ -98,23 +98,23 @@ def listAccounts(request):
 
 
 
-# @api_view(['POST'])
-# def addStock(request):
-#     stockAccount = StockAccount.objects.get(institution_name='Chase')
-#     data = {
-#         'account_id': request.data.get('account_id'),
-#         'name': request.data.get('name'),
-#         'institution_price': request.data.get('institution_price'),
-#         'ticker_symbol': request.data.get('ticker_symbol'),
-#         'quantity': request.data.get('quantity'),
-#         'stockAccount': stockAccount
-#     }
-#     serializer = AddStock(data=data)
-#     print(StockAccount.objects.all())
-#     if serializer.is_valid():
-#         serializer.save()
-#         return JsonResponse(serializer.data, status=201)
-#     return JsonResponse(serializer.errors, status=400)
+@api_view(['POST'])
+def addStock(request):
+    stockAccount = StockAccount.objects.get(account_id=request.data.get('account_id'))
+    data = {
+        'account_id': request.data.get('account_id'),
+        'name': request.data.get('name'),
+        'institution_price': round(request.data.get('institution_price'), 2),
+        'ticker_symbol': request.data.get('ticker_symbol'),
+        'quantity': request.data.get('quantity'),
+        'stockAccount': stockAccount.account_id
+    }
+    serializer = AddStock(data=data)
+    print(StockAccount.objects.all())
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse(serializer.data, status=201)
+    return JsonResponse(serializer.errors, status=400)
 
 @api_view(['DELETE'])
 def deleteAccount(request):

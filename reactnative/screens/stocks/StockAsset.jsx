@@ -36,7 +36,7 @@ export default function StockAsset({ route, navigation }){
 
     return(
     <View>
-        <Text>{JSON.stringify(stocks)}</Text>
+        {/* <Text>{JSON.stringify(stocks)}</Text> */}
         <TouchableOpacity onPress={async ()=> {await deleteAccount(), navigation.navigate('Stock Account List')}}>
             <Text>REMOVE</Text>
         </TouchableOpacity>
