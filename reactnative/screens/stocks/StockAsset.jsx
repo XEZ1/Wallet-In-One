@@ -7,6 +7,7 @@ import { FlatList } from 'react-native-gesture-handler';
 export default function StockAsset({ route, navigation }){
     const isFocused = useIsFocused()
     const [transactions, setTransactions] = useState()
+    const [stocks, setStocks] = useState()
 
     const deleteAccount = async () => {
         const response = await fetch('http://10.0.2.2:8000/stocks/delete_account/', {
@@ -30,7 +31,15 @@ export default function StockAsset({ route, navigation }){
               "Content-Type": "application/json",
               Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
             },
-          }).then(async (res) => setTransactions(await res.json()))
+          }).then(async (res) => setTransactions(await res.json()));
+          await fetch(`http://10.0.2.2:8000/stocks/list_stocks/${stock}/`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+              },
+            }).then(async (res) => setStocks(await res.json()));
+          console.log(stocks)
           // .catch((error) => {
           //   console.error(error);
           // });
@@ -42,15 +51,25 @@ export default function StockAsset({ route, navigation }){
       console.log(JSON.stringify(transactions))
     return(
       <View>
-        {/* <Text>{JSON.stringify(stocks)}</Text> */}
           <TouchableOpacity onPress={async ()=> {await deleteAccount(), navigation.navigate('Stock Account List')}}>
               <Text>REMOVE</Text>
           </TouchableOpacity>
-          <FlatList data={transactions} renderItem={({item, index}) =>{
+          {/* <FlatList data={stocks} renderItem={({item, index}) =>{
+            return (
+              <TouchableOpacity style={[styles.item, {backgroundColor: 'red'}]}>
+                <View style={styles.row}>
+                  <Text style={styles.name}> {item.name} </Text>
+                  <Text style={styles.ins_name}>{item.quantity}</Text>
+                </View>
+              </TouchableOpacity>
+            )
+          }}
+          /> */}
+          <FlatList data={stocks.concat(transactions)} renderItem={({item, index}) =>{
             return (
               <TouchableOpacity style={[styles.item, {backgroundColor: 'red'}]} onPress={()=> navigation.navigate('TransactionData', {id: item.id}) }>
                 <View style={styles.row}>
-                  <Text style={styles.name}> Transaction </Text>
+                  <Text style={styles.name}> {item.name} </Text>
                   <Text style={styles.ins_name}> Hello World!</Text>
                 </View>
               </TouchableOpacity>

@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import initiate_plaid_link, addAccount, listAccounts, get_access_token, get_balance,listTransactions, get_transactions,AddTransactions, get_stocks, deleteAccount, addStock
-from .views import getTransaction
+from .views import getTransaction, listStocks
 
 urlpatterns = [
     path('initiate_plaid_link/', initiate_plaid_link),
@@ -15,5 +15,6 @@ urlpatterns = [
     path('get_stocks/', get_stocks),
     path('delete_account/', deleteAccount),
     path('get_transaction/<str:id>/', getTransaction),
-    path('add_stock/', addStock.as_view(), name='add_stock')
+    path('add_stock/', addStock.as_view(), name='add_stock'),
+    path('list_stocks/<str:stockAccount>/', listStocks)
 ]
