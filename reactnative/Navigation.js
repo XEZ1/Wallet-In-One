@@ -4,9 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { useContext, useEffect } from 'react';
 import { Text } from 'react-native';
-
-
-
 import MainStackNavigator from "./screens/Main Account/MainStackNavigator";
 
 // Screens
@@ -19,24 +16,12 @@ import AboutUsScreen from './screens/pre_logged_in/AboutUsScreen';
 import DeveloperInfoScreen from './screens/pre_logged_in/DeveloperInfoScreen';
 import NotificationsPage from "./screens/NotificationsPage";
 
-import AddBankScreen from './screens/banking/AddBankScreen'
-import BankAccountsScreen from './screens/banking/BankAccountsScreen'
-import BankTransactionsScreen from './screens/banking/BankTransactionsScreen'
-import BankStackNavigator from "./screens/banking/BankStackNavigator";
-
 import { initAuthState } from './authentication';
 import { userContext } from './data';
-import CryptoWalletStackNavigator from "./screens/crypto_wallet/CryptoWalletStackNavigator";
-import CryptoExchangesStackNavigator from './screens/cryptoExchanges/CryptoExchangesStackNavigator';
-
-
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-
-import { setStatusBarHidden } from 'expo-status-bar';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
