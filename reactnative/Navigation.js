@@ -68,8 +68,11 @@ export default function Navigation() {
             name='Home Page'
             component={HomePage}
             options={{
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Home</Text>),
-              tabBarIcon: ({focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="home" size={30}/></Text>),
+              tabBarIcon: ({focused }) => (
+                <Text style={{color: focused ? colors.primary : colors.text}}>
+                  <AntDesign name="home" size={30}/>
+                </Text>
+              ),
             }}
           />
           <Tab.Screen
@@ -77,7 +80,6 @@ export default function Navigation() {
             component={MainStackNavigator}
             options={{
               headerShown: false,
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Home</Text>),
               tabBarIcon: ({ focused }) => (
                 <Text style={{ color: focused ? colors.primary : colors.text }}>
                   <AntDesign name="user" size={30} />
@@ -89,7 +91,6 @@ export default function Navigation() {
             name="Notifications"
             component={NotificationsPage}
             options={{
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Home</Text>),
               tabBarIcon: ({ focused }) => (
                 <Text style={{ color: focused ? colors.primary : colors.text }}>
                   <AntDesign name="notification" size={30} />
@@ -101,8 +102,11 @@ export default function Navigation() {
             name="Settings"
             component={SettingsPage}
             options={{
-              //tabBarLabel: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}>Settings</Text>),
-              tabBarIcon: ({ focused }) => (<Text style={{color: focused ? colors.primary : colors.text}}><AntDesign name="setting" size={30}/></Text>)
+              tabBarIcon: ({ focused }) => (
+                <Text style={{color: focused ? colors.primary : colors.text}}>
+                  <AntDesign name="setting" size={30}/>
+                </Text>
+              ),
             }}
           />
         </Tab.Navigator>
