@@ -19,6 +19,7 @@ const PlaidComponent = ({ navigation }) => {
   let fetched_transaction_list = null
   let transactions_stock_account_id = ''
   let stocks = null
+  let securities = null
 
 
   const addAccount = async (account, success) => {
@@ -114,10 +115,11 @@ const PlaidComponent = ({ navigation }) => {
     });
     const data = await response.json();
     stocks = data.holdings
+    securities = data.securities
     console.log(data)
   }
 
-  const addStock = async (stock) => {
+  const addStock = async (stock, stockInfo) => {
     await fetch('http://10.0.2.2:8000/stocks/add_stock/', {
       method: 'POST',
       headers: {
@@ -128,8 +130,8 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({
         institution_price: (stock.institution_price).toFixed(2),
         quantity: stock.quantity,
-        name: 'test',
-        ticker_symbol: '$',
+        name: stockInfo.name,
+        ticker_symbol: stockInfo.ticker_symbol,
         stockAccount: stock.account_id
       }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
@@ -146,8 +148,8 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({ access_token: accessToken }),
     });
     const data = await response.json();
-    console.log("Get transaction data")
-    console.log(data)
+    // console.log("Get transaction data")
+    // console.log(data)
     fetched_transaction_list = data
   }
 
@@ -214,20 +216,10 @@ const PlaidComponent = ({ navigation }) => {
           // console.log("krishna")
         // }
         await getBalance(access_token)
-        console.log("krishna")
+        // console.log("krishna")
         await getStocks(access_token)
         console.log(success.metadata.accounts[0].meta)
         console.log(success.publicToken)
-        // await fetch(`http://10.0.2.2:8080/api/exchange_public_token`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({ public_token: success.publicToken }),
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
 
         account_list.forEach(async element => {
           // setAccountID(element._id)
@@ -242,14 +234,15 @@ const PlaidComponent = ({ navigation }) => {
         });
 
         await getTransaction(access_token)
-        console.log("fetched_transaction_list: ")
-        console.log(fetched_transaction_list.accounts)
-        // console.log(fetched_transaction_list.accounts[0])
-        console.log(fetched_transaction_list.accounts[0].account_id)
+        // console.log("fetched_transaction_list: ")
+        // console.log(fetched_transaction_list.accounts)
+        // // console.log(fetched_transaction_list.accounts[0])
+        // console.log(fetched_transaction_list.accounts[0].account_id)
         fetched_transaction_list.investment_transactions.forEach(element => {addTransaction(element)})
 
         stocks.forEach(element => {
-          addStock(element)
+          let stockInfo = securities[stocks.indexOf(element)]
+          addStock(element, stockInfo)
           console.log(element.quantity)
         })
         // listAccounts()

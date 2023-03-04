@@ -54,7 +54,7 @@ export default function StockAsset({ route, navigation }){
           <TouchableOpacity onPress={async ()=> {await deleteAccount(), navigation.navigate('Stock Account List')}}>
               <Text>REMOVE</Text>
           </TouchableOpacity>
-          {/* <FlatList data={stocks} renderItem={({item, index}) =>{
+          <FlatList data={stocks} renderItem={({item, index}) =>{
             return (
               <TouchableOpacity style={[styles.item, {backgroundColor: 'red'}]}>
                 <View style={styles.row}>
@@ -64,8 +64,8 @@ export default function StockAsset({ route, navigation }){
               </TouchableOpacity>
             )
           }}
-          /> */}
-          <FlatList data={stocks.concat(transactions)} renderItem={({item, index}) =>{
+          />
+          <FlatList data={transactions} renderItem={({item, index}) =>{
             return (
               <TouchableOpacity style={[styles.item, {backgroundColor: 'red'}]} onPress={()=> navigation.navigate('TransactionData', {id: item.id}) }>
                 <View style={styles.row}>
