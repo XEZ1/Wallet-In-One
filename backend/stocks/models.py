@@ -14,7 +14,6 @@ class StockAccount(models.Model):
 
 
 class Stock(models.Model):
-    account_id = models.CharField(max_length=1024, primary_key=True, unique=True, blank=False)
     stockAccount = models.ForeignKey(StockAccount, on_delete=models.CASCADE)
     institution_price = MoneyField(default_currency='GBP', decimal_places=2, max_digits=11, blank=True, null=True)
     name = models.CharField(max_length=1024, blank=False)

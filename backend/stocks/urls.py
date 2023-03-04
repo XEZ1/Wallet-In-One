@@ -15,5 +15,5 @@ urlpatterns = [
     path('get_stocks/', get_stocks),
     path('delete_account/', deleteAccount),
     path('get_transaction/<str:id>/', getTransaction),
-    path('add_stock/', addStock)
+    path('add_stock/', addStock.as_view(), name='add_stock')
 ]

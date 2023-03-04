@@ -126,12 +126,11 @@ const PlaidComponent = ({ navigation }) => {
         Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
       },
       body: JSON.stringify({
-        account_id: stock.security_id,
-        institution_price: stock.institution_price,
+        institution_price: (stock.institution_price).toFixed(2),
         quantity: stock.quantity,
         name: 'test',
         ticker_symbol: '$',
-        stockAccount: account_id
+        stockAccount: stock.account_id
       }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
     .then((data) => console.log(data))

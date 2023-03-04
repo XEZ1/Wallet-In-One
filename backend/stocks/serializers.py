@@ -31,11 +31,6 @@ class AddStock(serializers.ModelSerializer):
 
     class Meta:
        model = Stock
-       fields = ['account_id', 'name', 'institution_price', 'ticker_symbol', 'quantity', 'stockAccount']
+       fields = '__all__'
 
-    
-    def create(self, validated_data):
-        stock = Stock.objects.create(**validated_data)
-        stock.save()
-        return stock
 

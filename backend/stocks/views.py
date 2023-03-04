@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework import generics, permissions
 
 from .serializers import AddStockAccount, AddTransaction, AddStock
-from .models import StockAccount,Transaction
+from .models import StockAccount,Transaction, Stock
 
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
 from flask import jsonify
@@ -149,24 +149,11 @@ def getTransaction(request, id):
     serializer = AddTransaction(transaction, many=False)
     return Response(serializer.data)
 
+class addStock(generics.CreateAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = AddStock
+    queryset = Stock.objects.all()
 
-@api_view(['POST'])
-def addStock(request):
-    stockAccount = StockAccount.objects.get(account_id=request.data.get('account_id'))
-    data = {
-        'account_id': request.data.get('account_id'),
-        'name': request.data.get('name'),
-        'institution_price': round(request.data.get('institution_price'), 2),
-        'ticker_symbol': request.data.get('ticker_symbol'),
-        'quantity': request.data.get('quantity'),
-        'stockAccount': stockAccount.account_id
-    }
-    serializer = AddStock(data=data)
-    print(StockAccount.objects.all())
-    if serializer.is_valid():
-        serializer.save()
-        return JsonResponse(serializer.data, status=201)
-    return JsonResponse(serializer.errors, status=400)
 
 @api_view(['DELETE'])
 def deleteAccount(request):
