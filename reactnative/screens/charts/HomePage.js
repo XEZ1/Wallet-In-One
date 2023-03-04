@@ -73,11 +73,6 @@ export default function HomePage({ navigation }) {
   const colours = ["pink", "turquoise", "lime", "#FA991C"];
 
   let spacing = list.length * 60;
-  const stackChartData = {
-    labels: ["Crypto-Wallets", "Bank", "Stocks", "Crypto-Exchange"],
-    data: [data.map((val) => val.y)],
-    barColors: ["pink", "turquoise", "lime", "yellow"],
-  };
 
   const handleChartTypeChange = (type) => {
     setChartType(type);
@@ -118,7 +113,6 @@ export default function HomePage({ navigation }) {
         }}
         style={styles.container}
       >
-
         <View style={styles.chartTypeContainer}>
           <TouchableOpacity
             style={styles.chartTypeButton}
@@ -132,50 +126,10 @@ export default function HomePage({ navigation }) {
           >
             <Text style={styles.chartTypeText}>Stacked Bar Chart</Text>
           </TouchableOpacity>
-          {/*<Dropdown*/}
-          {/*  style={{ backgroundColor: colors.background }}*/}
-          {/*  onSelect={(index, value) => handleChartTypeChange(value)}*/}
-          {/*>*/}
-          {/*  <Dropdown.Toggle variant="success" id="dropdown-basic">*/}
-          {/*    {chartType}*/}
-          {/*  </Dropdown.Toggle>*/}
 
-          {/*  <Dropdown.Menu>*/}
-          {/*    <Dropdown.Item eventKey="1" value="pie">*/}
-          {/*      Pie Chart*/}
-          {/*    </Dropdown.Item>*/}
-          {/*    <Dropdown.Item eventKey="2" value="stacked">*/}
-          {/*      Stacked Bar Chart*/}
-          {/*    </Dropdown.Item>*/}
-          {/*  </Dropdown.Menu>*/}
-          {/*</Dropdown>*/}
+
         </View>
-        {chartType == "pie" ? (
-          <PieChart
-            data={data}
-            colours={colours}
-            spacing={spacing}
-            handlePressIn={handlePressIn}
-            pressed={pressed}
-            setNewData={setNewData}
-            setPressed={setPressed}
-            baseData={baseData}
-            colors={colors}
-          />
-        ) : (
-          <StackedChart
-            data={data}
-            colours={colours}
-            spacing={spacing}
-            handlePressIn={handlePressIn}
-            pressed={pressed}
-            setNewData={setNewData}
-            setPressed={setPressed}
-            baseData={baseData}
-            colors={colors}
-            stackChartData={stackChartData}
-          />
-        )}
+        {chartType == "pie" ? <PieChart /> : <StackedChart />}
         <VictoryBar
           horizontal={true}
           style={{
