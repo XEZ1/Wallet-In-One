@@ -12,9 +12,12 @@ const PlaidComponent = ({ navigation }) => {
   const [institution_name, setInstitutionName] = useState()
   const [institution_id, setInstitutionID] = useState()
   //const [access_token, setAccessToken] = useState()
+  //const [stocks, setStocks] = useState(null)
   let access_token = ''
   let balance = ''
   let fetched_transaction_list = null
+  let transactions_stock_account_id = ''
+  // let stocks = null
 
   const addAccount = async (account, success) => {
     await fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
@@ -94,12 +97,46 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({ access_token: accessToken }),
     });
     const data = await response.json();
-    console.log(data)
-    balance = data.accounts[0].balances.current
+    console.log(data.accounts[0].balances)
+    balance = parseFloat(data.accounts[0].balances.current).toFixed(2) 
   }
 
+  const getStocks = async (accessToken) => {
+    const response = await fetch('http://10.0.2.2:8000/stocks/get_stocks/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+      body: JSON.stringify({ access_token: accessToken }),
+    });
+    const data = await response.json();
+    // stocks = data.holdings
+    console.log(data)
+  }
+
+  // const addStock = async (stock) => {
+  //   await fetch('http://10.0.2.2:8000/stocks/add_stock/', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+  //     },
+  //     body: JSON.stringify({
+  //       account_id: stock.account_id,
+  //       institution_price: stock.institution_price,
+  //       quantity: stock.quantity,
+  //       name: 'test',
+  //       ticker_symbol: '$',
+  //       stockAccount: account_id
+  //     }),
+  //   }).then(res => res.json().then(data => ({status: res.status, body: data})) )
+  //   .then((data) => console.log(data))
+  // }
+
   const getTransaction = async (accessToken) => {
-    const response = await fetch('http://10.0.2.2:8000/stocks/get_transaction/', {
+    const response = await fetch('http://10.0.2.2:8000/stocks/get_transactions/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -113,6 +150,22 @@ const PlaidComponent = ({ navigation }) => {
     fetched_transaction_list = data
   }
 
+  // {'investment_transaction_id': '1pkroJ4L3bHd5ZQoBNweTAwaEgL1wrFZAAND5',
+  //  'account_id': 'VAeoMpawGbFv3mnPKk8AiKVW98MKmbUqNdk7g', 
+  //  'security_id': 'abJamDazkgfvBkVGgnnLUWXoxnomp5up8llg4',
+  //   'date': datetime.date(2023, 2, 7), 
+  //   'name': 'SELL iShares Inc MSCI Brazil', 
+  //   'quantity': -49.02909689729298, 
+  //   'amount': -2066.58,
+  //    'price': 41.62, 
+  //    'fees': 0.0, 
+  //    'type': 'sell',
+  //     'subtype': 'sell',
+  //      'iso_currency_code': 'USD', 
+  //      'unofficial_currency_code': None, 
+  //      'cancel_transaction_id': None
+  //     }
+
   const addTransaction = async (element) => {
     await fetch('http://10.0.2.2:8000/stocks/add_transaction_account/', {
       method: 'POST',
@@ -120,19 +173,20 @@ const PlaidComponent = ({ navigation }) => {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-      },
+      }, 
       body: JSON.stringify({
         account_id: element.account_id,
-        transaction_id: element.transaction_id,
-        amount: element.amount,
-        category: element.category,
-        category_id: element.category_id,
+        investment_transaction_id: element.investment_transaction_id,
+        security_id: element.security_id,
         date: element.date,
-        location: element.location,
         name: element.name,
-        payment_channel: element.payment_channel,
-        pending: element.pending,
-        transaction_type: element.transaction_type,
+        quantity: element.quantity,
+        amount: element.amount,
+        price: element.price,
+        fees: element.fees,
+        stock: fetched_transaction_list.accounts[0].account_id,
+        // pending: element.pending,
+        // transaction_type: element.transaction_type,
       }),
     })
     .then(res => res.json().then(data => ({status: res.status, body: data})))
@@ -148,7 +202,6 @@ const PlaidComponent = ({ navigation }) => {
         Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
       },
     }).then(async (res) => setList(await res.json()))};
-
 
   return (
     <>
@@ -168,9 +221,10 @@ const PlaidComponent = ({ navigation }) => {
           // console.log("krishna")
         // }
         await getBalance(access_token)
-        // console.log("krishna")
-        // console.log(success.metadata.accounts[0].meta)
-        // console.log(success.publicToken)
+        console.log("krishna")
+        await getStocks(access_token)
+        console.log(success.metadata.accounts[0].meta)
+        console.log(success.publicToken)
         // await fetch(`http://10.0.2.2:8080/api/exchange_public_token`, {
         //   method: "POST",
         //   headers: {
@@ -182,7 +236,7 @@ const PlaidComponent = ({ navigation }) => {
         //     console.log(err);
         //   });
 
-        account_list.forEach(element => {
+        account_list.forEach(async element => {
           // setAccountID(element._id)
           // console.log(element._id)
           // setName(element.meta.name)
@@ -196,11 +250,17 @@ const PlaidComponent = ({ navigation }) => {
         
         await getTransaction(access_token)
         console.log("fetched_transaction_list: ")
-        console.log(fetched_transaction_list)
-        // console.log(fetched_transaction_list.added[0].transaction_id)
-        fetched_transaction_list.added.forEach(element => {addTransaction(element)})
+        console.log(fetched_transaction_list.accounts)
+        // console.log(fetched_transaction_list.accounts[0])
+        console.log(fetched_transaction_list.accounts[0].account_id)
+        fetched_transaction_list.investment_transactions.forEach(element => {addTransaction(element)})
+
+        // stocks.forEach(element => {
+        //   addStock(element)
+        //   console.log(element.quantity)
+        // })
         // listAccounts()
-        listTransactions()
+        // listTransactions()
       }}
     />
     </>

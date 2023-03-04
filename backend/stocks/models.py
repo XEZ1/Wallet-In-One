@@ -24,38 +24,43 @@ class StockAccount(models.Model):
 #     store_number = models.CharField(max_length=100, default=None, blank=True, null=True)
 
 class Transaction(models.Model):
-    # stock = models.ForeignKey(StockAccount, on_delete=models.CASCADE, blank=False)
+    stock = models.ForeignKey(StockAccount, on_delete=models.CASCADE, blank=False)
     account_id = models.CharField(max_length=100, blank=False, null=False)
     amount = models.FloatField(blank=False,null=False) #  Positive values when money moves out of the account; negative values when money moves in.
+    quantity = models.FloatField(blank=False,null=False) 
+    price = models.FloatField(blank=False,null=False) 
+    fees = models.FloatField(blank=False,null=True) 
+    # cancel_transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)
     iso_currency_code = models.CharField(max_length=30, blank=False, null=True)
     # Always null if unofficial_currency_code is non-null.
     unofficial_currency_code = models.CharField(max_length=100, blank=False, null=True)
     # Always null if iso_currency_code is non-null.
     # Unofficial currency codes are used for currencies that do not have official ISO currency codes,
     # such as cryptocurrencies and the currencies of certain countries.
-    category = models.JSONField(encoder=None)
-    category_id = models.CharField(max_length=50, blank=False, null=False)
+    # category = models.JSONField(encoder=None)
+    # category_id = models.CharField(max_length=50, blank=False, null=False)
     date = models.DateField(blank=False, null=False)
     datetime = models.DateTimeField(blank=True, null=True)
     authorized_date = models.DateField(blank=True, null=True)
     authorized_datetime = models.DateTimeField(blank=True, null=True)
-    location = models.JSONField(encoder=None)#models.ForeignKey(Location, on_delete = models.CASCADE)
-    name = models.CharField(max_length=50, blank=False, null=False)
+    # location = models.JSONField(encoder=None)#models.ForeignKey(Location, on_delete = models.CASCADE)
+    name = models.CharField(max_length=100, blank=False, null=False)
     merchant_name = models.CharField(max_length=50, blank=True, null=True)
-    payment_channel = models.CharField(
-        max_length=20,
-        blank=False,
-        null=False,
-        choices=(
-            ("online", "Online"), # transactions that took place online.
-            ("in store", "In Store"), # transactions that were made at a physical location.
-            ("other", "Other") # transactions that relate to banks, e.g. fees or deposits.
-        )
-    )
-    pending = models.BooleanField(blank=False,null=False)
+    # payment_channel = models.CharField(
+    #     max_length=20,
+    #     blank=False,
+    #     null=False,
+    #     choices=(
+    #         ("online", "Online"), # transactions that took place online.
+    #         ("in store", "In Store"), # transactions that were made at a physical location.
+    #         ("other", "Other") # transactions that relate to banks, e.g. fees or deposits.
+    #     )
+    # )
+    # pending = models.BooleanField(blank=False,null=False)
     pending_transaction_id = models.CharField(max_length=100, blank=True, null=True)
     account_owner = models.CharField(max_length=50, blank=True, null=True)
-    transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    investment_transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)#transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    security_id = models.CharField(max_length=100, blank=False, null=False)
     transaction_code = models.CharField(
         max_length=30,
         blank=True, 
@@ -76,15 +81,15 @@ class Transaction(models.Model):
         )
     )
     # The transaction_code field is only populated for European institutions. For institutions in the US and Canada, this field is set to null.
-    transaction_type = models.CharField(
-        max_length=30,
-        blank=False,
-        null=False,
-        choices = (
-            ("digital", "Digital"), # transactions that took place online.
-            ("place", "Special"), # transactions that were made at a physical location.
-            ("special", "Special"), # transactions that relate to banks, e.g. fees or deposits.
-            ("unresolved", "Unresolved") # transactions that do not fit into the other three types.
-        )
-    )
+    # transaction_type = models.CharField(
+    #     max_length=30,
+    #     blank=False,
+    #     null=False,
+    #     choices = (
+    #         ("investment", "Investment"), # Investment account. In API versions 2018-05-22 and earlier, this type is called brokerage instead.
+    #         ("credit", "Credit"), #  Credit card.
+    #         ("depository", "Depository"), #  Depository account.
+    #         ("loan", "Loan") # Loan account
+    #     )
+    # )
 

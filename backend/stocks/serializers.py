@@ -10,7 +10,7 @@ class AddStockAccount(serializers.ModelSerializer):
 
     def validate(self, attrs):
         super().validate(attrs)
-        if StockAccount.objects.filter(name=attrs['name'], institution_name=attrs['institution_id']).exists():
+        if StockAccount.objects.filter(name=attrs['name'], institution_id=attrs['institution_id']).exists():
             raise serializers.ValidationError('Account already exists')
         return attrs
 
@@ -20,14 +20,6 @@ class AddStockAccount(serializers.ModelSerializer):
         return account
     
 class AddTransaction(serializers.ModelSerializer):
-    # stock = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Transaction
         fields = '__all__'
-
-    def validate(self, attrs):
-        super().validate(attrs)
-        print("Validation")
-        # if StockAccount.objects.filter(name=attrs['name'], institution_name=attrs['institution_id']).exists():
-            # raise serializers.ValidationError('Account already exists')
-        return attrs

@@ -1,7 +1,5 @@
-from django.shortcuts import render
+from django.http import JsonResponse
 import plaid
-import requests
-from plaid.api import plaid_api
 from plaid.model.link_token_create_request import LinkTokenCreateRequest
 from plaid.model.link_token_create_request_user import LinkTokenCreateRequestUser
 import json
@@ -14,31 +12,26 @@ from rest_framework import generics, permissions
 from .serializers import AddStockAccount, AddTransaction
 from .models import StockAccount,Transaction
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
-from plaid.model.accounts_balance_get_request import AccountsBalanceGetRequest
 from flask import jsonify
 from plaid.model.accounts_get_request import AccountsGetRequest
 from plaid.model.transactions_sync_request import TransactionsSyncRequest
-
-PLAID_CLIENT_ID = '63ef90fc73e3070014496336'
-PLAID_SECRET = 'a57f2537ac53e9842da752b987bb5b'
-PLAID_ENV = 'sandbox'  # Change to 'development' or 'production' in production environment
+from .services import setUpClient
+from plaid.model.institutions_get_by_id_request import InstitutionsGetByIdRequest
+from plaid.model.investments_holdings_get_request import InvestmentsHoldingsGetRequest
+from rest_framework import status
+from plaid.model.investments_transactions_get_request import InvestmentsTransactionsGetRequest
+from plaid.model.investments_transactions_get_request_options import InvestmentsTransactionsGetRequestOptions
+from datetime import datetime
+from datetime import timedelta
+import datetime
+import json
+import time
 
 @api_view(['POST'])
 @csrf_exempt
 def initiate_plaid_link(request):
-    host = plaid.Environment.Sandbox
-    configuration = plaid.Configuration(
-    host=host,
-    api_key={
-        'clientId': PLAID_CLIENT_ID,
-        'secret': PLAID_SECRET,
-        'plaidVersion': '2020-09-14'
-    }
-    )
-
-    api_client = plaid.ApiClient(configuration)
-    client = plaid_api.PlaidApi(api_client)
-    prods = ['auth', 'transactions']
+    client = setUpClient()
+    prods = ['investments', 'transactions']
     products = []
     for product in prods:
         products.append(Products(product))
@@ -66,18 +59,7 @@ def initiate_plaid_link(request):
 @api_view(['POST'])
 def get_access_token(request):
     public_token = request.data.get('public_token')
-    host = plaid.Environment.Sandbox
-    configuration = plaid.Configuration(
-    host=host,
-    api_key={
-        'clientId': PLAID_CLIENT_ID,
-        'secret': PLAID_SECRET,
-        'plaidVersion': '2020-09-14'
-    }
-    )
-
-    api_client = plaid.ApiClient(configuration)
-    client = plaid_api.PlaidApi(api_client)
+    client = setUpClient()
     try:
         exchange_request = ItemPublicTokenExchangeRequest(
             public_token=public_token)
@@ -90,47 +72,41 @@ def get_access_token(request):
     
 @api_view(['POST'])
 def get_balance(request):
-    host = plaid.Environment.Sandbox
-    configuration = plaid.Configuration(
-    host=host,
-    api_key={
-        'clientId': PLAID_CLIENT_ID,
-        'secret': PLAID_SECRET,
-        'plaidVersion': '2020-09-14'
-    }
-    )
-
-    api_client = plaid.ApiClient(configuration)
-    client = plaid_api.PlaidApi(api_client)
+    client = setUpClient()
     try:
         request = AccountsGetRequest(
             access_token=request.data.get('access_token')
         )
         response = client.accounts_get(request)
-        print(response.to_dict())
+        return Response(response.to_dict())
+    except plaid.ApiException as e:
+        return json.loads(e.body)
+
+@api_view(['POST'])
+def get_stocks(request):
+    client = setUpClient()
+    try:
+        request = InvestmentsHoldingsGetRequest(access_token=request.data.get('access_token'))
+        response = client.investments_holdings_get(request)
+        
         return Response(response.to_dict())
     except plaid.ApiException as e:
         return json.loads(e.body)
     
 @api_view(['POST'])
-def get_transaction(request):
-    host = plaid.Environment.Sandbox
-    configuration = plaid.Configuration(
-    host=host,
-    api_key={
-        'clientId': PLAID_CLIENT_ID,
-        'secret': PLAID_SECRET,
-        'plaidVersion': '2020-09-14'
-    }
-    )
-
-    api_client = plaid.ApiClient(configuration)
-    client = plaid_api.PlaidApi(api_client)
+def get_transactions(request):
+    client = setUpClient()
+    start_date = (datetime.datetime.now() - timedelta(days=(1000)))
+    end_date = datetime.datetime.now()
     try:
-        request = TransactionsSyncRequest(
-            access_token=request.data.get('access_token')
+        options = InvestmentsTransactionsGetRequestOptions()
+        request = InvestmentsTransactionsGetRequest(
+            access_token=request.data.get('access_token'),
+            start_date=start_date.date(),
+            end_date=end_date.date(),
+            options=options
         )
-        response = client.transactions_sync(request)
+        response = client.investments_transactions_get(request)
         print(response.to_dict())
         return Response(response.to_dict())
     except plaid.ApiException as e:
@@ -154,8 +130,40 @@ def listAccounts(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def listTransactions(request):
+def listTransactions(request,stock):
     print("list transactions function called.")
-    transactions = Transaction.objects.all()
+    print("Stock:")
+    print(stock)
+    print('Transactions All:')
+    print(Transaction.objects.all())
+    transactions = Transaction.objects.filter(stock=stock)
     serializer = AddTransaction(transactions, many=True)
     return Response(serializer.data)
+
+
+# @api_view(['POST'])
+# def addStock(request):
+#     stockAccount = StockAccount.objects.get(institution_name='Chase')
+#     data = {
+#         'account_id': request.data.get('account_id'),
+#         'name': request.data.get('name'),
+#         'institution_price': request.data.get('institution_price'),
+#         'ticker_symbol': request.data.get('ticker_symbol'),
+#         'quantity': request.data.get('quantity'),
+#         'stockAccount': stockAccount
+#     }
+#     serializer = AddStock(data=data)
+#     print(StockAccount.objects.all())
+#     if serializer.is_valid():
+#         serializer.save()
+#         return JsonResponse(serializer.data, status=201)
+#     return JsonResponse(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+def deleteAccount(request):
+    stock_account = StockAccount.objects.get(account_id=request.data.get('account_id'))
+    if stock_account.user != request.user:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    stock_account.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+    
