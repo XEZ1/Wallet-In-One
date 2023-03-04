@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, Button, TextInput, Alert, FlatList , TouchableOpacity, Image} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Button, TextInput, Alert, SectionList , TouchableOpacity, Image } from 'react-native';
 import { useState, useEffect } from 'react';
 import { auth_get} from '../../authentication'
 import { useIsFocused } from '@react-navigation/native';
 import Loading from './Loading'
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 function BankTransactionsScreen({ route, navigation }) {
   const [ isLoading, setIsLoading ] = useState(true)
@@ -42,16 +43,15 @@ function BankTransactionsScreen({ route, navigation }) {
     return  date.toLocaleTimeString();
   };
 
-  const styles = StyleSheet.create({
+  const stylesInternal = StyleSheet.create({
     container: {
       width: '100%',
-      paddingLeft: 20,
-      paddingRight: 20,
       paddingBottom: 0,
       borderWidth: 1,
       borderRadius: 5,
       borderColor: dark ? colors.background : '#ddd',
       overflow: 'hidden',
+      backgroundColor: colors.background,
     },
     row:{
       flexDirection: 'row',
@@ -60,16 +60,11 @@ function BankTransactionsScreen({ route, navigation }) {
     olditem:{
       padding: 20,
     },
-    text:{
-      color: colors.text
-    },
     item: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingVertical: 8,
-      borderBottomWidth: 1,
-      borderBottomColor: 'lightgray',
     },
     leftContainer: {
       flex: 1,
@@ -95,20 +90,51 @@ function BankTransactionsScreen({ route, navigation }) {
       fontSize: 14,
       color: 'gray',
     },
+    header:{
+      paddingLeft:20, 
+      paddingRight: 20,
+      paddingTop: 6,
+      paddingBottom: 6,
+      fontWeight: 'bold',
+      color:  colors.text,
+      backgroundColor: dark ? '#505050' : '#f5f5f5',
+    },
+    padding:{
+      paddingLeft:20, 
+      paddingRight: 20
+    }
   });
 
-  const TransactionItem = ({ item, name, date, amount, time }) => {
+  const groupData = (data) => {
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    return data.reduce((acc, item) => {
+      const date = new Date(item.time);
+      const month = months[date.getMonth()]
+      const year = date.getFullYear();
+      const title = `${month} ${year}`;
+      const monthData = acc.find((item) => item.title === title);
+      if (monthData) {
+        monthData.data.push(item);
+      } else {
+        acc.push({ title: title, data: [item] });
+      }
+    
+      return acc;
+    }, []);
+  }
+
+  const TransactionItem = ({ item, name, date, amount, time, last}) => {
     const amountColor = amount >= 0 ? 'green' : 'red';
     return (
-      <View style={styles.item}>
-        <View style={styles.leftContainer}>
+      <View style={[stylesInternal.item,last ? {} : {borderBottomWidth: 1, borderBottomColor: 'lightgray'}]}>
+        <View style={stylesInternal.leftContainer}>
           <ScrollView horizontal={true}>
-            <Text style={styles.name}>{name}</Text>
+            <Text style={stylesInternal.name}>{name}</Text>
           </ScrollView>
-          <Text style={styles.date}>{date} at {time}</Text>
+          <Text style={stylesInternal.date}>{date} at {time}</Text>
         </View>
-        <View style={styles.rightContainer}>
-          <Text style={[styles.amount, { color: amountColor }]}>{item.formatted_amount.string}</Text>
+        <View style={stylesInternal.rightContainer}>
+          <Text style={[stylesInternal.amount, { color: amountColor }]}>{item.formatted_amount.string}</Text>
         </View>
       </View>
     );
@@ -116,21 +142,28 @@ function BankTransactionsScreen({ route, navigation }) {
 
   if (isLoading){
     return <Loading/>
-}
-
+  }
+  
   return (
     <View style={{flex:1,  margin: 4, marginBottom: 54}} >
-              <View style={[styles.container, {backgroundColor: colors.background}]}>
-                  <FlatList data={bankData} renderItem={({item, index}) =>{
+              <View style={[stylesInternal.container]}>
+                  <SectionList 
+                    ListEmptyComponent={<View style={stylesInternal.padding}><Text style={styles(dark, colors).text}>{'\nYou have no bank accounts\n'}</Text></View>}
+                    sections={groupData(bankData)} 
+                    renderSectionHeader={({section: {title}}) => (<Text style={stylesInternal.header}>{title}</Text>)}
+                    renderItem={({item, index, section}) =>{
                       return (
+                        <View style={stylesInternal.padding}>
                         <TransactionItem
                           item={item}
                           name={item.info}
                           amount={item.amount}
                           date={displayDate(item.time)}
-                          time={displayTime(item.time)} />)
+                          time={displayTime(item.time)}
+                          last={index == section.data.length-1}/>
+                        </View>)
                       }}
-                      ListEmptyComponent={<Text style={styles.text}>{'\nYou have no bank accounts\n'}</Text>}
+                      
                   />
               </View>
       </View>

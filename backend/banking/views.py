@@ -1,15 +1,19 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.utils import timezone
+from django.db.models import Sum
+from django.db.models.functions import TruncDate
 
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import APIException
+from rest_framework.views import APIView
 from .services import get_institutions, create_requisition, delete_all_requisitions, get_requisitions, get_account_data, total_user_balance, get_institution, update_user_accounts
 from .serializers import URLSerializer, OldAccountSerializer, TransactionSerializer, AccountSerializer, format_money
 from .models import Account, Transaction
+
 
 @api_view(['GET'])
 def bank_list(request):
@@ -17,8 +21,8 @@ def bank_list(request):
 
 @api_view(['GET'])
 def auth_page(request, id):
-    referance = str(request.user.id) + "-" + str(timezone.now().timestamp())
-    response = create_requisition(id,"https://example.com", referance)
+    reference = str(request.user.id) + "-" + str(timezone.now().timestamp())
+    response = create_requisition(id,"https://example.com", reference)
 
     if ('link' in response.keys()):
         return Response({'url': response['link']})
@@ -76,6 +80,7 @@ class AccountList(generics.ListAPIView):
         else:
             return Account.objects.filter(user = self.request.user)
 
+
 class TransactionList(generics.ListAPIView):
     model = Transaction
     serializer_class = TransactionSerializer
@@ -84,10 +89,33 @@ class TransactionList(generics.ListAPIView):
         update_user_accounts(self.request.user)
         id = self.kwargs.get('account_id')
         if (id):
-            return Transaction.objects.filter(account=id,account__user = self.request.user)
+            return Transaction.objects.filter(account=id,account__user = self.request.user).order_by('-time')
         else:
-            return Transaction.objects.filter(account__user = self.request.user)
+            return Transaction.objects.filter(account__user = self.request.user).order_by('-time')
 
+from django.core import serializers
+import json
+from itertools import groupby
+
+class TransactionChartView(APIView):
+    def get(self, request):
+
+        transactions = Transaction.objects.filter(account__user = self.request.user).annotate(date=TruncDate('time'))
+
+        # Group transactions by date
+        groups = groupby(transactions, key=lambda x: x.date)
+        daily_transaction_sum = {date: sum(t.amount for t in group) for date, group in groups}
+        dates = sorted(daily_transaction_sum,reverse=True)
+
+        daily_balances = {}
+
+        balance = total_user_balance(request.user)
+        for d in dates:
+            daily_balances[str(d)] = str(balance)
+            balance -= daily_transaction_sum[d]
+
+        return Response(daily_balances)
+    
 # Returns total balance of all user's bank accounts
 @api_view(['GET'])
 def get_total_balance(request):
@@ -101,3 +129,8 @@ def delete_everything(request):
     delete_all_requisitions()
     Account.objects.all().delete()
     return Response({'Success': 'Everything has been deleted'}, status=200)
+
+@api_view(['GET'])
+def delete_account(request, account_id):
+    Account.objects.filter(user=request.user, id=account_id).delete()
+    return Response({'Success': 'Deleted'}, status=200)

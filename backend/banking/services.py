@@ -93,16 +93,16 @@ def get_institutions():
 def get_institution(id):
     return auth_get(f'/institutions/{id}')
 
-# Requestions
+# Requisitions
 
-def create_requisition(institution_id,redirect,referance):
+def create_requisition(institution_id,redirect,reference):
     # institution_id, redirect, agreement, reference,
     # user_language, ssn, account_selection, redirect_immediate
     body = {
         'institution_id': institution_id,
         'redirect': redirect,
         'user_language': 'EN',
-        'reference': referance
+        'reference': reference
     }
     return auth_post('/requisitions/', body=body)
 
@@ -136,8 +136,19 @@ def update_user_accounts(user):
     accounts = Account.objects.filter(user=user)
     for i in accounts:
         if i.can_update():
-            update_account_transactions(i)
-            update_account_balance(i)
+            try:
+                update_account_balance(i)
+                update_account_transactions(i)
+            except KeyError as e:
+                i.last_update = None
+                i.save()
+                print()
+                print("Error with bank data received")
+                if (get_account_data(i.id)['status'] == "SUSPENDED"):
+                    print('Account is suspended')
+                    i.disabled = True
+                    i.save()
+
 
 def update_account_transactions(account):
     transaction_data = get_account_transactions(account.id)["transactions"]["booked"]

@@ -3,6 +3,7 @@ import { ActivityIndicator, View, Button } from 'react-native';
 import { WebView } from 'react-native-webview'
 import Loading from './Loading'
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 export default function AuthWebView({ url, onCancel, stateChange}) {
   const [isLoading, setIsLoading] = useState(true);
@@ -10,7 +11,7 @@ export default function AuthWebView({ url, onCancel, stateChange}) {
 
   return (
     <View
-    style={{flex:1, backgroundColor: colors.background}}
+    style={styles(dark, colors).container}
     >
       {isLoading ? (
         <Loading/>

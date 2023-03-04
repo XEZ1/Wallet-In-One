@@ -16,3 +16,9 @@ class CryptoWallet(models.Model):
     symbol = models.CharField(max_length=16)
     address = models.CharField(max_length=256, blank=False)
     balance = models.FloatField()
+
+
+class CryptoWalletTransaction(models.Model):
+    crypto_wallet = models.ForeignKey(CryptoWallet, on_delete=models.CASCADE)
+    value = models.FloatField()
+    time = models.IntegerField()
