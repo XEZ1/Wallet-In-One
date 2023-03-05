@@ -23,19 +23,19 @@ export default function StockAsset({ route, navigation }){
     console.log(route.params)
 
     useEffect(() => {
-        const listTransactions = async (stock) => {
-          await fetch(`http://10.0.2.2:8000/stocks/list_transactions/${stock}/`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-            },
-          }).then(async (res) => setTransactions(await res.json()))
-          // .catch((error) => {
-          //   console.error(error);
-          // });
-        };
-        if(isFocused){listTransactions(route.params.accountID);}
+      const listTransactions = async (stock) => {
+        await fetch(`http://10.0.2.2:8000/stocks/list_transactions/${stock}/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+          },
+        }).then(async (res) => setTransactions(await res.json()))
+        // .catch((error) => {
+        //   console.error(error);
+        // });
+      };
+      if(isFocused){listTransactions(route.params.accountID);}
     }, [isFocused])
 
 
@@ -43,8 +43,13 @@ export default function StockAsset({ route, navigation }){
     return(
       <View>
           <TouchableOpacity onPress={async ()=> {await deleteAccount(), navigation.navigate('Stock Account List')}}>
-              <Text>REMOVE</Text>
+              <Text>REMOVE{"\n"}</Text>
           </TouchableOpacity>
+          
+          <TouchableOpacity onPress={ ()=> { navigation.navigate('LineGraph', {transactions_data: transactions})}}>
+              <Text>GRAPH{"\n"}</Text>
+          </TouchableOpacity>
+
           <FlatList data={transactions} renderItem={({item, index}) =>{
             return (
               <TouchableOpacity style={[styles.item, {backgroundColor: 'red'}]} onPress={()=> navigation.navigate('TransactionData', {id: item.id}) }>
