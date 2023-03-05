@@ -34,6 +34,10 @@ class CryptoWalletTestCase(TestCase):
         with self.assertRaises(ValidationError):
             crypto_wallet.full_clean()
 
+    """Test Set Up"""
+    def test_set_up(self):
+        self._assert_is_valid(self.crypto_wallet)
+
     """Test User"""
     def test_user_must_not_be_blank(self):
         self.crypto_wallet.user = None
