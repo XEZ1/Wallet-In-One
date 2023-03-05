@@ -2,6 +2,8 @@
 # from crypto_wallets.seralizers import WalletSerializer
 # from accounts.models import User
 # from crypto_wallets.models import CryptoWallet
+# from django.urls import reverse
+# from rest_framework.test import APIClient
 
 # class WalletSerializerTestCase(TestCase):
 #     """Unit tests for WalletSerializer class."""
@@ -11,14 +13,17 @@
 #     ]
 
 #     def setUp(self):
-#         self.user = User.objects.get(id=1)
+#         self.client = APIClient()
+#         self.login_url = reverse('login')
+#         form_input = { 'username': '@pickles', 'password': 'Password123%' }
+#         self.client.post(self.login_url, form_input, format='json')
 #         self.transaction = {
 #             'id': 232,
 #             'value': 434,
 #             'time': 45,
 #         }
 #         self.serializer_input = {
-#             'user': self.user,
+#             'user': ,   # HELP
 #             'id':1,
 #             'cryptocurrency': 'Bitcoin',
 #             'symbol': 'BTC',
