@@ -14,7 +14,7 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import * as SecureStore from "expo-secure-store";
 
 export default function AddCryptoScreen(props) {
-  const { connectWallet} = useCryptoWallet();
+  const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
   const {dark, colors, setScheme} = useTheme();
 
   const styles = StyleSheet.create({
