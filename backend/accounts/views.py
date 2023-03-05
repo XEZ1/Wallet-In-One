@@ -23,6 +23,8 @@ from banking.services import total_user_balance, chart_breakdown
 
 from crypto_wallets.services import total_user_balance_crypto, chart_breakdown_crypto
 
+from stocks.services import total_stock_balance, chart_breakdown_stocks
+
 # Maybe this should go in new app
 @api_view(['GET'])
 def graph_data(request):
@@ -32,11 +34,15 @@ def graph_data(request):
     
     bank_data = chart_breakdown(request.user)
     crypto_data = chart_breakdown_crypto(request.user)
+    stock_data = chart_breakdown_stocks(request.user)
     if bank_data:
         data['all'].append({"x": "Banks", "y": total_user_balance(request.user).amount})
         data['Banks'] = bank_data
     if crypto_data:
         data['all'].append({"x": "Cryptocurrency", "y": total_user_balance_crypto(request.user)})
         data['Cryptocurrency'] = crypto_data
+    if stock_data:
+        data['all'].append({"x": "Stock Accounts", "y": total_stock_balance(request.user).amount})
+        data['Stock Accounts'] = stock_data
     print(data)
     return Response(data)
