@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   Button, Image,
   Modal,
-  Pressable,
+  Pressable, ScrollView,
   StyleSheet,
   Text,
   TextInput, TouchableWithoutFeedback,
@@ -12,6 +12,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import getCryptoIcon from "./icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {styles} from 'reactnative/screens/All_Styles.style.js';
+import coins from './coins.json'
 
 const Stack = createStackNavigator();
 
@@ -30,7 +31,6 @@ export function WalletSelector(props) {
       paddingTop: 20,
     },
     cryptoItem: {
-      backgroundColor: '#e5e5e5',
       width: '40%',
       padding: 10,
       margin: 10,
@@ -42,7 +42,7 @@ export function WalletSelector(props) {
   });
 
   return(
-    <View style={[styles(dark, colors).container, {paddingTop: 30}]}>
+    <ScrollView style={[styles(dark, colors).container, {paddingTop: 30}]}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 1, flexDirection: "column" }}>
           <Pressable onPress={() => props.navigation.navigate("Wallets")}>
@@ -54,35 +54,27 @@ export function WalletSelector(props) {
 
       <View style={stylesInternal.container}>
 
-        <TouchableWithoutFeedback 
-          onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Bitcoin', symbol: 'BTC'})}
-        >
-          <View style={[stylesInternal.cryptoItem]}>
-            <Image
-              style={{width: 64, height: 64}}
-              source={require(`./icons/BTC.png`)}
-            />
-            <Text style={[styles(dark, colors).textBold, {fontSize: 20}]}>Bitcoin</Text>
-          </View>
-        </TouchableWithoutFeedback>
+        {
+          coins.map((coin) =>
+            <TouchableWithoutFeedback
+              key={coin.symbol}
+              onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: coin.name, symbol: coin.symbol})}
+            >
+              <View style={[stylesInternal.cryptoItem]}>
+                <Image
+                  style={{width: 64, height: 64}}
+                  source={getCryptoIcon(coin.symbol)}
+                />
+                <Text style={[styles(dark, colors).textBold, {fontSize: 20}]}>{coin.name}</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          )
 
-        <TouchableWithoutFeedback
-          onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Dogecoin', symbol: 'DOGE'})}
-        >
-          <View style={[stylesInternal.cryptoItem]}>
-            <Image
-              style={{width: 64, height: 64}}
-              source={require(`./icons/DOGE.png`)}
-            />
-            <Text style={[styles(dark, colors).textBold, {fontSize: 20}]}>Dogecoin</Text>
-          </View>
-        </TouchableWithoutFeedback>
+        }
 
       </View>
 
-      <Button title="Next" onPress={() => props.navigation.navigate("WalletConnector")} />
-
-    </View>
+    </ScrollView>
   )
 }
 

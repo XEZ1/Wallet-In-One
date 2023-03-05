@@ -11,7 +11,7 @@ class CryptoWalletService:
 
     def __init__(self, cryptocurrency, address):
         url = f"https://api.blockchair.com/{cryptocurrency.lower()}/dashboards/address/{address}?key={API_KEY}" \
-              f"&transaction_details=true&limit=10000"
+              f"&transaction_details=true&limit=1000"
         r = requests.get(url=url)
         response = r.json()
         # print(response)
