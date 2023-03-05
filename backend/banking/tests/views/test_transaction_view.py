@@ -39,7 +39,7 @@ class TransactionViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEquals(len(response.data),0)
 
-    def test_transactios_from_one_account(self):
+    def test_transactions_from_one_account(self):
         self.url = reverse('transactions',kwargs={'account_id':'abc'})
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
