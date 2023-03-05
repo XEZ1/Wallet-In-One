@@ -4,6 +4,7 @@ import {ThemeProvider} from './src/theme/ThemeProvider'
 import 'react-native-gesture-handler';
 import Navigation from './Navigation';
 
+
 import { userContext } from './data';
 
 export default function App() {

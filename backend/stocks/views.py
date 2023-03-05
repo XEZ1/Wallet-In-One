@@ -9,8 +9,10 @@ from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import generics, permissions
-from .serializers import AddStockAccount, AddTransaction
-from .models import StockAccount,Transaction
+
+from .serializers import AddStockAccount, AddTransaction, AddStock
+from .models import StockAccount,Transaction, Stock
+
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
 from flask import jsonify
 from plaid.model.accounts_get_request import AccountsGetRequest
@@ -141,30 +143,23 @@ def listTransactions(request,stock):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def listStocks(request, stockAccount):
+    stocks = Stock.objects.filter(stockAccount=stockAccount)
+    serializer = AddStock(stocks, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
 def getTransaction(request, id):
     transaction = Transaction.objects.get(id=id)
     print(transaction)
     serializer = AddTransaction(transaction, many=False)
     return Response(serializer.data)
 
+class addStock(generics.CreateAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = AddStock
+    queryset = Stock.objects.all()
 
-# @api_view(['POST'])
-# def addStock(request):
-#     stockAccount = StockAccount.objects.get(institution_name='Chase')
-#     data = {
-#         'account_id': request.data.get('account_id'),
-#         'name': request.data.get('name'),
-#         'institution_price': request.data.get('institution_price'),
-#         'ticker_symbol': request.data.get('ticker_symbol'),
-#         'quantity': request.data.get('quantity'),
-#         'stockAccount': stockAccount
-#     }
-#     serializer = AddStock(data=data)
-#     print(StockAccount.objects.all())
-#     if serializer.is_valid():
-#         serializer.save()
-#         return JsonResponse(serializer.data, status=201)
-#     return JsonResponse(serializer.errors, status=400)
 
 @api_view(['DELETE'])
 def deleteAccount(request):

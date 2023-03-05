@@ -3,6 +3,7 @@ import { Button, Text } from 'react-native';
 import { LinkSuccess, LinkExit} from 'react-native-plaid-link-sdk';
 import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
+import { api_url } from '../../authentication';
 
 const PlaidComponent = ({ navigation }) => {
   const [linkToken, setLinkToken] = useState<string | undefined>(undefined)
@@ -15,12 +16,15 @@ const PlaidComponent = ({ navigation }) => {
   //const [stocks, setStocks] = useState(null)
   let access_token = ''
   let balance = ''
+
   let fetched_transaction_list = null
   let transactions_stock_account_id = ''
-  // let stocks = null
+  let stocks = null
+  let securities = null
+
 
   const addAccount = async (account, success) => {
-    await fetch('http://10.0.2.2:8000/stocks/add_stock_account/', {
+    await fetch(api_url + '/stocks/add_stock_account/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -41,7 +45,7 @@ const PlaidComponent = ({ navigation }) => {
     
   const listAccounts = async () => {
 
-  fetch('http://10.0.2.2:8000/stocks/list_accounts/', {
+  fetch(api_url + '/stocks/list_accounts/', {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -53,7 +57,7 @@ const PlaidComponent = ({ navigation }) => {
     // if(access_token == null)
     // {
       let token = await SecureStore.getItemAsync('token')
-      const response = await fetch('http://10.0.2.2:8000/stocks/initiate_plaid_link/', {
+      const response = await fetch(api_url + '/stocks/initiate_plaid_link/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +78,7 @@ const PlaidComponent = ({ navigation }) => {
   };
 
   const getAccessToken = async (publicToken) => {
-    const response = await fetch('http://10.0.2.2:8000/stocks/get_access_token/', {
+    const response = await fetch(api_url + '/stocks/get_access_token/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -88,7 +92,7 @@ const PlaidComponent = ({ navigation }) => {
   }
 
   const getBalance = async (accessToken) => {
-    const response = await fetch('http://10.0.2.2:8000/stocks/get_balance/', {
+    const response = await fetch(api_url + '/stocks/get_balance/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -102,7 +106,7 @@ const PlaidComponent = ({ navigation }) => {
   }
 
   const getStocks = async (accessToken) => {
-    const response = await fetch('http://10.0.2.2:8000/stocks/get_stocks/', {
+    const response = await fetch(api_url + '/stocks/get_stocks/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -111,32 +115,32 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({ access_token: accessToken }),
     });
     const data = await response.json();
-    // stocks = data.holdings
+    stocks = data.holdings
+    securities = data.securities
     console.log(data)
   }
 
-  // const addStock = async (stock) => {
-  //   await fetch('http://10.0.2.2:8000/stocks/add_stock/', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-  //     },
-  //     body: JSON.stringify({
-  //       account_id: stock.account_id,
-  //       institution_price: stock.institution_price,
-  //       quantity: stock.quantity,
-  //       name: 'test',
-  //       ticker_symbol: '$',
-  //       stockAccount: account_id
-  //     }),
-  //   }).then(res => res.json().then(data => ({status: res.status, body: data})) )
-  //   .then((data) => console.log(data))
-  // }
+  const addStock = async (stock, stockInfo) => {
+    await fetch(api_url + '/stocks/add_stock/', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+      body: JSON.stringify({
+        institution_price: (stock.institution_price).toFixed(2),
+        quantity: stock.quantity,
+        name: stockInfo.name,
+        ticker_symbol: stockInfo.ticker_symbol,
+        stockAccount: stock.account_id
+      }),
+    }).then(res => res.json().then(data => ({status: res.status, body: data})) )
+    .then((data) => console.log(data))
+  }
 
   const getTransaction = async (accessToken) => {
-    const response = await fetch('http://10.0.2.2:8000/stocks/get_transactions/', {
+    const response = await fetch(api_url + '/stocks/get_transactions/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -145,8 +149,8 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({ access_token: accessToken }),
     });
     const data = await response.json();
-    console.log("Get transaction data")
-    console.log(data)
+    // console.log("Get transaction data")
+    // console.log(data)
     fetched_transaction_list = data
   }
 
@@ -167,7 +171,7 @@ const PlaidComponent = ({ navigation }) => {
   //     }
 
   const addTransaction = async (element) => {
-    await fetch('http://10.0.2.2:8000/stocks/add_transaction_account/', {
+    await fetch(api_url + '/stocks/add_transaction_account/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -213,20 +217,10 @@ const PlaidComponent = ({ navigation }) => {
           // console.log("krishna")
         // }
         await getBalance(access_token)
-        console.log("krishna")
+        // console.log("krishna")
         await getStocks(access_token)
         console.log(success.metadata.accounts[0].meta)
         console.log(success.publicToken)
-        // await fetch(`http://10.0.2.2:8080/api/exchange_public_token`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({ public_token: success.publicToken }),
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
 
         account_list.forEach(async element => {
           // setAccountID(element._id)
@@ -239,18 +233,19 @@ const PlaidComponent = ({ navigation }) => {
           // console.log(success.metadata.institution.id)
           addAccount(element, success)
         });
-        
+
         await getTransaction(access_token)
-        console.log("fetched_transaction_list: ")
-        console.log(fetched_transaction_list.accounts)
-        // console.log(fetched_transaction_list.accounts[0])
-        console.log(fetched_transaction_list.accounts[0].account_id)
+        // console.log("fetched_transaction_list: ")
+        // console.log(fetched_transaction_list.accounts)
+        // // console.log(fetched_transaction_list.accounts[0])
+        // console.log(fetched_transaction_list.accounts[0].account_id)
         fetched_transaction_list.investment_transactions.forEach(element => {addTransaction(element)})
 
-        // stocks.forEach(element => {
-        //   addStock(element)
-        //   console.log(element.quantity)
-        // })
+        stocks.forEach(element => {
+          let stockInfo = securities[stocks.indexOf(element)]
+          addStock(element, stockInfo)
+          console.log(element.quantity)
+        })
         // listAccounts()
         // listTransactions()
       }}

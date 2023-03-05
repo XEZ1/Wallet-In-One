@@ -3,10 +3,7 @@
 #import <UIKit/UIKit.h>
 
 #import <Expo/Expo.h>
-#import "RNAppAuthAuthorizationFlowManager.h"
 
-@interface AppDelegate : EXAppDelegateWrapper <RCTBridgeDelegate, RNAppAuthAuthorizationFlowManager>
-
-@property(nonatomic, weak)id<RNAppAuthAuthorizationFlowManagerDelegate>authorizationFlowManagerDelegate;
+@interface AppDelegate : EXAppDelegateWrapper <RCTBridgeDelegate>
 
 @end

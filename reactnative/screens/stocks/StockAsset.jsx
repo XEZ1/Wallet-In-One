@@ -3,13 +3,15 @@ import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
+import { api_url } from '../../authentication';
 
 export default function StockAsset({ route, navigation }){
     const isFocused = useIsFocused()
     const [transactions, setTransactions] = useState()
+    const [stocks, setStocks] = useState()
 
     const deleteAccount = async () => {
-        const response = await fetch('http://10.0.2.2:8000/stocks/delete_account/', {
+        const response = await fetch(api_url + '/stocks/delete_account/', {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
@@ -54,7 +56,7 @@ export default function StockAsset({ route, navigation }){
             return (
               <TouchableOpacity style={[styles.item, {backgroundColor: 'red'}]} onPress={()=> navigation.navigate('TransactionData', {id: item.id}) }>
                 <View style={styles.row}>
-                  <Text style={styles.name}> Transaction </Text>
+                  <Text style={styles.name}> {item.name} </Text>
                   <Text style={styles.ins_name}> Hello World!</Text>
                 </View>
               </TouchableOpacity>

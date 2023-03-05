@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import StockAccount,Transaction
+
+from .models import StockAccount,Transaction, Stock
+
 from rest_framework.fields import CurrentUserDefault
 
 class AddStockAccount(serializers.ModelSerializer):
@@ -19,7 +21,16 @@ class AddStockAccount(serializers.ModelSerializer):
         account.save()
         return account
     
+
 class AddTransaction(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = '__all__'
+
+class AddStock(serializers.ModelSerializer):
+
+    class Meta:
+       model = Stock
+       fields = '__all__'
+
+

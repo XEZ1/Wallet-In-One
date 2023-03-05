@@ -11,6 +11,7 @@ import {
 import {createStackNavigator} from "@react-navigation/stack";
 import getCryptoIcon from "./icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import {styles} from 'reactnative/screens/All_Styles.style.js';
 
 const Stack = createStackNavigator();
 
@@ -19,40 +20,61 @@ export function WalletSelector(props) {
   const { connectWallet } = props.route.params;
   const {dark, colors, setScheme} = useTheme();
 
+  const stylesInternal = StyleSheet.create({
+    container: {
+      flex: 1,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'flex-start',
+      alignSelf: "center",
+      paddingTop: 20,
+    },
+    cryptoItem: {
+      backgroundColor: '#e5e5e5',
+      width: '40%',
+      padding: 10,
+      margin: 10,
+      borderRadius: 10,
+      alignItems: "center",
+      justifyContent: 'center',
+      backgroundColor: colors.primary,
+    },
+  });
+
   return(
-    <View style={{flex:1, backgroundColor: colors.background, paddingTop: 30}}>
+    <View style={[styles(dark, colors).container, {paddingTop: 30}]}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 1, flexDirection: "column" }}>
-          <Pressable onPress={() => props.navigation.navigate("Wallets")}>
-            <Text style={[styles.backArrow, {color: colors.primary}]}>←</Text>
+          <Pressable onPress={() => props.navigation.navigate("Crypto Wallets")}>
+            <Text style={[styles(dark, colors).backArrow, {position: "absolute", paddingLeft: 10}]}>←</Text>
           </Pressable>
-          <Text style={[styles.title, {color: colors.text}]}>Connect Wallet</Text>
+          <Text style={[styles(dark, colors).largeTextBold, {alignSelf: "center"}]}>Connect Wallet</Text>
         </View>
       </View>
 
-      <View style={styles.container}>
+      <View style={stylesInternal.container}>
 
         <TouchableWithoutFeedback 
           onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Bitcoin', symbol: 'BTC'})}
         >
-          <View style={[styles.cryptoItem, {backgroundColor: colors.primary}]}>
+          <View style={[stylesInternal.cryptoItem]}>
             <Image
               style={{width: 64, height: 64}}
               source={require(`./icons/BTC.png`)}
             />
-            <Text style={{fontWeight: "700", fontSize: 20, color: colors.text}}>Bitcoin</Text>
+            <Text style={[styles(dark, colors).textBold, {fontSize: 20}]}>Bitcoin</Text>
           </View>
         </TouchableWithoutFeedback>
 
         <TouchableWithoutFeedback
           onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Dogecoin', symbol: 'DOGE'})}
         >
-          <View style={[styles.cryptoItem, {backgroundColor: colors.primary}]}>
+          <View style={[stylesInternal.cryptoItem]}>
             <Image
               style={{width: 64, height: 64}}
               source={require(`./icons/DOGE.png`)}
             />
-            <Text style={{fontWeight: "700", fontSize: 20, color: colors.text}}>Dogecoin</Text>
+            <Text style={[styles(dark, colors).textBold, {fontSize: 20}]}>Dogecoin</Text>
           </View>
         </TouchableWithoutFeedback>
 
@@ -70,15 +92,28 @@ export function WalletConnector(props) {
   const { connectWallet, cryptocurrency, symbol } = props.route.params;
   const {dark, colors, setScheme} = useTheme();
 
+  const stylesInternal = StyleSheet.create({
+    input: {
+      height: 40,
+      width: '100%',
+      borderWidth: 0.5,
+      padding: 10,
+      borderColor: 'gray',
+      borderRadius: 5,
+      marginTop: 5,
+      marginBottom: 5,
+    },
+  });
+
   return (
     <View style={{flex:1, backgroundColor: colors.background}}>
       <View style={{ paddingTop: 30 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View style={{ flex: 1, flexDirection: "column" }}>
-            <Pressable onPress={() => props.navigation.navigate("Wallets")}>
-              <Text style={[styles.backArrow, {color: colors.text}]}>✗</Text>
+            <Pressable onPress={() => props.navigation.navigate("Crypto Wallets")}>
+              <Text style={[styles(dark, colors).backArrow, {position: "absolute", paddingLeft: 10}]}>✗</Text>
             </Pressable>
-            <Text style={[styles.title, {color: colors.text}]}>Connect Wallet</Text>
+            <Text style={[styles(dark, colors).largeTextBold, {alignSelf: "center"}]}>Connect Wallet</Text>
           </View>
         </View>
 
@@ -91,7 +126,7 @@ export function WalletConnector(props) {
         </View>
 
         <TextInput
-          style={[styles.input, {color: colors.text}, {backgroundColor: colors.background}]}
+          style={[styles(dark, colors).input, {color: colors.text}, {backgroundColor: colors.background}]}
           onChangeText={(text) => setAddress(text)}
           placeholderTextColor= {colors.text}
           placeholder="Wallet Address"
@@ -101,51 +136,10 @@ export function WalletConnector(props) {
           title="Connect Wallet"
           onPress={() =>
             connectWallet(cryptocurrency, symbol, address)
-              .then(() => props.navigation.navigate("Wallets"))
+              .then(() => props.navigation.navigate("Crypto Wallets"))
           }
         />
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontWeight: "900",
-    fontSize: 40,
-    alignSelf: "center",
-  },
-  backArrow: {
-    fontWeight: "900",
-    fontSize: 40,
-    position: "absolute",
-    paddingLeft: 10,
-  },
-  input: {
-    height: 40,
-    width: '100%',
-    borderWidth: 0.5,
-    padding: 10,
-    borderColor: 'gray',
-    borderRadius: 5,
-    marginTop: 5,
-    marginBottom: 5,
-  },
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    alignSelf: "center",
-    paddingTop: 20,
-  },
-  cryptoItem: {
-    backgroundColor: '#e5e5e5',
-    width: '40%',
-    padding: 10,
-    margin: 10,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: 'center',
-  },
-});
