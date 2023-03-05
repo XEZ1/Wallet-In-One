@@ -7,7 +7,7 @@ export default function useCryptoExchange() {
   const [exchanges, setExchanges] = useState([]);
 
   const fetchExchanges = async () => {
-    await fetch(`${BACKEND_URL}/crypto-exchanges/`, {
+    await fetch('http://10.0.2.2:8000/crypto-exchanges', {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

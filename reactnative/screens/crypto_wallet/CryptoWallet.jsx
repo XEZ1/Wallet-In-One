@@ -86,7 +86,7 @@ export default function CryptoWallet(props) {
 
   useEffect(() => {
     fetchWallets();
-    // fetchExchanges();
+    fetchExchanges();
   }, []);
 
   const handleSubmit = async () => {
@@ -139,10 +139,17 @@ export default function CryptoWallet(props) {
         }
         </View>
 
-        {/* <View style={[styles.walletList]}>
+        <View style={[styles.walletList]}>
         {
           exchanges.map((item)=> <ExchangeAsset key={item.id} item={item} navigation={props.navigation} />)
         }
+        </View>
+
+        {/* <View style={styles.container}>
+          <Text style={styles.title}>Exchanges</Text>
+          {exchanges.map((exchange) => (
+            <ExchangeAsset key={exchange.id} item={exchange} />
+          ))}
         </View> */}
 
       </ScrollView>

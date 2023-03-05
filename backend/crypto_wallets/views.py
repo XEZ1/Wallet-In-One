@@ -16,7 +16,6 @@ class ListCryptoWallets(APIView):
     def get(self, request):
         crypto_wallets = CryptoWallet.objects.filter(user=self.request.user)
         serializer = WalletSerializer(crypto_wallets, many=True)
-        print(f'Matushan: {Response(serializer.data)}')
         return Response(serializer.data)
 
     def post(self, request):

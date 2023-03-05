@@ -14,7 +14,7 @@ from crypto_exchanges.services import *
 class GenericCryptoExchanges(APIView):
     __metaclass__ = ABCMeta
 
-    def __init__(self, crypto_exchange_name, fetcher, **kwargs):
+    def __init__(self, crypto_exchange_name=None, fetcher=None, **kwargs):
         super().__init__(**kwargs)
         self.crypto_exchange_name = crypto_exchange_name
         self.fetcher = fetcher
@@ -58,10 +58,10 @@ class GenericCryptoExchanges(APIView):
     def save_coins(self, filtered_data, request, saved_exchange_account_object):
         pass
 
+    @abstractmethod
     def get(self, request):
         crypto_exchange_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
         serializer = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
-        print(f'Us: {Response(serializer.data)}')
         return Response(serializer.data)
 
     @abstractmethod
@@ -137,11 +137,6 @@ class GenericCryptoExchanges(APIView):
 
         return Response(filtered_data, status=200)
 
-
-    def get(self, request):
-        crypto_exchange_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
-        serialiser = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
-        return Response(serialiser.data)
     def delete(self, request):
         crypto_exchange_account = CryptoExchangeAccount.objects.get(id=request.data['id'])
         if crypto_exchange_account.user != request.user:
@@ -176,9 +171,14 @@ class BinanceView(GenericCryptoExchanges, ABC):
             token.locked_amount = float(coin['locked'])
             token.save()
 
+    def get(self, request):
+        return super(BinanceView, self).get(request)
+
     def post(self, request):
         return super(BinanceView, self).post(request)
 
+    def delete(self, request):
+        return super(BinanceView, self).delete(request)
 
 # Huobi
 class HuobiView(GenericCryptoExchanges, ABC):
@@ -206,8 +206,14 @@ class HuobiView(GenericCryptoExchanges, ABC):
             token.locked_amount = float(coin['debt'])
             token.save()
 
+    def get(self, request):
+        return super(HuobiView, self).get(request)
+
     def post(self, request):
         return super(HuobiView, self).post(request)
+
+    def delete(self, request):
+        return super(HuobiView, self).delete(request)
 
 # GateIo
 class GateioView(GenericCryptoExchanges, ABC):
@@ -235,8 +241,14 @@ class GateioView(GenericCryptoExchanges, ABC):
             token.locked_amount = float(coin['locked'])
             token.save()
 
+    def get(self, request):
+        return super(GateioView, self).get(request)
+
     def post(self, request):
         return super(GateioView, self).post(request)
+
+    def delete(self, request):
+        return super(GateioView, self).delete(request)
 
 
 # CoinList
@@ -265,8 +277,14 @@ class CoinListView(GenericCryptoExchanges, ABC):
             token.locked_amount = float(0)
             token.save()
 
+    def get(self, request):
+        return super(CoinListView, self).get(request)
+
     def post(self, request):
         return super(CoinListView, self).post(request)
+
+    def delete(self, request):
+        return super(CoinListView, self).delete(request)
 
 
 # CoinBase
@@ -294,8 +312,14 @@ class CoinBaseView(GenericCryptoExchanges, ABC):
             token.locked_amount = float(0)
             token.save()
 
+    def get(self, request):
+        return super(CoinBaseView, self).get(request)
+
     def post(self, request):
         return super(CoinBaseView, self).post(request)
+
+    def delete(self, request):
+        return super(CoinBaseView, self).delete(request)
 
 
 # Kraken
@@ -323,8 +347,14 @@ class KrakenView(GenericCryptoExchanges, ABC):
             token.locked_amount = float(0)
             token.save()
 
+    def get(self, request):
+        return super(KrakenView, self).get(request)
+
     def post(self, request):
         return super(KrakenView, self).post(request)
+
+    def delete(self, request):
+        return super(KrakenView, self).delete(request)
 
 
 # Update the existing tokens retrieved from crypto exchanges
