@@ -2,6 +2,7 @@ from PIL import Image
 import requests
 from io import BytesIO
 
+# Returns the dominant color in an image from a url
 def main_image_color(url):
     response= requests.get(url)
     rgba_image = Image.open(BytesIO(response.content))

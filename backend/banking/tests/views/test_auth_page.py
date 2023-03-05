@@ -27,3 +27,9 @@ class AuthPageViewTestCase(TestCase):
         delete_requisition(id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('url',list(response.data.keys()))
+
+    def test_invalid_id(self):
+        self.url = reverse('auth_page',kwargs={'id':'Invalid_ID'})
+        response = self.client.get(self.url)
+        self.assertIn('url',list(response.data.keys()))
+        self.assertEqual(response.data,{'url': None})
