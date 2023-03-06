@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Text } from 'react-native';
 import { LinkSuccess, LinkExit} from 'react-native-plaid-link-sdk';
 import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
 import { api_url } from '../../authentication';
+import { useIsFocused } from '@react-navigation/native';
 
 import {Alert, Modal, StyleSheet, Pressable, View, Animated} from 'react-native';
 
@@ -17,6 +18,7 @@ const PlaidComponent = ({ navigation }) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState("Modal");
+  const isFocused = useIsFocused()
   //const [access_token, setAccessToken] = useState()
   //const [stocks, setStocks] = useState(null)
   let access_token = ''
@@ -62,6 +64,7 @@ const PlaidComponent = ({ navigation }) => {
     },
   }).then(async (res) => setList(await res.json()))};
 
+  useEffect(() => {
   const initiatePlaidLink = async () => {
     // if(access_token == null)
     // {
@@ -85,6 +88,8 @@ const PlaidComponent = ({ navigation }) => {
     //   console.log(access_token)
     // }
   };
+  if(isFocused){initiatePlaidLink()}
+}, [isFocused])
 
   const getAccessToken = async (publicToken) => {
     const response = await fetch(api_url + '/stocks/get_access_token/', {
@@ -210,8 +215,6 @@ const PlaidComponent = ({ navigation }) => {
 
   return (
     <>
-      <Button title="Add Stock Account" onPress={initiatePlaidLink} />
-      {list ? (<Text>{JSON.stringify(list)}</Text>):''}
       <PlaidLink
       linkToken={linkToken}
       onEvent={(event) => console.log(event)}
