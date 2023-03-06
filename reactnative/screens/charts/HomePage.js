@@ -14,6 +14,7 @@ import {
   VictoryBar,
   VictoryLabel,
   VictoryContainer,
+  VictoryStack
 } from "victory-native";
 
 import fixture from "../charts/chartData.json";
@@ -93,12 +94,13 @@ export default function HomePage({ navigation }) {
 
   const handleChartTypeChange = (type) => {
     setChartType(type);
+
   };
 
   if (value == 0) {
     return (
       <ScrollView
-        // <<<<<<< HEAD
+
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: "center",
@@ -131,15 +133,22 @@ export default function HomePage({ navigation }) {
         }}
         style={styles.container}
       >
-        <View style={styles.chartTypeContainer}>
+
+        <View style={{flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 20, borderRadius: 30}}>
           <TouchableOpacity
-            style={styles.chartTypeButton}
+            style={[
+            styles.btn,
+            chartType === "pie" && { backgroundColor: "aliceblue" },
+          ]}
             onPress={() => handleChartTypeChange("pie")}
           >
             <Text style={styles.chartTypeText}>Pie Chart</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.chartTypeButton}
+            style={[
+            styles.btn,
+            chartType === "stacked" && { backgroundColor: "aliceblue" },
+          ]}
             onPress={() => handleChartTypeChange("stacked")}
           >
             <Text style={styles.chartTypeText}>Stacked Bar Chart</Text>
@@ -195,21 +204,29 @@ export default function HomePage({ navigation }) {
   }
 }
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-//   title: {
-//     fontWeight: "900",
-//     fontSize: 50,
-//     alignSelf: "center",
-//     paddingVertical: 10,
-//   },
-//   button: {
-//     width: "75%",
-//     borderRadius: 25,
-//     textAlign: "center",
-//     fontWeight: "bold",
-//     fontSize: 30,
-//   },
-// });
+//const mystyle = StyleSheet.create({
+  // container: {
+  //   flex: 1,
+  // },
+  // title: {
+  //   fontWeight: "900",
+  //   fontSize: 50,
+  //   alignSelf: "center",
+  //   paddingVertical: 10,
+  // },
+  // button: {
+  //   width: "75%",
+  //   borderRadius: 25,
+  //   textAlign: "center",
+  //   fontWeight: "bold",
+  //   fontSize: 30,
+  // },
+  // btn: {
+  //   padding: 10,
+  //   margin: 10,
+  //   borderRadius: 20,
+  //   width: "40%",
+  //   alignItems: "center",
+  // },
+  
+//});
