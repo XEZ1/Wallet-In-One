@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Text } from 'react-native';
+import { Button, Text, Image } from 'react-native';
 import { LinkSuccess, LinkExit} from 'react-native-plaid-link-sdk';
 import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
@@ -15,6 +15,7 @@ const PlaidComponent = ({ navigation }) => {
   const [list, setList] = useState()
   const [institution_name, setInstitutionName] = useState()
   const [institution_id, setInstitutionID] = useState()
+  const [imageState, setImage] = useState()
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState("Modal");
@@ -23,7 +24,7 @@ const PlaidComponent = ({ navigation }) => {
   //const [stocks, setStocks] = useState(null)
   let access_token = ''
   let balance = ''
-
+  let image = ''
   let fetched_transaction_list = null
   let transactions_stock_account_id = ''
   let stocks = null
@@ -47,6 +48,7 @@ const PlaidComponent = ({ navigation }) => {
         institution_id: success.metadata.institution.id,
         access_token: access_token,
         balance: balance,
+        institution_logo: image,
       }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
     .then((data) => console.log(data.status))
@@ -211,10 +213,31 @@ const PlaidComponent = ({ navigation }) => {
     .then((data) => console.log(data))
     };
 
+
+  const getLogo = async (success) => {
+    const response = await fetch(api_url + '/stocks/get_logo/', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+      body: JSON.stringify({ name: success.metadata.institution.name }),
+    });
+    const data = await response.json()
+    console.log(data.logo)
+    image = data.logo
+    setImage(data.logo)
+  }
+
   
 
   return (
     <>
+      <Image
+        style={{ width: 152, height: 152 }}
+        source={{ uri: `data:image/png;base64,${imageState}` }}
+      />
       <PlaidLink
       linkToken={linkToken}
       onEvent={(event) => console.log(event)}
@@ -242,6 +265,7 @@ const PlaidComponent = ({ navigation }) => {
           // console.log(success.metadata.institution.name)
           // setInstitutionID(success.metadata.institution.id)
           // console.log(success.metadata.institution.id)
+          await getLogo(success)
           addAccount(element, success)
           console.log(data_response)
 
