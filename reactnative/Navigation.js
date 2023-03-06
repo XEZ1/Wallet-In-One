@@ -65,12 +65,13 @@ export default function Navigation() {
           }}
         >
           <Tab.Screen
-            name='Home Page'
-            component={HomePage}
+            name='Home'
+            component={HomePageNavigator}
             options={{
-              tabBarIcon: ({focused }) => (
-                <Text style={{color: focused ? colors.primary : colors.text}}>
-                  <AntDesign name="home" size={30}/>
+              headerShown: false,
+              tabBarIcon: ({ focused }) => (
+                <Text style={{ color: focused ? colors.primary : colors.text }}>
+                  <AntDesign name="home" size={30} />
                 </Text>
               ),
             }}
@@ -144,5 +145,17 @@ export default function Navigation() {
       )}
     </NavigationContainer>
   )
+}
+
+function HomePageNavigator() {
+  return (<Stack.Navigator>
+    <Stack.Screen
+      name='Home Page'
+      component={HomePage}
+     />
+    <Stack.Screen
+      name='Bank Transactions'
+      component={BankTransactionsScreen} />
+  </Stack.Navigator>)
 }
 

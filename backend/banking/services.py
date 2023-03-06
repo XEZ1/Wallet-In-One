@@ -175,4 +175,4 @@ def chart_breakdown(user):
     update_user_accounts(user)
     accounts = Account.objects.filter(user=user)
     if accounts.exists():
-        return [{'x': a.institution_name, 'y': a.account_balance().amount} for a in accounts]
+        return [{'x': a.institution_name, 'y': a.account_balance().amount, 'id':a.id} for a in accounts]

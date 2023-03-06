@@ -20,7 +20,7 @@ export default function HomePage({ navigation }) {
 
   const [baseData, setBaseData] = useState(fixture);
   const [data, setNewData] = useState(baseData.all);
-  const [pressed, setPressed] = useState(false);
+  const [pressed, setPressed] = useState(null);
 
   // Uncomment to show bank data from backend
 
@@ -31,7 +31,7 @@ export default function HomePage({ navigation }) {
       if (response.status == 200) {
         setBaseData(response.body);
         setNewData(response.body.all);
-        setPressed(false);
+        setPressed(null);
       }
     };
     if (isFocused) {
@@ -40,17 +40,30 @@ export default function HomePage({ navigation }) {
   }, [isFocused]);
 
   const handlePressIn = (event, datapoint) => {
+    var index = datapoint.index;
+    
     if (pressed) {
-      setNewData(baseData.all);
-    } else {
-      const dataPoint = data[datapoint.index];
-      if (baseData[dataPoint.x]) {
-        setNewData(baseData[dataPoint.x]);
-      } else {
-        setNewData(baseData.all.filter((val) => val.x.match(dataPoint.x)));
+      if (pressed == "Banks"){
+        var bankData = baseData["Banks"][index]
+        if (bankData.id){
+          navigation.navigate('Bank Transactions', {accountID: bankData.id})
+          return
+        }
       }
+      setNewData(baseData.all);
+      setPressed(null)
+    } else {
+      const dataPoint = data[index];
+      const name = dataPoint.x
+      if (baseData[name]) {
+        setNewData(baseData[name]);
+      } else {
+        // If data for single type of asset does not exist, just display that one asset from all.
+        setNewData(baseData.all.filter((val) => val.x.match(name)));
+      }
+      setPressed(name);
     }
-    setPressed(!pressed);
+    
   };
 
   let value = 0;
@@ -105,9 +118,18 @@ export default function HomePage({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        {chartType == "pie" ? <PieChart colours={colours} data={data} handlePressIn={handlePressIn}/>: <StackedChart data={baseData} />}
+        <Text >{pressed}</Text>
 
-        {BarChart(colours, list, data, colors, spacing, handlePressIn)}
+        {chartType == "pie" ? 
+          <>
+            <PieChart colours={colours} data={data} handlePressIn={handlePressIn}/>
+            {BarChart(colours, list, data, colors, spacing, handlePressIn)}
+          </>
+          : 
+            <StackedChart data={baseData} />
+        }
+
+        
         
         {pressed ? (
           <TouchableOpacity
