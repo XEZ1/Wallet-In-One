@@ -26,7 +26,7 @@ export default function StockAsset({ route, navigation }){
 
     useEffect(() => {
       const listTransactions = async (stock) => {
-        await fetch(`http://10.0.2.2:8000/stocks/list_transactions/${stock}/`, {
+        await fetch(api_url + `/stocks/list_transactions/${stock}/`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

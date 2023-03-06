@@ -3,14 +3,14 @@ import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
-
+import { api_url } from '../../authentication';
 export default function TransactionData({ route, navigation }){
     const isFocused = useIsFocused()
     const [data, setTransactions] = useState()
 
     useEffect(() => {
         const getTransaction = async (id) => {
-          await fetch(`http://10.0.2.2:8000/stocks/get_transaction/${id}/`, {
+          await fetch(api_url + `/stocks/get_transaction/${id}/`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",

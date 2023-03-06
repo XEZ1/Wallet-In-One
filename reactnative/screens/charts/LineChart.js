@@ -42,7 +42,7 @@ export default function LineChartScreen({route,navigation})
 
     let balance = 0;
 
-    let graph_data = transactions.map((item) => [balance + item.amount, item.date]);
+    let graph_data = transactions.map((item) => [item.amount, item.date]);
 
     const accumulate_totals_for_each_day = (data_input) => {
         return Object.entries(data_input.reduce((acc, [amount, date]) => {
@@ -107,16 +107,16 @@ export default function LineChartScreen({route,navigation})
         });
     }
 
-    const last_30_days = () => {
+    const last_week = () => {
+        filter_transactions(7);
+    }
+
+    const last_month = () => {
         filter_transactions(30);
     }
 
     const last_year = () => {
         filter_transactions(365);
-    }
-
-    const last_3_years = () => {
-        filter_transactions(1095);
     }
 
     const all_time = () => {
@@ -132,7 +132,7 @@ export default function LineChartScreen({route,navigation})
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between' }}>
-        <Text>Asset X</Text>
+        <Text></Text>
 
         <View style={styles.chartContainer}>
         <LineChart 
@@ -177,9 +177,9 @@ export default function LineChartScreen({route,navigation})
 
         <View style={styles.buttonContainer}>
             <View style={styles.timeButton}><Button onPress={all_time} title="ALL"/></View>
-            <View style={styles.timeButton}><Button onPress={last_3_years} title="Y"/></View>
-            <View style={styles.timeButton}><Button onPress={last_year} title="M"/></View>
-            <View style={styles.timeButton}><Button onPress={last_30_days} title="D"/></View>
+            <View style={styles.timeButton}><Button onPress={last_year} title="Y"/></View>
+            <View style={styles.timeButton}><Button onPress={last_month} title="M"/></View>
+            <View style={styles.timeButton}><Button onPress={last_week} title="D"/></View>
         </View>
 
         </View>

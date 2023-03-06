@@ -22,6 +22,8 @@ const PlaidComponent = ({ navigation }) => {
   let stocks = null
   let securities = null
 
+  let data_response = null
+
 
   const addAccount = async (account, success) => {
     await fetch(api_url + '/stocks/add_stock_account/', {
@@ -40,8 +42,10 @@ const PlaidComponent = ({ navigation }) => {
         balance: balance,
       }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
-    .then((data) => console.log(data))
+    .then((data) => console.log(data.status))
+    .then((data) => data_response = data)
     };
+    
     
   const listAccounts = async () => {
 
@@ -232,22 +236,25 @@ const PlaidComponent = ({ navigation }) => {
           // setInstitutionID(success.metadata.institution.id)
           // console.log(success.metadata.institution.id)
           addAccount(element, success)
+          console.log(data_response)
+
+          if(data_response != 400){
+            await getTransaction(access_token)
+            // console.log("fetched_transaction_list: ")
+            // console.log(fetched_transaction_list.accounts)
+            // // console.log(fetched_transaction_list.accounts[0])
+            // console.log(fetched_transaction_list.accounts[0].account_id)
+            fetched_transaction_list.investment_transactions.forEach(element => {addTransaction(element)})
+    
+            stocks.forEach(element => {
+              let stockInfo = securities[stocks.indexOf(element)]
+              addStock(element, stockInfo)
+              console.log(element.quantity)
+            })
+            // listAccounts()
+            // listTransactions()
+          }
         });
-
-        await getTransaction(access_token)
-        // console.log("fetched_transaction_list: ")
-        // console.log(fetched_transaction_list.accounts)
-        // // console.log(fetched_transaction_list.accounts[0])
-        // console.log(fetched_transaction_list.accounts[0].account_id)
-        fetched_transaction_list.investment_transactions.forEach(element => {addTransaction(element)})
-
-        stocks.forEach(element => {
-          let stockInfo = securities[stocks.indexOf(element)]
-          addStock(element, stockInfo)
-          console.log(element.quantity)
-        })
-        // listAccounts()
-        // listTransactions()
       }}
     />
     </>
