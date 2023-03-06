@@ -101,8 +101,8 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({ access_token: accessToken }),
     });
     const data = await response.json();
-    console.log(data.accounts[0].balances)
-    balance = parseFloat(data.accounts[0].balances.current).toFixed(2) 
+    console.log((parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2))
+    balance = (parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2) 
   }
 
   const getStocks = async (accessToken) => {
@@ -213,7 +213,6 @@ const PlaidComponent = ({ navigation }) => {
         // if(access_token == null){
         await getAccessToken(success.publicToken)
         console.log(access_token)
-          getBalance(access_token)
           // console.log("krishna")
         // }
         await getBalance(access_token)
