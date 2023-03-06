@@ -10,61 +10,24 @@ import { useIsFocused } from "@react-navigation/native";
 
 import {
   VictoryPie,
-  VictoryBar,
   VictoryLabel,
   VictoryContainer,
 } from "victory-native";
 
-import fixture from "../../charts/chartData.json";
+
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 
-import { auth_get } from "../../../authentication";
+export default function PieChart({colours, data, handlePressIn}) {
 
-export default function PieChart({ navigation }) {
-  const [baseData, setBaseData ] = useState(fixture)
   const {dark, colors, setScheme} = useTheme();
-  const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed ] = useState(false)
   const isFocused = useIsFocused()
-
-  // Uncomment to show bank data from backend
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await auth_get("/graph_data/");
-      console.log("fetch graph data", response.status);
-      if (response.status == 200) {
-        setBaseData(response.body);
-        setNewData(response.body.all);
-        setPressed(false);
-      }
-    };
-    if (isFocused) {
-      fetchData();
-    }
-  }, [isFocused]);
-
-  const handlePressIn = (event, datapoint) => {
-    if (pressed) {
-      setNewData(baseData.all);
-    } else {
-      const dataPoint = data[datapoint.index];
-      if (baseData[dataPoint.x]) {
-        setNewData(baseData[dataPoint.x]);
-      } else {
-        setNewData(baseData.all.filter((val) => val.x.match(dataPoint.x)));
-      }
-    }
-    setPressed(!pressed);
-  };
 
   let value = 0;
   data.forEach((jsonObj) => {
     value += jsonObj.y;
   });
   value = value.toFixed(2);
-
-  const colours = ["pink", "turquoise", "lime", "#FA991C"];
 
   return (
     <ScrollView
@@ -77,8 +40,6 @@ export default function PieChart({ navigation }) {
       }}
       style={styles.container}
     >
-      {/* <Text style={[styles.title, {color: colors.text}]}>Wallet-In-One</Text>
-      <Text style={[styles.amountText, {color: colors.text}]}>Amount: £{value}</Text> */}
 
       <VictoryContainer
         width={Dimensions.get("window").width}
