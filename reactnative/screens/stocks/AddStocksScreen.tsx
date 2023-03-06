@@ -5,6 +5,8 @@ import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
 import { api_url } from '../../authentication';
 
+import {Alert, Modal, StyleSheet, Pressable, View, Animated} from 'react-native';
+
 const PlaidComponent = ({ navigation }) => {
   const [linkToken, setLinkToken] = useState<string | undefined>(undefined)
   const [account_id, setAccountID] = useState()
@@ -12,6 +14,9 @@ const PlaidComponent = ({ navigation }) => {
   const [list, setList] = useState()
   const [institution_name, setInstitutionName] = useState()
   const [institution_id, setInstitutionID] = useState()
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalText, setModalText] = useState("Modal");
   //const [access_token, setAccessToken] = useState()
   //const [stocks, setStocks] = useState(null)
   let access_token = ''
@@ -253,12 +258,89 @@ const PlaidComponent = ({ navigation }) => {
             })
             // listAccounts()
             // listTransactions()
+            setModalText("Stock account has been successfully added.")
+          }else{
+            setModalText("Stock account has already been added!")
           }
+          setModalVisible(true)
         });
       }}
     />
+    <View>
+      <Modal
+        
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View >
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>{modalText}</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Pressable
+        style={[styles.button]}
+        onPress={() => setModalVisible(true)}>
+        <Text style={styles.textStyle}>Show Modal</Text>
+        
+      </Pressable>
+    </View>
     </>
   );
 };
+
+
+const styles = StyleSheet.create({
+  // centeredView: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   marginTop: 22,
+  // },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  // buttonOpen: {
+  //   backgroundColor: '#F194FF',
+  // },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+});
 
 export default PlaidComponent;
