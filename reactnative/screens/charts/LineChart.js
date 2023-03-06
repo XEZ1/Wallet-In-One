@@ -42,11 +42,31 @@ export default function LineChartScreen({route,navigation})
 
     let balance = 0;
 
-    let graph_data = transactions.map((item) => [balance + item.amount,(item.date)]);    
+    let graph_data = transactions.map((item) => [balance + item.amount, item.date]);
 
-    const updateChart = () => {
-        
+    const accumulate_totals_for_each_day = (data_input) => {
+        return Object.entries(data_input.reduce((acc, [amount, date]) => {
+            amount = String(amount);
+
+            // If this day already exists in the accumulator, add the amount to it.
+            if (acc[date]) {
+                // If amount is negative subtract in accumulator, else add to it.
+                if (amount.startsWith("-")) {
+                    acc[date] -= parseFloat(amount.substr(1));
+                } else {
+                    acc[date] += parseFloat(amount);
+                }
+            }
+            // Otherwise, create a new entry for this day in the accumulator.
+            else {
+                acc[date] = parseFloat(amount);
+            }
+
+            return acc;
+        }, {})).map(([date, amount]) => [amount, date]);
     }
+      
+    graph_data = accumulate_totals_for_each_day(graph_data);
 
     
     const [line_graph_data, setLineGraphData] = React.useState(graph_data.map((item) => item[0]));
@@ -66,9 +86,13 @@ export default function LineChartScreen({route,navigation})
           }
           return false;
         })
+
+        let line_graph_data = accumulate_totals_for_each_day(updated_data.map((item) => [balance + item.amount, item.date]));
+
+        console.log(line_graph_data);
       
-        setLineGraphData(updated_data.map((item) => item.amount));
-        setLineGraphLabel(updated_data.map((item) => item.date));
+        setLineGraphData(line_graph_data.map((item) => item[0]));
+        setLineGraphLabel(line_graph_data.map((item) => item[1]));
 
         let updated_table_data = updated_data.map((item) => [
             item.amount, 
