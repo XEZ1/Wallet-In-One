@@ -22,8 +22,9 @@
 #             'value': 434,
 #             'time': 45,
 #         }
+#         # self.transaction.save()
 #         self.serializer_input = {
-#             'user': ,   # HELP
+#             'user': User.objects.get(username='@pickles'),
 #             'id':1,
 #             'cryptocurrency': 'Bitcoin',
 #             'symbol': 'BTC',
@@ -33,5 +34,5 @@
 #         }
 
 #     def test_valid_data_wallet_serializer(self):
-#         serializer = WalletSerializer(data=self.serializer_input)
+#         serializer = WalletSerializer(data=self.serializer_input, context={'request': self.client.request()})
 #         self.assertTrue(serializer.is_valid())
