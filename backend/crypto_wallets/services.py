@@ -20,31 +20,21 @@ class CryptoWalletService:
 
 
 def get_timestamp(date_time):
-    dt = datetime.strptime(date_time, "%Y-%m-%d %H:%M:%S")  # What timezone?
+    dt = datetime.strptime(date_time, "%Y-%m-%d %H:%M:%S")
     return datetime.timestamp(dt)
 
 
 def normalise_value(cryptocurrency, value):
-    if cryptocurrency == 'Bitcoin':
-        return value / 100_000_000
-    else:
-        return value / 100_000_000
-
-
-@DeprecationWarning
-def fetch_balance(address, cryptocurrency):
-    # address = 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh'
-    if cryptocurrency == 'Bitcoin':
-        url = f'https://blockchain.info/rawaddr/{address}?limit=0'
-        r = requests.get(url=url)
-        response = r.json()
-        return response['final_balance'] / 100_000_000
-    elif cryptocurrency == 'Dogecoin':
-        url = f'https://dogechain.info/api/v1/address/balance/{address}'
-        r = requests.get(url=url)
-        response = r.json()
-        return response['balance']
-
+    return {
+        'Bitcoin': value / 100_000_000,
+        'Bitcoin-Cash': value / 100_000_000,
+        'Litecoin': value / 100_000_000,
+        'Dogecoin': value / 100_000_000,
+        'Dash': value / 100_000_000,
+        'Groestlcoin': value / 100_000_000,
+        'Zcash': value / 100_000_000,
+        'eCash': value / 100,
+    }.get(cryptocurrency, value)
 
 def getCryptoPrice(symbol):
     url = f'https://min-api.cryptocompare.com/data/price?fsym={symbol}&tsyms=GBP'
