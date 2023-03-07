@@ -27,7 +27,17 @@ export default function HuobiCredentials({ navigation }) {
       const data = await response.json();
       const statusCode = response.status;
       if (statusCode == 200) {
-        Alert.alert('Success', 'Huobi account data retrieved successfully!');
+        Alert.alert('Success', 'Huobi account data retrieved successfully!', [
+          {
+            text: 'OK',
+            onPress: () => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Crypto Wallets & Exchanges' }],
+            });
+            navigation.navigate('Crypto Wallets & Exchanges');
+          }}
+        ]);
       } else {
         Alert.alert('Error', data["error"]);
       }
