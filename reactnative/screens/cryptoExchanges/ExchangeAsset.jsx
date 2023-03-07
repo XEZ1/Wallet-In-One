@@ -7,7 +7,6 @@ import {
     TouchableWithoutFeedback,
     View,
   } from "react-native";
-  //import { LineChart } from "react-native-chart-kit";
   import React, {useEffect, useState} from "react";
   import getCryptoIcon from "../crypto_wallet/icons/icon";
   import { useTheme } from 'reactnative/src/theme/ThemeProvider'
@@ -40,7 +39,7 @@ import {
       <TouchableWithoutFeedback
         onPress={() =>
           props.navigation.navigate("f",
-            { item: props.item, value: crypto_exchange_name })
+            { item: props.item, value: props.item.crypto_exchange_name })
         }
       >
         <View style={[styles.exchangeAsset, {backgroundColor: colors.primary}]}>
@@ -53,7 +52,7 @@ import {
           >
             <Image
               style={styles.exchangeAssetImage}
-              source={getCryptoIcon("BTC")}
+              source={getCryptoIcon(props.item.crypto_exchange_name)}
             />
           </View>
   
@@ -69,10 +68,10 @@ import {
                 {props.item.crypto_exchange_name}
               </Text>
               {/* <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>
-                {props.item.balance} {props.item.symbol}
+                {props.item.secret_key} {props.item.crypto_exchange_name}
               </Text> */}
   
-              <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>£{cryptoValue * props.item.balance}</Text>
+              <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>Total Balance: £{props.item.balance}</Text>
               {/* ▲ 0.00% */}
             </View>
   
