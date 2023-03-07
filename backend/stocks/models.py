@@ -2,7 +2,6 @@ from django.db import models
 from accounts.models import User
 from djmoney.models.fields import MoneyField
 
-
 class StockAccount(models.Model):
     account_id = models.CharField(max_length=1024, primary_key=True, unique=True, blank=False)
     access_token = models.CharField(max_length=1024, blank=False)

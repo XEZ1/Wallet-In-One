@@ -2,7 +2,8 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from stocks.models import StockAccount
-
+from djmoney.money import Money
+from moneyed.classes import CurrencyDoesNotExist
 
 class StockAccountModelTestCase(TestCase):
 
@@ -13,7 +14,6 @@ class StockAccountModelTestCase(TestCase):
 
     def setUp(self):
         self.stock = StockAccount.objects.get(account_id='1')
-        self.stock.balance = 100
 
     def _assert_stock_is_valid(self, stock):
         try:
@@ -27,6 +27,10 @@ class StockAccountModelTestCase(TestCase):
 
     def test_account_id_cannot_be_blank(self):
         self.stock.account_id = ''
+        self._assert_stock_is_invalid(self.stock)
+
+    def test_account_id_cannot_be_none(self):
+        self.stock.account_id = None
         self._assert_stock_is_invalid(self.stock)
 
     def test_account_id_can_be_20_characters_long(self):
@@ -53,6 +57,10 @@ class StockAccountModelTestCase(TestCase):
         self.stock.access_token = ''
         self._assert_stock_is_invalid(self.stock)
 
+    def test_access_token_cannot_be_none(self):
+        self.stock.access_token = None
+        self._assert_stock_is_invalid(self.stock)
+
     def test_access_token_can_be_20_characters_long(self):
         self.stock.access_token = 'a' * 20
         self._assert_stock_is_valid(self.stock)
@@ -75,6 +83,10 @@ class StockAccountModelTestCase(TestCase):
 
     def test_name_cannot_be_blank(self):
         self.stock.name = ''
+        self._assert_stock_is_invalid(self.stock)
+
+    def test_name_cannot_be_none(self):
+        self.stock.name = None
         self._assert_stock_is_invalid(self.stock)
 
     def test_name_can_be_20_characters_long(self):
@@ -101,6 +113,10 @@ class StockAccountModelTestCase(TestCase):
         self.stock.institution_name = ''
         self._assert_stock_is_invalid(self.stock)
 
+    def test_institution_name_cannot_be_none(self):
+        self.stock.institution_name = None
+        self._assert_stock_is_invalid(self.stock)
+
     def test_institution_name_can_be_20_characters_long(self):
         self.stock.institution_name = 'a' * 20
         self._assert_stock_is_valid(self.stock)
@@ -125,6 +141,10 @@ class StockAccountModelTestCase(TestCase):
         self.stock.institution_id = ''
         self._assert_stock_is_invalid(self.stock)
 
+    def test_institution_id_cannot_be_none(self):
+        self.stock.institution_id = None
+        self._assert_stock_is_invalid(self.stock)
+
     def test_institution_id_can_be_20_characters_long(self):
         self.stock.institution_id = 'a' * 20
         self._assert_stock_is_valid(self.stock)
@@ -143,4 +163,61 @@ class StockAccountModelTestCase(TestCase):
 
     def test_institution_id_can_contain_special_characters(self):
         self.stock.institution_id = '_@*&'
+        self._assert_stock_is_valid(self.stock)
+
+    def test_balance_cannot_be_none(self):
+        self.stock.balance = None
+        self._assert_stock_is_invalid(self.stock)
+
+    def test_balance_can_be_zero(self):
+        self.stock.balance = Money(0, 'GBP')
+        self._assert_stock_is_valid(self.stock)
+
+    def test_balance_can_be_usd(self):
+        self.stock.balance = Money(100, 'USD')
+        self._assert_stock_is_valid(self.stock)
+
+    def test_balance_can_have_2_decimal_values(self):
+        self.stock.balance = Money(99.99, 'GBP')
+        self._assert_stock_is_valid(self.stock)
+
+    def test_balance_cannot_have_more_than_2_decimal_values(self):
+        self.stock.balance = Money(99.999, 'GBP')
+        self._assert_stock_is_invalid(self.stock)
+
+    def test_balance_can_have_11_digits(self):
+        self.stock.balance = Money(123456789.00, 'GBP')
+        self._assert_stock_is_valid(self.stock)
+
+    def test_balance_cannot_have_more_than_11_digits(self):
+        self.stock.balance = Money(112233445566778899.00, 'GBP')
+        self._assert_stock_is_invalid(self.stock)
+
+    def test_balance_can_have_invalid_currency(self):
+        with self.assertRaises(CurrencyDoesNotExist):
+            self.balance.amount = Money(100, 'Gold')
+        self._assert_stock_is_valid(self.stock)
+
+    def test_institution_logo_cannot_be_none(self):
+        self.stock.institution_logo = None
+        self._assert_stock_is_invalid(self.stock)
+
+    def test_institution_logo_can_be_20_characters_long(self):
+        self.stock.institution_logo = 'a' * 20
+        self._assert_stock_is_valid(self.stock)
+
+    def test_institution_logo_can_be_10000_characters_long(self):
+        self.stock.institution_logo = 'a' * 10000
+        self._assert_stock_is_valid(self.stock)
+
+    def test_institution_logo_cannot_be_10001_characters_long(self):
+        self.stock.institution_logo = 'a' * 10001
+        self._assert_stock_is_invalid(self.stock)
+
+    def test_institution_logo_can_contain_numbers(self):
+        self.stock.institution_logo = '123'
+        self._assert_stock_is_valid(self.stock)
+
+    def test_institution_logo_can_contain_special_characters(self):
+        self.stock.institution_logo = '_@*&'
         self._assert_stock_is_valid(self.stock)
