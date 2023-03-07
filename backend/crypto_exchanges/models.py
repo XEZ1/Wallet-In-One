@@ -12,6 +12,7 @@ class CryptoExchangeAccount(models.Model):
     secret_key = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
 # Token model
 class Token(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -19,6 +20,5 @@ class Token(models.Model):
     asset = models.CharField(max_length=5)
     free_amount = models.FloatField(validators=[MinValueValidator(0.0)])
     locked_amount = models.FloatField(validators=[MinValueValidator(0.0)])
-
 
 # Crypto exchange account model

@@ -21,10 +21,20 @@ class TokenModelTestCase(TestCase):
 
         self.user = User.objects.get(id=1)
 
+        self.crypto_exchange_account = CryptoExchangeAccount(
+            user=self.user,
+            crypto_exchange_name='Kraken',
+            api_key='owibhouibh034985',
+            secret_key='oefigno23487h',
+        )
+
+        self.crypto_exchange_account.save()
+
         self.token = Token(user=self.user,
+                           crypto_exchange_object=self.crypto_exchange_account,
                            asset="ETH",
-                           free="5.2341",
-                           locked="0.2134")
+                           free_amount="5.2341",
+                           locked_amount="0.2134")
 
     def _assert_token_is_valid(self, token):
         try:
@@ -53,11 +63,11 @@ class TokenModelTestCase(TestCase):
         self._assert_token_is_invalid(self.token)
 
     def test_free_cannot_be_negative(self):
-        self.token.free = -1.0
+        self.token.free_amount = -1.0
         self._assert_token_is_invalid(self.token)
 
     def test_locked_cannot_be_negative(self):
-        self.token.locked = -1.0
+        self.token.locked_amount = -1.0
         self._assert_token_is_invalid(self.token)
 
 
@@ -72,7 +82,7 @@ class CryptoExchangeAccountModelTestCase(TestCase):
         self.user = User.objects.get(id=2)
 
         self.crypto_exchange_account = CryptoExchangeAccount(user=self.user,
-                                                             crypto_exchange="Binance",
+                                                             crypto_exchange_name="Binance",
                                                              api_key="0x0",
                                                              secret_key="0x0",
                                                              created_at='2006-10-25 14:30:59')
@@ -92,7 +102,7 @@ class CryptoExchangeAccountModelTestCase(TestCase):
         self._assert_crypto_exchange_account_is_valid(self.crypto_exchange_account)
 
     def test_crypto_exchange_account_crypto_exchange_cannot_exceed_255_characters(self):
-        self.crypto_exchange_account.crypto_exchange = 'a' * 256
+        self.crypto_exchange_account.crypto_exchange_name = 'a' * 256
         self._assert_crypto_exchange_account_is_invalid(self.crypto_exchange_account)
 
     def test_crypto_exchange_account_user_not_blank(self):
