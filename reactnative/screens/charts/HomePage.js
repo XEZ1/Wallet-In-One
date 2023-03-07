@@ -56,7 +56,7 @@ export default function HomePage({ navigation }) {
         var cryptoData = baseData["Cryptocurrency"][index]
         var wallet = wallets.find(x => x.id === cryptoData.id)
         if (cryptoData.id) {
-          navigation.navigate("WalletAssetDetail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
+          navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
           return
         }
       }
