@@ -61,8 +61,13 @@ class GenericCryptoExchanges(APIView):
     @abstractmethod
     def get(self, request):
         crypto_exchange_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
-        serializer = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
-        return Response(serializer.data)
+        serializers = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
+        serializer_array = serializers.data
+        for serializer in serializer_array:
+            exchange = CryptoExchangeAccount.objects.get(api_key=serializer['api_key'])
+            serializer.update({'balance': CurrentMarketPriceFetcher(request.user).get_exchange_balance(exchange)})
+        print(serializer_array)
+        return Response(serializer_array)
 
     @abstractmethod
     def post(self, request):

@@ -67,11 +67,11 @@ import {
               <Text style={{ fontSize: 25, fontWeight: "700", color: colors.background }}>
                 {props.item.crypto_exchange_name}
               </Text>
-              <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>
+              {/* <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>
                 {props.item.secret_key} {props.item.crypto_exchange_name}
-              </Text>
+              </Text> */}
   
-              <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>Total Balance: £{cryptoValue * props.item.balance}</Text>
+              <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>Total Balance: £{props.item.balance}</Text>
               {/* ▲ 0.00% */}
             </View>
   
