@@ -63,4 +63,4 @@ def total_user_balance_crypto(user):
 def chart_breakdown_crypto(user):
     wallets = CryptoWallet.objects.filter(user=user)
     if wallets.exists():
-        return [{'x': a.cryptocurrency, 'y': round(getCryptoPrice(a.symbol)*a.balance,2)} for a in wallets]
+        return [{'x': a.cryptocurrency, 'y': round(getCryptoPrice(a.symbol)*a.balance, 2), 'id': a.id} for a in wallets]
