@@ -1,4 +1,4 @@
-from rest_framework.test import APIRequestFactory
+from rest_framework.test import APIRequestFactory, APIClient
 from stocks.serializers import AddStockAccount
 from stocks.models import StockAccount
 from rest_framework.request import Request
@@ -15,23 +15,23 @@ class StockAccountSerializerTestCase(TestCase):
     ]
 
     def setUp(self):
+        self.client = APIClient()
+        self.login_url = reverse('login')
         self.user = User.objects.get(pk='3')
+        self.client.force_authenticate(self.user)
         self.serializer_input = {
             'account_id': '10',
             'access_token': 'test_access_token',
-            'user': self.user,
             'name': 'test',
             'institution_id': 'ins_1',
             'institution_name': 'test1',
             'institution_logo': 'test2',
-            'balance': 100
+            'balance': Money(100, 'GBP')
         }
-        self.stockAccount = StockAccount.objects.create(**self.serializer_input)
-        self.serializer = AddStockAccount(instance=self.stockAccount)
 
     def test_serializer(self):
-        data = self.serializer.data
         factory = APIRequestFactory()
-        request = factory.get(reverse('add_stock_account'))
-        serializer = AddStockAccount(data=data, context={'request': request})
+        request = factory.post('/')
+        request.user = self.user
+        serializer = AddStockAccount(data=self.serializer_input, context={'request': request})
         self.assertTrue(serializer.is_valid())
