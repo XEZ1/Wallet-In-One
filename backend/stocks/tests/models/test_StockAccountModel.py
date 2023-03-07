@@ -4,6 +4,9 @@ from django.core.exceptions import ValidationError
 from stocks.models import StockAccount
 from djmoney.money import Money
 from moneyed.classes import CurrencyDoesNotExist
+from django.db import models
+from djmoney.models.fields import MoneyField
+from accounts.models import User
 
 class StockAccountModelTestCase(TestCase):
 
@@ -27,6 +30,25 @@ class StockAccountModelTestCase(TestCase):
 
     def test_stock_account_is_valid(self):
         self._assert_stock_is_valid(self.stockAccount)
+
+    def test_user_foreign_key_field(self):
+        field = StockAccount._meta.get_field('user')
+        self.assertIsInstance(field, models.ForeignKey)
+        self.assertEqual(field.many_to_one, True)
+        self.assertFalse(field.blank)
+
+    def test_user_on_delete_cascade(self):
+        user = User.objects.get(pk=3)
+        user.delete()
+        self.assertFalse(StockAccount.objects.filter(account_id='1').exists())
+
+    def test_account_id_field(self):
+        field = StockAccount._meta.get_field('account_id')
+        self.assertIsInstance(field, models.CharField)
+        self.assertEqual(field.max_length, 1024)
+        self.assertFalse(field.blank)
+        self.assertTrue(field.primary_key)
+        self.assertTrue(field.editable)
 
     def test_account_id_cannot_be_blank(self):
         self.stockAccount.account_id = ''
@@ -56,6 +78,13 @@ class StockAccountModelTestCase(TestCase):
         self.stockAccount.account_id = '_@*&'
         self._assert_stock_is_valid(self.stockAccount)
 
+    def test_access_token_field(self):
+        field = StockAccount._meta.get_field('access_token')
+        self.assertIsInstance(field, models.CharField)
+        self.assertEqual(field.max_length, 1024)
+        self.assertFalse(field.blank)
+        self.assertTrue(field.editable)
+
     def test_access_token_cannot_be_blank(self):
         self.stockAccount.access_token = ''
         self._assert_stock_is_invalid(self.stockAccount)
@@ -83,6 +112,13 @@ class StockAccountModelTestCase(TestCase):
     def test_access_token_can_contain_special_characters(self):
         self.stockAccount.access_token = '_@*&'
         self._assert_stock_is_valid(self.stockAccount)
+
+    def test_name_field(self):
+        field = StockAccount._meta.get_field('name')
+        self.assertIsInstance(field, models.CharField)
+        self.assertEqual(field.max_length, 1024)
+        self.assertFalse(field.blank)
+        self.assertTrue(field.editable)
 
     def test_name_cannot_be_blank(self):
         self.stockAccount.name = ''
@@ -112,6 +148,13 @@ class StockAccountModelTestCase(TestCase):
         self.stockAccount.name = '_@*&'
         self._assert_stock_is_valid(self.stockAccount)
 
+    def test_institution_name_field(self):
+        field = StockAccount._meta.get_field('institution_name')
+        self.assertIsInstance(field, models.CharField)
+        self.assertEqual(field.max_length, 1024)
+        self.assertFalse(field.blank)
+        self.assertTrue(field.editable)
+
     def test_institution_name_cannot_be_blank(self):
         self.stockAccount.institution_name = ''
         self._assert_stock_is_invalid(self.stockAccount)
@@ -140,6 +183,13 @@ class StockAccountModelTestCase(TestCase):
         self.stockAccount.institution_name = '_@*&'
         self._assert_stock_is_valid(self.stockAccount)
 
+    def test_institution_id_field(self):
+        field = StockAccount._meta.get_field('institution_id')
+        self.assertIsInstance(field, models.CharField)
+        self.assertEqual(field.max_length, 1024)
+        self.assertFalse(field.blank)
+        self.assertTrue(field.editable)
+
     def test_institution_id_cannot_be_blank(self):
         self.stockAccount.institution_id = ''
         self._assert_stock_is_invalid(self.stockAccount)
@@ -167,6 +217,14 @@ class StockAccountModelTestCase(TestCase):
     def test_institution_id_can_contain_special_characters(self):
         self.stockAccount.institution_id = '_@*&'
         self._assert_stock_is_valid(self.stockAccount)
+
+    def test_balance_field(self):
+        field = StockAccount._meta.get_field('balance')
+        self.assertIsInstance(field, MoneyField)
+        self.assertEqual(field.default_currency, 'GBP')
+        self.assertEqual(field.decimal_places, 2)
+        self.assertEqual(field.max_digits, 11)
+        self.assertTrue(field.editable)
 
     def test_balance_cannot_be_none(self):
         self.stockAccount.balance = None
@@ -200,6 +258,13 @@ class StockAccountModelTestCase(TestCase):
         with self.assertRaises(CurrencyDoesNotExist):
             self.stockAccount.balance = Money(100, 'Gold')
         self._assert_stock_is_valid(self.stockAccount)
+
+    def test_institution_logo_field(self):
+        field = StockAccount._meta.get_field('institution_logo')
+        self.assertIsInstance(field, models.CharField)
+        self.assertEqual(field.max_length, 10000)
+        self.assertTrue(field.editable)
+        self.assertTrue(field.editable)
 
     def test_institution_logo_cannot_be_none(self):
         self.stockAccount.institution_logo = None
