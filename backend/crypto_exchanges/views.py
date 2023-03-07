@@ -16,6 +16,7 @@ class GenericCryptoExchanges(APIView):
 
     def __init__(self, crypto_exchange_name=None, fetcher=None, **kwargs):
         super().__init__(**kwargs)
+        self.account_ids = None
         self.crypto_exchange_name = crypto_exchange_name
         self.fetcher = fetcher
 
@@ -27,7 +28,27 @@ class GenericCryptoExchanges(APIView):
                 # encountering an error while retrieving data
                 return Response({'error': data['msg']}, status=400)
         elif self.fetcher == HuobiFetcher:
-            pass
+            # For some reason only every 4th/5th request is successful, thus it was decided to add this awful construct.
+            # It is hard to explain why 4 requests fall while having the same input data, it seems like huobi API is
+            # Encountering some internal server issues.
+            success = False
+            counter = 0
+            while not success:
+                try:
+                    self.account_ids = service.get_account_IDs()
+                    if self.account_ids['status'] == 'ok':
+                        success = True
+                    # Internal huobi_api error
+                    elif self.account_ids['status'] == 'error' and self.account_ids['err-msg'] \
+                            == 'Signature not valid: Verification failure [校验失败]':
+                        raise TypeError
+                    else:
+                        return Response({'error': self.account_ids['err-msg']}, status=400)
+                except TypeError:
+                    counter += 1
+                    if counter == 20:
+                        return Response({'error': 'Huobi API is currently experiencing some issues. Please try later.'},
+                                        status=503)
         elif self.fetcher == GateioFetcher:
             if 'label' and 'message' in data:
                 # encountering an error while retrieving data
@@ -89,27 +110,8 @@ class GenericCryptoExchanges(APIView):
 
         # Get the user's account information
         if self.fetcher == HuobiFetcher:
-            # For some reason only every 4th/5th request is successful, thus it was decided to add this awful construct.
-            # It is hard to explain why 4 requests fall while having the same input data, it seems like huobi API is
-            # Encountering some internal server issues.
-            success = False
-            counter = 0
-            while not success:
-                try:
-                    self.account_ids = service.get_account_IDs()
-                    if self.account_ids['status'] == 'ok':
-                        success = True
-                    # Internal huobi_api error
-                    elif self.account_ids['status'] == 'error' and self.account_ids[
-                        'err-msg'] == 'Signature not valid: Verification failure [校验失败]':
-                        raise TypeError
-                    else:
-                        return Response({'error': self.account_ids['err-msg']}, status=400)
-                except TypeError:
-                    counter += 1
-                    if counter == 20:
-                        return Response({'error': 'Huobi API is currently experiencing some issues. Please try later.'},
-                                        status=503)
+            # Making sure the api and secret keys are valid before saving the account
+            self.check_for_errors_from_the_response_to_the_api_call(data={}, service=service)
 
             success = False
             while not success:
@@ -118,15 +120,13 @@ class GenericCryptoExchanges(APIView):
                     success = True
                 except TypeError:
                     pass
-                except Exception:
-                    pass
         else:
             data = service.get_account_data()
 
-        # Making sure the api and secret keys are valid before saving the account
-        checker: Response = self.check_for_errors_from_the_response_to_the_api_call(data, service)
-        if checker:
-            return checker
+            # Making sure the api and secret keys are valid before saving the account
+            checker: Response = self.check_for_errors_from_the_response_to_the_api_call(data, service)
+            if checker:
+                return checker
 
         # Save the binance account to the database
         saved_exchange_account_object = account.save()

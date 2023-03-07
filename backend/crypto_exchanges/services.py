@@ -9,7 +9,7 @@ from urllib.parse import quote_plus, urlencode
 from crypto_exchanges.models import Token, CryptoExchangeAccount
 
 
-# Class was implemented according to: ""
+# Class was implemented according to: "https://binance-docs.github.io/apidocs/spot/en/#change-log"
 class BinanceFetcher:
 
     def __init__(self, api_key, secret_key):
@@ -31,7 +31,7 @@ class BinanceFetcher:
         return round(time.time() * 1000)
 
 
-# Class was implemented according to: ""
+# Class was implemented according to: "https://huobiapi.github.io/docs/spot/v1/en/#change-log"
 class HuobiFetcher:
 
     def __init__(self, api_key, secret_key):
@@ -94,7 +94,7 @@ class HuobiFetcher:
             return response.json()['data']['list']
 
 
-# Class was implemented according to: ""
+# Class was implemented according to: "https://www.gate.io/docs/developers/apiv4/en/"
 class GateioFetcher:
 
     def __init__(self, api_key, secret_key):
@@ -129,7 +129,7 @@ class GateioFetcher:
         return {'KEY': self.api_key, 'Timestamp': str(timestamp), 'SIGN': signature}
 
 
-# Class was implemented according to: ""
+# Class was implemented according to: "https://coinlist.co/help/api"
 class CoinListFetcher:
 
     def __init__(self, api_key, secret_key):
@@ -194,7 +194,7 @@ class CoinListFetcher:
         return timestamp + method.upper() + path + (body or '')
 
 
-# Class was implemented according to: ""
+# Class was implemented according to: "https://docs.cloud.coinbase.com/exchange/docs/requests"
 # Create custom authentication for Coinbase API
 class CoinBaseAuthorisation(requests.auth.AuthBase):
     def __init__(self, api_key, secret_key):
@@ -245,7 +245,7 @@ class CoinBaseFetcher:
         return data_to_return
 
 
-# Class was implemented according to: ""
+# Class was implemented according to: "https://docs.kraken.com/rest/"
 class KrakenFetcher:
     def __init__(self, api_key, secret_key):
         self.api_key = api_key
