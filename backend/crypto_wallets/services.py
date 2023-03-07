@@ -14,8 +14,13 @@ class CryptoWalletService:
               f"&transaction_details=true&limit=1000"
         r = requests.get(url=url)
         response = r.json()
-        # print(response)
+
+        if r.status_code == 400:
+            self.type = None
+            return
+
         self.balance = response['data'][address]['address']['balance']
+        self.type = response['data'][address]['address']['type']
         self.transactions = response['data'][address]['transactions']
 
 
