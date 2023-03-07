@@ -18,9 +18,16 @@ class CryptoWalletService:
             return
 
         response = r.json()
-        self.balance = response['data'][address]['address']['balance']
-        self.type = response['data'][address]['address']['type']
+        data = response['data'][address]['address']
+
+        self.type = data['type']
+        self.balance = data['balance']
+        self.received = data['received']
+        self.spent = data['spent']
+        self.output_count = data['output_count']
+        self.unspent_output_count = data['unspent_output_count']
         self.transactions = response['data'][address]['transactions']
+
 
 
 def get_timestamp(date_time):

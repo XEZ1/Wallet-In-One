@@ -97,9 +97,33 @@ export default function WalletAssetDetail(props) {
 
         <Text style={{fontWeight: "700", color: colors.text}}>Value</Text>
         <Text style={{color: colors.text}}>£{value}</Text>
+        <Text />
         {/* ▲ 0.00% */}
 
+        <Text style={{fontWeight: "700", color: colors.text}}>Received</Text>
+        <Text style={{color: colors.text}}>{item.received} {item.symbol}</Text>
+        <Text />
+
+        <Text style={{fontWeight: "700", color: colors.text}}>Spent</Text>
+        <Text style={{color: colors.text}}>{item.spent} {item.symbol}</Text>
+        <Text />
+
+        <Text style={{fontWeight: "700", color: colors.text}}>Output Count</Text>
+        <Text style={{color: colors.text}}>{item.output_count}</Text>
+        <Text />
+
+        <Text style={{fontWeight: "700", color: colors.text}}>Unspent Output Count</Text>
+        <Text style={{color: colors.text}}>{item.unspent_output_count}</Text>
+
       </View>
+
+      <Pressable
+        onPress={() => removeWallet(item.id).then(() => props.navigation.goBack())}
+        style={{alignItems: "center", justifyContent: "center"}}>
+        <View style={styles(dark, colors).smallButton}>
+          <Text style={{color: colors.text, fontWeight: "800"}}>Remove</Text>
+        </View>
+      </Pressable>
 
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Graph</Text>
       {graphData.length <= 2 ? (
@@ -136,13 +160,6 @@ export default function WalletAssetDetail(props) {
         }
       </View>
 
-      <Pressable
-        onPress={() => removeWallet(item.id).then(() => props.navigation.goBack())}
-        style={{alignItems: "center", justifyContent: "center"}}>
-        <View style={styles(dark, colors).smallButton}>
-          <Text style={{color: colors.text, fontWeight: "800"}}>Remove</Text>
-        </View>
-      </Pressable>
 
     </ScrollView>
   );

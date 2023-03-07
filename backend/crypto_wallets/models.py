@@ -16,6 +16,10 @@ class CryptoWallet(models.Model):
     symbol = models.CharField(max_length=16)
     address = models.CharField(max_length=256, blank=False, unique=True)
     balance = models.FloatField()
+    received = models.FloatField()
+    spent = models.FloatField()
+    output_count = models.IntegerField()
+    unspent_output_count = models.IntegerField()
 
 
 class CryptoWalletTransaction(models.Model):
