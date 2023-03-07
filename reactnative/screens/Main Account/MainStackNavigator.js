@@ -24,11 +24,26 @@ import KrakenCredentials from "../cryptoExchanges/KrakenExchange";
 import CryptoExchanges from "../cryptoExchanges/CryptoExchanges";
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+
 const Stack = createStackNavigator();
 
 export default function MainStackNavigator() {
+
+  const {dark, colors, setScheme} = useTheme();
+
   return (
-    <Stack.Navigator initialRouteName="Main Account">
+    <Stack.Navigator
+      initialRouteName="Main Account"
+      screenOptions={
+        {
+          headerStyle: {backgroundColor: colors.background},
+          headerTitleStyle: {color: colors.text},
+          tabBarStyle: {backgroundColor: colors.background},
+          tabBarShowLabel: false,
+          tabBarHideOnKeyboard: true,
+        }}
+    >
       <Stack.Screen name="Accounts" component={MainAccountPage} />
       <Stack.Screen
         name="Bank Accounts"
@@ -49,7 +64,6 @@ export default function MainStackNavigator() {
         name="Bank Transactions"
         component={BankTransactionsScreen}
       />
-      
       <Stack.Screen 
         name="Crypto Wallets & Exchanges"
         component={CryptoWallet}
@@ -63,11 +77,16 @@ export default function MainStackNavigator() {
             </TouchableOpacity>
           )
       })}/>
-      <Stack.Screen 
+      <Stack.Screen
         name="Add Cryptocurrency Wallet or Account"
         component={AddCryptoScreen} />
-
-      <Stack.Screen name="WalletAssetDetail" component={WalletAssetDetail} />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="WalletAssetDetail"
+        component={WalletAssetDetail}
+      />
       <Stack.Screen name="WalletSelector" component={WalletSelector} />
       <Stack.Screen name="WalletConnector" component={WalletConnector} />  
 
