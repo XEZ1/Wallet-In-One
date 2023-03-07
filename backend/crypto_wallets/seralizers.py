@@ -24,7 +24,7 @@ class WalletSerializer(serializers.ModelSerializer):
         cryptocurrency = validated_data['cryptocurrency']
         crypto_wallet_service = CryptoWalletService(cryptocurrency, validated_data['address'])
         if crypto_wallet_service.type is None:
-            raise serializers.ValidationError("The cryptocurrency address could not be found.")
+            raise serializers.ValidationError({'address': ["the cryptocurrency address could not be found."]})
 
         crypto_wallet = CryptoWallet.objects.create(
             **validated_data,
