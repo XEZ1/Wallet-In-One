@@ -9,9 +9,9 @@ class TransactionModelTestCase(TestCase):
     """Tests for transaction model."""
 
     fixtures = [
-        'stocks/fixtures/transaction.json',
-        'stocks/fixtures/stocks.json',
-        'stocks/fixtures/user.json'
+        'stocks/tests/fixtures/transaction.json',
+        'stocks/tests/fixtures/stocks.json',
+        'stocks/tests/fixtures/user.json'
     ]
 
     def setUp(self):

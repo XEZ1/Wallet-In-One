@@ -8,8 +8,8 @@ from moneyed.classes import CurrencyDoesNotExist
 class StockAccountModelTestCase(TestCase):
 
     fixtures = [
-        'stocks/fixtures/stocks.json',
-        'stocks/fixtures/user.json',
+        'stocks/tests/fixtures/stocks.json',
+        'stocks/tests/fixtures/user.json',
     ]
 
     def setUp(self):
