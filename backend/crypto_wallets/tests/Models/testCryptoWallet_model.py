@@ -21,7 +21,11 @@ class CryptoWalletTestCase(TestCase):
             cryptocurrency="Bitcoin",
             symbol="BTC",
             address="0x0",
-            balance=100.00
+            balance=100.00,
+            received=300.00,
+            spent=200.00,
+            output_count=50,
+            unspent_output_count=20
         )
 
     def _assert_is_valid(self, crypto_wallet):
@@ -105,11 +109,27 @@ class CryptoWalletTestCase(TestCase):
         self.crypto_wallet.received = None
         self._assert_is_invalid(self.crypto_wallet)
 
+    def test_received_can_be_integer(self):
+        self.crypto_wallet.received = 234
+        self._assert_is_valid(self.crypto_wallet)
+
+    def test_received_can_be_float(self):
+        self.crypto_wallet.received = 234.2344
+        self._assert_is_valid(self.crypto_wallet)
+
     """Test Spent"""
 
     def test_spent_must_not_be_blank(self):
         self.crypto_wallet.spent = None
         self._assert_is_invalid(self.crypto_wallet)
+
+    def test_spent_can_be_integer(self):
+        self.crypto_wallet.spent = 234
+        self._assert_is_valid(self.crypto_wallet)
+
+    def test_spent_can_be_float(self):
+        self.crypto_wallet.spent = 234.2344
+        self._assert_is_valid(self.crypto_wallet)
 
     """Test Output Count"""
 
@@ -117,8 +137,16 @@ class CryptoWalletTestCase(TestCase):
         self.crypto_wallet.output_count = None
         self._assert_is_invalid(self.crypto_wallet)
 
+    def test_output_count_is_integer(self):
+        self.crypto_wallet.output_count = 234
+        self._assert_is_valid(self.crypto_wallet)
+
     """Test Unspent Output Count"""
 
     def test_unspent_output_count_must_not_be_blank(self):
         self.crypto_wallet.unspent_output_count = None
         self._assert_is_invalid(self.crypto_wallet)
+
+    def test_unspent_output_count_is_integer(self):
+        self.crypto_wallet.unspent_output_count = 234
+        self._assert_is_valid(self.crypto_wallet)
