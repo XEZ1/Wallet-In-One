@@ -5,7 +5,7 @@ import {
   Pressable, ScrollView,
   StyleSheet,
   Text,
-  TextInput, TouchableWithoutFeedback,
+  TextInput, TouchableOpacity, TouchableWithoutFeedback,
   View,
 } from "react-native";
 import {createStackNavigator} from "@react-navigation/stack";
@@ -24,14 +24,9 @@ export function WalletSelector(props) {
   const stylesInternal = StyleSheet.create({
     container: {
       flex: 1,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'flex-start',
-      alignSelf: "center",
       paddingTop: 20,
     },
     cryptoItem: {
-      width: '40%',
       padding: 10,
       margin: 10,
       borderRadius: 10,
@@ -52,11 +47,10 @@ export function WalletSelector(props) {
         </View>
       </View>
 
-      <View style={stylesInternal.container}>
-
+      <View style={{flex: 1}}>
         {
           coins.map((coin) =>
-            <TouchableWithoutFeedback
+            <TouchableOpacity
               key={coin.symbol}
               onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: coin.name, symbol: coin.symbol})}
             >
@@ -67,11 +61,10 @@ export function WalletSelector(props) {
                 />
                 <Text style={[styles(dark, colors).textBold, {fontSize: 20}]}>{coin.name}</Text>
               </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           )
 
         }
-
       </View>
 
     </ScrollView>

@@ -49,7 +49,7 @@ export default function WalletAsset(props) {
 
 
   return (
-    <TouchableWithoutFeedback
+    <TouchableOpacity
       onPress={() =>
         props.navigation.navigate("WalletAssetDetail",
           { item: props.item, value: cryptoValue * props.item.balance, removeWallet: props.removeWallet })
@@ -90,6 +90,6 @@ export default function WalletAsset(props) {
 
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 }
