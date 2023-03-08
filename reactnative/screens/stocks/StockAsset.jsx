@@ -144,6 +144,7 @@ export default function StockAsset({ route, navigation, }){
           {transactions && 
             <LineChartScreen 
               transactions={transactions}
+              stockAccountBalance={route.params.balance}
               graph_version={1}
               height={275}
               width={350}

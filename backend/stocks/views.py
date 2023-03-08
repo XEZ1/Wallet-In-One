@@ -17,7 +17,7 @@ from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchan
 from flask import jsonify
 from plaid.model.accounts_get_request import AccountsGetRequest
 from plaid.model.transactions_sync_request import TransactionsSyncRequest
-from .services import setUpClient
+from .services import setUpClient, get_total_number_of_transactions, get_highest_transaction, get_lowest_transaction, get_average_transaction, get_variance_transaction, get_standard_deviation_transaction
 from plaid.model.institutions_search_request import InstitutionsSearchRequest
 from plaid.model.institutions_search_request_options import InstitutionsSearchRequestOptions
 from plaid.model.investments_holdings_get_request import InvestmentsHoldingsGetRequest
@@ -188,12 +188,23 @@ def deleteAccount(request, stockAccount):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
     stock_account.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-# @api_view(['GET'])
-# def getTransactionsForStock(request, stock_id):
-#     transaction = Transaction.objects.filter(stock=stock_id)
-#     print(transaction)
-#     serializer = AddTransaction(transaction, many=False)
-#     return Response(serializer.data)
     
+@api_view(['GET'])
+def getMetrics(request):
+    stockAccounts = StockAccount.objects.filter(user=request.user)
+    total_number_of_transactions = get_total_number_of_transactions(stockAccounts)
+    highest_transaction = get_highest_transaction(stockAccounts)
+    lowest_transaction = get_lowest_transaction(stockAccounts)
+    average_transaction = get_average_transaction(stockAccounts)
+    variance = get_variance_transaction(stockAccounts)
+    standard_deviation = get_standard_deviation_transaction(stockAccounts)
+    
+    return Response({
+        'total_number_of_transactions': total_number_of_transactions,
+        'highest_transaction': highest_transaction,
+        'lowest_transaction': lowest_transaction,
+        'average_transaction': average_transaction,
+        'variance': variance,
+        'standard_deviation': standard_deviation
+        })
+
