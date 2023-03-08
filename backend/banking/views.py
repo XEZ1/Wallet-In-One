@@ -93,28 +93,107 @@ class TransactionList(generics.ListAPIView):
         else:
             return Transaction.objects.filter(account__user = self.request.user).order_by('-time')
 
-from django.core import serializers
-import json
+
 from itertools import groupby
+
+def group_transactions(transactions, balance, interval='day', format=True):
+    transactions = transactions.annotate(date=TruncDate('time'))
+
+    # Group transactions by date
+    if interval == "day":
+        key = lambda x: x.date
+    elif interval == "time":
+        key = lambda x: x.time
+    elif interval == "month":
+        key = lambda x: x.date.replace(day=1)
+     
+    groups = groupby(transactions, key=key)
+    daily_transaction_sum = {date: sum(t.amount for t in group) for date, group in groups}
+    dates = sorted(daily_transaction_sum,reverse=True)
+
+    daily_balances = {}
+    for d in dates:
+        if format:
+            daily_balances[str(d)] = str(balance)
+        else:
+            daily_balances[str(d)] = balance.amount
+        balance -= daily_transaction_sum[d]
+    
+    return daily_balances
+
 
 class TransactionChartView(APIView):
     def get(self, request):
-
-        transactions = Transaction.objects.filter(account__user = self.request.user).annotate(date=TruncDate('time'))
-
-        # Group transactions by date
-        groups = groupby(transactions, key=lambda x: x.date)
-        daily_transaction_sum = {date: sum(t.amount for t in group) for date, group in groups}
-        dates = sorted(daily_transaction_sum,reverse=True)
-
-        daily_balances = {}
-
         balance = total_user_balance(request.user)
-        for d in dates:
-            daily_balances[str(d)] = str(balance)
-            balance -= daily_transaction_sum[d]
-
+        transactions = Transaction.objects.filter(account__user = self.request.user)
+        daily_balances = group_transactions(transactions, balance, interval='day', format=True)
         return Response(daily_balances)
+
+from dateutil.relativedelta import relativedelta
+from django.db.models import Max, Min, StdDev, Avg, Variance, Sum
+
+def calculate_metrics(transactions):
+    res= {}
+    positive = transactions.filter(amount__gt=0)
+    negative = transactions.filter(amount__lt=0)
+
+    res['total_amount_of_transactions'] = len(transactions)
+    res['highest_transaction'] = transactions.aggregate(Max('amount')).get('amount__max')
+    res['lowest_transaction'] = transactions.aggregate(Min('amount')).get('amount__min')
+    res['average_transaction'] = transactions.aggregate(Avg('amount')).get('amount__avg')
+    res['average_transaction_in'] = positive.aggregate(Avg('amount')).get('amount__avg')
+    res['average_transaction_out'] = negative.aggregate(Avg('amount')).get('amount__avg')
+    res['variance'] = transactions.aggregate(Variance('amount')).get('amount__variance')
+    res['standard_deviation'] = transactions.aggregate(StdDev('amount')).get('amount__stddev')
+
+    balance = Account.objects.all()[2].account_balance()
+    balance_history= group_transactions(transactions, balance, interval='time', format=False)
+
+    #res['balance_history'] = balance_history
+    res['highest_balance'] = max(balance_history.items(), key=lambda x: x[1], default=0)
+    res['lowest_balance'] = min(balance_history.items(), key=lambda x: x[1], default=0)
+
+    res['debit_transactions'] = len(positive)
+    res['credit_transactions'] = len(negative)
+
+    res['total_money_in'] = positive.aggregate(Sum('amount')).get('amount__sum')
+    res['total_money_out'] = negative.aggregate(Sum('amount')).get('amount__sum')
+    res['net'] = transactions.aggregate(Sum('amount')).get('amount__sum')
+    return res
+
+@api_view(['GET'])
+def metrics(request, account_id=None):
+    res = {}
+
+    # Start of current month
+    start1month = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    start3month = start1month - relativedelta(months=3-1)
+    start6month = start1month - relativedelta(months=6-1)
+    start12month = start1month - relativedelta(months=12-1)
+
+
+    res['1 month start'] = start1month
+    # # Start of month 3 months ago
+    res['3 month start '] = start3month
+    # # Start of month 6 months ago
+    res['6 month start'] = start6month
+    # # Start of month 12 months ago
+    res['12 month start'] = start12month
+    # transactions = Transaction.objects.filter(account__user = request.user, time__gte=start )
+    
+    transactions = Transaction.objects.filter(account=Account.objects.all()[2], account__user = request.user, amount_currency="GBP")
+
+    res['all'] = calculate_metrics(transactions)
+    #res['1month'] = calculate_metrics(transactions.filter(time__gte=start1month))
+    res['3month'] = calculate_metrics(transactions.filter(time__gte=start3month))
+    res['6month'] = calculate_metrics(transactions.filter(time__gte=start6month))
+    return Response(res)
+    
+
+@api_view(['GET'])
+def delete_account(request, account_id):
+    Account.objects.filter(user=request.user, id=account_id).delete()
+    return Response({'Success': 'Deleted'}, status=200)
     
 # Returns total balance of all user's bank accounts
 @api_view(['GET'])
