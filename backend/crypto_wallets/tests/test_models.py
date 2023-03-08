@@ -95,6 +95,38 @@ class CryptoWalletTestCase(TestCase):
     Test Balance
     """
 
-    def test_amount_must_not_be_blank(self):
+    def test_balance_must_not_be_blank(self):
         self.crypto_wallet.balance = None
+        self._assert_crypto_wallet_is_invalid(self.crypto_wallet)
+
+    """
+    Test Received
+    """
+
+    def test_received_must_not_be_blank(self):
+        self.crypto_wallet.received = None
+        self._assert_crypto_wallet_is_invalid(self.crypto_wallet)
+
+    """
+    Test Spent
+    """
+
+    def test_spent_must_not_be_blank(self):
+        self.crypto_wallet.spent = None
+        self._assert_crypto_wallet_is_invalid(self.crypto_wallet)
+
+    """
+    Test Output Count
+    """
+
+    def test_output_count_must_not_be_blank(self):
+        self.crypto_wallet.output_count = None
+        self._assert_crypto_wallet_is_invalid(self.crypto_wallet)
+
+    """
+    Test Unspent Output Count
+    """
+
+    def test_unspent_output_count_must_not_be_blank(self):
+        self.crypto_wallet.unspent_output_count = None
         self._assert_crypto_wallet_is_invalid(self.crypto_wallet)
