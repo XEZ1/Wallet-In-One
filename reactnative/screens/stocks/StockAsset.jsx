@@ -7,6 +7,7 @@ import { api_url } from '../../authentication';
 import LineChartScreen from "reactnative/screens/charts/LineChart.js";
 import { ScrollView, Dimensions, Button, TouchableHighlight, Alert } from 'react-native';
 import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
+import { auth_delete } from '../../authentication';
 
 export default function StockAsset({ route, navigation, }){
     const isFocused = useIsFocused();
@@ -14,16 +15,7 @@ export default function StockAsset({ route, navigation, }){
     // const [stocks, setStocks] = useState()
 
     const deleteAccount = async () => {
-        const response = await fetch(api_url + '/stocks/delete_account/', {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Token ${await SecureStore.getItemAsync("token")}`
-            },
-            body: JSON.stringify({
-                account_id: route.params.accountID
-            }),
-          });
+      await auth_delete(`/stocks/delete_account/${route.params.accountID}/`)
     }
     
     // console.log("transactions:", transactions);
