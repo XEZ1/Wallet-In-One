@@ -84,7 +84,7 @@ export default function WalletAsset(props) {
               {props.item.balance} {props.item.symbol}
             </Text>
 
-            <Text style={[styles.walletAssetTitle, {color: colors.background}]}>£{cryptoValue * props.item.balance}</Text>
+            <Text style={[styles.walletAssetTitle, {color: colors.background}]}>£{(cryptoValue * props.item.balance).toFixed(2)}</Text>
             {/* ▲ 0.00% */}
           </View>
 

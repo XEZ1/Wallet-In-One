@@ -96,7 +96,7 @@ export default function WalletAssetDetail(props) {
         <Text />
 
         <Text style={{fontWeight: "700", color: colors.text}}>Value</Text>
-        <Text style={{color: colors.text}}>£{value}</Text>
+        <Text style={{color: colors.text}}>£{value.toFixed(2)}</Text>
         <Text />
         {/* ▲ 0.00% */}
 

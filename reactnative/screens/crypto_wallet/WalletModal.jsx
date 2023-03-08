@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Button, Image,
   Modal,
   Pressable, ScrollView,
@@ -74,6 +75,7 @@ export function WalletSelector(props) {
 
 export function WalletConnector(props) {
   const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
   const { connectWallet, cryptocurrency, symbol } = props.route.params;
   const {dark, colors, setScheme} = useTheme();
 
@@ -117,13 +119,21 @@ export function WalletConnector(props) {
           placeholder="Wallet Address"
         />
 
-        <Button
-          title="Connect Wallet"
-          onPress={() =>
-            connectWallet(cryptocurrency, symbol, address)
-              .then(() => props.navigation.navigate("Wallets"))
-          }
-        />
+        {
+          loading ?
+            <ActivityIndicator size="large" color={colors.primary}/>
+            :
+            <Button
+              title="Connect Wallet"
+              onPress={() => {
+                  setLoading(true);
+                  connectWallet(cryptocurrency, symbol, address)
+                    .then(() => props.navigation.navigate("Wallets"))
+                }
+              }
+            />
+        }
+
       </View>
     </View>
   );
