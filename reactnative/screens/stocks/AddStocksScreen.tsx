@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Button, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Button, Text, Image } from 'react-native';
 import { LinkSuccess, LinkExit} from 'react-native-plaid-link-sdk';
 import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
 import { api_url } from '../../authentication';
+import { useIsFocused } from '@react-navigation/native';
 
 import {Alert, Modal, StyleSheet, Pressable, View, Animated} from 'react-native';
 
@@ -14,14 +15,16 @@ const PlaidComponent = ({ navigation }) => {
   const [list, setList] = useState()
   const [institution_name, setInstitutionName] = useState()
   const [institution_id, setInstitutionID] = useState()
+  const [imageState, setImage] = useState()
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState("Modal");
+  const isFocused = useIsFocused()
   //const [access_token, setAccessToken] = useState()
   //const [stocks, setStocks] = useState(null)
   let access_token = ''
   let balance = ''
-
+  let image = ''
   let fetched_transaction_list = null
   let transactions_stock_account_id = ''
   let stocks = null
@@ -45,6 +48,7 @@ const PlaidComponent = ({ navigation }) => {
         institution_id: success.metadata.institution.id,
         access_token: access_token,
         balance: balance,
+        institution_logo: image,
       }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
     .then((data) => console.log(data.status))
@@ -62,6 +66,7 @@ const PlaidComponent = ({ navigation }) => {
     },
   }).then(async (res) => setList(await res.json()))};
 
+  useEffect(() => {
   const initiatePlaidLink = async () => {
     // if(access_token == null)
     // {
@@ -85,6 +90,8 @@ const PlaidComponent = ({ navigation }) => {
     //   console.log(access_token)
     // }
   };
+  if(isFocused){initiatePlaidLink()}
+}, [isFocused])
 
   const getAccessToken = async (publicToken) => {
     const response = await fetch(api_url + '/stocks/get_access_token/', {
@@ -110,8 +117,8 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({ access_token: accessToken }),
     });
     const data = await response.json();
-    console.log(data.accounts[0].balances)
-    balance = parseFloat(data.accounts[0].balances.current).toFixed(2) 
+    console.log((parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2))
+    balance = (parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2) 
   }
 
   const getStocks = async (accessToken) => {
@@ -206,12 +213,31 @@ const PlaidComponent = ({ navigation }) => {
     .then((data) => console.log(data))
     };
 
+
+  const getLogo = async (success) => {
+    const response = await fetch(api_url + '/stocks/get_logo/', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+      body: JSON.stringify({ name: success.metadata.institution.name }),
+    });
+    const data = await response.json()
+    console.log(data.logo)
+    image = data.logo
+    setImage(data.logo)
+  }
+
   
 
   return (
     <>
-      <Button title="Add Stock Account" onPress={initiatePlaidLink} />
-      {list ? (<Text>{JSON.stringify(list)}</Text>):''}
+      <Image
+        style={{ width: 152, height: 152 }}
+        source={{ uri: `data:image/png;base64,${imageState}` }}
+      />
       <PlaidLink
       linkToken={linkToken}
       onEvent={(event) => console.log(event)}
@@ -222,7 +248,6 @@ const PlaidComponent = ({ navigation }) => {
         // if(access_token == null){
         await getAccessToken(success.publicToken)
         console.log(access_token)
-          getBalance(access_token)
           // console.log("krishna")
         // }
         await getBalance(access_token)
@@ -240,6 +265,7 @@ const PlaidComponent = ({ navigation }) => {
           // console.log(success.metadata.institution.name)
           // setInstitutionID(success.metadata.institution.id)
           // console.log(success.metadata.institution.id)
+          await getLogo(success)
           addAccount(element, success)
           console.log(data_response)
 

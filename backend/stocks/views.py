@@ -18,7 +18,8 @@ from flask import jsonify
 from plaid.model.accounts_get_request import AccountsGetRequest
 from plaid.model.transactions_sync_request import TransactionsSyncRequest
 from .services import setUpClient
-from plaid.model.institutions_get_by_id_request import InstitutionsGetByIdRequest
+from plaid.model.institutions_search_request import InstitutionsSearchRequest
+from plaid.model.institutions_search_request_options import InstitutionsSearchRequestOptions
 from plaid.model.investments_holdings_get_request import InvestmentsHoldingsGetRequest
 from rest_framework import status
 from plaid.model.investments_transactions_get_request import InvestmentsTransactionsGetRequest
@@ -81,6 +82,25 @@ def get_balance(request):
         )
         response = client.accounts_get(request)
         return Response(response.to_dict())
+    except plaid.ApiException as e:
+        return json.loads(e.body)
+        
+
+@api_view(['POST'])
+def get_logo(request):
+    client = setUpClient()
+    print(request.data.get('name'))
+    try:
+        options = InstitutionsSearchRequestOptions(include_optional_metadata=True)
+        request = InstitutionsSearchRequest(
+            query=request.data.get('name'),
+            products=None,
+            country_codes=list(map(lambda x: CountryCode(x), ['US'])),
+            options=options
+        )
+        institution_response = client.institutions_search(request)
+        print(institution_response.institutions[0].logo)
+        return Response({'logo': institution_response.institutions[0].logo})
     except plaid.ApiException as e:
         return json.loads(e.body)
 
