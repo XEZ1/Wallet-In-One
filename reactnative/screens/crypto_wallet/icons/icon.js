@@ -7,6 +7,12 @@ const images = {
   'GRS': require('./GRS.png'),
   'ZEC': require('./ZEC.png'),
   'XEC': require('./XEC.png'),
+  'Binance': require('./Binance.png'),
+  'Huobi': require('./Huobi.png'),
+  'GateIo': require('./Gateio.png'),
+  'CoinList': require('./Coinlist.png'),
+  'CoinBase': require('./Coinbase.png'),
+  'Kraken': require('./Kraken.png'),
 }
 
 export default function getCryptoIcon(symbol) {

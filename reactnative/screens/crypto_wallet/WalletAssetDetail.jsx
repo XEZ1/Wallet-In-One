@@ -127,7 +127,7 @@ export default function WalletAssetDetail(props) {
 
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Graph</Text>
       {graphData.length <= 2 ? (
-        <Text>Not enough data to display graph.</Text>
+        <Text style={{color: colors.text}}>Not enough data to display graph.</Text>
       ) : (
         <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
           <LineChart.Provider data={data}>
