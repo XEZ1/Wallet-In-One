@@ -17,14 +17,11 @@ class WalletSerializerTestCase(TestCase):
         self.client = APIClient()
         self.login_url = reverse('login')
         self.user = User.objects.get(id=1)
-        # form_input = { 'username': '@pickles', 'password': 'Password123%' }
-        # self.client.post(self.login_url, form_input, format='json')
         self.transaction = {
             'id': 232,
             'value': 434,
             'time': 45,
         }
-        # self.transaction.save()
         self.serializer_input = {
             'user': User.objects.get(username='@pickles'),
             'id':1,
@@ -40,3 +37,20 @@ class WalletSerializerTestCase(TestCase):
         request.user = self.user
         serializer = WalletSerializer(data=self.serializer_input, context={'request': request})
         self.assertTrue(serializer.is_valid())
+
+    def test_necessary_fields_in_wallet_serializer(self):
+        serializer = WalletSerializer()
+        self.assertIn('user', serializer.fields)
+        self.assertIn('id', serializer.fields)
+        self.assertIn('cryptocurrency', serializer.fields)
+        self.assertIn('symbol', serializer.fields)
+        self.assertIn('address', serializer.fields)
+        self.assertIn('balance', serializer.fields)
+        self.assertIn('transactions', serializer.fields)
+
+    def test_form_uses_model_validation(self):
+        self.serializer_input['balance'] = 'badbalance'
+        request = APIRequestFactory().post('/')
+        request.user = self.user
+        serializer = WalletSerializer(data=self.serializer_input, context={'request': request})
+        self.assertFalse(serializer.is_valid())
