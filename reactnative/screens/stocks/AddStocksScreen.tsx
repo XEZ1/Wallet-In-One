@@ -5,6 +5,7 @@ import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
 import { api_url } from '../../authentication';
 import { useIsFocused } from '@react-navigation/native';
+import { auth_post } from '../../authentication';
 
 import {Alert, Modal, StyleSheet, Pressable, View, Animated} from 'react-native';
 
@@ -34,182 +35,103 @@ const PlaidComponent = ({ navigation }) => {
 
 
   const addAccount = async (account, success) => {
-    const res = await fetch(api_url + '/stocks/add_stock_account/', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-      },
-      body: JSON.stringify({
-        account_id: account._id,
-        name: account.meta.name,
-        institution_name: success.metadata.institution.name,
-        institution_id: success.metadata.institution.id,
-        access_token: access_token,
-        balance: balance,
-        institution_logo: image,
-      }),
-    });
-    data_response = res.status
-    };
+    const body = {
+      account_id: account._id,
+      name: account.meta.name,
+      institution_name: success.metadata.institution.name,
+      institution_id: success.metadata.institution.id,
+      access_token: access_token,
+      balance: balance,
+      institution_logo: image,
+    }
+    const response = await auth_post('/stocks/add_stock_account/', body)
+    data_response = response.status
+  };
     
     
-  const listAccounts = async () => {
-
-  fetch(api_url + '/stocks/list_accounts/', {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-    },
-  }).then(async (res) => setList(await res.json()))};
+  // const listAccounts = async () => {
+  //   const response = await auth_get('/stocks/list_accounts/')
+  //   setList
+  // fetch(api_url + '/stocks/list_accounts/', {
+  //   method: "GET",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+  //   },
+  // }).then(async (res) => setList(await res.json()))};
 
   useEffect(() => {
   const initiatePlaidLink = async () => {
-    // if(access_token == null)
-    // {
-      let token = await SecureStore.getItemAsync('token')
-      const response = await fetch(api_url + '/stocks/initiate_plaid_link/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Token '+ token
-        },
-        body: JSON.stringify({
-          // any additional parameters needed for the Django view
-        }),
-      });
-      const data = await response.json();
-      setLinkToken(data.link_token);
-      // console.log(linkToken);
-    // }
-    // else{
-    //   setLinkToken(access_token);
-    //   console.log(access_token)
-    // }
+      const response = await auth_post('/stocks/initiate_plaid_link/')
+      setLinkToken(response.body.link_token);
   };
   if(isFocused){initiatePlaidLink()}
 }, [isFocused])
 
   const getAccessToken = async (publicToken) => {
-    const response = await fetch(api_url + '/stocks/get_access_token/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-      },
-      body: JSON.stringify({ public_token: publicToken }),
-    });
-    const data = await response.json();
-    access_token = data.access_token
+    const body = {
+      public_token: publicToken
+    }
+    const response = await auth_post('/stocks/get_access_token/', body)
+    access_token = response.body.access_token
     // setAccessToken(data.access_token)
   }
 
   const getBalance = async (accessToken) => {
-    const response = await fetch(api_url + '/stocks/get_balance/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-      },
-      body: JSON.stringify({ access_token: accessToken }),
-    });
-    const data = await response.json();
+    const body = {
+      access_token: accessToken
+    }
+    const response = await auth_post('/stocks/get_balance/', body)
+    const data = response.body;
     console.log((parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2))
     balance = (parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2) 
   }
 
   const getStocks = async (accessToken) => {
-    const response = await fetch(api_url + '/stocks/get_stocks/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-      },
-      body: JSON.stringify({ access_token: accessToken }),
-    });
-    const data = await response.json();
+    const body = {
+      access_token: accessToken
+    }
+    const response = await auth_post('/stocks/get_stocks/', body)
+    const data = response.body;
     stocks = data.holdings
     securities = data.securities
     console.log(data)
   }
 
   const addStock = async (stock, stockInfo) => {
-    await fetch(api_url + '/stocks/add_stock/', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-      },
-      body: JSON.stringify({
-        institution_price: (stock.institution_price).toFixed(2),
-        quantity: stock.quantity,
-        name: stockInfo.name,
-        ticker_symbol: stockInfo.ticker_symbol,
-        stockAccount: stock.account_id
-      }),
-    }).then(res => res.json().then(data => ({status: res.status, body: data})) )
-    .then((data) => console.log(data))
+    const body = {
+      institution_price: (stock.institution_price).toFixed(2),
+      quantity: stock.quantity,
+      name: stockInfo.name,
+      ticker_symbol: stockInfo.ticker_symbol,
+      stockAccount: stock.account_id
+    }
+    await auth_post('/stocks/add_stock/', body)
   }
 
   const getTransaction = async (accessToken) => {
-    const response = await fetch(api_url + '/stocks/get_transactions/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-      },
-      body: JSON.stringify({ access_token: accessToken }),
-    });
-    const data = await response.json();
-    // console.log("Get transaction data")
-    // console.log(data)
-    fetched_transaction_list = data
+    const body = {
+      access_token: accessToken
+    }
+    const response = await auth_post('/stocks/get_transactions/', body)
+    fetched_transaction_list = response.body
   }
 
-  // {'investment_transaction_id': '1pkroJ4L3bHd5ZQoBNweTAwaEgL1wrFZAAND5',
-  //  'account_id': 'VAeoMpawGbFv3mnPKk8AiKVW98MKmbUqNdk7g', 
-  //  'security_id': 'abJamDazkgfvBkVGgnnLUWXoxnomp5up8llg4',
-  //   'date': datetime.date(2023, 2, 7), 
-  //   'name': 'SELL iShares Inc MSCI Brazil', 
-  //   'quantity': -49.02909689729298, 
-  //   'amount': -2066.58,
-  //    'price': 41.62, 
-  //    'fees': 0.0, 
-  //    'type': 'sell',
-  //     'subtype': 'sell',
-  //      'iso_currency_code': 'USD', 
-  //      'unofficial_currency_code': None, 
-  //      'cancel_transaction_id': None
-  //     }
 
   const addTransaction = async (element) => {
-    await fetch(api_url + '/stocks/add_transaction_account/', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-      }, 
-      body: JSON.stringify({
-        account_id: element.account_id,
-        investment_transaction_id: element.investment_transaction_id,
-        security_id: element.security_id,
-        date: element.date,
-        name: element.name,
-        quantity: element.quantity,
-        amount: element.amount,
-        price: element.price,
-        fees: element.fees,
-        stock: fetched_transaction_list.accounts[0].account_id,
-        // pending: element.pending,
-        // transaction_type: element.transaction_type,
-      }),
-    })
-    .then(res => res.json().then(data => ({status: res.status, body: data})))
-    .then((data) => console.log(data))
+    const body = {
+      account_id: element.account_id,
+      investment_transaction_id: element.investment_transaction_id,
+      security_id: element.security_id,
+      date: element.date,
+      name: element.name,
+      quantity: element.quantity,
+      amount: element.amount,
+      price: element.price,
+      fees: element.fees,
+      stock: fetched_transaction_list.accounts[0].account_id,
+    }
+    await auth_post('/stocks/add_transaction_account/', body)
     };
 
 
@@ -233,10 +155,10 @@ const PlaidComponent = ({ navigation }) => {
 
   return (
     <>
-      <Image
+      {/* <Image
         style={{ width: 152, height: 152 }}
         source={{ uri: `data:image/png;base64,${imageState}` }}
-      />
+      /> */}
       <PlaidLink
       linkToken={linkToken}
       onEvent={(event) => console.log(event)}
@@ -273,7 +195,6 @@ const PlaidComponent = ({ navigation }) => {
           console.log(data_response.status)
 
           if(data_response != 400){
-            console.log("KRISHNA")
             await getTransaction(access_token)
             // console.log("fetched_transaction_list: ")
             // console.log(fetched_transaction_list.accounts)
