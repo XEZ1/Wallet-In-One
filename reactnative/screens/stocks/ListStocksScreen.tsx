@@ -12,7 +12,7 @@ import {
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
-import { api_url, auth_get } from '../../authentication';
+import { auth_get } from '../../authentication';
 
 import LineChartScreen from '../charts/LineChart';
 // import LineChartScreen from '../../charts/LineChart';
