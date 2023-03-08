@@ -86,6 +86,8 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     // });
     // console.log(graph_data)
     let color = 'green';
+    const data = graphData
+    console.log(data)
 
     // if (graph_data !== undefined && graph_data[0][0] > graph_data[graph_data.length -1][0]){
     //     color = 'red';
@@ -101,9 +103,9 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                 <>
                     {/* Interactive graph */}
                     { graph_version == 1 && 
-          <LineChart.Provider data={graphData}>
+          <LineChart.Provider data={data}>
           <LineChart height={height} width={width}>
-            <LineChart.Path/>
+            <LineChart.Path color={color}/>
             <LineChart.CursorCrosshair>
 
               <LineChart.Tooltip>

@@ -80,6 +80,5 @@ export const auth_post = async (url, body=null, headers={}) => {
 }
 
 export const auth_delete = async (url, body=null, headers={}) => {
-    console.log(body + "krishna")
     return await auth_request(url, body, headers, "DELETE");
 }
