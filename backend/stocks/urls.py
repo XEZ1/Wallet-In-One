@@ -17,5 +17,6 @@ urlpatterns = [
     path('get_transaction/<str:id>/', getTransaction),
     path('add_stock/', addStock.as_view(), name='add_stock'),
     path('list_stocks/<str:stockAccount>/', listStocks),
-    path('get_logo/', get_logo)
+    path('get_logo/', get_logo),
+    # path('get_stock_transactions/<str:stock>',getTransactionsForStock),
 ]

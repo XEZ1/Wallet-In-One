@@ -2127,6 +2127,11 @@
   "resolved" "https://registry.npmjs.org/@react-native/normalize-color/-/normalize-color-2.0.0.tgz"
   "version" "2.0.0"
 
+"@react-native/normalize-colors@*":
+  "integrity" "sha512-285lfdqSXaqKuBbbtP9qL2tDrfxdOFtIMvkKadtleRQkdOxx+uzGvFr82KHmc/sSiMtfXGp7JnFYWVh4sFl7Yw=="
+  "resolved" "https://registry.npmjs.org/@react-native/normalize-colors/-/normalize-colors-0.72.0.tgz"
+  "version" "0.72.0"
+
 "@react-native/polyfills@2.0.0":
   "integrity" "sha512-K0aGNn1TjalKj+65D7ycc1//H9roAQ51GJVk5ZJQFb2teECGmzd86bYDC0aYdbRf7gtovescq4Zt6FR0tgXiHQ=="
   "resolved" "https://registry.npmjs.org/@react-native/polyfills/-/polyfills-2.0.0.tgz"
@@ -4971,6 +4976,15 @@
   "resolved" "https://registry.npmjs.org/depd/-/depd-2.0.0.tgz"
   "version" "2.0.0"
 
+"deprecated-react-native-prop-types@^4.0.0":
+  "integrity" "sha512-q0kk77qFPC4adlnZH7cv9lfbHALeaTkl7wT1uNERc+e0Os3KcBKKy1rVliTE8sfey6TP6OPzoIXpr9OPidvvHw=="
+  "resolved" "https://registry.npmjs.org/deprecated-react-native-prop-types/-/deprecated-react-native-prop-types-4.0.0.tgz"
+  "version" "4.0.0"
+  dependencies:
+    "@react-native/normalize-colors" "*"
+    "invariant" "*"
+    "prop-types" "*"
+
 "des.js@^1.0.0":
   "integrity" "sha512-Q0I4pfFrv2VPd34/vfLrFOoRmlYj3OV50i7fskps1jZWK1kApMWWT9G6RRUeYedLcBDIhnSDaUvJMb3AhUlaEA=="
   "resolved" "https://registry.npmjs.org/des.js/-/des.js-1.0.1.tgz"
@@ -6913,7 +6927,7 @@
   "resolved" "https://registry.npmjs.org/intl/-/intl-1.2.5.tgz"
   "version" "1.2.5"
 
-"invariant@^2.2.4", "invariant@2.2.4":
+"invariant@*", "invariant@^2.2.4", "invariant@2.2.4":
   "integrity" "sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA=="
   "resolved" "https://registry.npmjs.org/invariant/-/invariant-2.2.4.tgz"
   "version" "2.2.4"
@@ -9886,6 +9900,16 @@
   "resolved" "https://registry.npmjs.org/point-in-polygon/-/point-in-polygon-1.1.0.tgz"
   "version" "1.1.0"
 
+"popup-ui-new@^1.0.0":
+  "integrity" "sha512-tjzfvsnf9HiSCdTnXie63a7k1wStsL5MreiMt28zhk634RYghBzn3ETBSTCYdli9gAsgWI2BV70LS7xkmGBlQQ=="
+  "resolved" "https://registry.npmjs.org/popup-ui-new/-/popup-ui-new-1.0.0.tgz"
+  "version" "1.0.0"
+
+"popup-ui@^1.2.2":
+  "integrity" "sha512-2vJZ79lOSyHuVEH0zHfB8ga3LY9xYpuggKA2sT9tTKbcOsKlJnuvY/kEugIM1xW0+svxWE9Orku1tRQQvR9Hog=="
+  "resolved" "https://registry.npmjs.org/popup-ui/-/popup-ui-1.2.2.tgz"
+  "version" "1.2.2"
+
 "portfinder@^1.0.26":
   "integrity" "sha512-on2ZJVVDXRADWE6jnQaX0ioEylzgBpQk8r55NE4wjXW1ZxO+BgDlY6DXwj20i0V8eB4SenDQ00WEaxfiIQPcxg=="
   "resolved" "https://registry.npmjs.org/portfinder/-/portfinder-1.0.32.tgz"
@@ -10322,7 +10346,7 @@
     "kleur" "^3.0.3"
     "sisteransi" "^1.0.5"
 
-"prop-types@^15.7.2", "prop-types@^15.8.1":
+"prop-types@*", "prop-types@^15.7.2", "prop-types@^15.8.1":
   "integrity" "sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg=="
   "resolved" "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   "version" "15.8.1"

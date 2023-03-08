@@ -6,6 +6,7 @@ import SuccessComponent from "./ListStocksScreen";
 import TransactionData from "./StockTransactionData";
 import LineChartScreen from "reactnative/screens/charts/LineChart.js";
 import PlaidComponent from "./AddStocksScreen";
+import StockDetails from "./StockDetails";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ export default function StockStackNavigator() {
         <Stack.Screen name="TransactionData" component={TransactionData} />
         <Stack.Screen name="LineGraph" component={LineChartScreen} />
         <Stack.Screen name="Stocks" component={PlaidComponent} />
+        <Stack.Screen name="StockDetails" component={StockDetails} />
       </Stack.Navigator>
     );
   }

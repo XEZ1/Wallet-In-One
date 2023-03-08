@@ -188,4 +188,12 @@ def deleteAccount(request, stockAccount):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
     stock_account.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# @api_view(['GET'])
+# def getTransactionsForStock(request, stock_id):
+#     transaction = Transaction.objects.filter(stock=stock_id)
+#     print(transaction)
+#     serializer = AddTransaction(transaction, many=False)
+#     return Response(serializer.data)
     

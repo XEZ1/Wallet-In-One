@@ -35,32 +35,32 @@ const SuccessComponent = (props) => {
         if(isFocused){listAccounts()}
       }, [isFocused])
 
-    //   useEffect(() => {
-    //     const listStocks = async (stockAccount) => {
-    //       await fetch(api_url + `/stocks/list_stocks/${stockAccount}/`, {
-    //         method: "GET",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //           Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-    //         },
-    //       }).then(async (res) => setStocks(await res.json()));
-    //       // console.log(stocks)
-    //       // .catch((error) => {
-    //       //   console.error(error);
-    //       // });
-    //       const data = await res.json();
-    //       setStocks(prevStocks => ({
-    //         ...prevStocks,
-    //         [stockAccount]: data
-    //       }));
-    //     };
-    //     if(isFocused && stocks) {
-    //       // listTransactions(stockAccount);
-    //       list.forEach((account) => {
-    //         listTransactions(account.account_id);
-    //       });
-    //     }
-    // }, [isFocused])
+      useEffect(() => {
+        const listStocks = async (stockAccount) => {
+          await fetch(api_url + `/stocks/list_stocks/${stockAccount}/`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+            },
+          }).then(async (res) => setStocks(await res.json()));
+          // console.log(stocks)
+          // .catch((error) => {
+          //   console.error(error);
+          // });
+          const data = await res.json();
+          setStocks(prevStocks => ({
+            ...prevStocks,
+            [stockAccount]: data
+          }));
+        };
+        if(isFocused && stocks) {
+          // listTransactions(stockAccount);
+          list.forEach((account) => {
+            listTransactions(account.account_id);
+          });
+        }
+    }, [isFocused])
 
     const getStocks = useCallback(async (accountID) => {
       try {
@@ -138,19 +138,22 @@ const SuccessComponent = (props) => {
                   <View style={styles.row}>
                   {item.institution_logo !== null && 
                     <Image
-                      style={{ width: 35, height: 35 }}
+                      style={{ width: 50, height: 50 }}
                       source={{ uri: `data:image/png;base64,${item.institution_logo}` }}
                     />
                   }
 
                   {item.institution_logo === null && 
                     <Image
-                      style={{ width: 35, height: 35 }}
+                      style={{ width: 50, height: 50 }}
                       source={{ uri: 'https://kriptomat.io/wp-content/uploads/t_hub/usdc-x2.png' }}
                     />
                   }
-                    <Text style={styles.name}>  {item.name} - </Text>
-                    <Text style={styles.ins_name}>{item.institution_name} - £{item.balance}</Text>
+                    <View style={{flexDirection: "column"}}>
+                      <Text style={styles.name}>  {item.name}</Text>
+                      <Text style={styles.ins_name}>   {item.institution_name} £{item.balance}</Text>
+                    </View>
+                    {/* <Text style={styles.ins_name}>   {item.institution_name} £{item.balance}</Text> */}
                   </View>
 
                   {transactions[item.account_id] && 
@@ -187,7 +190,7 @@ const SuccessComponent = (props) => {
       },
       ins_name:{
         color: "black",
-        fontSize: 18,
+        fontSize: 15,
       },
       separator: {
         height: 1,

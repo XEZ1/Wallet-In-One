@@ -1,15 +1,39 @@
 import { View, Text, TouchableOpacity,StyleSheet } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { api_url } from '../../authentication';
 import LineChartScreen from "reactnative/screens/charts/LineChart.js";
 import { ScrollView, Dimensions, Button, TouchableHighlight, Alert } from 'react-native';
 import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 import { auth_delete } from '../../authentication';
+import { auth_get } from '../../authentication';
 
 export default function StockAsset({ route, navigation, }){
+  const [stockTransactions, setStockTransactions] = useState({});
+
+  const getStockTransactions = useCallback(async (accountID) => {
+    try {
+      const response = await auth_get(`/stocks/list_transactions/${accountID}/`);
+      const data = response.body;
+      setStockTransactions(prevTransactions => ({
+        ...prevTransactions,
+        ["data"]: data
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (route.params?.stocks?.accountID?.length) {
+      route.params.stocks.accountID.forEach((account) => {
+        getStockTransactions(account.stockAccount);
+      });
+    }
+  }, [route.params?.stocks?.accountID, getStockTransactions]);
+
     const isFocused = useIsFocused();
     const [transactions, setTransactions] = useState(route.params.transactions);
     // const [stocks, setStocks] = useState()
@@ -106,55 +130,19 @@ export default function StockAsset({ route, navigation, }){
       setTransactions(route.params.transactions);
       setTableData(tableData);
     }
-
-      // console.log("route2:")
-      // console.log((route2))
-    const ItemSeparator = () => <View style={styles.separator} />;
     
+    const ItemSeparator = () => <View style={styles.separator} />;
+
     return(
       <ScrollView style={{padding: 10}}>
         <View>
-          <TouchableOpacity onPress={async ()=> {await deleteAccount(), navigation.navigate('Stock Account List')}}>
-              <Text>REMOVE{"\n"}</Text>
-          </TouchableOpacity>
+          <Button title ={"REMOVE"} color = "red" onPress={async ()=> {await deleteAccount(), navigation.navigate('Stock Account List')}}/>
 
-          {/* <Text>stocks need be added right here</Text> */}
-
-          <Button
-            onPress={toggleStocksView}
-            title={showStocks ? "Hide Stocks" : "View Stocks"}
-            color="#fcd34d"
-          />
-          
-          {showStocks && (
-          <FlatList 
-            data={route.params.stocks.accountID} 
-            style={{paddingVertical: 5, paddingHorizontal: 10}}
-            ItemSeparatorComponent={() => <View style={{height: 5}} />}
-            contentContainerStyle={{paddingBottom: 20}}
-            renderItem={({item, index}) =>{
-              return (
-                <TouchableOpacity style={[styles.item, {backgroundColor: '#1e40af'}]} > 
-                {/* onPress={()=> navigation.navigate('TransactionData', {id: item.id}) }> */}
-                <View style={styles.row}>
-                  <Text style={[styles.name, {fontSize: 14}]}> {item.name} </Text>
-                </View>
-              </TouchableOpacity>
-              )
-
-            }}
-            ListEmptyComponent={<Text>{'\nYou have no stocks listed.\n'}</Text>}
-            />)}
-          
-          {/* <TouchableOpacity onPress={ ()=> { navigation.navigate('LineGraph', {transactions: transactions})}}>
-              <Text>GRAPH{"\n"}</Text>
-          </TouchableOpacity> */}
-          
           {transactions && 
             <LineChartScreen 
               transactions={transactions}
               graph_version={1}
-              height={400}
+              height={275}
               width={350}
           />}
           
@@ -195,6 +183,31 @@ export default function StockAsset({ route, navigation, }){
                   )}
               </View>
           )}
+
+          <Button
+            onPress={toggleStocksView}
+            title={showStocks ? "Hide Stocks" : "View Stocks"}
+            color="#fcd34d"
+          />
+          
+          {showStocks && (
+            <FlatList 
+              data={route.params.stocks.accountID} 
+              style={{paddingVertical: 5, paddingHorizontal: 10}}
+              ItemSeparatorComponent={() => <View style={{height: 5}} />}
+              contentContainerStyle={{paddingBottom: 20}}
+              renderItem={({item, index}) =>{
+                return (
+                  <TouchableOpacity style={[styles.item, {backgroundColor: '#1e40af'}]} onPress={()=> navigation.navigate('StockDetails', {stock: item, stock_transactions: stockTransactions}) }>
+                  <View style={styles.row}>
+                    <Text style={[styles.name, {fontSize: 14}]}> {item.name} </Text>
+                  </View>
+                </TouchableOpacity>
+                )
+              }}
+              ListEmptyComponent={<Text>{'\nYou have no stocks listed.\n'}</Text>}
+              />)
+            }
         </View>
       </ScrollView>
     );

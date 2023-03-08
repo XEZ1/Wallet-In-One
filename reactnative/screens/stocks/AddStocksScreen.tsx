@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Text, Image } from 'react-native';
+import React, { useState, useEffect,useRef  } from 'react';
+import { Button, Text, Image ,Dimensions } from 'react-native';
 import { LinkSuccess, LinkExit} from 'react-native-plaid-link-sdk';
 import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
@@ -9,6 +9,8 @@ import { auth_post } from '../../authentication';
 
 import {Alert, Modal, StyleSheet, Pressable, View, Animated} from 'react-native';
 
+const { width, height } = Dimensions.get('window');
+
 const PlaidComponent = ({ navigation }) => {
   const [linkToken, setLinkToken] = useState<string | undefined>(undefined)
   const [account_id, setAccountID] = useState()
@@ -17,9 +19,6 @@ const PlaidComponent = ({ navigation }) => {
   const [institution_name, setInstitutionName] = useState()
   const [institution_id, setInstitutionID] = useState()
   const [imageState, setImage] = useState()
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalText, setModalText] = useState("Modal");
   const isFocused = useIsFocused()
   //const [access_token, setAccessToken] = useState()
   //const [stocks, setStocks] = useState(null)
@@ -150,8 +149,27 @@ const PlaidComponent = ({ navigation }) => {
     image = data.logo
     setImage(data.logo)
   }
-
   
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalText, setModalText] = useState("Empty Modal");
+  const scaleValue = useRef(new Animated.ValueXY({x: 0.5, y: 0.5})).current;
+
+
+  useEffect(() => {
+    if (modalVisible) {
+      Animated.timing(scaleValue, {
+        toValue: {x: 1, y: 1},
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(scaleValue, {
+        toValue: {x: 0, y: 0},
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [modalVisible]);
 
   return (
     <>
@@ -217,34 +235,54 @@ const PlaidComponent = ({ navigation }) => {
         });
       }}
     />
-    <View>
-      <Modal
-        
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
-        <View >
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>{modalText}</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>Close</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-      <Pressable
-        style={[styles.button]}
-        onPress={() => setModalVisible(true)}>
-        <Text style={styles.textStyle}>Show Modal</Text>
-        
-      </Pressable>
-    </View>
+  <View>
+    <Modal
+      animationType="none"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        Alert.alert('Modal has been closed.');
+        setModalVisible(false);
+      }}
+    >
+    <Animated.View style={[styles.modal, { transform: [{ scaleX: scaleValue.x }, { scaleY: scaleValue.y }] }]}>
+      <View style={styles.modalView}>
+        {modalText == "Stock account has been successfully added." && 
+          <Image
+            style={{ width: 100, height: 100 }}
+            source={{ uri: `https://cdn-icons-png.flaticon.com/512/4436/4436481.png` }}
+          />
+        }
+        {modalText == "Stock account has already been added!" && 
+          <Image
+            style={{ width: 100, height: 100 }}
+            source={{ uri: 'http://www.setra.com/hubfs/Sajni/crc_error.jpg' }}
+          />
+        }
+        <Text style={styles.modalText}>{modalText}</Text>
+        <Pressable
+          style={[styles.button, styles.buttonClose]}
+          onPress={() => {
+            Animated.timing(scaleValue, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }).start(() => setModalVisible(false));
+          }}
+        >
+        <Text style={styles.textStyle}>Close</Text>
+        </Pressable>
+      </View>
+    </Animated.View>
+    </Modal>
+
+    <Pressable
+      style={[styles.button]}
+      onPress={() => setModalVisible(true)}
+    >
+      <Text style={styles.textStyle}>Show Modal</Text>
+    </Pressable>
+  </View>
     </>
   );
 };
@@ -292,6 +330,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
+  modal: {
+    
+  }
 });
 
 export default PlaidComponent;
