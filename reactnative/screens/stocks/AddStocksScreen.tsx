@@ -51,7 +51,7 @@ const PlaidComponent = ({ navigation }) => {
         institution_logo: image,
       }),
     }).then(res => res.json().then(data => ({status: res.status, body: data})) )
-    .then((data) => console.log(data.status))
+    .then((data) => console.log(data))
     .then((data) => data_response = data)
     };
     
@@ -266,10 +266,11 @@ const PlaidComponent = ({ navigation }) => {
           // setInstitutionID(success.metadata.institution.id)
           // console.log(success.metadata.institution.id)
           await getLogo(success)
-          addAccount(element, success)
+          await addAccount(element, success)
           console.log(data_response)
 
           if(data_response != 400){
+            console.log("KRISHNA" + data_response)
             await getTransaction(access_token)
             // console.log("fetched_transaction_list: ")
             // console.log(fetched_transaction_list.accounts)

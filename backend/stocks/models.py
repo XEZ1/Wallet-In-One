@@ -10,7 +10,7 @@ class StockAccount(models.Model):
     institution_id = models.CharField(max_length=1024, blank=False)
     institution_name = models.CharField(max_length=1024, blank=False)
     balance = MoneyField(default_currency='GBP', decimal_places=2, max_digits=11)
-    institution_logo = models.CharField(max_length=10000)
+    institution_logo = models.CharField(max_length=10000, null=True)
 
 
 class Stock(models.Model):
