@@ -100,7 +100,7 @@ export default function HomePage({ navigation }) {
         <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 20, borderRadius: 30 }}>
           <TouchableOpacity
             style={[
-              styles.btn,
+              styles(dark, colors).btn,
               chartType === "pie" && { backgroundColor: "aliceblue" },
             ]}
             onPress={() => handleChartTypeChange("pie")}
@@ -109,7 +109,7 @@ export default function HomePage({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={[
-              styles.btn,
+              styles(dark, colors).btn,
               chartType === "stacked" && { backgroundColor: "aliceblue" },
             ]}
             onPress={() => handleChartTypeChange("stacked")}
@@ -138,7 +138,7 @@ export default function HomePage({ navigation }) {
               setPressed(false);
             }}
           >
-            <Text style={[styles.button, { color: colors.text }]}>Back</Text>
+            <Text style={[styles(dark, colors).button, { color: colors.text }]}>Back</Text>
           </TouchableOpacity>
         ) : (
           ""
