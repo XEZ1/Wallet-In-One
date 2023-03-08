@@ -13,7 +13,7 @@ import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import { api_url } from '../../authentication';
-
+import { Button, Image } from 'react-native';
 import LineChartScreen from '../charts/LineChart';
 // import LineChartScreen from '../../charts/LineChart';
 
@@ -73,10 +73,24 @@ const SuccessComponent = (props) => {
           <View>
             <FlatList data={list} ItemSeparatorComponent={ItemSeparator} renderItem={({item, index}) =>{
               return (
-                <TouchableOpacity style={[styles.item, {backgroundColor: '#a8a29e'}]} onPress={()=> props.navigation.navigate('StockAsset', {accountID: item.account_id, accessToken: item.access_token, transactions: transactions[item.account_id]}) }>
-                  
+                <TouchableOpacity style={[styles.item, {backgroundColor: '#a8a29e'}]} onPress={()=> props.navigation.navigate('StockAsset', {accountID: item.account_id, accessToken: item.access_token, transactions: transactions[item.account_id],logo: item.institution_logo}) }>
+                  {/* {console.log(item.institution_logo);} */}
+
                   <View style={styles.row}>
-                    <Text style={styles.name}>{item.name} - </Text>
+                  {item.institution_logo !== null && 
+                    <Image
+                      style={{ width: 35, height: 35 }}
+                      source={{ uri: `data:image/png;base64,${item.institution_logo}` }}
+                    />
+                  }
+
+                  {item.institution_logo === null && 
+                    <Image
+                      style={{ width: 35, height: 35 }}
+                      source={{ uri: 'https://kriptomat.io/wp-content/uploads/t_hub/usdc-x2.png' }}
+                    />
+                  }
+                    <Text style={styles.name}>  {item.name} - </Text>
                     <Text style={styles.ins_name}>{item.institution_name} - £{item.balance}</Text>
                   </View>
 

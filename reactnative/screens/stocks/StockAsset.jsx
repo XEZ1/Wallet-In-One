@@ -37,6 +37,8 @@ export default function StockAsset({ route, navigation, }){
           item.fees,
         ])
       : null;
+      console.log("LOGO");
+      console.log(route.params.logo);
 
       const tableData = {
         tableHead: ['ID','Amount', 'Date', 'Quantity','Fees'],

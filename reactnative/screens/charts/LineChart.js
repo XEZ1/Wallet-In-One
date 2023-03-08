@@ -63,6 +63,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
         <View>
             {graph_data && graph_data.length > 0 ? (
                 <>
+                    {/* Interactive graph */}
                     { graph_version == 1 && 
                         <LineChart.Provider data={graph_data}>
                             <LineChart width={width} height={height}>
@@ -75,14 +76,16 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                             <LineChart.DatetimeText />
                         </LineChart.Provider>
                     }
-                    
+
+                    {/* Static graph */}   
+
                     { graph_version == 2 &&
                         <LineChart.Provider data={graph_data}>
                             <LineChart width={width} height={height}>
                                 <LineChart.Path color={color}/>
-                                <LineChart.CursorCrosshair>
+                                {/* <LineChart.CursorCrosshair>
                                     <LineChart.Tooltip />
-                                </LineChart.CursorCrosshair>
+                                </LineChart.CursorCrosshair> */}
                             </LineChart>
                         </LineChart.Provider>
                     }
