@@ -17,7 +17,7 @@ class Stock(models.Model):
     stockAccount = models.ForeignKey(StockAccount, on_delete=models.CASCADE, blank=False)
     institution_price = MoneyField(default_currency='GBP', decimal_places=2, max_digits=11)
     name = models.CharField(max_length=1024, blank=False)
-    ticker_symbol = models.CharField(max_length=1024, blank=False)
+    ticker_symbol = models.CharField(max_length=1024, blank=False, null=True)
     quantity = models.FloatField()
 
 # class Location(models.Model):
