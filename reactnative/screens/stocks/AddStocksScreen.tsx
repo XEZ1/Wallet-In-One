@@ -233,10 +233,10 @@ const PlaidComponent = ({ navigation }) => {
 
   return (
     <>
-      <Image
+      {/* <Image
         style={{ width: 152, height: 152 }}
         source={{ uri: `data:image/png;base64,${imageState}` }}
-      />
+      /> */}
       <PlaidLink
       linkToken={linkToken}
       onEvent={(event) => console.log(event)}

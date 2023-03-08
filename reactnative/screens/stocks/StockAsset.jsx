@@ -26,7 +26,7 @@ export default function StockAsset({ route, navigation, }){
           });
     }
     
-    console.log("transactions:", transactions);
+    // console.log("transactions:", transactions);
     
     const transaction_table_data = transactions
       ? transactions.map((item) => [
@@ -37,8 +37,8 @@ export default function StockAsset({ route, navigation, }){
           item.fees,
         ])
       : null;
-      console.log("LOGO");
-      console.log(route.params.logo);
+      console.log("stocks");
+      console.log(route.params.stocks);
 
       const tableData = {
         tableHead: ['ID','Amount', 'Date', 'Quantity','Fees'],
@@ -48,11 +48,16 @@ export default function StockAsset({ route, navigation, }){
 
       const [data, setTableData] = React.useState(tableData);
       const [showTable,setShowTable] = React.useState(false);
-      console.log("DATA")
-      console.log(data);
+      const [showStocks,setShowStocks] = React.useState(false);
+      // console.log("DATA")
+      // console.log(data);
       
       const toggleTable = () => {
           setShowTable(!showTable);
+      };
+      
+      const toggleStocksView = () => {
+        setShowStocks(!showStocks);
       };
 
       const filter_transactions = (time) => {
@@ -112,12 +117,42 @@ export default function StockAsset({ route, navigation, }){
 
       // console.log("route2:")
       // console.log((route2))
+    const ItemSeparator = () => <View style={styles.separator} />;
+    
     return(
       <ScrollView style={{padding: 10}}>
+        <View>
           <TouchableOpacity onPress={async ()=> {await deleteAccount(), navigation.navigate('Stock Account List')}}>
               <Text>REMOVE{"\n"}</Text>
           </TouchableOpacity>
-          <Text>stocks need be added right here</Text>
+
+          {/* <Text>stocks need be added right here</Text> */}
+
+          <Button
+            onPress={toggleStocksView}
+            title={showStocks ? "Hide Stocks" : "View Stocks"}
+            color="#fcd34d"
+          />
+          
+          {showStocks && (
+          <FlatList 
+            data={route.params.stocks.accountID} 
+            style={{paddingVertical: 5, paddingHorizontal: 10}}
+            ItemSeparatorComponent={() => <View style={{height: 5}} />}
+            contentContainerStyle={{paddingBottom: 20}}
+            renderItem={({item, index}) =>{
+              return (
+                <TouchableOpacity style={[styles.item, {backgroundColor: '#1e40af'}]} > 
+                {/* onPress={()=> navigation.navigate('TransactionData', {id: item.id}) }> */}
+                <View style={styles.row}>
+                  <Text style={[styles.name, {fontSize: 14}]}> {item.name} </Text>
+                </View>
+              </TouchableOpacity>
+              )
+
+            }}
+            ListEmptyComponent={<Text>{'\nYou have no stocks listed.\n'}</Text>}
+            />)}
           
           {/* <TouchableOpacity onPress={ ()=> { navigation.navigate('LineGraph', {transactions: transactions})}}>
               <Text>GRAPH{"\n"}</Text>
@@ -138,63 +173,38 @@ export default function StockAsset({ route, navigation, }){
             <View style={styles.timeButton}><Button onPress={last_week} title="D"/></View>
           </View>
 
-        <Button
-            onPress={toggleTable}
-            title={showTable ? "Hide Transactions" : "View Transactions"}
-            color="#fcd34d"
-        />
+          <Button
+              onPress={toggleTable}
+              title={showTable ? "Hide Transactions" : "View Transactions"}
+              color="#fcd34d"
+          />
 
-        {showTable && (
-            <View style={styles.table}>
-                {data.tableData.length > 0 ? (
-                  <View>
-                    <Text style={[{textAlign: 'center', alignSelf: 'center'}]}>Select Row to view transaction details.{"\n"}</Text>
-                    
-                    <Table borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
-                      <Row data={data.tableHead} style={styles.head} textStyle={styles.text} />
-                      {data.tableData.map((rowData, index) => (
-                        <TouchableOpacity key={index} onPress={()=> navigation.navigate('TransactionData', {id: rowData[0]})}>
-                          <TableWrapper style={styles.row}>
-                            {rowData.map((cellData, cellIndex) => (
-                              <Cell key={cellIndex} data={cellData} textStyle={styles.text} />
-                            ))}
-                          </TableWrapper>
-                        </TouchableOpacity>
-                      ))}
-                    </Table>
-                  </View>
-                ) : (
-                  <Text style={[{textAlign: 'center', alignSelf: 'center'}]}>No data available</Text>
-                )}
-            </View>
-        )}
-
-          {/* <TouchableOpacity onPress={() => { 
-            if (transactions) {
-              setTransactions(null); 
-            }
-            navigation.navigate('LineGraph', {transactions_data: transactions})
-          }}>
-            <Text>GRAPH{"\n"}</Text>
-          </TouchableOpacity> */}
-
-          {/* <Stack.Screen name="TransactionData" component={TransactionData} /> */}
-          
-
-          {/* <FlatList data={transactions} renderItem={({item, index}) =>{
-            return (
-              <TouchableOpacity style={[styles.item, {backgroundColor: 'red'}]} onPress={()=> navigation.navigate('TransactionData', {id: item.id}) }>
-                <View style={styles.row}>
-                  <Text style={styles.name}> {item.name} </Text>
-                  <Text style={styles.ins_name}> Hello World!</Text>
-                </View>
-              </TouchableOpacity>
-            )
-          }}
-          ListEmptyComponent={<Text>{'\nYou have no stock accounts\n'}</Text>}
-          /> */}
+          {showTable && (
+              <View style={styles.table}>
+                  {data.tableData.length > 0 ? (
+                    <View>
+                      <Text style={[{textAlign: 'center', alignSelf: 'center'}]}>Select Row to view transaction details.{"\n"}</Text>
+                      
+                      <Table borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
+                        <Row data={data.tableHead} style={styles.head} textStyle={styles.text} />
+                        {data.tableData.map((rowData, index) => (
+                          <TouchableOpacity key={index} onPress={()=> navigation.navigate('TransactionData', {id: rowData[0]})}>
+                            <TableWrapper style={styles.row}>
+                              {rowData.map((cellData, cellIndex) => (
+                                <Cell key={cellIndex} data={cellData} textStyle={styles.text} />
+                              ))}
+                            </TableWrapper>
+                          </TouchableOpacity>
+                        ))}
+                      </Table>
+                    </View>
+                  ) : (
+                    <Text style={[{textAlign: 'center', alignSelf: 'center'}]}>No data available</Text>
+                  )}
+              </View>
+          )}
+        </View>
       </ScrollView>
-
     );
 }
 
@@ -243,5 +253,9 @@ const styles = StyleSheet.create({
   },
   row: { 
     flexDirection: 'row',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#3f3f46",
   },
 });
