@@ -34,7 +34,7 @@ const PlaidComponent = ({ navigation }) => {
 
 
   const addAccount = async (account, success) => {
-    await fetch(api_url + '/stocks/add_stock_account/', {
+    const res = await fetch(api_url + '/stocks/add_stock_account/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -50,9 +50,8 @@ const PlaidComponent = ({ navigation }) => {
         balance: balance,
         institution_logo: image,
       }),
-    }).then(res => res.json().then(data => ({status: res.status, body: data})) )
-    .then((data) => console.log(data))
-    .then((data) => data_response = data)
+    });
+    data_response = res.status
     };
     
     
@@ -267,10 +266,14 @@ const PlaidComponent = ({ navigation }) => {
           // console.log(success.metadata.institution.id)
           await getLogo(success)
           await addAccount(element, success)
+          // while(data_response == undefined){
+          //   console.log(data_response)
+          // }
           console.log(data_response)
+          console.log(data_response.status)
 
           if(data_response != 400){
-            console.log("KRISHNA" + data_response)
+            console.log("KRISHNA")
             await getTransaction(access_token)
             // console.log("fetched_transaction_list: ")
             // console.log(fetched_transaction_list.accounts)
