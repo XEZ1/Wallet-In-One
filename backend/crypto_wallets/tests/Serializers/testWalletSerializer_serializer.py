@@ -3,7 +3,7 @@ from crypto_wallets.seralizers import WalletSerializer
 from accounts.models import User
 from crypto_wallets.models import CryptoWallet
 from django.urls import reverse
-from rest_framework.test import APIClient, APIRequestFactory
+from rest_framework.test import APIRequestFactory
 
 
 class WalletSerializerTestCase(TestCase):
@@ -14,8 +14,6 @@ class WalletSerializerTestCase(TestCase):
     ]
 
     def setUp(self):
-        self.client = APIClient()
-        self.login_url = reverse('login')
         self.user = User.objects.get(id=1)
         self.transaction = {
             'id': 232,
@@ -23,7 +21,7 @@ class WalletSerializerTestCase(TestCase):
             'time': 45,
         }
         self.serializer_input = {
-            'user': User.objects.get(username='@pickles'),
+            'user': User.objects.get(id=1),
             'id':1,
             'cryptocurrency': 'Bitcoin',
             'symbol': 'BTC',

@@ -43,7 +43,7 @@ export default function MainAccountPage({ navigation }) {
             </TouchableOpacity>
             <TouchableOpacity
                 style={[stylesInternal.box, { backgroundColor: 'red' }]}
-                onPress={() => navigation.navigate("Crypto Wallets")}
+                onPress={() => navigation.navigate("Crypto Wallets & Exchanges")}
             >
                 <Icon2 style={{ color: 'white' }} name="wallet" size={80} />
                 <Text style={stylesInternal.text}>{'Cryptocurrency'}</Text>
