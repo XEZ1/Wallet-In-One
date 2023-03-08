@@ -3,53 +3,88 @@ import { StyleSheet, Text, ScrollView, View, Dimensions, Button, TouchableHighli
 
 import data from "./chartData.json"
 import { LineChart } from 'react-native-wagmi-charts';
-
+import {useEffect, useState} from "react";
 
 import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 
-export default function LineChartScreen({transactions, graph_version, height, width})
+export default function LineChartScreen({transactions, graph_version, height, width, stockAccountBalance})
 {
     // console.log("INPUT TRANSACTIONS")
     // console.log(transactions);
+    const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
+    
 
     let graph_data = transactions.map((item) => [item.amount, item.date]);
+    graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
+    console.log(graph_data)
 
-    const accumulate_totals_for_each_day = (data_input) => {
-        return Object.entries(data_input.reduce((acc, [amount, date]) => {
-            amount = String(amount);
+    // const test = (data_input) => {
+    //     if(data_input.length == 0)
+    //     {
+    //         return data_input
+    //     }
+    //     else{
+    //         let arr = []
+    //         let curr = data_input[0]
+    //         for(let i = 0; i < data_input.length; i++)
+    //         {
+    //             if(curr[1] != data_input[i][1])
+    //             {
 
-            // If this day already exists in the accumulator, add the amount to it.
-            if (acc[date]) {
-                // If amount is negative subtract in accumulator, else add to it.
-                if (amount.startsWith("-")) {
-                    acc[date] -= parseFloat(amount.substr(1));
-                } else {
-                    acc[date] += parseFloat(amount);
-                }
-            }
-            // Otherwise, create a new entry for this day in the accumulator.
-            else {
-                acc[date] = parseFloat(amount);
-            }
+    //             }
+    //         }
+    //     }
+    // }
+    useEffect(() => {
+    let points = [];
+    let balance = stockAccountBalance;
 
-            return acc;
-        }, {})).map(([date, amount]) => [amount, date]);
+    for (let i = 0; i < graph_data.length; i++) {
+      let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
+      balance -= graph_data[i][0]
+      points = [point, ...points]
     }
-    graph_data = accumulate_totals_for_each_day(graph_data);
+    console.log(points)
+    setGraphData(points)
+}, []);
+    // const accumulate_totals_for_each_day = (data_input) => {
+    //     return Object.entries(data_input.reduce((acc, [amount, date]) => {
+    //         amount = String(amount);
+
+    //         // If this day already exists in the accumulator, add the amount to it.
+    //         if (acc[date]) {
+    //             // If amount is negative subtract in accumulator, else add to it.
+    //             if (amount.startsWith("-")) {
+    //                 bal += parseFloat(amount)
+    //                 acc[date] = bal;
+    //             } else {
+    //                 bal -= parseFloat(amount)
+    //                 acc[date] = bal;
+    //             }
+    //         }
+    //         // Otherwise, create a new entry for this day in the accumulator.
+    //         else {
+    //             acc[date] = bal;
+    //         }
+
+    //         return acc;
+    //     }, {})).map(([date, amount]) => [amount, date]);
+    // }
+    // graph_data = accumulate_totals_for_each_day(graph_data);
 
     // console.log(graph_data);
 
-    graph_data = graph_data.map((item) => {
-        return {timestamp: (new Date(item[1])).getTime(), value: item[0]};
-    }).sort((a, b) => a.timestamp - b.timestamp);
-
-    let balance = 0;
+    // graph_data = graph_data.map((item) => {
+    //     return {timestamp: (new Date(item[1])).getTime(), value: item[0]};
+    // }).sort((a, b) => a.timestamp - b.timestamp);
+    // console.log(graph_data)
+    // let balance = 0;
     
-    graph_data = graph_data.map((item) => {
-        balance += item.value;
-        return {timestamp: item.timestamp, value: item.value};
-    });
-
+    // graph_data = graph_data.map((item) => {
+    //     balance += item.value;
+    //     return {timestamp: item.timestamp, value: item.value};
+    // });
+    // console.log(graph_data)
     let color = 'green';
 
     // if (graph_data !== undefined && graph_data[0][0] > graph_data[graph_data.length -1][0]){
@@ -58,29 +93,36 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     // else {
     //     color = 'green'
     // }
+    
 
     return (
-        <View>
+        <View >
             {graph_data && graph_data.length > 0 ? (
                 <>
                     {/* Interactive graph */}
                     { graph_version == 1 && 
-                        <LineChart.Provider data={graph_data}>
-                            <LineChart width={width} height={height}>
-                                <LineChart.Path color={color}>
-                                    <LineChart.Gradient />
-                                </LineChart.Path>
-                                <LineChart.CursorCrosshair />
-                            </LineChart>
-                            <LineChart.PriceText />
-                            <LineChart.DatetimeText />
-                        </LineChart.Provider>
+          <LineChart.Provider data={graphData}>
+          <LineChart height={height} width={width}>
+            <LineChart.Path/>
+            <LineChart.CursorCrosshair>
+
+              <LineChart.Tooltip>
+                <LineChart.PriceText precision={10} />
+              </LineChart.Tooltip>
+
+              <LineChart.Tooltip position="bottom" >
+                <LineChart.DatetimeText />
+              </LineChart.Tooltip>
+
+            </LineChart.CursorCrosshair>
+          </LineChart>
+        </LineChart.Provider>
                     }
 
                     {/* Static graph */}   
 
                     { graph_version == 2 &&
-                        <LineChart.Provider data={graph_data}>
+                        <LineChart.Provider data={graphData}>
                             <LineChart width={width} height={height}>
                                 <LineChart.Path color={color}/>
                                 {/* <LineChart.CursorCrosshair>
