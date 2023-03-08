@@ -12,7 +12,7 @@ import {
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
-import { api_url } from '../../authentication';
+import { api_url, auth_get } from '../../authentication';
 
 import LineChartScreen from '../charts/LineChart';
 // import LineChartScreen from '../../charts/LineChart';
@@ -26,27 +26,16 @@ const SuccessComponent = (props) => {
 
       useEffect(() => {
         const listAccounts = async () => {
-
-          await fetch(api_url + '/stocks/list_accounts/', {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-            },
-          }).then(async (res) => setList(await res.json()))};
+          const response = await auth_get('/stocks/list_accounts/')
+          setList(response.body)
+        }
         if(isFocused){listAccounts()}
       }, [isFocused])
 
       const getTransactions = useCallback(async (accountID) => {
         try {
-          const res = await fetch(api_url + `/stocks/list_transactions/${accountID}/`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-            },
-          });
-          const data = await res.json();
+          const response = await auth_get(`/stocks/list_transactions/${accountID}/`)
+          const data = response.body;
           setTransactions(prevTransactions => ({
             ...prevTransactions,
             [accountID]: data
