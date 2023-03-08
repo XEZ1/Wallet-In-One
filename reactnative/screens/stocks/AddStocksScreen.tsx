@@ -115,7 +115,7 @@ const PlaidComponent = ({ navigation }) => {
     const response = await auth_post('/stocks/get_transactions/', body)
     fetched_transaction_list = response.body
   }
-
+//19614.54
 
   const addTransaction = async (element) => {
     const body = {
@@ -125,7 +125,7 @@ const PlaidComponent = ({ navigation }) => {
       date: element.date,
       name: element.name,
       quantity: element.quantity,
-      amount: element.amount,
+      amount: element.amount * 0.83, // to convert to GBP
       price: element.price,
       fees: element.fees,
       stock: fetched_transaction_list.accounts[0].account_id,

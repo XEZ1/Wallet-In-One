@@ -53,8 +53,8 @@ export default function StockAsset({ route, navigation, }){
           item.fees,
         ])
       : null;
-      console.log("stocks");
-      console.log(route.params.stocks);
+      // console.log("stocks");
+      // console.log(route.params.stocks);
 
       const tableData = {
         tableHead: ['ID','Amount', 'Date', 'Quantity','Fees'],
@@ -130,6 +130,9 @@ export default function StockAsset({ route, navigation, }){
       setTransactions(route.params.transactions);
       setTableData(tableData);
     }
+
+    console.log("Transactions to check balance");
+    console.log(route.params.balance);
     
     const ItemSeparator = () => <View style={styles.separator} />;
 
@@ -144,6 +147,7 @@ export default function StockAsset({ route, navigation, }){
               graph_version={1}
               height={275}
               width={350}
+              stockAccountBalance={route.params.balance}
           />}
           
           <View style={styles.buttonContainer, {flexDirection: "row"}}>

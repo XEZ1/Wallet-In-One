@@ -35,32 +35,32 @@ const SuccessComponent = (props) => {
         if(isFocused){listAccounts()}
       }, [isFocused])
 
-      useEffect(() => {
-        const listStocks = async (stockAccount) => {
-          await fetch(api_url + `/stocks/list_stocks/${stockAccount}/`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-            },
-          }).then(async (res) => setStocks(await res.json()));
-          // console.log(stocks)
-          // .catch((error) => {
-          //   console.error(error);
-          // });
-          const data = await res.json();
-          setStocks(prevStocks => ({
-            ...prevStocks,
-            [stockAccount]: data
-          }));
-        };
-        if(isFocused && stocks) {
-          // listTransactions(stockAccount);
-          list.forEach((account) => {
-            listTransactions(account.account_id);
-          });
-        }
-    }, [isFocused])
+    //   useEffect(() => {
+    //     const listStocks = async (stockAccount) => {
+    //       await fetch(api_url + `/stocks/list_stocks/${stockAccount}/`, {
+    //         method: "GET",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+    //         },
+    //       }).then(async (res) => setStocks(await res.json()));
+    //       // console.log(stocks)
+    //       // .catch((error) => {
+    //       //   console.error(error);
+    //       // });
+    //       const data = await res.json();
+    //       setStocks(prevStocks => ({
+    //         ...prevStocks,
+    //         [stockAccount]: data
+    //       }));
+    //     };
+    //     if(isFocused && stocks) {
+    //       // listTransactions(stockAccount);
+    //       list.forEach((account) => {
+    //         listTransactions(account.account_id);
+    //       });
+    //     }
+    // }, [isFocused])
 
     const getStocks = useCallback(async (accountID) => {
       try {
@@ -133,6 +133,7 @@ const SuccessComponent = (props) => {
                     transactions: transactions[item.account_id],
                     logo: item.institution_logo,
                     stocks: stocks,
+                    balance: item.balance
                   }) }>
 
                   <View style={styles.row}>
@@ -162,6 +163,7 @@ const SuccessComponent = (props) => {
                       graph_version={2}
                       height={75}
                       width={350}
+                      stockAccountBalance={item.balance}
                   />}
 
                 </TouchableOpacity>
