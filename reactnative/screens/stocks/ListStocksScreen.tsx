@@ -74,6 +74,7 @@ const SuccessComponent = (props) => {
             <FlatList data={list} ItemSeparatorComponent={ItemSeparator} renderItem={({item, index}) =>{
               return (
                 <TouchableOpacity style={[styles.item, {backgroundColor: '#a8a29e'}]} onPress={()=> props.navigation.navigate('StockAsset', {accountID: item.account_id, accessToken: item.access_token, transactions: transactions[item.account_id]}) }>
+                  
                   <View style={styles.row}>
                     <Text style={styles.name}>{item.name} - </Text>
                     <Text style={styles.ins_name}>{item.institution_name} - £{item.balance}</Text>

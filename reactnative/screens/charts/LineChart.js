@@ -6,8 +6,6 @@ import { LineChart } from 'react-native-wagmi-charts';
 
 
 import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
-// import LineChartScreen from "reactnative/screens/charts/LineChart.js";
-// import moment from 'moment';
 
 export default function LineChartScreen({transactions, graph_version, height, width})
 {
@@ -15,10 +13,6 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     // console.log(transactions);
 
     let graph_data = transactions.map((item) => [item.amount, item.date]);
-
-    const [line_graph_data, setLineGraphData] = React.useState(graph_data);
-
-    // console.log(graph_data);//.filter(item => item[1] == "2023-01-09"));
 
     const accumulate_totals_for_each_day = (data_input) => {
         return Object.entries(data_input.reduce((acc, [amount, date]) => {
@@ -53,26 +47,18 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     
     graph_data = graph_data.map((item) => {
         balance += item.value;
-        // console.log(item[0]);
         return {timestamp: item.timestamp, value: item.value};
     });
 
-    let color = '';
+    let color = 'green';
 
-    if (graph_data[0][0] > graph_data[graph_data.length -1][0]){
-        color = 'red';
-    } 
-    else {
-        color = 'green'
-    }
+    // if (graph_data !== undefined && graph_data[0][0] > graph_data[graph_data.length -1][0]){
+    //     color = 'red';
+    // } 
+    // else {
+    //     color = 'green'
+    // }
 
-    // console.log(color);
-
-    // let line_graph_data = graph_data.map((item) => item[0]);
-
-    // let line_graph_label = graph_data.map((item) => item[1]);
-
-    // console.log(graph_data);
     return (
         <View>
             {graph_data && graph_data.length > 0 ? (
@@ -115,29 +101,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 8,
   },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   chartContainer: {
     marginVertical: 8,
     borderRadius: 16,
     // paddingHorizontal: 10,
-  },
-  timeButton: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    borderRadius: 4,
-  },
-  table: {
-    flex: 1,
-    padding: 10,
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    paddingTop: 20,
   },
   head: {
     height: 44,

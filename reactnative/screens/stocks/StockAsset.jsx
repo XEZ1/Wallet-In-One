@@ -30,6 +30,7 @@ export default function StockAsset({ route, navigation, }){
     
     const transaction_table_data = transactions
       ? transactions.map((item) => [
+          item.id,
           item.amount, 
           item.date, 
           item.quantity, 
@@ -38,7 +39,7 @@ export default function StockAsset({ route, navigation, }){
       : null;
 
       const tableData = {
-        tableHead: ['Amount', 'Date', 'Quantity','Fees'],
+        tableHead: ['ID','Amount', 'Date', 'Quantity','Fees'],
         tableData : transaction_table_data
       };
       
