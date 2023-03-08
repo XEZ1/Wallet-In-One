@@ -182,7 +182,8 @@ function CryptoWalletTransaction(props) {
 
   return (
     <View style={styles.transaction}>
-      <Text style={{color: colors.text}}>{props.transaction.value} {props.symbol}</Text>
+      <Text />
+      <Text style={{color: colors.text, fontWeight: "700"}}>{props.transaction.value} {props.symbol}</Text>
       <Text style={{color: colors.text}}>{f_date}</Text>
     </View>
   )

@@ -26,7 +26,11 @@ class CryptoWalletTestCase(TestCase):
             cryptocurrency="Bitcoin",
             symbol="BTC",
             address="0x0",
-            balance=100.00
+            balance=100.00,
+            received=300.00,
+            spent=200.00,
+            output_count=50,
+            unspent_output_count=20
         )
 
     def _assert_crypto_wallet_is_valid(self, crypto_wallet):
