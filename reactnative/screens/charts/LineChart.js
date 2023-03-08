@@ -1,48 +1,24 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView, View, Dimensions, Button, TouchableHighlight, Alert } from 'react-native';
+import { StyleSheet, Text, ScrollView, View, Dimensions, Button, TouchableHighlight, Alert,TouchableOpacity } from 'react-native';
 
 import data from "./chartData.json"
-import {
-    LineChart,
-    BarChart,
-    PieChart,
-    ProgressChart,
-    ContributionGraph,
-    StackedBarChart
-} from 'react-native-chart-kit'
+import { LineChart } from 'react-native-wagmi-charts';
 
-import {Table, Row, Rows} from 'react-native-table-component';
 
+import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
+// import LineChartScreen from "reactnative/screens/charts/LineChart.js";
 // import moment from 'moment';
 
-export default function LineChartScreen({route,navigation})
+export default function LineChartScreen({transactions, graph_version, height, width})
 {
-    const transactions = route.params.transactions_data
-
-    const transaction_table_data = transactions.map((item) => [
-        item.amount, 
-        item.date, 
-        item.quantity, 
-        item.fees,
-    ]);
-
-    const graph_date_data = transaction_table_data.map((item) => item.date);
-
-    const tableData = {
-        tableHead: ['Amount', 'Date', 'Quantity','Fees'],
-        tableData : transaction_table_data
-    };
-
-    const [data, setTableData] = React.useState(tableData);
-    const [showTable,setShowTable] = React.useState(false);
-
-    const toggleTable = () => {
-        setShowTable(!showTable);
-    };
-
-    let balance = 0;
+    // console.log("INPUT TRANSACTIONS")
+    // console.log(transactions);
 
     let graph_data = transactions.map((item) => [item.amount, item.date]);
+
+    const [line_graph_data, setLineGraphData] = React.useState(graph_data);
+
+    // console.log(graph_data);//.filter(item => item[1] == "2023-01-09"));
 
     const accumulate_totals_for_each_day = (data_input) => {
         return Object.entries(data_input.reduce((acc, [amount, date]) => {
@@ -65,140 +41,69 @@ export default function LineChartScreen({route,navigation})
             return acc;
         }, {})).map(([date, amount]) => [amount, date]);
     }
-      
     graph_data = accumulate_totals_for_each_day(graph_data);
 
+    // console.log(graph_data);
+
+    graph_data = graph_data.map((item) => {
+        return {timestamp: (new Date(item[1])).getTime(), value: item[0]};
+    }).sort((a, b) => a.timestamp - b.timestamp);
+
+    let balance = 0;
     
-    const [line_graph_data, setLineGraphData] = React.useState(graph_data.map((item) => item[0]));
-    const [line_graph_label, setLineGraphLabel] = React.useState(graph_data.map((item) => item[1]));
+    graph_data = graph_data.map((item) => {
+        balance += item.value;
+        // console.log(item[0]);
+        return {timestamp: item.timestamp, value: item.value};
+    });
 
-    const filter_transactions = (time) => {
-        const currentDate = new Date();
-        const currentDateTime = currentDate.getTime();
-        const lastTransactionDate = new Date(currentDate.setDate(currentDate.getDate() - time));
-        const lastTransactionDateTime = lastTransactionDate.getTime();
-      
-        let updated_data = transactions.filter(transaction => {
-          const transactionDateTime = new Date(transaction.date).getTime();
+    let color = '';
 
-          if (transactionDateTime <= currentDateTime && transactionDateTime > lastTransactionDateTime) {
-            return true;
-          }
-          return false;
-        })
-
-        let line_graph_data = accumulate_totals_for_each_day(updated_data.map((item) => [balance + item.amount, item.date]));
-
-        console.log(line_graph_data);
-      
-        setLineGraphData(line_graph_data.map((item) => item[0]));
-        setLineGraphLabel(line_graph_data.map((item) => item[1]));
-
-        let updated_table_data = updated_data.map((item) => [
-            item.amount, 
-            item.date, 
-            item.quantity, 
-            item.fees,
-        ]);
-
-        setTableData({
-            tableHead: ['Amount', 'Date', 'Quantity','Fees'],
-            tableData : updated_table_data,
-        });
+    if (graph_data[0][0] > graph_data[graph_data.length -1][0]){
+        color = 'red';
+    } 
+    else {
+        color = 'green'
     }
 
-    const last_week = () => {
-        filter_transactions(7);
-    }
-
-    const last_month = () => {
-        filter_transactions(30);
-    }
-
-    const last_year = () => {
-        filter_transactions(365);
-    }
-
-    const all_time = () => {
-        setLineGraphData(graph_data.map((item) => item[0]));
-        setLineGraphLabel(graph_data.map((item) => item[1]));
-    }
+    // console.log(color);
 
     // let line_graph_data = graph_data.map((item) => item[0]);
 
     // let line_graph_label = graph_data.map((item) => item[1]);
 
     // console.log(graph_data);
-
     return (
-        <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between' }}>
-        <Text></Text>
-
-        <View style={styles.chartContainer}>
-        <LineChart 
-            data={{
-                labels: line_graph_label,
-                datasets: [
-                    {
-                        data: line_graph_data,
-                    },
-                ],
-            }}
-            width={Dimensions.get('window').width - 16}
-            height={220}
-            withDots={true}
-            withInnerLines={false}
-            yAxisLabel={'£ '}
-            chartConfig={{
-                backgroundColor: '#f2f2f2',
-                backgroundGradientFrom: '#f2f2f2',
-                backgroundGradientTo: '#f2f2f2',
-                decimalPlaces: 2,
-                color: (opacity = 1) => `rgba(255, 165, 0, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                style: {
-                    marginHorizontal: 8,
-                    elevation: 4,
-                    shadowColor: '#000',
-                    shadowOffset: {
-                        width: 0,
-                        height: 2,
-                    },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 3.84,
-                },
-            }}
-            bezier
-            style={{
-                marginVertical: 8,
-                borderRadius: 16,
-            }}
-        />
-
-        <View style={styles.buttonContainer}>
-            <View style={styles.timeButton}><Button onPress={all_time} title="ALL"/></View>
-            <View style={styles.timeButton}><Button onPress={last_year} title="Y"/></View>
-            <View style={styles.timeButton}><Button onPress={last_month} title="M"/></View>
-            <View style={styles.timeButton}><Button onPress={last_week} title="D"/></View>
-        </View>
+        <View>
+            {graph_data && graph_data.length > 0 ? (
+                <>
+                    { graph_version == 1 && 
+                        <LineChart.Provider data={graph_data}>
+                            <LineChart width={width} height={height}>
+                                <LineChart.Path color={color}>
+                                    <LineChart.Gradient />
+                                </LineChart.Path>
+                                <LineChart.CursorCrosshair />
+                            </LineChart>
+                            <LineChart.PriceText />
+                            <LineChart.DatetimeText />
+                        </LineChart.Provider>
+                    }
+                    
+                    { graph_version == 2 &&
+                        <LineChart.Provider data={graph_data}>
+                            <LineChart width={width} height={height}>
+                                <LineChart.Path color={color}/>
+                                <LineChart.CursorCrosshair>
+                                    <LineChart.Tooltip />
+                                </LineChart.CursorCrosshair>
+                            </LineChart>
+                        </LineChart.Provider>
+                    }
+                </>
+            ) : (<Text style={[styles.emptyText, {textAlign: 'center', alignSelf: 'center'}]}>No data available</Text>)}
 
         </View>
-
-        <Button
-            onPress={toggleTable}
-            title={showTable ? "Hide Transactions" : "View Transactions"}
-            color="#fcd34d"
-        />
-
-        {showTable && (
-            <View style={styles.table}>
-                <Table borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
-                    <Row data={data.tableHead} />
-                    <Rows data={data.tableData}/>
-                </Table>
-            </View>
-        )}
-        </ScrollView>
     );
 }
 
@@ -238,7 +143,10 @@ const styles = StyleSheet.create({
     height: 44,
      backgroundColor: '#42b983'
   },
-  // text: {
-  //   margin: 6
-  // },
+  text: { 
+    // margin: 8
+  },
+  row: { 
+    flexDirection: 'row',
+  },
 });

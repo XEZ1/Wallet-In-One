@@ -14,11 +14,15 @@ import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import { api_url } from '../../authentication';
 
+import LineChartScreen from '../charts/LineChart';
+// import LineChartScreen from '../../charts/LineChart';
 
 const SuccessComponent = (props) => {
     const [data, setData] = useState(null);
     const [list, setList] = useState()
     const isFocused = useIsFocused()
+    // const isFocused = useIsFocused();
+    const [transactions, setTransactions] = useState({});
 
       useEffect(() => {
         const listAccounts = async () => {
@@ -32,19 +36,57 @@ const SuccessComponent = (props) => {
           }).then(async (res) => setList(await res.json()))};
         if(isFocused){listAccounts()}
       }, [isFocused])
+
+      const getTransactions = useCallback(async (accountID) => {
+        try {
+          const res = await fetch(api_url + `/stocks/list_transactions/${accountID}/`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+            },
+          });
+          const data = await res.json();
+          setTransactions(prevTransactions => ({
+            ...prevTransactions,
+            [accountID]: data
+          }));
+        } catch (error) {
+          console.error(error);
+        }
+      }, []);
+    
+      useEffect(() => {
+        if (isFocused && list) {
+          list.forEach((account) => {
+            getTransactions(account.account_id);
+          });
+        }
+      }, [isFocused, list, getTransactions]);
+
+      const ItemSeparator = () => <View style={styles.separator} />;
     return (
         <View>
           <View>
             <Text>Accounts</Text>
           </View>
           <View>
-            <FlatList data={list} renderItem={({item, index}) =>{
+            <FlatList data={list} ItemSeparatorComponent={ItemSeparator} renderItem={({item, index}) =>{
               return (
-                <TouchableOpacity style={[styles.item, {backgroundColor: 'red'}]} onPress={()=> props.navigation.navigate('StockAsset', {accountID: item.account_id, accessToken: item.access_token}) }>
+                <TouchableOpacity style={[styles.item, {backgroundColor: '#a8a29e'}]} onPress={()=> props.navigation.navigate('StockAsset', {accountID: item.account_id, accessToken: item.access_token, transactions: transactions[item.account_id]}) }>
                   <View style={styles.row}>
                     <Text style={styles.name}>{item.name} - </Text>
                     <Text style={styles.ins_name}>{item.institution_name} - £{item.balance}</Text>
                   </View>
+
+                  {transactions[item.account_id] && 
+                    <LineChartScreen 
+                      transactions={transactions[item.account_id]}
+                      graph_version={2}
+                      height={75}
+                      width={350}
+                  />}
+
                 </TouchableOpacity>
               )
             }}
@@ -65,14 +107,18 @@ const SuccessComponent = (props) => {
         alignItems: 'flex-start',
       },
       name:{
-        color: "white",
+        color: "black",
         fontWeight: 'bold',
         fontSize: 21,
       },
       ins_name:{
-        color: "white",
+        color: "black",
         fontSize: 18,
-      }
+      },
+      separator: {
+        height: 1,
+        backgroundColor: "#3f3f46",
+      },
     });
 
 
