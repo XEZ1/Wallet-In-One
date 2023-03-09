@@ -16,7 +16,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
 
     let graph_data = transactions.map((item) => [item.amount, item.date]);
     graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
-    console.log(graph_data)
+    // console.log(graph_data)
 
     // const test = (data_input) => {
     //     if(data_input.length == 0)
@@ -44,7 +44,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
       balance -= graph_data[i][0]
       points = [point, ...points]
     }
-    console.log(points)
+    // console.log(points)
     setGraphData(points)
 }, [transactions, stockAccountBalance]);
     // const accumulate_totals_for_each_day = (data_input) => {
@@ -87,15 +87,17 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     // console.log(graph_data)
     let color = 'green';
     const data = graphData
-    console.log(data)
+    // console.log(data)
 
 
-    if (data != undefined && data[0].value > data[data.length -1].value){
-        color = 'red';
-    } 
-    else if (data != undefined) {
-        color = 'green'
-    }
+    if (data && data.length > 0) {
+        if (data[0]?.value > data[data.length -1]?.value){
+          color = 'red';
+        } 
+        else {
+          color = 'green';
+        }
+    }      
     
 
     return (

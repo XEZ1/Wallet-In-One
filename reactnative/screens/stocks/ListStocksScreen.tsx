@@ -110,6 +110,8 @@ const SuccessComponent = (props) => {
         }
       }, [isFocused, list, getTransactions]);
 
+      console.log(list);
+
       // useEffect(() => {
       //   if (isFocused && stocks) {
       //     stocks.forEach((account) => {
@@ -122,12 +124,12 @@ const SuccessComponent = (props) => {
     return (
         <View>
           <View>
-            <Text>Accounts</Text>
+            {/* <Text>Accounts</Text> */}
           </View>
           <View>
-            <FlatList data={list} ItemSeparatorComponent={() => <View style={{height: 5}} />} renderItem={({item, index}) =>{
+            <FlatList data={list} ItemSeparatorComponent={() => <View style={{height: 8}} />} renderItem={({item, index}) =>{
               return (
-                <TouchableOpacity style={[styles.item, {backgroundColor: '#a8a29e'}]} onPress={()=> props.navigation.navigate('StockAsset', {
+                <TouchableOpacity style={[styles.item, {backgroundColor: '#fafafa'}]} onPress={()=> props.navigation.navigate('StockAsset', {
                     accountID: item.account_id, 
                     accessToken: item.access_token, 
                     transactions: transactions[item.account_id],
@@ -139,22 +141,28 @@ const SuccessComponent = (props) => {
                   <View style={styles.row}>
                   {item.institution_logo !== null && 
                     <Image
-                      style={{ width: 50, height: 50 }}
+                      style={{ width: 40, height: 40 }}
                       source={{ uri: `data:image/png;base64,${item.institution_logo}` }}
                     />
                   }
 
                   {item.institution_logo === null && 
                     <Image
-                      style={{ width: 50, height: 50 }}
+                      style={{ width: 40, height: 40 }}
                       source={{ uri: 'https://kriptomat.io/wp-content/uploads/t_hub/usdc-x2.png' }}
                     />
                   }
-                    <View style={{flexDirection: "column"}}>
+                    <View style={{flexDirection: "column", flex: 1}}>
                       <Text style={styles.name}>  {item.name}</Text>
-                      <Text style={styles.ins_name}>   {item.institution_name} £{item.balance}</Text>
+                      <Text style={[styles.ins_name, {fontSize: 11}]}>   {item.institution_name} • {item.balance_currency}</Text>
                     </View>
-                    {/* <Text style={styles.ins_name}>   {item.institution_name} £{item.balance}</Text> */}
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Text style={[styles.ins_name, {fontWeight: 'bold', fontSize: 14, height: 19}]}>£{parseInt(item.balance)}</Text>
+                      <View style={{height: 16}}>
+                        <Text style={[styles.ins_name, { fontSize: 12}]}>.{(item.balance).toString().split('.')[1]}</Text>
+                      </View>
+                    </View>
+
                   </View>
 
                   {transactions[item.account_id] && 
@@ -164,7 +172,6 @@ const SuccessComponent = (props) => {
                       graph_version={2}
                       height={75}
                       width={350}
-                      stockAccountBalance={item.balance}
                   />}
 
                 </TouchableOpacity>
@@ -189,11 +196,13 @@ const SuccessComponent = (props) => {
       name:{
         color: "black",
         fontWeight: 'bold',
-        fontSize: 21,
+        fontSize: 16,
+        fontFamily: 'sans-serif',
       },
       ins_name:{
         color: "black",
         fontSize: 15,
+        fontFamily: 'sans-serif',
       },
       separator: {
         height: 1,
