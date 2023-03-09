@@ -1,8 +1,13 @@
 import { StyleSheet, Text, ScrollView,} from "react-native";
 import { styles } from "reactnative/screens/All_Styles.style.js";
+import { useTheme } from "reactnative/src/theme/ThemeProvider";
 
-export default function NoWallets(colors) {
-    return (<ScrollView
+export default function NoWallets() {
+
+  const {dark, colors, setScheme } = useTheme();
+
+    return (
+    <ScrollView
       contentContainerStyle={{
         flexGrow: 1,
         justifyContent: "center",
@@ -12,14 +17,10 @@ export default function NoWallets(colors) {
       }}
       style={styles.container}
     >
-      <Text style={[styles.title, { color: colors.text }]}>
+      <Text style={[styles(dark, colors).text, {textAlign: "center"}]}>
         Wallet-In-One
-      </Text>
-      <Text style={[styles.amountText, { color: colors.text }]}>
-        Amount: £0
-      </Text>
-      <Text style={[styles.amountText, { color: colors.text }]}>
-        Connect your Wallets to See your Funds!
+        {'\n'}Amount: £0
+        {'\n'}Connect your Wallets to See your Funds!
       </Text>
     </ScrollView>);
   }
