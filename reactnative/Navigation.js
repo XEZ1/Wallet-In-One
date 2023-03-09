@@ -37,6 +37,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { setStatusBarHidden } from 'expo-status-bar';
+import WalletAssetDetail from "./screens/crypto_wallet/WalletAssetDetail";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -156,6 +157,9 @@ function HomePageNavigator() {
     <Stack.Screen
       name='Bank Transactions'
       component={BankTransactionsScreen} />
+    <Stack.Screen
+      name='Wallet Detail'
+      component={WalletAssetDetail} />
   </Stack.Navigator>)
 }
 

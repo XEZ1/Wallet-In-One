@@ -68,9 +68,6 @@ export default function MainStackNavigator() {
         component={CryptoWallet}
       />
       <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
         name="WalletAssetDetail"
         component={WalletAssetDetail}
       />

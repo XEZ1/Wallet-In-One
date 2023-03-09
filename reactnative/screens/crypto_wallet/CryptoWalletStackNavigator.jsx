@@ -15,12 +15,11 @@ const Stack = createStackNavigator();
 
 export default function CryptoWalletStackNavigator() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator>
       <Stack.Screen name="Wallets" component={CryptoWallet} />
       <Stack.Screen name="WalletAssetDetail" component={WalletAssetDetail} />
       <Stack.Screen name="WalletSelector" component={WalletSelector} />
       <Stack.Screen name="WalletConnector" component={WalletConnector} />
-
 
     </Stack.Navigator>
   );

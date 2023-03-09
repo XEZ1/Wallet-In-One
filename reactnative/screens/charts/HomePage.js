@@ -12,6 +12,7 @@ import PieChart from "./chartComponents/pieChart";
 import BarChart from "./chartComponents/barChart"
 import StackedChart from "./chartComponents/stackedBarChart";
 import fixture from "../charts/chartData.json";
+import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 
 export default function HomePage({ navigation }) {
   const {dark, colors, setScheme } = useTheme();
@@ -21,6 +22,7 @@ export default function HomePage({ navigation }) {
   const [baseData, setBaseData] = useState(fixture);
   const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed] = useState(null);
+  const { wallets, fetchWallets, removeWallet } = useCryptoWallet();
 
   // Uncomment to show bank data from backend
 
@@ -37,6 +39,7 @@ export default function HomePage({ navigation }) {
     if (isFocused) {
       fetchData();
     }
+    fetchWallets();
   }, [isFocused]);
 
   const handlePressIn = (event, datapoint) => {
@@ -47,6 +50,13 @@ export default function HomePage({ navigation }) {
         var bankData = baseData["Banks"][index]
         if (bankData.id){
           navigation.navigate('Bank Transactions', {accountID: bankData.id})
+          return
+        }
+      } else if (pressed === "Cryptocurrency") {
+        var cryptoData = baseData["Cryptocurrency"][index]
+        var wallet = wallets.find(x => x.id === cryptoData.id)
+        if (cryptoData.id) {
+          navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
           return
         }
       }
