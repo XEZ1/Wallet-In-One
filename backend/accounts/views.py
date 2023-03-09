@@ -45,7 +45,7 @@ def graph_data(request):
         data['Banks'] = bank_data
     if crypto_data:
         data['all'].append({"x": "Cryptocurrency from wallets", "y": total_user_balance_crypto(request.user)})
-        data['Cryptocurrency'] = crypto_data
+        data['Cryptocurrency from wallets'] = crypto_data
 
     if stock_data:
         data['all'].append({"x": "Stock Accounts", "y": total_stock_balance(request.user).amount})
