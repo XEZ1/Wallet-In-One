@@ -1,50 +1,69 @@
 import { View, Text, TouchableOpacity,StyleSheet } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import { api_url } from '../../authentication';
 import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 
 export default function StockDetails({ route, navigation }){
-  console.log("STOCKTRANS")
-  console.log(route.params.stock_transactions);
-      const stock_data = route.params.stock;
 
-      const table_data = route.params.stock_transactions.data.map(item => [
-        item.id,
-        item.amount,
-        item.date,
-        item.quantity,
-        item.fees,
-      ]);
+  const [stockTransactions, setStockTransactions] = useState([]);
+  const stock = route.params.stock;
 
-      const data = {
-        tableHead: ['ID','Amount', 'Date', 'Quantity','Fees'],
-        tableData : table_data,
-      };
-      
-      // console.log(JSON.stringify(data))
+  const getStockTransactions = useCallback(async (stock) => {
+    try {
+      const response = await fetch(api_url + `/stocks/list_transactions/${stock}/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+        },
+      });
+      const data = await response.json();
+      setStockTransactions(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (stock) {
+      getStockTransactions(stock.stockAccount);
+    }
+  }, [stock, getStockTransactions]);
+
+  const data = {
+    tableHead: ['ID', 'Amount', 'Date', 'Quantity', 'Fees'],
+    tableData: stockTransactions.map(item => [
+      item.id,
+      item.amount,
+      item.date,
+      item.quantity,
+      item.fees,
+    ]),
+  };
+
     return (
       <ScrollView style={styles.screen}>
         <Text style={styles.label}>Stock Data{"\n"}</Text>
 
-        {stock_data ? (
+        {stock ? (
           <View>
             <Text style={styles.label}>Name</Text>
-            <Text>{stock_data.name}{"\n"}</Text>
+            <Text>{stock.name}{"\n"}</Text>
 
             <Text style={styles.label}>Institution Price Currency</Text>
-            <Text>{stock_data.institution_price_currency}{"\n"}</Text>
+            <Text>{stock.institution_price_currency}{"\n"}</Text>
 
             <Text style={styles.label}>Institution Price</Text>
-            <Text>{stock_data.institution_price}{"\n"}</Text>
+            <Text>{stock.institution_price}{"\n"}</Text>
 
             <Text style={styles.label}>Ticker Symbol</Text>
-            <Text>{stock_data.ticker_symbol}{"\n"}</Text>
+            <Text>{stock.ticker_symbol}{"\n"}</Text>
 
             <Text style={styles.label}>Quantity</Text>
-            <Text>{stock_data.quantity}{"\n"}</Text>
+            <Text>{stock.quantity}{"\n"}</Text>
 
           </View>
         ):(<Text>Loading...</Text>)}
@@ -52,23 +71,23 @@ export default function StockDetails({ route, navigation }){
         {/* <Text>{JSON.stringify(data)}</Text> */}
         {data && (
           <View style={styles.table}>
-              {data.tableData.length > 0 ? (
+              {data && data.tableData && data.tableData.length > 0 ? (
                 <View>
                   <Table borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
                     <Row data={data.tableHead} style={styles.head} textStyle={styles.text} />
                     {data.tableData.map((rowData, index) => (
-                      // <TouchableOpacity key={index} onPress={()=> navigation.navigate('TransactionData', {id: rowData[0]})}>
+                      <TouchableOpacity key={index} onPress={()=> navigation.navigate('TransactionData', {id: rowData[0]})}>
                         <TableWrapper style={styles.row}>
                           {rowData.map((cellData, cellIndex) => (
                             <Cell key={cellIndex} data={cellData} textStyle={styles.text} />
                           ))}
                         </TableWrapper>
-                      // </TouchableOpacity>
+                      </TouchableOpacity>
                     ))}
                   </Table>
                 </View>
               ) : (
-                <Text style={[{textAlign: 'center', alignSelf: 'center'}]}>No data available</Text>
+                <Text style={[{textAlign: 'center', alignSelf: 'center'}]}>... Loading</Text>
               )}
           </View>
           )}

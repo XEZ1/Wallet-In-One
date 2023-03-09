@@ -11,28 +11,62 @@ import { auth_delete } from '../../authentication';
 import { auth_get } from '../../authentication';
 
 export default function StockAsset({ route, navigation, }){
-  const [stockTransactions, setStockTransactions] = useState({});
+  const [stocks, setStocks] = useState()
 
-  const getStockTransactions = useCallback(async (accountID) => {
-    try {
-      const response = await auth_get(`/stocks/list_transactions/${accountID}/`);
-      const data = response.body;
-      setStockTransactions(prevTransactions => ({
-        ...prevTransactions,
-        ["data"]: data
-      }));
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+  const getStocks = useCallback(async (accountID) => {
+      try {
+        const res = await fetch(api_url + `/stocks/list_stocks/${accountID}/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+          },
+        });
+        const data = await res.json();
+        setStocks(data);
 
-  useEffect(() => {
-    if (route.params?.stocks?.accountID?.length) {
-      route.params.stocks.accountID.forEach((account) => {
-        getStockTransactions(account.stockAccount);
-      });
-    }
-  }, [route.params?.stocks?.accountID, getStockTransactions]);
+      } catch (error) {
+        console.error(error);
+      }
+    }, []);
+  
+    useEffect(() => {
+      if (isFocused ) {
+        getStocks(route.params.accountID);
+      }
+    }, [isFocused, getStocks]);
+
+  //   const [stockTransactions, setStockTransactions] = useState([]);
+
+  //   const getStockTransactions = useCallback(async (accountID) => {
+  //     try {
+  //       const response = await fetch(api_url + `/stocks/list_transaction/${accountID}/`, {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+  //         },
+  //       });
+  //       const data = await response.json();
+  //       setStockTransactions(prevTransactions => ({
+  //         ...prevTransactions,
+  //         ["data"]: data
+  //       }));
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }, []);
+
+  // useEffect(() => {
+  //   if (stocks.length) {
+  //     stocks.forEach((stock) => {
+  //       getStockTransactions(stock.stockAccount);
+  //     });
+  //   }
+  // }, [stocks, getStockTransactions]);
+
+  console.log("STOCKS SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS:");
+  console.log(stocks);
 
     const isFocused = useIsFocused();
     const [transactions, setTransactions] = useState(route.params.transactions);
@@ -148,7 +182,7 @@ export default function StockAsset({ route, navigation, }){
               graph_version={1}
               height={275}
               width={350}
-              stockAccountBalance={route.params.balance}
+              // stockAccountBalance={route.params.balance}
           />}
           
           <View style={styles.buttonContainer, {flexDirection: "row"}}>
@@ -195,15 +229,15 @@ export default function StockAsset({ route, navigation, }){
             color="#fcd34d"
           />
           
-          {showStocks && (
+          {showStocks && stocks &&  (
             <FlatList 
-              data={route.params.stocks.accountID} 
+              data={stocks} 
               style={{paddingVertical: 5, paddingHorizontal: 10}}
               ItemSeparatorComponent={() => <View style={{height: 5}} />}
               contentContainerStyle={{paddingBottom: 20}}
               renderItem={({item, index}) =>{
                 return (
-                  <TouchableOpacity style={[styles.item, {backgroundColor: '#1e40af'}]} onPress={()=> navigation.navigate('StockDetails', {stock: item, stock_transactions: stockTransactions}) }>
+                  <TouchableOpacity style={[styles.item, {backgroundColor: '#1e40af'}]} onPress={()=> navigation.navigate('StockDetails', {stock: stocks[index]}) }>
                   <View style={styles.row}>
                     <Text style={[styles.name, {fontSize: 14}]}> {item.name} </Text>
                   </View>

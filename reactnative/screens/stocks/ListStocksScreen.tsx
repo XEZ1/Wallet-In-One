@@ -62,32 +62,32 @@ const SuccessComponent = (props) => {
     //     }
     // }, [isFocused])
 
-    const getStocks = useCallback(async (accountID) => {
-      try {
-        const res = await fetch(api_url + `/stocks/list_stocks/${accountID}/`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-          },
-        });
-        const data = await res.json();
-        setStocks(prevStocks => ({
-          ...prevStocks,
-          "accountID": data
-        }));
-      } catch (error) {
-        console.error(error);
-      }
-    }, []);
+    // const getStocks = useCallback(async (accountID) => {
+    //   try {
+    //     const res = await fetch(api_url + `/stocks/list_stocks/${accountID}/`, {
+    //       method: "GET",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+    //       },
+    //     });
+    //     const data = await res.json();
+    //     setStocks(prevStocks => ({
+    //       ...prevStocks,
+    //       "accountID": data
+    //     }));
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }, []);
   
-    useEffect(() => {
-      if (isFocused && list) {
-        list.forEach((account) => {
-          getStocks(account.account_id);
-        });
-      }
-    }, [isFocused, list, getStocks]);
+    // useEffect(() => {
+    //   if (isFocused && list) {
+    //     list.forEach((account) => {
+    //       getStocks(account.account_id);
+    //     });
+    //   }
+    // }, [isFocused, list, getStocks]);
 
       const getTransactions = useCallback(async (accountID) => {
         try {
@@ -129,12 +129,13 @@ const SuccessComponent = (props) => {
           <View>
             <FlatList data={list} ItemSeparatorComponent={() => <View style={{height: 8}} />} renderItem={({item, index}) =>{
               return (
+                
                 <TouchableOpacity style={[styles.item, {backgroundColor: '#fafafa'}]} onPress={()=> props.navigation.navigate('StockAsset', {
                     accountID: item.account_id, 
                     accessToken: item.access_token, 
                     transactions: transactions[item.account_id],
                     logo: item.institution_logo,
-                    stocks: stocks,
+                    // stocks: stocks,
                     balance: item.balance
                   }) }>
 
