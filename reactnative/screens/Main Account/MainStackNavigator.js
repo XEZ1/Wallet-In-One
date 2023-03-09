@@ -25,6 +25,7 @@ import CryptoExchanges from "../cryptoExchanges/CryptoExchanges";
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import CryptoWalletInsights from "../crypto_wallet/CryptoWalletInsights";
 
 const Stack = createStackNavigator();
 
@@ -88,7 +89,8 @@ export default function MainStackNavigator() {
         component={WalletAssetDetail}
       />
       <Stack.Screen name="WalletSelector" component={WalletSelector} />
-      <Stack.Screen name="WalletConnector" component={WalletConnector} />  
+      <Stack.Screen name="WalletConnector" component={WalletConnector} />
+      <Stack.Screen name="Crypto Wallet Insights" component={CryptoWalletInsights} />
 
       <Stack.Screen name="Crypto exchanges" component={CryptoExchanges} />
       <Stack.Screen name="Binance" component={BinanceCredentials} />
