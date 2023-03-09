@@ -52,7 +52,7 @@ export default function HomePage({ navigation }) {
           navigation.navigate('Bank Transactions', {accountID: bankData.id})
           return
         }
-      } else if (pressed === "Cryptocurrency") {
+      } else if (pressed === "Cryptocurrency from wallets") {
         var cryptoData = baseData["Cryptocurrency"][index]
         var wallet = wallets.find(x => x.id === cryptoData.id)
         if (cryptoData.id) {
