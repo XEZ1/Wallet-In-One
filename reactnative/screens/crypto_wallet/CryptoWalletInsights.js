@@ -1,11 +1,13 @@
 import {View, Text, StyleSheet} from "react-native";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-// import useCryptoWallet from "./useCryptoWallet";
+import { BACKEND_URL } from "@env"
+import * as SecureStore from "expo-secure-store";
 
-export default function CryptoWalletInsights(props) {
+export default function CryptoWalletInsights() {
+  const [insights, setInsights] = useState({});
+
   const {dark, colors, setScheme} = useTheme();
-  // const { wallets, fetchWallets } = useCryptoWallet();
 
   const styles = StyleSheet.create({
     title: {
@@ -17,18 +19,26 @@ export default function CryptoWalletInsights(props) {
     }
   });
 
-  /*
   useEffect(() => {
-    fetchWallets();
+    fetchInsights();
   }, [])
 
-  const totalSpent = () => {
-    // [{}, {}, {}]
-  }
+  const fetchInsights = async () => {
+    await fetch(`${BACKEND_URL}/crypto_wallets/insights`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => setInsights(res))
+      .catch((err) => console.log(err));
+  };
 
-   */
 
-  // console.log(wallets)
+
+  console.log(insights)
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>

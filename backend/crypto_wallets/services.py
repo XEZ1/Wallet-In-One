@@ -1,5 +1,5 @@
 from datetime import datetime, date, timedelta
-
+import statistics
 import requests
 from crypto_wallets.models import CryptoWallet, CryptoWalletTransaction
 
@@ -103,3 +103,23 @@ def calculate_received_spent(user):
         spent_received[wallet.symbol]['received'] += wallet.received
         spent_received[wallet.symbol]['spent'] += wallet.spent
     return spent_received
+
+
+def calculate_average_spend(user):
+    average_spend = {}
+    crypto_wallets = list(CryptoWallet.objects.filter(user=user))
+
+    for wallet in crypto_wallets:
+        transactions = list(CryptoWalletTransaction.objects.filter(crypto_wallet=wallet))
+        for transaction in transactions:
+            if transaction.value < 0:
+                if wallet.symbol not in average_spend:
+                    average_spend[wallet.symbol] = []
+                average_spend[wallet.symbol].append(transaction.value)
+
+    for symbol in average_spend:
+        average_spend[symbol] = statistics.fmean(average_spend[symbol])
+
+    return average_spend
+
+
