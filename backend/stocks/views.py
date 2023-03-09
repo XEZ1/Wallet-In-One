@@ -216,3 +216,7 @@ def getMetrics(request):
         'average_transaction_fee': average_transaction_fee
         })
 
+@api_view(['GET'])
+def getAccount(request, account_id):
+    account = StockAccount.objects.get(account_id=account_id)
+    return Response({'access_token': account.access_token, 'logo': account.institution_logo, 'balance': account.balance.amount})

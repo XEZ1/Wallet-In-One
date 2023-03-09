@@ -32,6 +32,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { setStatusBarHidden } from 'expo-status-bar';
 import WalletAssetDetail from "./screens/crypto_wallet/WalletAssetDetail";
 
+import StockAsset from './screens/stocks/StockAsset';
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -153,6 +155,9 @@ function HomePageNavigator() {
     <Stack.Screen
       name='Wallet Detail'
       component={WalletAssetDetail} />
+    <Stack.Screen
+      name='Stock Account Transactions'
+      component={StockAsset} />
   </Stack.Navigator>)
 }
 

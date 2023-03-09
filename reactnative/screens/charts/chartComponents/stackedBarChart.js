@@ -54,6 +54,13 @@ export default function StackedChart({ data = fixture.all  }) {
               barWidth={35}
             />
           ))}
+          {(data['Stock Accounts']?data['Stock Accounts']:[]).map(i => (
+            <VictoryBar
+              key={i}
+              data={[{ x: "Stock Accounts", y: i.y }]}
+              barWidth={35}
+            />
+          ))}
         </VictoryStack>
       </VictoryChart>
 
