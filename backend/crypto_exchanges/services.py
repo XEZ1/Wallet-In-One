@@ -266,23 +266,31 @@ class GateioFetcher:
 
         return response.json()
 
-    def get_deposit_history(self, currency, limit=10):
-        url = '/wallet/deposits'
-        query_param = 'currency=%s&limit=%d' % (currency, limit)
-        sign_headers = self.gen_sign('GET', self.prefix + url, query_param)
-        self.headers.update(sign_headers)
-        r = requests.request('GET', self.host + self.prefix + url + '?' + query_param, headers=self.headers)
-        deposit_history = r.json()
-        return deposit_history
+    def get_deposit_history(self):
+        host = "https://api.gateio.ws"
+        prefix = "/api/v4"
+        headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
 
-    def get_withdrawal_history(self, currency, limit=10):
+        url = '/wallet/deposits'
+        query_param = ''
+        # for `gen_sign` implementation, refer to section `Authentication` above
+        sign_headers = self.gen_sign('GET', prefix + url, query_param)
+        headers.update(sign_headers)
+        r = requests.request('GET', host + prefix + url, headers=headers)
+        return r.json()
+
+    def get_withdrawal_history(self):
+        host = "https://api.gateio.ws"
+        prefix = "/api/v4"
+        headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+
         url = '/wallet/withdrawals'
-        query_param = 'currency=%s&limit=%d' % (currency, limit)
-        sign_headers = self.gen_sign('GET', self.prefix + url, query_param)
-        self.headers.update(sign_headers)
-        r = requests.request('GET', self.host + self.prefix + url + '?' + query_param, headers=self.headers)
-        withdrawal_history = r.json()
-        return withdrawal_history
+        query_param = ''
+        # for `gen_sign` implementation, refer to section `Authentication` above
+        sign_headers = self.gen_sign('GET', prefix + url, query_param)
+        headers.update(sign_headers)
+        r = requests.request('GET', host + prefix + url, headers=headers)
+        return r.json()
 
     def get_trading_history(self, currency_pair, limit=10):
         url = f"/spot/trades?currency_pair={currency_pair}&limit={limit}"
@@ -357,9 +365,9 @@ class CoinListFetcher:
     def prehash(self, timestamp, method, path, body):
         return timestamp + method.upper() + path + (body or '')
 
-    def get_deposit_history(self):
+    def get_deposit_withdrawal_history(self):
         endpoint = 'https://trade-api.coinlist.co'
-        path = '/v1/deposit_history'
+        path = '/v1/transfers'
         timestamp = str(int(time.time()))
         request_url = f"{endpoint}{path}"
         body = None
@@ -379,9 +387,9 @@ class CoinListFetcher:
         response = requests.get(url=request_url, headers=headers)
         return response.json()
 
-    def get_withdrawal_history(self):
+    def get_trading_history(self):
         endpoint = 'https://trade-api.coinlist.co'
-        path = '/v1/withdrawals/'
+        path = '/v1/accounts/'
         timestamp = str(int(time.time()))
         request_url = f"{endpoint}{path}"
         body = None
@@ -398,31 +406,37 @@ class CoinListFetcher:
             'CL-ACCESS-TIMESTAMP': timestamp
         }
 
-        response = requests.get(url=request_url, headers=headers)
-        return response.json()
+        response_id = requests.get(url=request_url, headers=headers)
 
-    def get_trading_history(self, symbol, limit=10):
-        endpoint = 'https://trade-api.coinlist.co'
-        path = f"/v1/orders?symbol={symbol}&limit={limit}"
-        timestamp = str(int(time.time()))
-        request_url = f"{endpoint}{path}"
-        body = None
-        method = 'GET'
+        if 'accounts' not in response_id.json():
+            return response_id.json()
 
-        prehashed = self.prehash(timestamp, method, path, body)
-        secret = b64decode(self.secret_key)
-        signature = self.sha265hmac(prehashed, secret)
+        # We retrieved ID addresses of sub-accounts, its time to retrieve the actual data
+        to_return = {}
+        for account_id in response_id.json()['accounts']:
+            endpoint = 'https://trade-api.coinlist.co'
+            #path = f"""/v1/accounts/{account_id['trader_id']}"""
+            path = f"/v1/accounts/{account_id['trader_id']}/ledger"
+            timestamp = str(int(time.time()))
+            request_url = f"{endpoint}{path}"
+            body = None
+            method = 'GET'
 
-        headers = {
-            'Content-Type': 'application/json',
-            'CL-ACCESS-KEY': self.api_key,
-            'CL-ACCESS-SIG': signature,
-            'CL-ACCESS-TIMESTAMP': timestamp
-        }
+            prehashed = self.prehash(timestamp, method, path, body)
+            secret = b64decode(self.secret_key)
+            signature = self.sha265hmac(prehashed, secret)
 
-        response = requests.get(url=request_url, headers=headers)
+            headers = {
+                'Content-Type': 'application/json',
+                'CL-ACCESS-KEY': self.api_key,
+                'CL-ACCESS-SIG': signature,
+                'CL-ACCESS-TIMESTAMP': timestamp
+            }
 
-        return response.json()
+            response = requests.get(url=request_url, headers=headers)
+            to_return.update(response.json())
+
+        return to_return
 
 
 # Class was implemented according to: "https://docs.cloud.coinbase.com/exchange/docs/requests"
@@ -474,42 +488,13 @@ class CoinBaseFetcher:
             data_to_return.append(coin['balance'])
 
         return data_to_return
-    def get_deposit_history(self):
-        api_url = 'https://api.coinbase.com/v2/'
-        auth = CoinBaseAuthorisation(self.api_key, self.secret_key)
-
-        # Get deposit history
-        response = requests.get(api_url + 'deposits', auth=auth)
-
-        if response.status_code == 400 or response.status_code == 401 or response.status_code == 402 \
-                or response.status_code == 403 or response.status_code == 404 or response.status_code == 405:
-            return response.json()
-
-        return response.json()
-
-    def get_withdrawal_history(self):
-        api_url = 'https://api.coinbase.com/v2/'
-        auth = CoinBaseAuthorisation(self.api_key, self.secret_key)
-
-        # Get withdrawal history
-        response = requests.get(api_url + 'withdrawals', auth=auth)
-
-        if response.status_code == 400 or response.status_code == 401 or response.status_code == 402 \
-                or response.status_code == 403 or response.status_code == 404 or response.status_code == 405:
-            return response.json()
-
-        return response.json()
 
     def get_trading_history(self):
-        api_url = 'https://api.coinbase.com/v2/'
         auth = CoinBaseAuthorisation(self.api_key, self.secret_key)
+        # api_url = "https://api.coinbase.com/api/v3/brokerage/transaction_summary"
+        api_url = "https://api.coinbase.com/api/v3/brokerage/orders/historical/fills"
 
-        # Get trading history
-        response = requests.get(api_url + 'fills', auth=auth)
-
-        if response.status_code == 400 or response.status_code == 401 or response.status_code == 402 \
-                or response.status_code == 403 or response.status_code == 404 or response.status_code == 405:
-            return response.json()
+        response = requests.get(api_url, auth=auth)
 
         return response.json()
 
