@@ -25,7 +25,7 @@ export default function TransactionData({ route, navigation }){
     }, [isFocused])
 
 
-      console.log(JSON.stringify(data))
+      // console.log(JSON.stringify(data))
     return (
       <ScrollView style={styles.screen}>
         <Text style={styles.text}>Transaction Data{"\n"}</Text>
@@ -44,6 +44,9 @@ export default function TransactionData({ route, navigation }){
             <Text style={styles.text}>Amount</Text>
             <Text>£ {data.amount}{"\n"}</Text>
 
+            <Text style={styles.text}>Date</Text>
+            <Text>{data.date}{"\n"}</Text>
+
             <Text style={styles.text}>Quantity</Text>
             <Text>{data.quantity}{"\n"}</Text>
 
@@ -52,13 +55,10 @@ export default function TransactionData({ route, navigation }){
 
             <Text style={styles.text}>Fees</Text>
             <Text>£ {data.fees}{"\n"}</Text>
-
-            <Text style={styles.text}>Date</Text>
-            <Text>{data.date}{"\n"}</Text>
           </View>
         ):(<Text>Loading...</Text>)}
 
-        <Text>{JSON.stringify(data)}</Text>
+        {/* <Text>{JSON.stringify(data)}</Text> */}
       </ScrollView>
   );
     

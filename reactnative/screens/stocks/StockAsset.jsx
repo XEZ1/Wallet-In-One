@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity,StyleSheet,VirtualizedList } from 'react-native';
+import { View, Text, TouchableOpacity,StyleSheet,SectionList } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect,useCallback } from 'react';
@@ -65,8 +65,8 @@ export default function StockAsset({ route, navigation, }){
   //   }
   // }, [stocks, getStockTransactions]);
 
-  console.log("STOCKS SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS:");
-  console.log(stocks);
+  // console.log("STOCKS SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS:");
+  // console.log(stocks);
 
     const isFocused = useIsFocused();
     const [transactions, setTransactions] = useState(route.params.transactions);
@@ -81,7 +81,7 @@ export default function StockAsset({ route, navigation, }){
     const transaction_table_data = transactions
       ? transactions.map((item) => [
           item.id,
-          item.amount, 
+          (item.amount).toFixed(2), 
           item.date, 
           item.quantity, 
           item.fees,
@@ -134,7 +134,7 @@ export default function StockAsset({ route, navigation, }){
 
         let updated_table_data = updated_data.map((item) => [
             item.id,
-            item.amount, 
+            (item.amount).toFixed(2), 
             item.date, 
             item.quantity, 
             item.fees,
@@ -171,7 +171,11 @@ export default function StockAsset({ route, navigation, }){
     const ItemSeparator = () => <View style={styles.separator} />;
 
     return(
-      <ScrollView style={{padding: 10}}>
+      <FlatList
+        style={{padding: 10}}
+        data={transactions}
+        keyExtractor={(item) => item.id.toString()}
+        ListHeaderComponent={
         <View>
           <Button title ={"REMOVE"} color = "red" onPress={async ()=> {await deleteAccount(), navigation.navigate('Stock Account List')}}/>
 
@@ -205,17 +209,18 @@ export default function StockAsset({ route, navigation, }){
                       <Text style={[{textAlign: 'center', alignSelf: 'center'}]}>Select Row to view transaction details.{"\n"}</Text>
                       
                       <Table borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
-                        <Row data={data.tableHead} style={styles.head} textStyle={styles.text} />
+                        <Row data={data.tableHead} style={styles.head} />
                         {data.tableData.map((rowData, index) => (
-                          <TouchableOpacity key={index} onPress={()=> navigation.navigate('TransactionData', {id: rowData[0]})}>
-                            <TableWrapper style={styles.row}>
+                          <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionData', { id: rowData[0] })}>
+                            <TableWrapper style={[styles.row, {backgroundColor: rowData[1] < 0 ? "#f87171" : '#bbf7d0'}]} borderStyle={{borderWidth: 1, borderColor: '#000000'}}>
                               {rowData.map((cellData, cellIndex) => (
-                                <Cell key={cellIndex} data={cellData} textStyle={styles.text} />
+                                <Cell key={cellIndex} data={cellData} />
                               ))}
                             </TableWrapper>
                           </TouchableOpacity>
                         ))}
                       </Table>
+
                     </View>
                   ) : (
                     <Text style={[{textAlign: 'center', alignSelf: 'center'}]}>No data available</Text>
@@ -248,7 +253,8 @@ export default function StockAsset({ route, navigation, }){
               />)
             }
         </View>
-      </ScrollView>
+        }
+      />
     );
 }
 

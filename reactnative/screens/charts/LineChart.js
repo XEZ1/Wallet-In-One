@@ -93,7 +93,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     // console.log(graph_data)
     let color = 'green';
     const data = graphData;
-    console.log(data)
+    // console.log(data)
 
 
     if (data && data.length > 0) {
@@ -117,6 +117,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                                 <LineChart.Path color={color}>
                                     <LineChart.Gradient />
                                 </LineChart.Path>
+                                <LineChart.CursorLine />
                                 <LineChart.CursorCrosshair />
                             </LineChart>
                             <LineChart.PriceText />

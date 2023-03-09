@@ -39,7 +39,7 @@ export default function StockDetails({ route, navigation }){
     tableHead: ['ID', 'Amount', 'Date', 'Quantity', 'Fees'],
     tableData: stockTransactions.map(item => [
       item.id,
-      item.amount,
+      (item.amount).toFixed(2),
       item.date,
       item.quantity,
       item.fees,
@@ -80,12 +80,12 @@ export default function StockDetails({ route, navigation }){
               {data && data.tableData && data.tableData.length > 0 ? (
                 <View>
                   <Table borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
-                    <Row data={data.tableHead} style={styles.head} textStyle={styles.text} />
+                    <Row data={data.tableHead} style={styles.head} />
                     {data.tableData.map((rowData, index) => (
-                      <TouchableOpacity key={index} onPress={()=> navigation.navigate('TransactionData', {id: rowData[0]})}>
-                        <TableWrapper style={styles.row}>
+                      <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionData', { id: rowData[0] })}>
+                        <TableWrapper style={[styles.row, {backgroundColor: rowData[1] < 0 ? "#f87171" : '#bbf7d0'}]} borderStyle={{borderWidth: 1, borderColor: '#000000'}}>
                           {rowData.map((cellData, cellIndex) => (
-                            <Cell key={cellIndex} data={cellData} textStyle={styles.text} />
+                            <Cell key={cellIndex} data={cellData} />
                           ))}
                         </TableWrapper>
                       </TouchableOpacity>
