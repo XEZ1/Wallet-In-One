@@ -268,20 +268,14 @@ const PlaidComponent = ({ navigation }) => {
               duration: 300,
               useNativeDriver: true,
             }).start(() => setModalVisible(false));
+            navigation.navigate("Stock Account List")
           }}
         >
-        <Text style={styles.textStyle}>Close</Text>
+        <Text style={styles.textStyle}>Exit</Text>
         </Pressable>
       </View>
     </Animated.View>
     </Modal>
-
-    <Pressable
-      style={[styles.button]}
-      onPress={() => setModalVisible(true)}
-    >
-      <Text style={styles.textStyle}>Show Modal</Text>
-    </Pressable>
   </View>
     </>
   );
