@@ -21,6 +21,8 @@ from banking.services import total_user_balance, chart_breakdown
 
 from crypto_wallets.services import total_user_balance_crypto, chart_breakdown_crypto
 
+from crypto_exchanges.services import CurrentMarketPriceFetcher
+
 # Maybe this should go in new app
 @api_view(['GET'])
 def graph_data(request):
@@ -30,11 +32,16 @@ def graph_data(request):
     
     bank_data = chart_breakdown(request.user)
     crypto_data = chart_breakdown_crypto(request.user)
+    crypto_exchanges = CurrentMarketPriceFetcher(request.user)
+    crypto_data_from_exchanges = crypto_exchanges.chart_breakdown_crypto_free()
+
     if bank_data:
         data['all'].append({"x": "Banks", "y": total_user_balance(request.user).amount})
         data['Banks'] = bank_data
     if crypto_data:
-        data['all'].append({"x": "Cryptocurrency", "y": total_user_balance_crypto(request.user)})
+        data['all'].append({"x": "Cryptocurrency from wallets", "y": total_user_balance_crypto(request.user)})
         data['Cryptocurrency'] = crypto_data
-    print(data)
+    if crypto_data_from_exchanges:
+        data['all'].append({"x": "Cryptocurrency from exchanges", "y": crypto_exchanges.total_user_balance_crypto()})
+        data['Cryptocurrency from exchanges'] = crypto_data_from_exchanges
     return Response(data)

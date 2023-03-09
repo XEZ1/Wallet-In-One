@@ -44,9 +44,6 @@ export function WalletSelector(props) {
     <View style={[styles(dark, colors).container, {paddingTop: 30}]}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 1, flexDirection: "column" }}>
-          <Pressable onPress={() => props.navigation.navigate("Crypto Wallets")}>
-            <Text style={[styles(dark, colors).backArrow, {position: "absolute", paddingLeft: 10}]}>←</Text>
-          </Pressable>
           <Text style={[styles(dark, colors).largeTextBold, {alignSelf: "center"}]}>Connect Wallet</Text>
         </View>
       </View>
@@ -109,9 +106,6 @@ export function WalletConnector(props) {
       <View style={{ paddingTop: 30 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View style={{ flex: 1, flexDirection: "column" }}>
-            <Pressable onPress={() => props.navigation.navigate("Crypto Wallets")}>
-              <Text style={[styles(dark, colors).backArrow, {position: "absolute", paddingLeft: 10}]}>✗</Text>
-            </Pressable>
             <Text style={[styles(dark, colors).largeTextBold, {alignSelf: "center"}]}>Connect Wallet</Text>
           </View>
         </View>
@@ -135,7 +129,11 @@ export function WalletConnector(props) {
           title="Connect Wallet"
           onPress={() =>
             connectWallet(cryptocurrency, symbol, address)
-              .then(() => props.navigation.navigate("Crypto Wallets"))
+              .then(() => props.navigation.reset({
+                index: 0,
+                routes: [{ name: 'Crypto Wallets & Exchanges' }],
+              }))
+              .then(() => props.navigation.navigate("Crypto Wallets & Exchanges"))
           }
         />
       </View>
