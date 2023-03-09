@@ -10,6 +10,8 @@ export default function StockDetails({ route, navigation }){
 
   const [stockTransactions, setStockTransactions] = useState([]);
   const stock = route.params.stock;
+  console.log("-----------------------------------------------------");
+  console.log(stock);
 
   const getStockTransactions = useCallback(async (stock) => {
     try {
@@ -59,8 +61,12 @@ export default function StockDetails({ route, navigation }){
             <Text style={styles.label}>Institution Price</Text>
             <Text>{stock.institution_price}{"\n"}</Text>
 
-            <Text style={styles.label}>Ticker Symbol</Text>
-            <Text>{stock.ticker_symbol}{"\n"}</Text>
+            {stock.ticker_symbol != null && (
+              <View>
+                <Text style={styles.label}>Ticker Symbol</Text>
+                <Text>{stock.ticker_symbol}{"\n"}</Text>
+              </View>
+            )}
 
             <Text style={styles.label}>Quantity</Text>
             <Text>{stock.quantity}{"\n"}</Text>
