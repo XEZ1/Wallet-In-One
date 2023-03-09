@@ -36,38 +36,6 @@ export default function StockAsset({ route, navigation, }){
       }
     }, [isFocused, getStocks]);
 
-  //   const [stockTransactions, setStockTransactions] = useState([]);
-
-  //   const getStockTransactions = useCallback(async (accountID) => {
-  //     try {
-  //       const response = await fetch(api_url + `/stocks/list_transaction/${accountID}/`, {
-  //         method: "GET",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-  //         },
-  //       });
-  //       const data = await response.json();
-  //       setStockTransactions(prevTransactions => ({
-  //         ...prevTransactions,
-  //         ["data"]: data
-  //       }));
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   }, []);
-
-  // useEffect(() => {
-  //   if (stocks.length) {
-  //     stocks.forEach((stock) => {
-  //       getStockTransactions(stock.stockAccount);
-  //     });
-  //   }
-  // }, [stocks, getStockTransactions]);
-
-  console.log("STOCKS SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS:");
-  console.log(stocks);
-
     const isFocused = useIsFocused();
     const [transactions, setTransactions] = useState(route.params.transactions);
     // const [stocks, setStocks] = useState()
@@ -76,7 +44,6 @@ export default function StockAsset({ route, navigation, }){
       await auth_delete(`/stocks/delete_account/${route.params.accountID}/`)
     }
     
-    // console.log("transactions:", transactions);
     
     const transaction_table_data = transactions
       ? transactions.map((item) => [
@@ -87,8 +54,6 @@ export default function StockAsset({ route, navigation, }){
           item.fees,
         ])
       : null;
-      // console.log("stocks");
-      // console.log(route.params.stocks);
 
       const tableData = {
         tableHead: ['ID','Amount', 'Date', 'Quantity','Fees'],
@@ -99,8 +64,6 @@ export default function StockAsset({ route, navigation, }){
       const [data, setTableData] = React.useState(tableData);
       const [showTable,setShowTable] = React.useState(false);
       const [showStocks,setShowStocks] = React.useState(false);
-      // console.log("DATA")
-      // console.log(data);
       
       const toggleTable = () => {
           setShowTable(!showTable);
@@ -124,13 +87,6 @@ export default function StockAsset({ route, navigation, }){
           }
           return false;
         })
-
-        // let line_graph_data = accumulate_totals_for_each_day(updated_data.map((item) => [balance + item.amount, item.date]));
-
-        // console.log(line_graph_data);
-      
-        // setLineGraphData(line_graph_data.map((item) => item[0]));
-        // setLineGraphLabel(line_graph_data.map((item) => item[1]));
 
         let updated_table_data = updated_data.map((item) => [
             item.id,
@@ -164,9 +120,6 @@ export default function StockAsset({ route, navigation, }){
       setTransactions(route.params.transactions);
       setTableData(tableData);
     }
-
-    // console.log("Transactions to check balance");
-    // console.log(route.params.balance);
     
     const ItemSeparator = () => <View style={styles.separator} />;
 
@@ -182,7 +135,6 @@ export default function StockAsset({ route, navigation, }){
               graph_version={1}
               height={275}
               width={375}
-              // stockAccountBalance={route.params.balance}
           />}
           
           <View style={styles.buttonContainer, {flexDirection: "row"}}>

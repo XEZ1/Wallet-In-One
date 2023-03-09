@@ -10,8 +10,6 @@ export default function StockDetails({ route, navigation }){
 
   const [stockTransactions, setStockTransactions] = useState([]);
   const stock = route.params.stock;
-  console.log("-----------------------------------------------------");
-  console.log(stock);
 
   const getStockTransactions = useCallback(async (stock) => {
     try {

@@ -25,7 +25,6 @@ export default function TransactionData({ route, navigation }){
     }, [isFocused])
 
 
-      console.log(JSON.stringify(data))
     return (
       <ScrollView style={styles.screen}>
         <Text style={styles.text}>Transaction Data{"\n"}</Text>
