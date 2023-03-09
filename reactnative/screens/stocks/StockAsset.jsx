@@ -177,7 +177,10 @@ export default function StockAsset({ route, navigation, }){
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={
         <View>
-          <Button title ={"REMOVE"} color = "red" onPress={async ()=> {await deleteAccount(), navigation.navigate('Stock Account List')}}/>
+          <View style={styles.balanceContainer}>
+            <Text style={styles.balanceText}>BALANCE:</Text>
+            <Text style={styles.balanceText}>£{route.params.balance}</Text>
+          </View>
 
           {transactions && 
             <LineChartScreen 
@@ -227,7 +230,7 @@ export default function StockAsset({ route, navigation, }){
                   )}
               </View>
           )}
-
+          
           <Button
             onPress={toggleStocksView}
             title={showStocks ? "Hide Stocks" : "View Stocks"}
@@ -252,6 +255,10 @@ export default function StockAsset({ route, navigation, }){
               ListEmptyComponent={<Text>{'\nYou have no stocks listed.\n'}</Text>}
               />)
             }
+
+          <View style={{marginTop: 100}}>
+            <Button title="REMOVE" color="red" onPress={async () => {await deleteAccount(), navigation.navigate('Stock Account List')}} />
+          </View>
         </View>
         }
       />
@@ -260,9 +267,10 @@ export default function StockAsset({ route, navigation, }){
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
+    marginVertical: 10,
   },
   item:{
     padding: 20,
@@ -307,5 +315,16 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: "#3f3f46",
+  },
+  balanceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  balanceText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginHorizontal: 10,
   },
 });
