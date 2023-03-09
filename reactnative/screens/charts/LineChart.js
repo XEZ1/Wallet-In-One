@@ -108,7 +108,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
 
     return (
         <View >
-            {graphData && graphData.length > 0 ? (
+            {graphData && graphData.length > 1 ? (
                 <>
                     {/* Interactive graph */}
                     { graph_version == 1 && 
