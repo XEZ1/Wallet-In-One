@@ -16,12 +16,21 @@ import AboutUsScreen from './screens/pre_logged_in/AboutUsScreen';
 import DeveloperInfoScreen from './screens/pre_logged_in/DeveloperInfoScreen';
 import NotificationsPage from "./screens/NotificationsPage";
 
+import AddBankScreen from './screens/banking/AddBankScreen'
+import BankAccountsScreen from './screens/banking/BankAccountsScreen'
+import BankTransactionsScreen from './screens/banking/BankTransactionsScreen'
+import BankStackNavigator from "./screens/banking/BankStackNavigator";
+
 import { initAuthState } from './authentication';
 import { userContext } from './data';
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+
+import { setStatusBarHidden } from 'expo-status-bar';
+import WalletAssetDetail from "./screens/crypto_wallet/WalletAssetDetail";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -50,12 +59,13 @@ export default function Navigation() {
           }}
         >
           <Tab.Screen
-            name='Home Page'
-            component={HomePage}
+            name='Home'
+            component={HomePageNavigator}
             options={{
-              tabBarIcon: ({focused }) => (
-                <Text style={{color: focused ? colors.primary : colors.text}}>
-                  <AntDesign name="home" size={30}/>
+              headerShown: false,
+              tabBarIcon: ({ focused }) => (
+                <Text style={{ color: focused ? colors.primary : colors.text }}>
+                  <AntDesign name="home" size={30} />
                 </Text>
               ),
             }}
@@ -129,5 +139,20 @@ export default function Navigation() {
       )}
     </NavigationContainer>
   )
+}
+
+function HomePageNavigator() {
+  return (<Stack.Navigator>
+    <Stack.Screen
+      name='Home Page'
+      component={HomePage}
+     />
+    <Stack.Screen
+      name='Bank Transactions'
+      component={BankTransactionsScreen} />
+    <Stack.Screen
+      name='Wallet Detail'
+      component={WalletAssetDetail} />
+  </Stack.Navigator>)
 }
 
