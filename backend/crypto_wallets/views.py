@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from crypto_wallets.models import CryptoWallet
 from crypto_wallets.seralizers import WalletSerializer
-from crypto_wallets.services import calculate_received_spent
+from crypto_wallets.services import calculate_received_spent, calculate_predicted_balance
 
 
 # Create your views here.
@@ -37,5 +37,6 @@ class ListCryptoWallets(APIView):
 class CryptoWalletInsights(APIView):
 
     def get(self, request):
+        predicted_balance = calculate_predicted_balance(self.request.user)
         spent_received = calculate_received_spent(self.request.user)
-        return Response(spent_received)
+        return Response()  # spent_received)
