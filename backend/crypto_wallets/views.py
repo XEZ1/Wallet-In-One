@@ -39,6 +39,6 @@ class CryptoWalletInsights(APIView):
 
     def get(self, request):
         predicted_balance = calculate_predicted_balance(self.request.user)
-        spent_received = calculate_received_spent(self.request.user)
-        average_transaction = calculate_average_spend(self.request.user)
-        return Response({'predicted_balance': predicted_balance, 'spent_received': spent_received, 'average_transaction': average_transaction})
+        received_spent = calculate_received_spent(self.request.user)
+        average_spend = calculate_average_spend(self.request.user)
+        return Response({'predicted_balance': predicted_balance, 'received_spent': received_spent, 'average_spend': average_spend})

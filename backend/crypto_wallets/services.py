@@ -102,6 +102,7 @@ def calculate_received_spent(user):
             spent_received[wallet.symbol] = {'spent': 0, 'received': 0}
         spent_received[wallet.symbol]['received'] += wallet.received
         spent_received[wallet.symbol]['spent'] += wallet.spent
+
     return spent_received
 
 
@@ -121,5 +122,3 @@ def calculate_average_spend(user):
         average_spend[symbol] = statistics.fmean(average_spend[symbol])
 
     return average_spend
-
-
