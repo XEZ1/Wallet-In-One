@@ -65,4 +65,11 @@ export const styles = (dark, colors) => StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
   },
+   btn: {
+    padding: 10,
+    margin: 10,
+    borderRadius: 10,
+    width: "40%",
+    alignItems: "center",
+  },
 });

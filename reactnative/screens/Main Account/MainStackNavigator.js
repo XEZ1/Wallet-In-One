@@ -83,9 +83,6 @@ export default function MainStackNavigator() {
         name="Add Cryptocurrency Wallet or Account"
         component={AddCryptoScreen} />
       <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
         name="WalletAssetDetail"
         component={WalletAssetDetail}
       />

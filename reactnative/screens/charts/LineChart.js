@@ -46,7 +46,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     }
     // console.log(points)
     if (points.length > 0) {
-        points[points.length - 1].value = parseInt(points[points.length - 1].value);
+        points[points.length - 1].value = parseFloat(points[points.length - 1].value);
     }
     setGraphData(points)
 }, [transactions, stockAccountBalance]);

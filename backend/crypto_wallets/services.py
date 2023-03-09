@@ -66,4 +66,4 @@ def chart_breakdown_crypto(user):
     if wallets.exists():
         for a in wallets:
             print(a.cryptocurrency)
-        return [{'x': a.symbol + ' Wallet: ' + a.address[:15] + '...', 'y': round(getCryptoPrice(a.symbol)*a.balance,2)} for a in wallets]
+        return [{'x': a.symbol + ' Wallet: ' + a.address[:15] + '...', 'y': round(getCryptoPrice(a.symbol)*a.balance,2), 'id': a.id} for a in wallets]
