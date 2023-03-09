@@ -13,20 +13,11 @@ const { width, height } = Dimensions.get('window');
 
 const PlaidComponent = ({ navigation }) => {
   const [linkToken, setLinkToken] = useState<string | undefined>(undefined)
-  const [account_id, setAccountID] = useState()
-  const [name, setName] = useState()
-  const [list, setList] = useState()
-  const [institution_name, setInstitutionName] = useState()
-  const [institution_id, setInstitutionID] = useState()
-  const [imageState, setImage] = useState()
   const isFocused = useIsFocused()
-  //const [access_token, setAccessToken] = useState()
-  //const [stocks, setStocks] = useState(null)
   let access_token = ''
   let balance = ''
   let image = ''
   let fetched_transaction_list = null
-  let transactions_stock_account_id = ''
   let stocks = null
   let securities = null
 
@@ -47,18 +38,6 @@ const PlaidComponent = ({ navigation }) => {
     data_response = response.status
   };
     
-    
-  // const listAccounts = async () => {
-  //   const response = await auth_get('/stocks/list_accounts/')
-  //   setList
-  // fetch(api_url + '/stocks/list_accounts/', {
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-  //   },
-  // }).then(async (res) => setList(await res.json()))};
-
   useEffect(() => {
   const initiatePlaidLink = async () => {
       const response = await auth_post('/stocks/initiate_plaid_link/')
@@ -73,7 +52,6 @@ const PlaidComponent = ({ navigation }) => {
     }
     const response = await auth_post('/stocks/get_access_token/', body)
     access_token = response.body.access_token
-    // setAccessToken(data.access_token)
   }
 
   const getBalance = async (accessToken) => {
@@ -82,7 +60,6 @@ const PlaidComponent = ({ navigation }) => {
     }
     const response = await auth_post('/stocks/get_balance/', body)
     const data = response.body;
-    console.log((parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2))
     balance = (parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2) 
   }
 
@@ -94,7 +71,6 @@ const PlaidComponent = ({ navigation }) => {
     const data = response.body;
     stocks = data.holdings
     securities = data.securities
-    console.log(data)
   }
 
   const addStock = async (stock, stockInfo) => {
@@ -145,9 +121,7 @@ const PlaidComponent = ({ navigation }) => {
       body: JSON.stringify({ name: success.metadata.institution.name }),
     });
     const data = await response.json()
-    console.log(data.logo)
     image = data.logo
-    setImage(data.logo)
   }
   
   const [modalVisible, setModalVisible] = useState(false);
@@ -173,60 +147,28 @@ const PlaidComponent = ({ navigation }) => {
 
   return (
     <>
-      {/* <Image
-        style={{ width: 152, height: 152 }}
-        source={{ uri: `data:image/png;base64,${imageState}` }}
-      /> */}
       <PlaidLink
       linkToken={linkToken}
       onEvent={(event) => console.log(event)}
       onExit={(exit) => console.log(exit)}
       onSuccess={async (success) => {
         let account_list = success.metadata.accounts
-        // let access_token = await SecureStore.getItemAsync('access_token')
-        // if(access_token == null){
         await getAccessToken(success.publicToken)
-        console.log(access_token)
-          // console.log("krishna")
-        // }
         await getBalance(access_token)
-        // console.log("krishna")
         await getStocks(access_token)
-        console.log(success.metadata.accounts[0].meta)
-        console.log(success.publicToken)
 
         account_list.forEach(async element => {
-          // setAccountID(element._id)
-          // console.log(element._id)
-          // setName(element.meta.name)
-          // console.log(element.meta.name)
-          // setInstitutionName(success.metadata.institution.name)
-          // console.log(success.metadata.institution.name)
-          // setInstitutionID(success.metadata.institution.id)
-          // console.log(success.metadata.institution.id)
           await getLogo(success)
           await addAccount(element, success)
-          // while(data_response == undefined){
-          //   console.log(data_response)
-          // }
-          console.log(data_response)
-          console.log(data_response.status)
 
           if(data_response != 400){
             await getTransaction(access_token)
-            // console.log("fetched_transaction_list: ")
-            // console.log(fetched_transaction_list.accounts)
-            // // console.log(fetched_transaction_list.accounts[0])
-            // console.log(fetched_transaction_list.accounts[0].account_id)
             fetched_transaction_list.investment_transactions.forEach(element => {addTransaction(element)})
     
             stocks.forEach(element => {
               let stockInfo = securities[stocks.indexOf(element)]
               addStock(element, stockInfo)
-              console.log(element.quantity)
             })
-            // listAccounts()
-            // listTransactions()
             setModalText("Stock account has been successfully added.")
           }else{
             setModalText("Stock account has already been added!")
@@ -268,20 +210,14 @@ const PlaidComponent = ({ navigation }) => {
               duration: 300,
               useNativeDriver: true,
             }).start(() => setModalVisible(false));
+            navigation.navigate("Stock Account List")
           }}
         >
-        <Text style={styles.textStyle}>Close</Text>
+        <Text style={styles.textStyle}>Exit</Text>
         </Pressable>
       </View>
     </Animated.View>
     </Modal>
-
-    <Pressable
-      style={[styles.button]}
-      onPress={() => setModalVisible(true)}
-    >
-      <Text style={styles.textStyle}>Show Modal</Text>
-    </Pressable>
   </View>
     </>
   );
@@ -289,12 +225,6 @@ const PlaidComponent = ({ navigation }) => {
 
 
 const styles = StyleSheet.create({
-  // centeredView: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   marginTop: 22,
-  // },
   modalView: {
     margin: 20,
     backgroundColor: 'white',
@@ -315,9 +245,6 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
   },
-  // buttonOpen: {
-  //   backgroundColor: '#F194FF',
-  // },
   buttonClose: {
     backgroundColor: '#2196F3',
   },

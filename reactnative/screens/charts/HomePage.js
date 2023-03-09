@@ -13,6 +13,7 @@ import BarChart from "./chartComponents/barChart"
 import StackedChart from "./chartComponents/stackedBarChart";
 import fixture from "../charts/chartData.json";
 import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
+import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
 
 export default function HomePage({ navigation }) {
   const {dark, colors, setScheme } = useTheme();
@@ -23,6 +24,7 @@ export default function HomePage({ navigation }) {
   const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed] = useState(null);
   const { wallets, fetchWallets, removeWallet } = useCryptoWallet();
+  const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
 
   // Uncomment to show bank data from backend
 
@@ -76,6 +78,15 @@ export default function HomePage({ navigation }) {
         console.log(stockData.id)
 
       }
+      //} 
+      // else if (pressed === "Cryptocurrency from exchanges") {
+      //   var cryptoWalletData = baseData["Cryptocurrency from exchanges"][index]
+      //   var exchange = exchanges.find(x => x.id === cryptoWalletData.id)
+      //   if (cryptoWalletData.id) {
+      //     navigation.navigate("Exchange Detail", { item: exchange, value: cryptoWalletData.y, removeExchange: removeExchange })
+      //     return
+      //   }
+      // }
       setNewData(baseData.all);
       setPressed(null)
     } else {

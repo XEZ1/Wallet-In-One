@@ -20,11 +20,8 @@ import LineChartScreen from '../charts/LineChart';
 // import LineChartScreen from '../../charts/LineChart';
 
 const SuccessComponent = (props) => {
-    const [data, setData] = useState(null);
     const [list, setList] = useState()
-    const [stocks, setStocks] = useState()
     const isFocused = useIsFocused()
-    // const isFocused = useIsFocused();
     const [transactions, setTransactions] = useState({});
 
       useEffect(() => {
@@ -34,60 +31,6 @@ const SuccessComponent = (props) => {
         }
         if(isFocused){listAccounts()}
       }, [isFocused])
-
-    //   useEffect(() => {
-    //     const listStocks = async (stockAccount) => {
-    //       await fetch(api_url + `/stocks/list_stocks/${stockAccount}/`, {
-    //         method: "GET",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //           Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-    //         },
-    //       }).then(async (res) => setStocks(await res.json()));
-    //       // console.log(stocks)
-    //       // .catch((error) => {
-    //       //   console.error(error);
-    //       // });
-    //       const data = await res.json();
-    //       setStocks(prevStocks => ({
-    //         ...prevStocks,
-    //         [stockAccount]: data
-    //       }));
-    //     };
-    //     if(isFocused && stocks) {
-    //       // listTransactions(stockAccount);
-    //       list.forEach((account) => {
-    //         listTransactions(account.account_id);
-    //       });
-    //     }
-    // }, [isFocused])
-
-    // const getStocks = useCallback(async (accountID) => {
-    //   try {
-    //     const res = await fetch(api_url + `/stocks/list_stocks/${accountID}/`, {
-    //       method: "GET",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-    //       },
-    //     });
-    //     const data = await res.json();
-    //     setStocks(prevStocks => ({
-    //       ...prevStocks,
-    //       "accountID": data
-    //     }));
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }, []);
-  
-    // useEffect(() => {
-    //   if (isFocused && list) {
-    //     list.forEach((account) => {
-    //       getStocks(account.account_id);
-    //     });
-    //   }
-    // }, [isFocused, list, getStocks]);
 
       const getTransactions = useCallback(async (accountID) => {
         try {
@@ -110,16 +53,6 @@ const SuccessComponent = (props) => {
         }
       }, [isFocused, list, getTransactions]);
 
-      console.log(list);
-
-      // useEffect(() => {
-      //   if (isFocused && stocks) {
-      //     stocks.forEach((account) => {
-      //       listStocks(account.account_id);
-      //     });
-      //   }
-      // }, [isFocused, stocks, listStocks]);
-
       const ItemSeparator = () => <View style={styles.separator} />;
     return (
         <View>
@@ -135,7 +68,6 @@ const SuccessComponent = (props) => {
                     accessToken: item.access_token, 
                     transactions: transactions[item.account_id],
                     logo: item.institution_logo,
-                    // stocks: stocks,
                     balance: item.balance
                   }) }>
 

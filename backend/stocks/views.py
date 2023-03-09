@@ -89,7 +89,6 @@ def get_balance(request):
 @api_view(['POST'])
 def get_logo(request):
     client = setUpClient()
-    print(request.data.get('name'))
     try:
         options = InstitutionsSearchRequestOptions(include_optional_metadata=True)
         request = InstitutionsSearchRequest(
@@ -99,7 +98,6 @@ def get_logo(request):
             options=options
         )
         institution_response = client.institutions_search(request)
-        print(institution_response.institutions[0].logo)
         return Response({'logo': institution_response.institutions[0].logo})
     except plaid.ApiException as e:
         return json.loads(e.body)
@@ -129,7 +127,6 @@ def get_transactions(request):
             options=options
         )
         response = client.investments_transactions_get(request)
-        print(response.to_dict())
         return Response(response.to_dict())
     except plaid.ApiException as e:
         return json.loads(e.body)
@@ -153,11 +150,6 @@ def listAccounts(request):
 
 @api_view(['GET'])
 def listTransactions(request,stock):
-    print("list transactions function called.")
-    print("Stock:")
-    print(stock)
-    print('Transactions All:')
-    print(Transaction.objects.all())
     transactions = Transaction.objects.filter(stock=stock)
     serializer = AddTransaction(transactions, many=True)
     return Response(serializer.data)
@@ -171,7 +163,6 @@ def listStocks(request, stockAccount):
 @api_view(['GET'])
 def getTransaction(request, id):
     transaction = Transaction.objects.get(id=id)
-    print(transaction)
     serializer = AddTransaction(transaction, many=False)
     return Response(serializer.data)
 
