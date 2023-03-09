@@ -4,7 +4,7 @@ import { StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity, View, } fro
 import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer, VictoryStack } from "victory-native";
 
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
-import { auth_get } from "../../authentication";
+import { auth_get, auth_post } from "../../authentication";
 import { styles } from "reactnative/screens/All_Styles.style.js";
 
 import NoWallets from "./chartComponents/noWallets";
@@ -44,7 +44,7 @@ export default function HomePage({ navigation }) {
     fetchWallets();
   }, [isFocused]);
 
-  const handlePressIn = (event, datapoint) => {
+  const handlePressIn = async (event, datapoint) => {
     var index = datapoint.index;
     
     if (pressed) {
@@ -61,7 +61,24 @@ export default function HomePage({ navigation }) {
           navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
           return
         }
-      } 
+      }
+      else if (pressed == "Stock Accounts") {
+        var stockData = baseData["Stock Accounts"][index]
+        if (stockData.id) {
+          var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
+          const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
+          navigation.navigate("Stock Account Transactions", {
+            accountID: stockData.id, 
+            accessToken: response.body.access_token, 
+            transactions: res.body,
+            logo: response.body.logo,
+            balance: response.body.balance
+          })
+        }
+        console.log(stockData.id)
+
+      }
+      //} 
       // else if (pressed === "Cryptocurrency from exchanges") {
       //   var cryptoWalletData = baseData["Cryptocurrency from exchanges"][index]
       //   var exchange = exchanges.find(x => x.id === cryptoWalletData.id)

@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<HomePage /> snapshot test 1`] = `
+<RCTScrollView
+  contentContainerStyle={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "white",
+      "flexGrow": 1,
+      "justifyContent": "center",
+      "paddingBottom": 20,
+    }
+  }
+>
+  <View>
+    <Text
+      style={
+        Array [
+          Object {
+            "color": "black",
+          },
+          Object {
+            "textAlign": "center",
+          },
+        ]
+      }
+    >
+      Wallet-In-One
+      
+
+      Amount: £0
+      
+
+      Connect your Wallets to See your Funds!
+    </Text>
+  </View>
+</RCTScrollView>
+`;
