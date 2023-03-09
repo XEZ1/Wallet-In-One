@@ -65,3 +65,14 @@ def chart_breakdown_crypto(user):
     wallets = CryptoWallet.objects.filter(user=user)
     if wallets.exists():
         return [{'x': a.cryptocurrency, 'y': round(getCryptoPrice(a.symbol)*a.balance,2)} for a in wallets]
+
+
+def calculate_received_spent(user):
+    spent_received = {}
+    crypto_wallets = list(CryptoWallet.objects.filter(user=user))
+    for wallet in crypto_wallets:
+        if wallet.symbol not in spent_received:
+            spent_received[wallet.symbol] = {'spent': 0, 'received': 0}
+        spent_received[wallet.symbol]['received'] += wallet.received
+        spent_received[wallet.symbol]['spent'] += wallet.spent
+    return spent_received
