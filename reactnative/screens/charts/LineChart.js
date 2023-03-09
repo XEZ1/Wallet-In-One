@@ -45,7 +45,9 @@ export default function LineChartScreen({transactions, graph_version, height, wi
       points = [point, ...points]
     }
     // console.log(points)
-    points[points.length - 1].value = parseInt(points[points.length - 1].value);
+    if (points.length > 0) {
+        points[points.length - 1].value = parseInt(points[points.length - 1].value);
+    }
     setGraphData(points)
 }, [transactions, stockAccountBalance]);
     // setGraphData(graphData)
@@ -111,7 +113,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                     {/* Interactive graph */}
                     { graph_version == 1 && 
                         <LineChart.Provider data={graphData}>
-                            <LineChart height={height}>
+                            <LineChart height={height} width={width}>
                                 <LineChart.Path color={color}>
                                     <LineChart.Gradient />
                                 </LineChart.Path>

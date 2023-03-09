@@ -181,7 +181,7 @@ export default function StockAsset({ route, navigation, }){
               stockAccountBalance={route.params.balance}
               graph_version={1}
               height={275}
-              width={350}
+              width={375}
               // stockAccountBalance={route.params.balance}
           />}
           
