@@ -13,91 +13,26 @@ exports[`<HomePage /> snapshot test 1`] = `
   }
 >
   <View>
-    <View
+    <Text
       style={
-        Object {
-          "backgroundColor": "antiquewhite",
-          "borderRadius": 30,
-          "flexDirection": "row",
-          "justifyContent": "space-around",
-          "margin": 20,
-          "width": "90%",
-        }
+        Array [
+          Object {
+            "color": "black",
+          },
+          Object {
+            "textAlign": "center",
+          },
+        ]
       }
     >
-      <View
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          Object {
-            "alignItems": "center",
-            "backgroundColor": "aliceblue",
-            "borderRadius": 10,
-            "margin": 10,
-            "opacity": 1,
-            "padding": 10,
-            "width": "40%",
-          }
-        }
-      >
-        <Text>
-          Pie Chart
-        </Text>
-      </View>
-      <View
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          Object {
-            "alignItems": "center",
-            "borderRadius": 10,
-            "margin": 10,
-            "opacity": 1,
-            "padding": 10,
-            "width": "40%",
-          }
-        }
-      >
-        <Text>
-          Stacked Bar Chart
-        </Text>
-      </View>
-    </View>
-    <Text />
-    <RCTScrollView
-      contentContainerStyle={
-        Object {
-          "alignItems": "center",
-          "backgroundColor": "white",
-          "flexGrow": 1,
-          "justifyContent": "center",
-          "paddingBottom": 20,
-        }
-      }
-      style={
-        Object {
-          "flex": 1,
-        }
-      }
-    >
-      <View />
-    </RCTScrollView>
+      Wallet-In-One
+      
+
+      Amount: £0
+      
+
+      Connect your Wallets to See your Funds!
+    </Text>
   </View>
 </RCTScrollView>
 `;
