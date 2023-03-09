@@ -65,6 +65,7 @@ export default function CryptoExchanges({ navigation }) {
         style={[styles(dark, colors).buttonWide, { width: Dimensions.get('window').width - 40 }]}
       >
         <Text style={[styles(dark, colors).textBold, {textAlign: 'center'}]}>Coinlist</Text>
+        <Text style={styles.buttonText}>Coinlist</Text>
       </TouchableOpacity>
     </View>
   );

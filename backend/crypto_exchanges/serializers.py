@@ -1,12 +1,14 @@
 from rest_framework import serializers
-from crypto_exchanges.models import Token, BinanceAccount, HuobiAccount, GateioAccount, CoinListAccount
+from crypto_exchanges.models import Token, CryptoExchangeAccount
 
 
+# Token serializer
 class TokenSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Token
-        fields = ('user', 'asset', 'free', 'locked')
+        fields = ('user', 'crypto_exchange_object', 'asset', 'free_amount', 'locked_amount')
 
     def create(self, validated_data):
         token = Token.objects.create(
@@ -15,54 +17,18 @@ class TokenSerializer(serializers.ModelSerializer):
         token.save()
         return token
 
-class BinanceAccountSerializer(serializers.ModelSerializer):
+
+# Crypto exchange account serializer
+class CryptoExchangeAccountSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
-        model = BinanceAccount
-        fields = ('user', 'api_key', 'secret_key', 'created_at')
+        model = CryptoExchangeAccount
+        fields = ('user', 'crypto_exchange_name', 'api_key', 'secret_key', 'created_at')
 
     def create(self, validated_data):
-        binance_account = BinanceAccount.objects.create(
+        crypto_exchange_account = CryptoExchangeAccount.objects.create(
             **validated_data,
         )
-        binance_account.save()
-        return binance_account
-
-class HuobiAccountSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    class Meta:
-        model = HuobiAccount
-        fields = ('user', 'api_key', 'secret_key', 'created_at')
-
-    def create(self, validated_data):
-        Huobi_account = HuobiAccount.objects.create(
-            **validated_data,
-        )
-        Huobi_account.save()
-        return Huobi_account
-
-class GateioAccountSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    class Meta:
-        model = GateioAccount
-        fields = ('user', 'api_key', 'secret_key', 'created_at')
-
-    def create(self, validated_data):
-        gateio_account = GateioAccount.objects.create(
-            **validated_data,
-        )
-        gateio_account.save()
-        return gateio_account
-
-class CoinListAccountSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    class Meta:
-        model = CoinListAccount
-        fields = ('user', 'api_key', 'secret_key', 'created_at')
-
-    def create(self, validated_data):
-        coinlist_account = CoinListAccount.objects.create(
-            **validated_data,
-        )
-        coinlist_account.save()
-        return coinlist_account
+        crypto_exchange_account.save()
+        return crypto_exchange_account

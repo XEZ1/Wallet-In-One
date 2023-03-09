@@ -8,3 +8,5 @@ django-money==3.0.0
 Pillow==9.3.0
 plaid-python==9.1.0
 Flask==2.1.0
+krakenex~=2.1.0
+pykrakenapi~=0.3.1
