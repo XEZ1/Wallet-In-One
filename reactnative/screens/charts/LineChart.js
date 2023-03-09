@@ -46,7 +46,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     }
     console.log(points)
     setGraphData(points)
-}, []);
+}, [transactions, stockAccountBalance]);
     // const accumulate_totals_for_each_day = (data_input) => {
     //     return Object.entries(data_input.reduce((acc, [amount, date]) => {
     //         amount = String(amount);
@@ -89,44 +89,58 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     const data = graphData
     console.log(data)
 
-    // if (graph_data !== undefined && graph_data[0][0] > graph_data[graph_data.length -1][0]){
-    //     color = 'red';
-    // } 
-    // else {
-    //     color = 'green'
-    // }
+
+    if (data != undefined && data[0].value > data[data.length -1].value){
+        color = 'red';
+    } 
+    else if (data != undefined) {
+        color = 'green'
+    }
     
 
     return (
         <View >
-            {graph_data && graph_data.length > 0 ? (
+            {graphData && graphData.length > 0 ? (
                 <>
                     {/* Interactive graph */}
                     { graph_version == 1 && 
-          <LineChart.Provider data={data}>
-          <LineChart height={height} width={width}>
-            <LineChart.Path color={color}/>
-            <LineChart.CursorCrosshair>
+                        <LineChart.Provider data={graphData}>
+                            <LineChart height={height}>
+                                <LineChart.Path color={color}>
+                                    <LineChart.Gradient />
+                                </LineChart.Path>
+                                <LineChart.CursorCrosshair />
+                            </LineChart>
+                            <LineChart.PriceText />
+                            <LineChart.DatetimeText />
+                        </LineChart.Provider>
+                        // <LineChart.Provider data={data}>
+                        //     <LineChart >
+                        //         <LineChart.Path color={color}/>
+                        //             {/* <LineChart.Gradient /> */}
+                                
+                        //         <LineChart.CursorCrosshair>
 
-              <LineChart.Tooltip>
-                <LineChart.PriceText precision={10} />
-              </LineChart.Tooltip>
+                        //         <LineChart.Tooltip>
+                        //             <LineChart.PriceText precision={10} />
+                        //         </LineChart.Tooltip>
 
-              <LineChart.Tooltip position="bottom" >
-                <LineChart.DatetimeText />
-              </LineChart.Tooltip>
+                        //         <LineChart.Tooltip position="bottom" >
+                        //             <LineChart.DatetimeText />
+                        //         </LineChart.Tooltip>
 
-            </LineChart.CursorCrosshair>
-          </LineChart>
-        </LineChart.Provider>
+                        //         </LineChart.CursorCrosshair>
+                        //     </LineChart>
+                        // </LineChart.Provider>
                     }
 
                     {/* Static graph */}   
-
                     { graph_version == 2 &&
                         <LineChart.Provider data={graphData}>
                             <LineChart width={width} height={height}>
-                                <LineChart.Path color={color}/>
+                            <LineChart.Path color={color}>
+                                <LineChart.Gradient />
+                            </LineChart.Path>
                                 {/* <LineChart.CursorCrosshair>
                                     <LineChart.Tooltip />
                                 </LineChart.CursorCrosshair> */}

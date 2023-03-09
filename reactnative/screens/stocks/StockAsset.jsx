@@ -112,7 +112,7 @@ export default function StockAsset({ route, navigation, }){
         });
 
         setTransactions(updated_data);
-    }
+      }
 
     const last_week = () => {
         filter_transactions(7);
@@ -131,8 +131,8 @@ export default function StockAsset({ route, navigation, }){
       setTableData(tableData);
     }
 
-    console.log("Transactions to check balance");
-    console.log(route.params.balance);
+    // console.log("Transactions to check balance");
+    // console.log(route.params.balance);
     
     const ItemSeparator = () => <View style={styles.separator} />;
 
