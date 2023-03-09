@@ -1,4 +1,4 @@
-import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer, VictoryStack } from "victory-native";
+import {VictoryBar,VictoryLabel} from "victory-native";
 
 export default function BarChart(colours, list, data, colors, spacing, handlePressIn) {
     return <VictoryBar

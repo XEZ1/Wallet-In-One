@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, ScrollView, Dimensions, View, TouchableOpacity } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+import { VictoryChart, VictoryBar, VictoryLabel, VictoryAxis, VictoryStack } from "victory-native";
 
 
 import { StackedBarChart } from "react-native-chart-kit";
@@ -8,24 +8,11 @@ import { StackedBarChart } from "react-native-chart-kit";
 import fixture from "../../charts/chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
-export default function StackedChart({ data = fixture.all }) {
+export default function StackedChart({ data = fixture.all  }) {
   
   const {dark, colors, setScheme} = useTheme();
 
-  const labels = ["Banks", "Cryptocurrency", "Stocks"] // ["Crypto-Wallets","Bank","Stocks","Crypto-Exchange"]
-  
-  function extract(name){
-    return name in data ? data[name].map(i=>i.y) : []
-  } 
-
-  const stackChartData = {
-    labels: labels,
-    data: labels.map(name => extract(name)),
-    barColors: ["pink", "turquoise", "lime", "yellow"],
-  };
-
-  console.log('before:', data)
-  console.log("real version:    ", JSON.stringify(stackChartData))
+  const labels = ["Banks", "Cryptocurrency", "Stocks"]; // ["Crypto-Wallets","Bank","Stocks","Crypto-Exchange"]
 
 
   return (
@@ -39,30 +26,37 @@ export default function StackedChart({ data = fixture.all }) {
       }}
       style={styles.container}
     >
-
-      <StackedBarChart
-          data={stackChartData}
-          width={Dimensions.get("window").width} // from react-native
-          height={220}
-          yAxisLabel="£"
-          chartConfig={{
-            backgroundColor: "#ffffff",
-            backgroundGradientFrom: "#ffffff",
-            backgroundGradientTo: "#ffffff",
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-
-            propsForDots: {
-              r: "6",
-              strokeWidth: "2",
-              stroke: "#ffa726",
-            },
-          }}
-          style={{
-            marginVertical: 8,
-          }}
+      {/*domain={{ x: [1, 4] }}*/}
+      <VictoryChart  domainPadding={{ x: 50, y: 20 }} >
+        <VictoryAxis
+            //tickValues={[ 1, 2, 3, 4 ,5]}
+             // set the domain to include values up to 20
+            fixLabelOverlap={true}
+            //tickFormat ={["Banks", "Cryptocurrency","Crypto-exchanges" ,"Stocks"]}
+            //height={10000}
+            //padding={{ top: 20, bottom: 60 }}
+            //width={400}
         />
+        <VictoryAxis dependentAxis />
+        {/*try brown also*/}
+        <VictoryStack colorScale={["tomato", "orange", "gold", "purple"]}>
+          {(data['Banks']?data['Banks']:[]).map(i => (
+            <VictoryBar
+              key={i}
+              data={[{ x: "Banks", y: i.y }]}
+              barWidth={35}
+            />
+          ))}
+          {(data['Cryptocurrency']?data['Cryptocurrency']:[]).map(i => (
+            <VictoryBar
+              key={i}
+              data={[{ x: "Cryptocurrency", y: i.y }]}
+              barWidth={35}
+            />
+          ))}
+        </VictoryStack>
+      </VictoryChart>
+
 
     </ScrollView>
   );
