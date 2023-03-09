@@ -33,7 +33,7 @@ def graph_data(request):
     bank_data = chart_breakdown(request.user)
     crypto_data = chart_breakdown_crypto(request.user)
     crypto_exchanges = CurrentMarketPriceFetcher(request.user)
-    crypto_data_from_exchanges = crypto_exchanges.chart_breakdown_crypto_free()
+    crypto_data_from_exchanges = crypto_exchanges.chart_breakdown_crypto_exchanges()
 
     if bank_data:
         data['all'].append({"x": "Banks", "y": total_user_balance(request.user).amount})

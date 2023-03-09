@@ -50,7 +50,14 @@ export default function StackedChart({ data = fixture.all  }) {
           {(data['Cryptocurrency']?data['Cryptocurrency']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Cryptocurrency", y: i.y }]}
+              data={[{ x: "Cryptocurrency from wallets", y: i.y }]}
+              barWidth={35}
+            />
+          ))}
+          {(data['Cryptocurrency from exchanges']?data['Cryptocurrency from exchanges']:[]).map(i => (
+            <VictoryBar
+              key={i}
+              data={[{ x: "Cryptocurrency from exchanges", y: i.y }]}
               barWidth={35}
             />
           ))}
