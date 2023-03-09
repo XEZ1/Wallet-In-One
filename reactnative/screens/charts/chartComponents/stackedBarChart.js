@@ -26,17 +26,16 @@ export default function StackedChart({ data = fixture.all  }) {
       }}
       style={styles.container}
     >
-
-      <VictoryChart >
+      {/*domain={{ x: [1, 4] }}*/}
+      <VictoryChart  domainPadding={{ x: 50, y: 20 }} >
         <VictoryAxis
-            //tickValues={[1, 2, 3, 4]}
+            //tickValues={[ 1, 2, 3, 4 ,5]}
              // set the domain to include values up to 20
             fixLabelOverlap={true}
             //tickFormat ={["Banks", "Cryptocurrency","Crypto-exchanges" ,"Stocks"]}
-            height={10000}
-            padding={{ top: 20, bottom: 60 }}
-            width={400}
-            
+            //height={10000}
+            //padding={{ top: 20, bottom: 60 }}
+            //width={400}
         />
         <VictoryAxis dependentAxis />
         {/*try brown also*/}
@@ -45,12 +44,14 @@ export default function StackedChart({ data = fixture.all  }) {
             <VictoryBar
               key={i}
               data={[{ x: "Banks", y: i.y }]}
+              barWidth={35}
             />
           ))}
           {(data['Cryptocurrency']?data['Cryptocurrency']:[]).map(i => (
             <VictoryBar
               key={i}
               data={[{ x: "Cryptocurrency", y: i.y }]}
+              barWidth={35}
             />
           ))}
         </VictoryStack>
