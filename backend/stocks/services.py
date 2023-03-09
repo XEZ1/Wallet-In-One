@@ -33,7 +33,7 @@ def total_stock_balance(user):
 def chart_breakdown_stocks(user):
     accounts = StockAccount.objects.filter(user=user)
     if accounts.exists():
-        return [{'x': acc.name + '-' + acc.institution_name, 'y': acc.balance.amount} for acc in accounts]
+        return [{'x': acc.name + '-' + acc.institution_name, 'y': acc.balance.amount, 'id': acc.account_id} for acc in accounts]
     
 def get_total_number_of_transactions(stockAccounts):
     num_of_transactions = 0
