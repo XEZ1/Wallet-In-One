@@ -14,16 +14,7 @@ export default function StackedChart({ data = fixture.all  }) {
 
   const labels = ["Banks", "Cryptocurrency", "Stocks"]; // ["Crypto-Wallets","Bank","Stocks","Crypto-Exchange"]
 
-  function extract(name){
-  return name in data ? data[name].map(i => ({ x: i.x, y: i.y })) : []
-}
 
-  const stackChartData = {
-    labels: labels,
-    data: labels.map(name => extract(name)),
-  };
-  console.log('before:', data)
-  console.log("real version:   ", JSON.stringify(data))
   return (
     <ScrollView
       contentContainerStyle={{
@@ -43,23 +34,18 @@ export default function StackedChart({ data = fixture.all  }) {
         />
         <VictoryAxis dependentAxis />
         <VictoryStack colorScale={["tomato", "orange", "gold"]}>
-          {labels.map((name, index) => (
-      <VictoryBar
-        key={index}
-        data={data[name]}
-
-        y={(datum) => datum.y}
-      />
-    ))}
-  {/*  <VictoryBar*/}
-  {/*  data={[{x: "Banks", y: 2}, {x: "Cryptocurrency", y: 3}, {x: "Stocks", y: 5}]}*/}
-  {/*/>*/}
-  {/*<VictoryBar*/}
-  {/*  data={[{x: "Banks", y: 1}, {x: "Cryptocurrency", y: 4}, {x: "Stocks", y: 5}]}*/}
-  {/*/>*/}
-  {/*<VictoryBar*/}
-  {/*  data={[{x: "Banks", y: 3}, {x: "Cryptocurrency", y: 2}, {x: "Stocks", y: 6}]}*/}
-  {/*/>*/}
+          {(data['Banks']?data['Banks']:[]).map(i => (
+            <VictoryBar
+              key={i}
+              data={[{ x: "Banks", y: i.y }]}
+            />
+          ))}
+          {(data['Cryptocurrency']?data['Cryptocurrency']:[]).map(i => (
+            <VictoryBar
+              key={i}
+              data={[{ x: "Cryptocurrency", y: i.y }]}
+            />
+          ))}
         </VictoryStack>
       </VictoryChart>
 
