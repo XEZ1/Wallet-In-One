@@ -30,53 +30,19 @@ class BinanceFetcher:
     def current_time(self):
         return round(time.time() * 1000)
 
-    def get_deposit_history(self, asset, status=None, start_time=None, end_time=None, limit=10):
-        endpoint = "https://api.binance.com/api"
-        params = {
-            'asset': asset,
-            'status': status,
-            'startTime': start_time,
-            'endTime': end_time,
-            'limit': limit
-        }
-        query_string = urlencode(params)
-        timestamp = f"timestamp={self.current_time()}"
-        request_url = f"{endpoint}/sapi/v1/capital/deposit/hisrec?{query_string}&{timestamp}&signature=" \
-                      f"{self.hash(query_string)}"
-        headers = {'X-MBX-APIKEY': self.api_key}
-        response = requests.get(url=request_url, headers=headers)
-        return response.json()
+    def hash_for_transactions(self, params):
+        query_string = '&'.join([f"{k}={v}" for k, v in params.items()])
+        return hmac.new(self.secret_key.encode('utf-8'), query_string.encode('utf-8'), sha256).hexdigest()
 
-    def get_withdrawal_history(self, asset, status=None, start_time=None, end_time=None, limit=10):
-        endpoint = "https://api.binance.com/api"
-        params = {
-            'asset': asset,
-            'status': status,
-            'startTime': start_time,
-            'endTime': end_time,
-            'limit': limit
-        }
-        query_string = urlencode(params)
-        timestamp = f"timestamp={self.current_time()}"
-        request_url = f"{endpoint}/sapi/v1/capital/withdraw/history?{query_string}&{timestamp}&signature=" \
-                      f"{self.hash(query_string)}"
+    def get_transaction_history(self, symbol):
+        timestamp = str(self.current_time())
+        params = {'symbol': symbol, 'timestamp': timestamp}
+        signature = self.hash_for_transactions(params)
+        request_url = "https://api.binance.com/api/v3/myTrades"
         headers = {'X-MBX-APIKEY': self.api_key}
-        response = requests.get(url=request_url, headers=headers)
-        return response.json()
+        response = requests.get(request_url, headers=headers, params={**params, **{'signature': signature}})
+        print(response.json())
 
-    def get_trading_history(self, symbol, start_time=None, end_time=None, limit=10):
-        endpoint = "https://api.binance.com/api"
-        params = {
-            'symbol': symbol,
-            'startTime': start_time,
-            'endTime': end_time,
-            'limit': limit
-        }
-        query_string = urlencode(params)
-        request_url = f"{endpoint}/v3/myTrades?{query_string}"
-        headers = {'X-MBX-APIKEY': self.api_key}
-        response = requests.get(url=request_url, headers=headers)
-        return response.json()
 
 
 # Class was implemented according to: "https://huobiapi.github.io/docs/spot/v1/en/#change-log"

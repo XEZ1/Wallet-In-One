@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from crypto_exchanges.models import Token, CryptoExchangeAccount
+from crypto_exchanges.models import *
 
 
 # Token serializer
@@ -32,3 +32,17 @@ class CryptoExchangeAccountSerializer(serializers.ModelSerializer):
         )
         crypto_exchange_account.save()
         return crypto_exchange_account
+
+
+# Transactions serializer
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CryptoExchangeAccount
+        fields = ('crypto_exchange_object', 'id', 'asset', 'transaction_type', 'timestamp')
+
+    def create(self, validated_data):
+        transaction = Transaction.objects.create(
+            **validated_data,
+        )
+        transaction.save()
+        return transaction
