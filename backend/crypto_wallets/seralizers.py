@@ -45,5 +45,3 @@ class WalletSerializer(serializers.ModelSerializer):
             crypto_wallet_transaction.save()
 
         return crypto_wallet
-
-
