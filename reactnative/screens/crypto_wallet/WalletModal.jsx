@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Button, Image,
   Modal,
-  Pressable,
+  Pressable, ScrollView,
   StyleSheet,
   Text,
-  TextInput, TouchableWithoutFeedback,
+  TextInput, TouchableOpacity, TouchableWithoutFeedback,
   View,
 } from "react-native";
 import {createStackNavigator} from "@react-navigation/stack";
 import getCryptoIcon from "./icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {styles} from 'reactnative/screens/All_Styles.style.js';
+import coins from './coins.json'
 
 const Stack = createStackNavigator();
 
@@ -23,15 +25,9 @@ export function WalletSelector(props) {
   const stylesInternal = StyleSheet.create({
     container: {
       flex: 1,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'flex-start',
-      alignSelf: "center",
       paddingTop: 20,
     },
     cryptoItem: {
-      backgroundColor: '#e5e5e5',
-      width: '40%',
       padding: 10,
       margin: 10,
       borderRadius: 10,
@@ -42,53 +38,41 @@ export function WalletSelector(props) {
   });
 
   return(
-    <View style={[styles(dark, colors).container, {paddingTop: 30}]}>
+    <ScrollView style={[styles(dark, colors).container, {paddingTop: 30}]}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 1, flexDirection: "column" }}>
-          <Pressable onPress={() => props.navigation.navigate("Crypto Wallets")}>
-            <Text style={[styles(dark, colors).backArrow, {position: "absolute", paddingLeft: 10}]}>←</Text>
-          </Pressable>
           <Text style={[styles(dark, colors).largeTextBold, {alignSelf: "center"}]}>Connect Wallet</Text>
         </View>
       </View>
 
-      <View style={stylesInternal.container}>
+      <View style={{flex: 1}}>
+        {
+          coins.map((coin) =>
+            <TouchableOpacity
+              key={coin.symbol}
+              onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: coin.name, symbol: coin.symbol})}
+            >
+              <View style={[stylesInternal.cryptoItem]}>
+                <Image
+                  style={{width: 64, height: 64}}
+                  source={getCryptoIcon(coin.symbol)}
+                />
+                <Text style={[styles(dark, colors).textBold, {fontSize: 20}]}>{coin.name}</Text>
+              </View>
+            </TouchableOpacity>
+          )
 
-        <TouchableWithoutFeedback 
-          onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Bitcoin', symbol: 'BTC'})}
-        >
-          <View style={[stylesInternal.cryptoItem]}>
-            <Image
-              style={{width: 64, height: 64}}
-              source={require(`./icons/BTC.png`)}
-            />
-            <Text style={[styles(dark, colors).textBold, {fontSize: 20}]}>Bitcoin</Text>
-          </View>
-        </TouchableWithoutFeedback>
-
-        <TouchableWithoutFeedback
-          onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: 'Dogecoin', symbol: 'DOGE'})}
-        >
-          <View style={[stylesInternal.cryptoItem]}>
-            <Image
-              style={{width: 64, height: 64}}
-              source={require(`./icons/DOGE.png`)}
-            />
-            <Text style={[styles(dark, colors).textBold, {fontSize: 20}]}>Dogecoin</Text>
-          </View>
-        </TouchableWithoutFeedback>
-
+        }
       </View>
 
-      <Button title="Next" onPress={() => props.navigation.navigate("WalletConnector")} />
-
-    </View>
+    </ScrollView>
   )
 }
 
 
 export function WalletConnector(props) {
   const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
   const { connectWallet, cryptocurrency, symbol } = props.route.params;
   const {dark, colors, setScheme} = useTheme();
 
@@ -110,9 +94,6 @@ export function WalletConnector(props) {
       <View style={{ paddingTop: 30 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View style={{ flex: 1, flexDirection: "column" }}>
-            <Pressable onPress={() => props.navigation.navigate("Crypto Wallets")}>
-              <Text style={[styles(dark, colors).backArrow, {position: "absolute", paddingLeft: 10}]}>✗</Text>
-            </Pressable>
             <Text style={[styles(dark, colors).largeTextBold, {alignSelf: "center"}]}>Connect Wallet</Text>
           </View>
         </View>
@@ -132,13 +113,24 @@ export function WalletConnector(props) {
           placeholder="Wallet Address"
         />
 
-        <Button
-          title="Connect Wallet"
-          onPress={() =>
-            connectWallet(cryptocurrency, symbol, address)
-              .then(() => props.navigation.navigate("Crypto Wallets"))
-          }
-        />
+        {
+          loading ?
+            <ActivityIndicator size="large" color={colors.primary}/>
+            :
+            <Button
+              title="Connect Wallet"
+              onPress={() => {
+                  setLoading(true);
+                  connectWallet(cryptocurrency, symbol, address)
+                    .then(() => props.navigation.reset({
+                      index: 0,
+                      routes: [{name: 'Crypto Wallets & Exchanges'}],
+                    }))
+                    .then(() => props.navigation.navigate("Crypto Wallets & Exchanges"))
+                }
+              }
+            />
+        }
       </View>
     </View>
   );

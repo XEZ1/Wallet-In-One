@@ -17,7 +17,7 @@ from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchan
 from flask import jsonify
 from plaid.model.accounts_get_request import AccountsGetRequest
 from plaid.model.transactions_sync_request import TransactionsSyncRequest
-from .services import setUpClient, get_total_number_of_transactions, get_highest_transaction, get_lowest_transaction, get_average_transaction, get_variance_transaction, get_standard_deviation_transaction
+from .services import setUpClient, get_total_number_of_transactions, get_highest_transaction, get_lowest_transaction, get_average_transaction, get_variance_transaction, get_standard_deviation_transaction, get_range, get_highest_transaction_fee, get_lowest_transaction_fee, get_average_transaction_fee
 from plaid.model.institutions_search_request import InstitutionsSearchRequest
 from plaid.model.institutions_search_request_options import InstitutionsSearchRequestOptions
 from plaid.model.investments_holdings_get_request import InvestmentsHoldingsGetRequest
@@ -198,6 +198,10 @@ def getMetrics(request):
     average_transaction = get_average_transaction(stockAccounts)
     variance = get_variance_transaction(stockAccounts)
     standard_deviation = get_standard_deviation_transaction(stockAccounts)
+    range = get_range(stockAccounts)
+    highest_transaction_fee = get_highest_transaction_fee(stockAccounts)
+    lowest_transaction_fee = get_lowest_transaction_fee(stockAccounts)
+    average_transaction_fee = get_average_transaction_fee(stockAccounts)
     
     return Response({
         'total_number_of_transactions': total_number_of_transactions,
@@ -205,6 +209,10 @@ def getMetrics(request):
         'lowest_transaction': lowest_transaction,
         'average_transaction': average_transaction,
         'variance': variance,
-        'standard_deviation': standard_deviation
+        'standard_deviation': standard_deviation,
+        'range': range,
+        'highest_transaction_fee': highest_transaction_fee,
+        'lowest_transaction_fee': lowest_transaction_fee,
+        'average_transaction_fee': average_transaction_fee
         })
 

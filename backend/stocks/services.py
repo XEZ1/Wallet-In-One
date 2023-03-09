@@ -33,7 +33,7 @@ def total_stock_balance(user):
 def chart_breakdown_stocks(user):
     accounts = StockAccount.objects.filter(user=user)
     if accounts.exists():
-        return [{'x': acc.name, 'y': acc.balance.amount} for acc in accounts]
+        return [{'x': acc.name + '-' + acc.institution_name, 'y': acc.balance.amount} for acc in accounts]
     
 def get_total_number_of_transactions(stockAccounts):
     num_of_transactions = 0
@@ -96,3 +96,46 @@ def get_standard_deviation_transaction(stockAccounts):
         return None
     else:
         return math.sqrt(variance)
+    
+def get_range(stockAccounts):
+    highest_transaction = get_highest_transaction(stockAccounts)
+    lowest_transaction = get_lowest_transaction(stockAccounts)
+    if highest_transaction == None or lowest_transaction == None:
+        return None
+    else:
+        return highest_transaction - lowest_transaction
+    
+def get_highest_transaction_fee(stockAccounts):
+    highest_transaction_fee = None
+    for account in stockAccounts:
+        transactions = Transaction.objects.filter(stock=account)
+        for transaction in transactions:
+            if highest_transaction_fee == None or transaction.fees > highest_transaction_fee:
+                highest_transaction_fee = transaction.fees
+
+    return highest_transaction_fee
+
+def get_lowest_transaction_fee(stockAccounts):
+    lowest_transaction_fee = None
+    for account in stockAccounts:
+        transactions = Transaction.objects.filter(stock=account)
+        for transaction in transactions:
+            if lowest_transaction_fee == None or transaction.fees < lowest_transaction_fee:
+                lowest_transaction_fee = transaction.fees
+
+    return lowest_transaction_fee
+
+def get_average_transaction_fee(stockAccounts):
+    total = None
+    for account in stockAccounts:
+        transactions = Transaction.objects.filter(stock=account)
+        for transaction in transactions:
+            if total == None:
+                total = transaction.fees
+            else:
+                total += transaction.fees
+
+    if total == None:
+        return total
+    else:
+        return total/get_total_number_of_transactions(stockAccounts)

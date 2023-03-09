@@ -11,40 +11,41 @@ class CryptoWalletService:
 
     def __init__(self, cryptocurrency, address):
         url = f"https://api.blockchair.com/{cryptocurrency.lower()}/dashboards/address/{address}?key={API_KEY}" \
-              f"&transaction_details=true&limit=10000"
+              f"&transaction_details=true&limit=1000"
         r = requests.get(url=url)
+        if r.status_code != 200:
+            self.type = None
+            return
+
         response = r.json()
-        # print(response)
-        self.balance = response['data'][address]['address']['balance']
+        data = response['data'][address]['address']
+
+        self.type = data['type']
+        self.balance = data['balance']
+        self.received = data['received']
+        self.spent = data['spent']
+        self.output_count = data['output_count']
+        self.unspent_output_count = data['unspent_output_count']
         self.transactions = response['data'][address]['transactions']
 
 
+
 def get_timestamp(date_time):
-    dt = datetime.strptime(date_time, "%Y-%m-%d %H:%M:%S")  # What timezone?
+    dt = datetime.strptime(date_time, "%Y-%m-%d %H:%M:%S")
     return datetime.timestamp(dt)
 
 
 def normalise_value(cryptocurrency, value):
-    if cryptocurrency == 'Bitcoin':
-        return value / 100_000_000
-    else:
-        return value / 100_000_000
-
-
-@DeprecationWarning
-def fetch_balance(address, cryptocurrency):
-    # address = 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh'
-    if cryptocurrency == 'Bitcoin':
-        url = f'https://blockchain.info/rawaddr/{address}?limit=0'
-        r = requests.get(url=url)
-        response = r.json()
-        return response['final_balance'] / 100_000_000
-    elif cryptocurrency == 'Dogecoin':
-        url = f'https://dogechain.info/api/v1/address/balance/{address}'
-        r = requests.get(url=url)
-        response = r.json()
-        return response['balance']
-
+    return {
+        'Bitcoin': value / 100_000_000,
+        'Bitcoin-Cash': value / 100_000_000,
+        'Litecoin': value / 100_000_000,
+        'Dogecoin': value / 100_000_000,
+        'Dash': value / 100_000_000,
+        'Groestlcoin': value / 100_000_000,
+        'Zcash': value / 100_000_000,
+        'eCash': value / 100,
+    }.get(cryptocurrency, value)
 
 def getCryptoPrice(symbol):
     url = f'https://min-api.cryptocompare.com/data/price?fsym={symbol}&tsyms=GBP'
@@ -63,4 +64,6 @@ def total_user_balance_crypto(user):
 def chart_breakdown_crypto(user):
     wallets = CryptoWallet.objects.filter(user=user)
     if wallets.exists():
-        return [{'x': a.cryptocurrency, 'y': round(getCryptoPrice(a.symbol)*a.balance,2)} for a in wallets]
+        for a in wallets:
+            print(a.cryptocurrency)
+        return [{'x': a.symbol + ' Wallet: ' + a.address[:15] + '...', 'y': round(getCryptoPrice(a.symbol)*a.balance,2)} for a in wallets]
