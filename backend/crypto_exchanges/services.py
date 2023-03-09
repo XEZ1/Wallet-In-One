@@ -34,7 +34,7 @@ class BinanceFetcher:
         query_string = '&'.join([f"{k}={v}" for k, v in params.items()])
         return hmac.new(self.secret_key.encode('utf-8'), query_string.encode('utf-8'), sha256).hexdigest()
 
-    def get_transaction_history(self, symbol):
+    def get_trading_history(self, symbol):
         timestamp = str(self.current_time())
         params = {'symbol': symbol, 'timestamp': timestamp}
         signature = self.hash_for_transactions(params)
