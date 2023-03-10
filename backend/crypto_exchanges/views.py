@@ -458,6 +458,7 @@ class KrakenView(GenericCryptoExchanges, ABC):
             transaction.crypto_exchange_object = saved_exchange_account_object
             transaction.asset = kraken_transaction['pair']
             transaction.transaction_type = kraken_transaction['type']
+            transaction.amount = kraken_transaction['vol']
             transaction.timestamp = unix_timestamp_to_datetime(kraken_transaction['time'])
             transaction.save()
 

@@ -111,62 +111,6 @@ class HuobiFetcher:
 
             return response.json()['data']['list']
 
-    def get_deposit_history(self, currency, limit=10):
-        # Get deposit history for the specified currency
-        timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
-        params = {
-            'AccessKeyId': self.api_key,
-            'SignatureMethod': 'HmacSHA256',
-            'SignatureVersion': '2',
-            'Timestamp': timestamp,
-            'currency': currency,
-            'type': 'deposit',
-            'size': limit
-        }
-
-        method = 'GET'
-        endpoint = '/v1/query/deposit-withdraw'
-        base_uri = 'api.huobi.pro'
-
-        sorted_params = sorted(params.items(), key=lambda x: x[0])
-        encoded_params = urlencode(sorted_params, quote_via=quote_plus)
-
-        pre_signed_text = '\n'.join([method, base_uri, endpoint, encoded_params])
-        hash_code = hmac.new(self.secret_key.encode(), pre_signed_text.encode(), sha256).digest()
-        signature = b64encode(hash_code).decode()
-
-        url = f"https://{base_uri}{endpoint}?{encoded_params}&Signature={signature}"
-        response = requests.get(url)
-        return response.json()['data']
-
-    def get_withdrawal_history(self, currency, limit=10):
-        # Get withdrawal history for the specified currency
-        timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
-        params = {
-            'AccessKeyId': self.api_key,
-            'SignatureMethod': 'HmacSHA256',
-            'SignatureVersion': '2',
-            'Timestamp': timestamp,
-            'currency': currency,
-            'type': 'withdraw',
-            'size': limit
-        }
-
-        method = 'GET'
-        endpoint = '/v1/query/deposit-withdraw'
-        base_uri = 'api.huobi.pro'
-
-        sorted_params = sorted(params.items(), key=lambda x: x[0])
-        encoded_params = urlencode(sorted_params, quote_via=quote_plus)
-
-        pre_signed_text = '\n'.join([method, base_uri, endpoint, encoded_params])
-        hash_code = hmac.new(self.secret_key.encode(), pre_signed_text.encode(), sha256).digest()
-        signature = b64encode(hash_code).decode()
-
-        url = f"https://{base_uri}{endpoint}?{encoded_params}&Signature={signature}"
-        response = requests.get(url)
-        return response.json()['data']
-
     def get_trading_history(self, symbol, start_time=None, end_time=None, limit=100):
         timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
         params = {
@@ -236,32 +180,6 @@ class GateioFetcher:
         response = requests.request('GET', endpoint, headers=headers)
 
         return response.json()
-
-    def get_deposit_history(self):
-        host = "https://api.gateio.ws"
-        prefix = "/api/v4"
-        headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
-
-        url = '/wallet/deposits'
-        query_param = ''
-        # for `gen_sign` implementation, refer to section `Authentication` above
-        sign_headers = self.gen_sign('GET', prefix + url, query_param)
-        headers.update(sign_headers)
-        r = requests.request('GET', host + prefix + url, headers=headers)
-        return r.json()
-
-    def get_withdrawal_history(self):
-        host = "https://api.gateio.ws"
-        prefix = "/api/v4"
-        headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
-
-        url = '/wallet/withdrawals'
-        query_param = ''
-        # for `gen_sign` implementation, refer to section `Authentication` above
-        sign_headers = self.gen_sign('GET', prefix + url, query_param)
-        headers.update(sign_headers)
-        r = requests.request('GET', host + prefix + url, headers=headers)
-        return r.json()
 
     def get_trading_history(self, limit=10):
         to_return = {}
@@ -338,28 +256,6 @@ class CoinListFetcher:
 
     def prehash(self, timestamp, method, path, body):
         return timestamp + method.upper() + path + (body or '')
-
-    def get_deposit_withdrawal_history(self):
-        endpoint = 'https://trade-api.coinlist.co'
-        path = '/v1/transfers'
-        timestamp = str(int(time.time()))
-        request_url = f"{endpoint}{path}"
-        body = None
-        method = 'GET'
-
-        prehashed = self.prehash(timestamp, method, path, body)
-        secret = b64decode(self.secret_key)
-        signature = self.sha265hmac(prehashed, secret)
-
-        headers = {
-            'Content-Type': 'application/json',
-            'CL-ACCESS-KEY': self.api_key,
-            'CL-ACCESS-SIG': signature,
-            'CL-ACCESS-TIMESTAMP': timestamp
-        }
-
-        response = requests.get(url=request_url, headers=headers)
-        return response.json()
 
     def get_trading_history(self):
         endpoint = 'https://trade-api.coinlist.co'
@@ -493,36 +389,6 @@ class KrakenFetcher:
         # Construct the request and print the result
         url = 'https://api.kraken.com'
         path = '/0/private/Balance'
-        timestamp = {"nonce": str(int(1000 * time.time()))}
-
-        headers = {
-            'API-Key': self.api_key,
-            'API-Sign': self.signature(path, timestamp, self.secret_key),
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-
-        response = requests.post((url + path), headers=headers, data=timestamp)
-
-        return response.json()
-
-    def get_deposit_history(self):
-        url = 'https://api.kraken.com'
-        path = '/0/private/DepositStatus'
-        timestamp = {"nonce": str(int(1000 * time.time()))}
-
-        headers = {
-            'API-Key': self.api_key,
-            'API-Sign': self.signature(path, timestamp, self.secret_key),
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-
-        response = requests.post((url + path), headers=headers, data=timestamp)
-
-        return response.json()
-
-    def get_withdrawal_history(self):
-        url = 'https://api.kraken.com'
-        path = '/0/private/WithdrawStatus'
         timestamp = {"nonce": str(int(1000 * time.time()))}
 
         headers = {
