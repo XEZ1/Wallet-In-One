@@ -12,6 +12,8 @@ import {
 import useCryptoWallet from "./useCryptoWallet";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import * as SecureStore from "expo-secure-store";
+import exchanges from '../cryptoExchanges/exchanges.json'
+
 
 export default function AddCryptoScreen(props) {
   const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
@@ -131,13 +133,20 @@ export default function AddCryptoScreen(props) {
             </Text>
           </View>
 
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('Exchange Credentials', {exchange: 'Generic'})}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Generic</Text>
-          </TouchableOpacity>
 
+          {
+            exchanges.map((exchange) =>
+              <TouchableOpacity
+                key={exchange.name}
+                onPress={() => props.navigation.navigate('Exchange Credentials', {exchange: exchange.name})}
+                style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+              >
+                <Text style={styles.buttonText}>{exchange.name}</Text>
+              </TouchableOpacity>)
+          }
+
+
+          {/*
           <TouchableOpacity
             onPress={() => props.navigation.navigate('Binance')}
             style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
@@ -174,7 +183,10 @@ export default function AddCryptoScreen(props) {
           >
             <Text style={styles.buttonText}>Kraken</Text>
           </TouchableOpacity>
+          */}
+
         </View>
+
 
       </ScrollView>
     </SafeAreaView>
