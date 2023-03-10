@@ -22,7 +22,8 @@
             "institution_price_currency": "GBP",
             "name": "Test Stock",
             "ticker_symbol": "WIO",
-            "quantity": 10
+            "quantity": 10,
+            "security_id": "123"
         }
     }
 

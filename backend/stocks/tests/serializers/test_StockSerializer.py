@@ -22,7 +22,8 @@ class StockSerializerTestCase(TestCase):
             'quantity': 10,
             'stockAccount': self.stockAccount.account_id,
             'ticker_symbol': 'TEST',
-            'institution_price': Money(100, 'GBP')
+            'institution_price': Money(100, 'GBP'),
+            'security_id': '123'
         }
 
 
@@ -42,7 +43,7 @@ class StockSerializerTestCase(TestCase):
         serializer = self.initiate_serializer()
         self.assertTrue(serializer.is_valid())
         data = serializer.data
-        self.assertCountEqual(data.keys(), set(['name', 'quantity', 'stockAccount', 'ticker_symbol', 'institution_price']))
+        self.assertCountEqual(data.keys(), set(['name', 'quantity', 'stockAccount', 'ticker_symbol', 'institution_price', 'security_id']))
 
     def test_invalid_name(self):
         self.serializer_input['name'] = ''
@@ -99,7 +100,8 @@ class StockSerializerTestCase(TestCase):
             'quantity': 10,
             'stockAccount': self.stockAccount,
             'ticker_symbol': 'TEST',
-            'institution_price': Money(100, 'GBP')
+            'institution_price': Money(100, 'GBP'),
+            'security_id': '123'
         })
         self.assertTrue(serializer.errors == {})
 
