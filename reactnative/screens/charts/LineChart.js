@@ -9,32 +9,12 @@ import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 
 export default function LineChartScreen({transactions, graph_version, height, width, stockAccountBalance})
 {
-    // console.log("INPUT TRANSACTIONS")
-    // console.log(transactions);
     const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
     
 
     let graph_data = transactions.map((item) => [item.amount, item.date]);
     graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
-    // console.log(graph_data)
 
-    // const test = (data_input) => {
-    //     if(data_input.length == 0)
-    //     {
-    //         return data_input
-    //     }
-    //     else{
-    //         let arr = []
-    //         let curr = data_input[0]
-    //         for(let i = 0; i < data_input.length; i++)
-    //         {
-    //             if(curr[1] != data_input[i][1])
-    //             {
-
-    //             }
-    //         }
-    //     }
-    // }
     useEffect(() => {
     let points = [];
     let balance = stockAccountBalance;
@@ -44,60 +24,21 @@ export default function LineChartScreen({transactions, graph_version, height, wi
       balance -= graph_data[i][0]
       points = [point, ...points]
     }
-    // console.log(points)
     if (points.length > 0) {
         points[points.length - 1].value = parseFloat(points[points.length - 1].value);
     }
     setGraphData(points)
 }, [transactions, stockAccountBalance]);
     
-    const percentageChange = ((stockAccountBalance - graphData[0].value) / graphData[0].value) * 100;
-    console.log(percentageChange);
-    // const percentage_change = points[]
-    // setGraphData(graphData)
-    // console.log("GRAPPH DATA _______________________________")
-    // console.log(graphData);
-    // const accumulate_totals_for_each_day = (data_input) => {
-    //     return Object.entries(data_input.reduce((acc, [amount, date]) => {
-    //         amount = String(amount);
-
-    //         // If this day already exists in the accumulator, add the amount to it.
-    //         if (acc[date]) {
-    //             // If amount is negative subtract in accumulator, else add to it.
-    //             if (amount.startsWith("-")) {
-    //                 bal += parseFloat(amount)
-    //                 acc[date] = bal;
-    //             } else {
-    //                 bal -= parseFloat(amount)
-    //                 acc[date] = bal;
-    //             }
-    //         }
-    //         // Otherwise, create a new entry for this day in the accumulator.
-    //         else {
-    //             acc[date] = bal;
-    //         }
-
-    //         return acc;
-    //     }, {})).map(([date, amount]) => [amount, date]);
-    // }
-    // graph_data = accumulate_totals_for_each_day(graph_data);
-
-    // console.log(graph_data);
-
-    // graph_data = graph_data.map((item) => {
-    //     return {timestamp: (new Date(item[1])).getTime(), value: item[0]};
-    // }).sort((a, b) => a.timestamp - b.timestamp);
-    // console.log(graph_data)
-    // let balance = 0;
-    
-    // graph_data = graph_data.map((item) => {
-    //     balance += item.value;
-    //     return {timestamp: item.timestamp, value: item.value};
-    // });
-    // console.log(graph_data)
+    let percentageChange = null
+    if(graphData && graphData.length > 0){
+        percentageChange = (((stockAccountBalance - graphData[0].value) / graphData[0].value) * 100).toFixed(2);
+        if(percentageChange > 0){
+            percentageChange = '+' + percentageChange
+        }
+    }
     let color1 = 'green';
     const data = graphData;
-    // console.log(data)
 
 
     if (data && data.length > 0) {
@@ -114,56 +55,35 @@ export default function LineChartScreen({transactions, graph_version, height, wi
         <View >
             {graphData && graphData.length > 1 ? (
                 <>
-                    <Text style={{textAlign: 'right', marginLeft: 'auto', color: 'red', fontSize: 11}}>{percentageChange.toFixed(2)}%</Text>
                     {/* Interactive graph */}
                     { graph_version == 1 && 
-                        <LineChart.Provider data={graphData}>
+                    <><Text style={{ textAlign: 'center', color: color1, fontSize: 20, fontWeight: 'bold' }}>{percentageChange}%</Text><LineChart.Provider data={graphData}>
                             <LineChart height={height} width={width}>
                                 <LineChart.Path color={color1}>
                                     <LineChart.Gradient />
                                 </LineChart.Path>
+                                <LineChart.HorizontalLine />
                                 <LineChart.CursorLine />
                                 <LineChart.CursorCrosshair />
                             </LineChart>
                             <LineChart.PriceText />
                             <LineChart.DatetimeText />
-                        </LineChart.Provider>
-                        // <LineChart.Provider data={data}>
-                        //     <LineChart >
-                        //         <LineChart.Path color={color}/>
-                        //             {/* <LineChart.Gradient /> */}
-                                
-                        //         <LineChart.CursorCrosshair>
-
-                        //         <LineChart.Tooltip>
-                        //             <LineChart.PriceText precision={10} />
-                        //         </LineChart.Tooltip>
-
-                        //         <LineChart.Tooltip position="bottom" >
-                        //             <LineChart.DatetimeText />
-                        //         </LineChart.Tooltip>
-
-                        //         </LineChart.CursorCrosshair>
-                        //     </LineChart>
-                        // </LineChart.Provider>
+                        </LineChart.Provider></>
                     }
-                    {/* <Text style={{ position: "absolute", top: 0, right: 0, padding: "1", boxSizing: "border-box" }}>
-                        {percentageChange}
-                    </Text> */}
 
 
                     {/* Static graph */}   
                     { graph_version == 2 &&
-                        <LineChart.Provider data={graphData}>
+                    <><Text style={{ textAlign: 'right', marginLeft: 'auto', color: color1, fontSize: 11 }}>{percentageChange}%</Text><LineChart.Provider data={graphData}>
                             <LineChart width={width} height={height}>
-                            <LineChart.Path color={color1}>
-                                <LineChart.Gradient />
-                            </LineChart.Path>
+                                <LineChart.Path color={color1}>
+                                    <LineChart.Gradient />
+                                </LineChart.Path>
                                 {/* <LineChart.CursorCrosshair>
-                                    <LineChart.Tooltip />
-                                </LineChart.CursorCrosshair> */}
+        <LineChart.Tooltip />
+    </LineChart.CursorCrosshair> */}
                             </LineChart>
-                        </LineChart.Provider>
+                        </LineChart.Provider></>
                     }
                 </>
             ) : (<Text style={[styles.emptyText, {textAlign: 'center', alignSelf: 'center'}]}>No data available</Text>)}
