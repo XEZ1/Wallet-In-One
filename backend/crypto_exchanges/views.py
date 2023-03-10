@@ -112,6 +112,7 @@ class GenericCryptoExchanges(APIView):
 
     @abstractmethod
     def post(self, request):
+        # CryptoExchangeAccount.objects.get(crypto_exchange_name="CoinList").delete()
         # Pass the data to the serialiser so that the binance account can be created
         # Create a field 'crypto_exchange' in the request dict to prevent double adding the same account
         request.data['crypto_exchange_name'] = self.crypto_exchange_name
@@ -349,16 +350,23 @@ class CoinListView(GenericCryptoExchanges, ABC):
 
     def save_transactions(self, transactions, request, saved_exchange_account_object):
         super(CoinListView, self).save_transactions(transactions, request, saved_exchange_account_object)
-        for coinlist_transaction in transactions:
-            transaction = Transaction()
-            transaction.crypto_exchange_object = saved_exchange_account_object
-            if coinlist_transaction['symbol'] is None:
-                transaction.asset = coinlist_transaction['asset']
-            else:
-                transaction.asset = coinlist_transaction['symbol']
-            transaction.transaction_type = coinlist_transaction['transaction_type']
-            transaction.timestamp = iso8601_to_datetime(coinlist_transaction['created_at'])
-            transaction.save()
+        for symbol in transactions.values():
+            for coinlist_transaction in symbol:
+                transaction = Transaction()
+                transaction.crypto_exchange_object = saved_exchange_account_object
+                if coinlist_transaction['symbol'] is None:
+                    transaction.asset = coinlist_transaction['asset']
+                else:
+                    transaction.asset = coinlist_transaction['symbol']
+                transaction.transaction_type = coinlist_transaction['transaction_type']
+                if coinlist_transaction['amount'] == '':
+                    transaction.amount = 0
+                elif float(coinlist_transaction['amount']) < 0:
+                    transaction.amount = float(coinlist_transaction['amount']) * -1
+                else:
+                    transaction.amount = float(coinlist_transaction['amount'])
+                transaction.timestamp = iso8601_to_datetime(coinlist_transaction['created_at'])
+                transaction.save()
 
     def get(self, request):
         return super(CoinListView, self).get(request)
