@@ -197,7 +197,7 @@ export default function StockAsset({ route, navigation, }){
               contentContainerStyle={{paddingBottom: 20}}
               renderItem={({item, index}) =>{
                 return (
-                  <TouchableOpacity style={[styles.item, {backgroundColor: '#1e40af'}]} onPress={()=> navigation.navigate('StockDetails', {stock: stocks[index]}) }>
+                  <TouchableOpacity style={[styles.item, {backgroundColor: '#1e40af'}]} onPress={()=> navigation.navigate('StockDetails', {stock: stocks[index], security_id: stocks[index].security_id}) }>
                   <View style={styles.row}>
                     <Text style={[styles.name, {fontSize: 14}]}> {item.name} </Text>
                   </View>

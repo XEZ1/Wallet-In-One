@@ -108,7 +108,7 @@ def get_stocks(request):
     try:
         request = InvestmentsHoldingsGetRequest(access_token=request.data.get('access_token'))
         response = client.investments_holdings_get(request)
-        
+        print((response.to_dict()))
         return Response(response.to_dict())
     except plaid.ApiException as e:
         return json.loads(e.body)
@@ -127,6 +127,7 @@ def get_transactions(request):
             options=options
         )
         response = client.investments_transactions_get(request)
+        print((response.to_dict()))
         return Response(response.to_dict())
     except plaid.ApiException as e:
         return json.loads(e.body)

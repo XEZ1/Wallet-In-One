@@ -11,7 +11,7 @@ export default function StockDetails({ route, navigation }){
   const [stockTransactions, setStockTransactions] = useState([]);
   const stock = route.params.stock;
 
-  const getStockTransactions = useCallback(async (stock) => {
+  let getStockTransactions = useCallback(async (stock) => {
     try {
       const response = await fetch(api_url + `/stocks/list_transactions/${stock}/`, {
         method: "GET",
@@ -20,7 +20,16 @@ export default function StockDetails({ route, navigation }){
           Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
         },
       });
-      const data = await response.json();
+      let data = await response.json();
+      data = data.filter(item => item.security_id === route.params.stock.security_id);
+      // data.map(item => console.log("item.name"));
+      data.map(item => console.log(item.name));
+      // data.map(item => console.log("item.security_id"));
+      data.map(item => console.log(item.security_id));
+      // data.map(item => console.log("route.params.security_id"));
+      data.map(item => console.log(route.params.security_id));
+      
+
       setStockTransactions(data);
     } catch (error) {
       console.error(error);
@@ -32,6 +41,11 @@ export default function StockDetails({ route, navigation }){
       getStockTransactions(stock.stockAccount);
     }
   }, [stock, getStockTransactions]);
+
+//  setStockTransactions(stockTransactions.filter(item => {
+//       item.security_id == route.params.security_id
+//   }));
+  
 
   const data = {
     tableHead: ['ID', 'Amount', 'Date', 'Quantity', 'Fees'],

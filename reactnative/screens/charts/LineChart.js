@@ -50,6 +50,10 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     }
     setGraphData(points)
 }, [transactions, stockAccountBalance]);
+    
+    const percentageChange = ((stockAccountBalance - graphData[0].value) / graphData[0].value) * 100;
+    console.log(percentageChange);
+    // const percentage_change = points[]
     // setGraphData(graphData)
     // console.log("GRAPPH DATA _______________________________")
     // console.log(graphData);
@@ -91,17 +95,17 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     //     return {timestamp: item.timestamp, value: item.value};
     // });
     // console.log(graph_data)
-    let color = 'green';
+    let color1 = 'green';
     const data = graphData;
     // console.log(data)
 
 
     if (data && data.length > 0) {
         if (data[0]?.value > data[data.length -1]?.value){
-          color = 'red';
+            color1 = 'red';
         } 
         else {
-          color = 'green';
+            color1 = 'green';
         }
     }      
     
@@ -110,11 +114,12 @@ export default function LineChartScreen({transactions, graph_version, height, wi
         <View >
             {graphData && graphData.length > 1 ? (
                 <>
+                    <Text style={{textAlign: 'right', marginLeft: 'auto', color: 'red', fontSize: 11}}>{percentageChange.toFixed(2)}%</Text>
                     {/* Interactive graph */}
                     { graph_version == 1 && 
                         <LineChart.Provider data={graphData}>
                             <LineChart height={height} width={width}>
-                                <LineChart.Path color={color}>
+                                <LineChart.Path color={color1}>
                                     <LineChart.Gradient />
                                 </LineChart.Path>
                                 <LineChart.CursorLine />
@@ -142,12 +147,16 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                         //     </LineChart>
                         // </LineChart.Provider>
                     }
+                    {/* <Text style={{ position: "absolute", top: 0, right: 0, padding: "1", boxSizing: "border-box" }}>
+                        {percentageChange}
+                    </Text> */}
+
 
                     {/* Static graph */}   
                     { graph_version == 2 &&
                         <LineChart.Provider data={graphData}>
                             <LineChart width={width} height={height}>
-                            <LineChart.Path color={color}>
+                            <LineChart.Path color={color1}>
                                 <LineChart.Gradient />
                             </LineChart.Path>
                                 {/* <LineChart.CursorCrosshair>
@@ -186,4 +195,7 @@ const styles = StyleSheet.create({
   row: { 
     flexDirection: 'row',
   },
+//   redText: {
+//     color: 'red'
+//   },
 });
