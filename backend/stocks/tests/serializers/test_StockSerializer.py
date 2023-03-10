@@ -80,6 +80,13 @@ class StockSerializerTestCase(TestCase):
         self.assertEqual(set(serializer.errors.keys()), set(['stockAccount']))
         self.assertTrue(serializer.errors == {'stockAccount': [ErrorDetail(string='Invalid pk "123456789" - object does not exist.', code='does_not_exist')]})
 
+    def test_invalid_security_id(self):
+        self.serializer_input['security_id'] = ''
+        serializer = self.initiate_serializer()
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(set(serializer.errors.keys()), set(['security_id']))
+        self.assertTrue(serializer.errors == {'security_id': [ErrorDetail(string='This field may not be blank.', code='blank')]})
+
     def test_serializer_cannot_be_empty(self):
         self.serializer_input = ''
         serializer = self.initiate_serializer()
