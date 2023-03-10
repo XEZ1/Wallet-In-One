@@ -1,11 +1,12 @@
-import {View, Text, StyleSheet} from "react-native";
+import {View, Text, StyleSheet, Image, ScrollView} from "react-native";
 import React, {useEffect, useState} from "react";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { BACKEND_URL } from "@env"
 import * as SecureStore from "expo-secure-store";
+import getCryptoIcon from "./icons/icon";
 
 export default function CryptoWalletInsights() {
-  const [insights, setInsights] = useState({predicted_balance: {}, spent_received: {}, average_transaction: {}});
+  const [insights, setInsights] = useState({predicted_balance: {}, received_spent: {}, average_spend: {}});
   const {dark, colors, setScheme} = useTheme();
 
   const styles = StyleSheet.create({
@@ -14,6 +15,12 @@ export default function CryptoWalletInsights() {
       fontSize: 40,
       alignSelf: "center",
       paddingVertical: 10,
+      color: colors.text
+    },
+    subtitle: {
+      fontWeight: "900",
+      fontSize: 30,
+      alignSelf: "center",
       color: colors.text
     }
   });
@@ -35,35 +42,105 @@ export default function CryptoWalletInsights() {
       .catch((err) => console.log(err));
   };
 
+  console.log(insights)
+
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <ScrollView style={{ flex: 1, backgroundColor: colors.background, paddingHorizontal: 20 }}>
       <Text style={styles.title}>Wallet Insights</Text>
       <Text />
 
-      <Text style={{ color: colors.text }}>Predicted Crypto Wallet Balance</Text>
+      <Text style={styles.subtitle}>Predicted Balance</Text>
+      <View style={{backgroundColor: colors.secondary, borderRadius: 10, paddingVertical: 10}}>
       {
         Object.entries(insights.predicted_balance).map(([key, value]) =>
-          <Text style={{ color: colors.text }}>{key} {value}</Text>
+            <InsightsView key={key} symbol={key} upper={`${value} ${key}`} lower="£0" />
         )
       }
+      </View>
       <Text />
 
-      <Text style={{ color: colors.text }}>Total Spent & Received</Text>
+      <Text style={styles.subtitle}>Total Spent & Received</Text>
+      <View style={{backgroundColor: colors.secondary, borderRadius: 10, paddingVertical: 10}}>
       {
         Object.entries(insights.received_spent).map(([key, value]) =>
-          <Text style={{ color: colors.text }}>{key} {value.spent} {value.received}</Text>
+          <InsightsView key={key} symbol={key} upper={`${value.spent} ${key}`} lower={`${value.received} ${key}`} />
         )
       }
+      </View>
       <Text />
 
-      <Text style={{ color: colors.text }}>Average Spend Amount</Text>
+      <Text style={styles.subtitle}>Average Spend</Text>
+      <View style={{backgroundColor: colors.secondary, borderRadius: 10, paddingVertical: 10}}>
       {
         Object.entries(insights.average_spend).map(([key, value]) =>
-          <Text style={{ color: colors.text }}>{key} {value}</Text>
+          <InsightsView key={key} symbol={key} upper={`${value} ${key}`} lower="£0" />
         )
       }
+      </View>
       <Text />
 
-    </View>
+    </ScrollView>
   )
+}
+
+function InsightsView(props) {
+
+  const {dark, colors, setScheme} = useTheme();
+
+  const styles = StyleSheet.create({
+    walletAsset: {
+      paddingHorizontal: 10,
+      borderRadius: 10,
+      flexDirection: "row",
+    },
+    walletAssetTitle: {
+      fontWeight: "700",
+    },
+    walletAssetImage: {
+      width: 30,
+      height: 30,
+    },
+  });
+
+
+  return (
+    <View style={[styles.walletAsset, {paddingVertical: 5}]}>
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          paddingRight: 10,
+        }}
+      >
+        <Image
+          style={styles.walletAssetImage}
+          source={getCryptoIcon(props.symbol)}
+        />
+      </View>
+
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <View>
+          <Text style={{ fontSize: 20, fontWeight: "700", color: colors.background }}>
+            {props.symbol}
+          </Text>
+
+          <Text style={[styles.walletAssetTitle, {color: colors.background}]}>
+            {props.upper}
+          </Text>
+
+          <Text style={[styles.walletAssetTitle, {color: colors.background}]}>
+            {props.lower}
+          </Text>
+
+        </View>
+
+      </View>
+    </View>
+  );
 }
