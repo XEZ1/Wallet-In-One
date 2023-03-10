@@ -55,6 +55,7 @@ class HuobiFetcher:
     def __init__(self, api_key, secret_key):
         self.api_key = api_key
         self.secret_key = secret_key
+        self.symbols = ['btc', 'eth', 'cspr', 'sol', 'ada', 'xrp']
 
     def get_account_IDs(self):
         # Get account IDs
@@ -111,37 +112,72 @@ class HuobiFetcher:
 
             return response.json()['data']['list']
 
-    def get_trading_history(self, symbol, start_time=None, end_time=None, limit=100):
-        timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
-        params = {
-            'AccessKeyId': self.api_key,
-            'SignatureMethod': 'HmacSHA256',
-            'SignatureVersion': '2',
-            'Timestamp': timestamp,
-            'symbol': symbol,
-            'size': limit
-        }
-        if start_time:
-            params['start-time'] = int(start_time.timestamp() * 1000)
-        if end_time:
-            params['end-time'] = int(end_time.timestamp() * 1000)
+    def get_trading_history(self, limit=10):
+        to_return = []
+        symbol_withdrawal_deposit = []
+        for symbol in self.symbols:
+            success = False
+            to_return += symbol_withdrawal_deposit
+            while not success:
+                try:
+                    symbol_withdrawal_deposit = []
 
-        method = 'GET'
-        endpoint = '/v1/order/matchresults'
-        base_uri = 'api.huobi.pro'
+                    # Get deposit history for the specified currency
+                    timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
+                    params = {
+                        'AccessKeyId': self.api_key,
+                        'SignatureMethod': 'HmacSHA256',
+                        'SignatureVersion': '2',
+                        'Timestamp': timestamp,
+                        'currency': symbol,
+                        'type': 'deposit',
+                        'size': limit
+                    }
 
-        sorted_params = sorted(params.items(), key=lambda x: x[0])
-        encoded_params = urlencode(sorted_params, quote_via=quote_plus)
+                    method = 'GET'
+                    endpoint = '/v1/query/deposit-withdraw'
+                    base_uri = 'api.huobi.pro'
 
-        pre_signed_text = '\n'.join([method, base_uri, endpoint, encoded_params])
-        hash_code = hmac.new(self.secret_key.encode(), pre_signed_text.encode(), sha256).digest()
-        signature = b64encode(hash_code).decode()
+                    sorted_params = sorted(params.items(), key=lambda x: x[0])
+                    encoded_params = urlencode(sorted_params, quote_via=quote_plus)
 
-        url = f"https://{base_uri}{endpoint}?{encoded_params}&Signature={signature}"
-        response = requests.get(url)
+                    pre_signed_text = '\n'.join([method, base_uri, endpoint, encoded_params])
+                    hash_code = hmac.new(self.secret_key.encode(), pre_signed_text.encode(), sha256).digest()
+                    signature = b64encode(hash_code).decode()
 
-        return response.json()['data']
+                    url = f"https://{base_uri}{endpoint}?{encoded_params}&Signature={signature}"
+                    response = requests.get(url)
+                    symbol_withdrawal_deposit += response.json()['data']
+                    # print(response.json()['data'])
 
+                    # Get withdrawal history for the specified currency
+                    params = {
+                        'AccessKeyId': self.api_key,
+                        'SignatureMethod': 'HmacSHA256',
+                        'SignatureVersion': '2',
+                        'Timestamp': timestamp,
+                        'currency': symbol,
+                        'type': 'withdraw',
+                        'size': limit
+                    }
+
+                    sorted_params = sorted(params.items(), key=lambda x: x[0])
+                    encoded_params = urlencode(sorted_params, quote_via=quote_plus)
+
+                    pre_signed_text = '\n'.join([method, base_uri, endpoint, encoded_params])
+                    hash_code = hmac.new(self.secret_key.encode(), pre_signed_text.encode(), sha256).digest()
+                    signature = b64encode(hash_code).decode()
+
+                    url = f"https://{base_uri}{endpoint}?{encoded_params}&Signature={signature}"
+                    response = requests.get(url)
+                    symbol_withdrawal_deposit += response.json()['data']
+                    # print(response.json()['data'])
+                    success = True
+
+                except TypeError:
+                    symbol_withdrawal_deposit = []
+
+        return to_return
 
 # Class was implemented according to: "https://www.gate.io/docs/developers/apiv4/en/"
 class GateioFetcher:

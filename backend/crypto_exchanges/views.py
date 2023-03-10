@@ -252,17 +252,16 @@ class HuobiView(GenericCryptoExchanges, ABC):
             token.locked_amount = float(coin['debt'])
             token.save()
 
-    # def save_transactions(self, transactions, request, saved_exchange_account_object):
-    #     super(HuobiView, self).save_transactions(transactions, request, saved_exchange_account_object)
-    #     for huobi_transaction in transactions:
-    #         transaction = Transaction()
-    #         transaction.crypto_exchange_object = saved_exchange_account_object
-    #         transaction.asset = binance_transaction['symbol']
-    #         if binance_transaction['isBuyer']:
-    #             transaction.transaction_type = 'buy'
-    #         else:
-    #             transaction.transaction_type = 'sell'
-    #         transaction.timestamp = millis_to_datetime(binance_transaction['time'])
+    def save_transactions(self, transactions, request, saved_exchange_account_object):
+        super(HuobiView, self).save_transactions(transactions, request, saved_exchange_account_object)
+        for huobi_transaction in transactions:
+            transaction = Transaction()
+            transaction.crypto_exchange_object = saved_exchange_account_object
+            transaction.asset = huobi_transaction['currency']
+            transaction.transaction_type = huobi_transaction['type']
+            transaction.amount = huobi_transaction['amount']
+            transaction.timestamp = millis_to_datetime(huobi_transaction['created-at'])
+            transaction.save()
 
     def get(self, request):
         return super(HuobiView, self).get(request)
