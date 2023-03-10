@@ -18,7 +18,7 @@ export default function ExchangeCredentials({ route, navigation }) {
     }
 
     try {
-      const response = await fetch(`${BACKEND_URL}/crypto-exchanges/${exchange.toLowerCase()}`, {
+      const response = await fetch(`http://10.0.2.2:8000/crypto-exchanges/${exchange.toLowerCase()}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
