@@ -205,6 +205,7 @@ class GateioFetcher:
     def __init__(self, api_key, secret_key):
         self.api_key = api_key
         self.secret_key = secret_key
+        self.symbols = ['BTC_USDT', 'ETH_USDT', 'ADA_USDT', 'XRP_USDT', 'SOL_USDT', 'ARV_USDT']
         self.host = "https://api.gateio.ws"
         self.prefix = "/api/v4"
         self.headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
@@ -262,13 +263,16 @@ class GateioFetcher:
         r = requests.request('GET', host + prefix + url, headers=headers)
         return r.json()
 
-    def get_trading_history(self, currency_pair, limit=10):
-        url = f"/spot/trades?currency_pair={currency_pair}&limit={limit}"
-        sign_headers = self.gen_sign('GET', self.prefix + url)
-        self.headers.update(sign_headers)
-        r = requests.request('GET', self.host + self.prefix + url, headers=self.headers)
-        trading_history = r.json()
-        return trading_history
+    def get_trading_history(self, limit=10):
+        to_return = {}
+        for currency_pair in self.symbols:
+            url = f"/spot/trades?currency_pair={currency_pair}&limit={limit}"
+            sign_headers = self.gen_sign('GET', self.prefix + url)
+            self.headers.update(sign_headers)
+            r = requests.request('GET', self.host + self.prefix + url, headers=self.headers)
+            to_return[currency_pair] = r.json()
+
+        return to_return
 
 
 # Class was implemented according to: "https://coinlist.co/help/api"

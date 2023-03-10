@@ -31,6 +31,7 @@ class TransactionAdmin(admin.ModelAdmin):
         'crypto_exchange_object',
         'asset',
         'transaction_type',
-        'timestamp'
+        'amount',
+        'timestamp',
     ]
 

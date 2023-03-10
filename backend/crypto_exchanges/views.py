@@ -204,7 +204,6 @@ class BinanceView(GenericCryptoExchanges, ABC):
         super(BinanceView, self).save_transactions(transactions, request, saved_exchange_account_object)
         for symbol in transactions.values():
             for binance_transaction in symbol:
-                #binance_transaction = binance_transaction.decode("utf-8")
                 transaction = Transaction()
                 transaction.crypto_exchange_object = saved_exchange_account_object
                 transaction.asset = binance_transaction['symbol']
@@ -212,6 +211,7 @@ class BinanceView(GenericCryptoExchanges, ABC):
                     transaction.transaction_type = 'buy'
                 else:
                     transaction.transaction_type = 'sell'
+                transaction.amount = binance_transaction['qty']
                 transaction.timestamp = millis_to_datetime(binance_transaction['time'])
                 transaction.save()
 
@@ -301,13 +301,15 @@ class GateioView(GenericCryptoExchanges, ABC):
 
     def save_transactions(self, transactions, request, saved_exchange_account_object):
         super(GateioView, self).save_transactions(transactions, request, saved_exchange_account_object)
-        for gateio_transaction in transactions:
-            transaction = Transaction()
-            transaction.crypto_exchange_object = saved_exchange_account_object
-            transaction.asset = gateio_transaction['currency_pair']
-            transaction.transaction_type = gateio_transaction['side']
-            transaction.timestamp = millis_to_datetime(gateio_transaction['create_time_ms'])
-            transaction.save()
+        for symbol in transactions.values():
+            for gateio_transaction in symbol:
+                transaction = Transaction()
+                transaction.crypto_exchange_object = saved_exchange_account_object
+                transaction.asset = gateio_transaction['currency_pair']
+                transaction.transaction_type = gateio_transaction['side']
+                transaction.amount = gateio_transaction['amount']
+                transaction.timestamp = millis_to_datetime(float(gateio_transaction['create_time_ms']))
+                transaction.save()
 
     def get(self, request):
         return super(GateioView, self).get(request)

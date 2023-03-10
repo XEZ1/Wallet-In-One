@@ -38,7 +38,7 @@ class CryptoExchangeAccountSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = CryptoExchangeAccount
-        fields = ('crypto_exchange_object', 'id', 'asset', 'transaction_type', 'timestamp')
+        fields = ('crypto_exchange_object', 'asset', 'transaction_type', 'amount', 'timestamp')
 
     def create(self, validated_data):
         transaction = Transaction.objects.create(
