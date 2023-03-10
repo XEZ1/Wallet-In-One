@@ -411,6 +411,7 @@ class CoinBaseView(GenericCryptoExchanges, ABC):
             transaction.crypto_exchange_object = saved_exchange_account_object
             transaction.asset = coinbase_transaction['product_id']
             transaction.transaction_type = coinbase_transaction['trade_type']
+            transaction.amount = coinbase_transaction['size']
             transaction.timestamp = iso8601_to_datetime(coinbase_transaction['trade_time'])
             transaction.save()
 
