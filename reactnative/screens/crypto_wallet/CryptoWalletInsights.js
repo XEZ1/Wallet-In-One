@@ -42,7 +42,14 @@ export default function CryptoWalletInsights() {
       .catch((err) => console.log(err));
   };
 
-  console.log(insights)
+  const getCryptoValue = async (symbol) => {
+    await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=GBP`)
+      .then((res) => res.json())
+      .then((res) => res.GBP)
+      .catch((err) => console.log(err))
+  }
+
+  // console.log(insights)
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background, paddingHorizontal: 20 }}>
@@ -53,7 +60,7 @@ export default function CryptoWalletInsights() {
       <View style={{backgroundColor: colors.secondary, borderRadius: 10, paddingVertical: 10}}>
       {
         Object.entries(insights.predicted_balance).map(([key, value]) =>
-            <InsightsView key={key} symbol={key} upper={`${value} ${key}`} lower="£0" />
+            <InsightsView key={key} symbol={key} upper={`${value} ${key}`} lower='£0.00' />
         )
       }
       </View>
@@ -63,7 +70,7 @@ export default function CryptoWalletInsights() {
       <View style={{backgroundColor: colors.secondary, borderRadius: 10, paddingVertical: 10}}>
       {
         Object.entries(insights.received_spent).map(([key, value]) =>
-          <InsightsView key={key} symbol={key} upper={`${value.spent} ${key}`} lower={`${value.received} ${key}`} />
+          <InsightsView key={key} symbol={key} upper={`+${value.received} ${key}`} lower={`-${value.spent} ${key}`} />
         )
       }
       </View>
@@ -73,7 +80,7 @@ export default function CryptoWalletInsights() {
       <View style={{backgroundColor: colors.secondary, borderRadius: 10, paddingVertical: 10}}>
       {
         Object.entries(insights.average_spend).map(([key, value]) =>
-          <InsightsView key={key} symbol={key} upper={`${value} ${key}`} lower="£0" />
+          <InsightsView key={key} symbol={key} upper={`${value * -1} ${key}`} lower="£0.00" />
         )
       }
       </View>
