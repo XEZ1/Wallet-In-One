@@ -23,4 +23,5 @@ urlpatterns = [
     path('', include('crypto_exchanges.urls')),
     path('crypto_wallets/', include('crypto_wallets.urls')),
     path('banking/', include('banking.urls')),
+    path('stocks/', include('stocks.urls'))
 ]

@@ -17,7 +17,7 @@ class WalletTransactionSerializerTestCase(TestCase):
         serializer = WalletTransactionSerializer(data=self.serializer_input)
         self.assertTrue(serializer.is_valid())
 
-    def test_necessary_fields_in_sign_up_serializer(self):
+    def test_necessary_fields_in_wallet_transaction_serializer(self):
         serializer = WalletTransactionSerializer()
         self.assertIn('id', serializer.fields)
         self.assertIn('value', serializer.fields)
