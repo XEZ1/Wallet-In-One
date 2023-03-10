@@ -32,6 +32,11 @@ export default function CryptoWallet(props) {
       alignSelf: "center",
       paddingVertical: 10,
     },
+    cryptoWalletSubtitle: {
+      fontWeight: "900",
+      fontSize: 30,
+      alignSelf: "center",
+    },
     backArrow: {
       fontWeight: "900",
       fontSize: 30,
@@ -40,7 +45,7 @@ export default function CryptoWallet(props) {
     },
     walletList: {
       marginHorizontal: 10,
-      marginVertical: 30,
+      marginBottom: 30,
     },
     container: {
       paddingHorizontal: 20,
@@ -133,12 +138,18 @@ export default function CryptoWallet(props) {
           </View>
         </View>
 
+        <Text style={[styles.cryptoWalletSubtitle, {color: colors.text, marginTop: 10}]}>Wallets</Text>
+        <Button
+          title='Insights'
+          onPress={() => props.navigation.navigate("Crypto Wallet Insights")}
+        />
         <View style={[styles.walletList]}>
         {
           wallets.map((item)=> <WalletAsset key={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
         }
         </View>
 
+        <Text style={[styles.cryptoWalletSubtitle, {color: colors.text}]}>Exchanges</Text>
         <View style={[styles.walletList]}>
         {
           exchanges.map((item, index)=> <ExchangeAsset key={index} item={item} navigation={props.navigation} />)

@@ -1,7 +1,7 @@
-from datetime import datetime
-
+from datetime import datetime, date, timedelta
+import statistics
 import requests
-from crypto_wallets.models import CryptoWallet
+from crypto_wallets.models import CryptoWallet, CryptoWalletTransaction
 
 API_KEY = "G___EAU7R8HuOi9HGRarUuX0xOujt6QQ"
 
@@ -67,3 +67,60 @@ def chart_breakdown_crypto(user):
         for a in wallets:
             print(a.cryptocurrency)
         return [{'x': a.symbol + ' Wallet: ' + a.address[:15] + '...', 'y': round(getCryptoPrice(a.symbol)*a.balance,2), 'id': a.id} for a in wallets]
+
+def calculate_predicted_balance(user):
+    """
+    First calculate spending over four weeks
+    """
+    today = datetime.today()
+    last_month = today - timedelta(days=28)
+
+    predicted_balance = {}
+    value_change = {}
+    crypto_wallets = list(CryptoWallet.objects.filter(user=user))
+    for wallet in crypto_wallets:
+        if wallet.symbol not in predicted_balance:
+            predicted_balance[wallet.symbol] = 0
+        predicted_balance[wallet.symbol] += wallet.balance
+
+        transactions = list(CryptoWalletTransaction.objects.filter(crypto_wallet=wallet))
+        for transaction in transactions:
+            if transaction.time >= datetime.timestamp(last_month):
+                if wallet.symbol not in value_change:
+                    value_change[wallet.symbol] = 0
+                value_change[wallet.symbol] += transaction.value
+
+    for symbol in value_change:
+        predicted_balance[symbol] += value_change[symbol]
+
+    return predicted_balance
+
+
+def calculate_received_spent(user):
+    spent_received = {}
+    crypto_wallets = list(CryptoWallet.objects.filter(user=user))
+    for wallet in crypto_wallets:
+        if wallet.symbol not in spent_received:
+            spent_received[wallet.symbol] = {'spent': 0, 'received': 0}
+        spent_received[wallet.symbol]['received'] += wallet.received
+        spent_received[wallet.symbol]['spent'] += wallet.spent
+
+    return spent_received
+
+
+def calculate_average_spend(user):
+    average_spend = {}
+    crypto_wallets = list(CryptoWallet.objects.filter(user=user))
+
+    for wallet in crypto_wallets:
+        transactions = list(CryptoWalletTransaction.objects.filter(crypto_wallet=wallet))
+        for transaction in transactions:
+            if transaction.value < 0:
+                if wallet.symbol not in average_spend:
+                    average_spend[wallet.symbol] = []
+                average_spend[wallet.symbol].append(transaction.value)
+
+    for symbol in average_spend:
+        average_spend[symbol] = statistics.fmean(average_spend[symbol])
+
+    return average_spend
