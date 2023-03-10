@@ -28,6 +28,7 @@ import StockStackNavigator from "../stocks/StockStackNavigator";
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import CryptoWalletInsights from "../crypto_wallet/CryptoWalletInsights";
+import ExchangeCredentials from "../cryptoExchanges/ExchangeCredentials";
 
 const Stack = createStackNavigator();
 
@@ -92,6 +93,8 @@ export default function MainStackNavigator() {
       <Stack.Screen name="Crypto Wallet Insights" component={CryptoWalletInsights} />
 
       <Stack.Screen name="Crypto exchanges" component={CryptoExchanges} />
+      <Stack.Screen name="Exchange Credentials" component={ExchangeCredentials} />
+
       <Stack.Screen name="Binance" component={BinanceCredentials} />
       <Stack.Screen name="Huobi" component={HuobiCredentials} />
       <Stack.Screen name="Gateio" component={GateioCredentials} />

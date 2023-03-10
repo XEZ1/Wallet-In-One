@@ -130,6 +130,14 @@ export default function AddCryptoScreen(props) {
               Add a cryptocurrency account from an exchange:
             </Text>
           </View>
+
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('Exchange Credentials', {exchange: 'Generic'})}
+            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+          >
+            <Text style={styles.buttonText}>Generic</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity
             onPress={() => props.navigation.navigate('Binance')}
             style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
