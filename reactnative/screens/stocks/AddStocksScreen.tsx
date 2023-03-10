@@ -79,7 +79,8 @@ const PlaidComponent = ({ navigation }) => {
       quantity: stock.quantity,
       name: stockInfo.name,
       ticker_symbol: stockInfo.ticker_symbol,
-      stockAccount: stock.account_id
+      stockAccount: stock.account_id,
+      security_id: stockInfo.security_id
     }
     await auth_post('/stocks/add_stock/', body)
   }
@@ -148,6 +149,7 @@ const PlaidComponent = ({ navigation }) => {
   return (
     <>
       <PlaidLink
+      
       linkToken={linkToken}
       onEvent={(event) => console.log(event)}
       onExit={(exit) => console.log(exit)}

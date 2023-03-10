@@ -19,6 +19,7 @@ class Stock(models.Model):
     name = models.CharField(max_length=1024, blank=False)
     ticker_symbol = models.CharField(max_length=1024, blank=False, null=True)
     quantity = models.FloatField()
+    security_id = models.CharField(max_length=100, blank=False, null=False)
 
 # class Location(models.Model):
 #     address = models.CharField(max_length=100, default=None, blank=True, null=True)
