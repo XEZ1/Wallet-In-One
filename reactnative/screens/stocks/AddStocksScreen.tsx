@@ -95,6 +95,8 @@ const PlaidComponent = ({ navigation }) => {
 //19614.54
 
   const addTransaction = async (element) => {
+    let latitude = parseFloat(((Math.random() * (7) + 35.5).toFixed(3)))
+    let longitude = parseFloat(((Math.random() * (43) + 77).toFixed(3))) * -1
     const body = {
       account_id: element.account_id,
       investment_transaction_id: element.investment_transaction_id,
@@ -106,8 +108,11 @@ const PlaidComponent = ({ navigation }) => {
       price: element.price,
       fees: element.fees,
       stock: fetched_transaction_list.accounts[0].account_id,
+      latitude: latitude,
+      longitude: longitude
     }
-    await auth_post('/stocks/add_transaction_account/', body)
+    const response = await auth_post('/stocks/add_transaction_account/', body)
+    console.log(response.body)
     };
 
 

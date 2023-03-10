@@ -38,6 +38,8 @@ class Transaction(models.Model):
     quantity = models.FloatField(blank=False,null=False) 
     price = models.FloatField(blank=False,null=False) 
     fees = models.FloatField(blank=False,null=True) 
+    latitude = models.FloatField(blank=False)
+    longitude = models.FloatField(blank=False)
     # cancel_transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)
     iso_currency_code = models.CharField(max_length=30, blank=False, null=True)
     # Always null if unofficial_currency_code is non-null.
