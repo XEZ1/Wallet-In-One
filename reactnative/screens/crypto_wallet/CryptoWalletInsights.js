@@ -57,7 +57,7 @@ export default function CryptoWalletInsights() {
       <Text />
 
       <Text style={styles.subtitle}>Predicted Balance</Text>
-      <View style={{backgroundColor: colors.secondary, borderRadius: 10, paddingVertical: 10}}>
+      <View style={{ borderRadius: 10, paddingVertical: 10}}>
       {
         Object.entries(insights.predicted_balance).map(([key, value]) =>
             <InsightsView key={key} symbol={key} upper={`${value} ${key}`} lower='£0.00' />
@@ -67,7 +67,7 @@ export default function CryptoWalletInsights() {
       <Text />
 
       <Text style={styles.subtitle}>Total Spent & Received</Text>
-      <View style={{backgroundColor: colors.secondary, borderRadius: 10, paddingVertical: 10}}>
+      <View style={{ borderRadius: 10, paddingVertical: 10}}>
       {
         Object.entries(insights.received_spent).map(([key, value]) =>
           <InsightsView key={key} symbol={key} upper={`+${value.received} ${key}`} lower={`-${value.spent} ${key}`} />
@@ -77,7 +77,7 @@ export default function CryptoWalletInsights() {
       <Text />
 
       <Text style={styles.subtitle}>Average Spend</Text>
-      <View style={{backgroundColor: colors.secondary, borderRadius: 10, paddingVertical: 10}}>
+      <View style={{ borderRadius: 10, paddingVertical: 10}}>
       {
         Object.entries(insights.average_spend).map(([key, value]) =>
           <InsightsView key={key} symbol={key} upper={`${value * -1} ${key}`} lower="£0.00" />
@@ -133,15 +133,15 @@ function InsightsView(props) {
         }}
       >
         <View>
-          <Text style={{ fontSize: 20, fontWeight: "700", color: colors.background }}>
+          <Text style={{ fontSize: 20, fontWeight: "700", color: colors.text }}>
             {props.symbol}
           </Text>
 
-          <Text style={[styles.walletAssetTitle, {color: colors.background}]}>
+          <Text style={[styles.walletAssetTitle, {color: colors.text}]}>
             {props.upper}
           </Text>
 
-          <Text style={[styles.walletAssetTitle, {color: colors.background}]}>
+          <Text style={[styles.walletAssetTitle, {color: colors.text}]}>
             {props.lower}
           </Text>
 
