@@ -1,5 +1,5 @@
 from abc import ABC, ABCMeta, abstractmethod
-import datetime
+from datetime import datetime
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -11,16 +11,16 @@ from crypto_exchanges.models import *
 
 
 def millis_to_datetime(millis):
-    return datetime.datetime.fromtimestamp(millis / 1000.0)
+    return datetime.fromtimestamp(millis / 1000.0)
 
 
 def iso8601_to_datetime(iso8601_string):
-    dt = datetime.datetime.strptime(iso8601_string, '%Y-%m-%dT%H:%M:%S.%fZ')
+    dt = datetime.strptime(iso8601_string, '%Y-%m-%dT%H:%M:%S.%fZ')
     return dt.strftime('%Y-%m-%d %H:%M:%S.%f')
 
 
 def unix_timestamp_to_datetime(unix_timestamp):
-    dt = datetime.datetime.fromtimestamp(unix_timestamp)
+    dt = datetime.fromtimestamp(unix_timestamp)
     return dt.strftime('%Y-%m-%d %H:%M:%S.%f')
 
 
@@ -202,16 +202,18 @@ class BinanceView(GenericCryptoExchanges, ABC):
 
     def save_transactions(self, transactions, request, saved_exchange_account_object):
         super(BinanceView, self).save_transactions(transactions, request, saved_exchange_account_object)
-        for binance_transaction in transactions:
-            transaction = Transaction()
-            transaction.crypto_exchange_object = saved_exchange_account_object
-            transaction.asset = binance_transaction['symbol']
-            if binance_transaction['isBuyer']:
-                transaction.transaction_type = 'buy'
-            else:
-                transaction.transaction_type = 'sell'
-            transaction.timestamp = millis_to_datetime(binance_transaction['time'])
-            transaction.save()
+        for symbol in transactions.values():
+            for binance_transaction in symbol:
+                #binance_transaction = binance_transaction.decode("utf-8")
+                transaction = Transaction()
+                transaction.crypto_exchange_object = saved_exchange_account_object
+                transaction.asset = binance_transaction['symbol']
+                if binance_transaction['isBuyer']:
+                    transaction.transaction_type = 'buy'
+                else:
+                    transaction.transaction_type = 'sell'
+                transaction.timestamp = millis_to_datetime(binance_transaction['time'])
+                transaction.save()
 
     def get(self, request):
         return super(BinanceView, self).get(request)

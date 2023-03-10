@@ -25,4 +25,12 @@ class CryptoExchangeAdmin(admin.ModelAdmin):
         'created_at'
     ]
 
+@admin.register(Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = [
+        'crypto_exchange_object',
+        'asset',
+        'transaction_type',
+        'timestamp'
+    ]
 

@@ -15,6 +15,7 @@ class BinanceFetcher:
     def __init__(self, api_key, secret_key):
         self.api_key = api_key
         self.secret_key = secret_key
+        self.symbols = ['BTCUSDT', 'ETHUSDT', 'ADAUSDT', 'XRPUSDT', 'SOLUSDT']
 
     def get_account_data(self):
         endpoint = "https://api.binance.com/api"
@@ -34,15 +35,18 @@ class BinanceFetcher:
         query_string = '&'.join([f"{k}={v}" for k, v in params.items()])
         return hmac.new(self.secret_key.encode('utf-8'), query_string.encode('utf-8'), sha256).hexdigest()
 
-    def get_trading_history(self, symbol):
-        timestamp = str(self.current_time())
-        params = {'symbol': symbol, 'timestamp': timestamp}
-        signature = self.hash_for_transactions(params)
-        request_url = "https://api.binance.com/api/v3/myTrades"
-        headers = {'X-MBX-APIKEY': self.api_key}
-        response = requests.get(request_url, headers=headers, params={**params, **{'signature': signature}})
-        print(response.json())
+    def get_trading_history(self):
+        to_return = {}
+        for symbol in self.symbols:
+            timestamp = str(self.current_time())
+            params = {'symbol': symbol, 'timestamp': timestamp}
+            signature = self.hash_for_transactions(params)
+            request_url = "https://api.binance.com/api/v3/myTrades"
+            headers = {'X-MBX-APIKEY': self.api_key}
+            response = requests.get(request_url, headers=headers, params={**params, **{'signature': signature}})
+            to_return[symbol] = response.json()
 
+        return to_return
 
 
 # Class was implemented according to: "https://huobiapi.github.io/docs/spot/v1/en/#change-log"
