@@ -27,9 +27,9 @@ export default function StackedChart({ data = fixture.all  }) {
       style={styles.container}
     >
       {/*domain={{ x: [1, 4] }}*/}
-      <VictoryChart  domainPadding={{ x: 50, y: 20 }} >
+      <VictoryChart  domainPadding={{ x: 20, y: 20 }} >
         <VictoryAxis
-            //tickValues={[ 1, 2, 3, 4 ,5]}
+            tickValues={[ 1, 2, 3, 4 ,5]}
              // set the domain to include values up to 20
             fixLabelOverlap={true}
             //tickFormat ={["Banks", "Cryptocurrency","Crypto-exchanges" ,"Stocks"]}
@@ -47,10 +47,10 @@ export default function StackedChart({ data = fixture.all  }) {
               barWidth={35}
             />
           ))}
-          {(data['Cryptocurrency']?data['Cryptocurrency']:[]).map(i => (
+          {(data['Cryptocurrency from wallets']?data['Cryptocurrency from wallets']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Cryptocurrency from wallets", y: i.y }]}
+              data={[{ x: "Crypto from wallets ", y: i.y }]}
               barWidth={35}
             />
           ))}
