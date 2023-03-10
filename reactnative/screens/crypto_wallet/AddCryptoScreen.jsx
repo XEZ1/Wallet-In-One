@@ -133,7 +133,6 @@ export default function AddCryptoScreen(props) {
             </Text>
           </View>
 
-
           {
             exchanges.map((exchange) =>
               <TouchableOpacity
@@ -144,46 +143,6 @@ export default function AddCryptoScreen(props) {
                 <Text style={styles.buttonText}>{exchange.name}</Text>
               </TouchableOpacity>)
           }
-
-
-          {/*
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('Binance')}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Binance</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('Huobi')}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Huobi</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('Gateio')}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Gateio</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('CoinList')}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Coinlist</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('Coinbase')}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Coinbase</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('Kraken')}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Kraken</Text>
-          </TouchableOpacity>
-          */}
 
         </View>
 

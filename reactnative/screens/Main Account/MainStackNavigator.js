@@ -14,20 +14,13 @@ import WalletAssetDetail from "../crypto_wallet/WalletAssetDetail";
 import { WalletConnector, WalletSelector } from "../crypto_wallet/WalletModal";
 import AddCryptoScreen from "../crypto_wallet/AddCryptoScreen"
 
-//Crypto Exchanges Screens
-import BinanceCredentials from "../cryptoExchanges/BinanceExchange";
-import HuobiCredentials from "../cryptoExchanges/HuobiExchange";
-import GateioCredentials from "../cryptoExchanges/GateioExchange";
-import CoinListCredentials from "../cryptoExchanges/CoinlistExchange";
-import CoinbaseCredentials from "../cryptoExchanges/CoinbaseExchange";
-import KrakenCredentials from "../cryptoExchanges/KrakenExchange";
-import CryptoExchanges from "../cryptoExchanges/CryptoExchanges";
-import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 
 import StockStackNavigator from "../stocks/StockStackNavigator";
 
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import CryptoWalletInsights from "../crypto_wallet/CryptoWalletInsights";
+
+//Crypto Exchanges Screens
 import ExchangeCredentials from "../cryptoExchanges/ExchangeCredentials";
 
 const Stack = createStackNavigator();
@@ -92,17 +85,11 @@ export default function MainStackNavigator() {
       <Stack.Screen name="WalletConnector" component={WalletConnector} />
       <Stack.Screen name="Crypto Wallet Insights" component={CryptoWalletInsights} />
 
-      <Stack.Screen name="Crypto exchanges" component={CryptoExchanges} />
       <Stack.Screen name="Exchange Credentials" component={ExchangeCredentials} />
 
-      <Stack.Screen name="Binance" component={BinanceCredentials} />
-      <Stack.Screen name="Huobi" component={HuobiCredentials} />
-      <Stack.Screen name="Gateio" component={GateioCredentials} />
-      <Stack.Screen name="CoinList" component={CoinListCredentials} />
       <Stack.Screen name="Stock Accounts" component={StockStackNavigator} options={{headerShown: false}} />
-      <Stack.Screen name="Coinbase" component={CoinbaseCredentials} />
-      <Stack.Screen name="Kraken" component={KrakenCredentials} />
-  
+
+
     </Stack.Navigator>
   );
 }
