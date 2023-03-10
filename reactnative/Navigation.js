@@ -15,6 +15,7 @@ import SettingsPage from './screens/SettingsPage';
 import AboutUsScreen from './screens/pre_logged_in/AboutUsScreen';
 import DeveloperInfoScreen from './screens/pre_logged_in/DeveloperInfoScreen';
 import NotificationsPage from "./screens/NotificationsPage";
+import BankInsights from './screens/banking/BankInsights';
 
 import AddBankScreen from './screens/banking/AddBankScreen'
 import BankAccountsScreen from './screens/banking/BankAccountsScreen'
@@ -80,6 +81,17 @@ export default function Navigation() {
               tabBarIcon: ({ focused }) => (
                 <Text style={{ color: focused ? colors.primary : colors.text }}>
                   <AntDesign name="user" size={30} />
+                </Text>
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Insights"
+            component={BankInsights}
+            options={{
+              tabBarIcon: ({ focused }) => (
+                <Text style={{ color: focused ? colors.primary : colors.text }}>
+                  <AntDesign name="notification" size={30} />
                 </Text>
               ),
             }}
