@@ -85,10 +85,14 @@ $ yarn test
 ```
 
 ## Account for use
-There are multiple assets that can be connected to the app including Bank Accounts, Crypto Wallets, Crypto Exchanges and Stock Brokers. Below are listed some accounts to use for testing purposes. We reccomeend using personal accounts where possible.
+There are multiple assets that can be connected to the app including Bank Accounts, Crypto Wallets, Crypto Exchanges and Stock Brokers. Below are listed some accounts to use for testing purposes. We reccomend using personal accounts where possible.
 ### Bank Accounts
+- Account details are not available for security reasons, users must connect thier own personal accounts.
+- Please note that by connecting your account Wallet-In-One can NOT access any sensitive information that may put you at risk.
 ### Crypto Wallets
 ### Crypto Exchanges
+- Account details are not available for security reasons, users must connect thier own personal accounts.
+- Please note that by connecting your account Wallet-In-One can NOT access any sensitive information that may put you at risk.
 ### Stock Brokers
 - From the 'Select your institution' page select Vanguard
 - Credentials to use are
