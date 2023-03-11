@@ -72,8 +72,8 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                                 <LineChart.CursorLine />
                                 <LineChart.CursorCrosshair />
                             </LineChart>
-                            <LineChart.PriceText />
-                            <LineChart.DatetimeText />
+                            <LineChart.PriceText style={{ color: colors.text }}/>
+                            <LineChart.DatetimeText style={{ color: colors.text }} />
                         </LineChart.Provider></>
                     }
 
@@ -92,7 +92,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                         </LineChart.Provider></>
                     }
                 </>
-            ) : (<Text style={[styles.emptyText, {textAlign: 'center', alignSelf: 'center'}]}>No data available</Text>)}
+            ) : (<Text style={[styles.emptyText, {textAlign: 'center', alignSelf: 'center', color: colors.text}]}>No data available</Text>)}
 
         </View>
     );
@@ -121,7 +121,4 @@ const styles = StyleSheet.create({
   row: { 
     flexDirection: 'row',
   },
-//   redText: {
-//     color: 'red'
-//   },
 });

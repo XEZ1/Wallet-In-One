@@ -20,7 +20,6 @@ import { styles } from "reactnative/screens/All_Styles.style.js";
 
 
 import LineChartScreen from '../charts/LineChart';
-// import LineChartScreen from '../../charts/LineChart';
 
 const SuccessComponent = (props) => {
     const [list, setList] = useState()
