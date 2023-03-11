@@ -79,14 +79,10 @@ export default function StockDetails({ route, navigation }){
       color: "white",
       fontSize: 18,
     },
-    label: {
-      fontWeight: 'bold',
-    },
     table: {
       flex: 1,
-      padding: 10,
       justifyContent: 'center',
-      backgroundColor: '#fff',
+      backgroundColor: colors.background,
       paddingTop: 20,
     },
     head: {
@@ -100,31 +96,31 @@ export default function StockDetails({ route, navigation }){
 
     return (
       <ScrollView style={[styles(dark, colors).container, {padding: 20}]}>
-        <Text style={stylesInternal.label}>Stock Data{"\n"}</Text>
+        {/* <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Stock Data{"\n"}</Text> */}
 
         {stock ? (
           <View>
-            <Text style={stylesInternal.label}>Name</Text>
-            <Text>{stock.name}{"\n"}</Text>
+            <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Name</Text>
+            <Text style={styles(dark, colors).text}>{stock.name}{"\n"}</Text>
 
-            <Text style={stylesInternal.label}>Institution Price Currency</Text>
-            <Text>{stock.institution_price_currency}{"\n"}</Text>
+            <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Institution Price Currency</Text>
+            <Text style={styles(dark, colors).text}>{stock.institution_price_currency}{"\n"}</Text>
 
-            <Text style={stylesInternal.label}>Institution Price</Text>
-            <Text>{stock.institution_price}{"\n"}</Text>
+            <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Institution Price</Text>
+            <Text style={styles(dark, colors).text}>{stock.institution_price}{"\n"}</Text>
 
             {stock.ticker_symbol != null && (
               <View>
-                <Text style={stylesInternal.label}>Ticker Symbol</Text>
-                <Text>{stock.ticker_symbol}{"\n"}</Text>
+                <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Ticker Symbol</Text>
+                <Text style={styles(dark, colors).text}>{stock.ticker_symbol}{"\n"}</Text>
               </View>
             )}
 
-            <Text style={stylesInternal.label}>Quantity</Text>
-            <Text>{stock.quantity}{"\n"}</Text>
+            <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Quantity</Text>
+            <Text style={styles(dark, colors).text}>{stock.quantity}{"\n"}</Text>
 
           </View>
-        ):(<Text>Loading...</Text>)}
+        ):(<Text style={styles(dark, colors).text}>Loading...</Text>)}
 
         {/* <Text>{JSON.stringify(data)}</Text> */}
         {data && (
