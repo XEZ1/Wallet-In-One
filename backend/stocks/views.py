@@ -104,10 +104,9 @@ def get_stocks(request):
     try:
         request = InvestmentsHoldingsGetRequest(access_token=request.data.get('access_token'))
         response = client.investments_holdings_get(request)
-        print((response.to_dict()))
         return Response(response.to_dict())
     except plaid.ApiException as e:
-        return json.loads(e.body)
+        return Response({"Error": json.loads(e.body)}, status=400)
     
 @api_view(['POST'])
 def get_transactions(request):

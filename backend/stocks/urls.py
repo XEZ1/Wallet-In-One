@@ -12,7 +12,7 @@ urlpatterns = [
     path('get_transactions/', get_transactions),
     path('list_transactions/<str:stock>/', listTransactions),
     path('add_transaction_account/', AddTransactions.as_view(), name='add_transaction_account'),
-    path('get_stocks/', get_stocks),
+    path('get_stocks/', get_stocks, name='get_stocks'),
     path('delete_account/<str:stockAccount>/', deleteAccount),
     path('get_transaction/<str:id>/', getTransaction),
     path('add_stock/', addStock.as_view(), name='add_stock'),
