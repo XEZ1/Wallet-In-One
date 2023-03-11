@@ -4,12 +4,14 @@ import { StyleSheet, Text, ScrollView, View, Dimensions, Button, TouchableHighli
 import data from "./chartData.json"
 import { LineChart } from 'react-native-wagmi-charts';
 import {useEffect, useState} from "react";
+import { useTheme } from "reactnative/src/theme/ThemeProvider";
 
 import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 
 export default function LineChartScreen({transactions, graph_version, height, width, stockAccountBalance})
 {
     const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
+    const {dark, colors, setScheme } = useTheme();
     
 
     let graph_data = transactions.map((item) => [item.amount, item.date]);
@@ -40,7 +42,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     let color1 = 'green';
     const data = graphData;
 
-
+    
     if (data && data.length > 0) {
         if (data[0]?.value > data[data.length -1]?.value){
             color1 = 'red';
@@ -48,7 +50,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
         else {
             color1 = 'green';
         }
-    }      
+    } 
     
 
     return (
@@ -66,8 +68,8 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                                 <LineChart.CursorLine />
                                 <LineChart.CursorCrosshair />
                             </LineChart>
-                            <LineChart.PriceText />
-                            <LineChart.DatetimeText />
+                            <LineChart.PriceText style={{ color: colors.text }}/>
+                            <LineChart.DatetimeText style={{ color: colors.text }} />
                         </LineChart.Provider></>
                     }
 
@@ -86,7 +88,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                         </LineChart.Provider></>
                     }
                 </>
-            ) : (<Text style={[styles.emptyText, {textAlign: 'center', alignSelf: 'center'}]}>No data available</Text>)}
+            ) : (<Text style={[styles.emptyText, {textAlign: 'center', alignSelf: 'center', color: colors.text}]}>No data available</Text>)}
 
         </View>
     );
@@ -115,7 +117,4 @@ const styles = StyleSheet.create({
   row: { 
     flexDirection: 'row',
   },
-//   redText: {
-//     color: 'red'
-//   },
 });

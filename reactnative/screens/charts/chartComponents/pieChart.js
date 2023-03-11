@@ -35,7 +35,7 @@ export default function PieChart({colours, data, handlePressIn}) {
         flexGrow: 1,
         justifyContent: "center",
         alignItems: "center",
-        paddingBottom: 20,
+        //paddingBottom: 20,
         backgroundColor: colors.background,
       }}
       style={styles.container}
@@ -45,7 +45,7 @@ export default function PieChart({colours, data, handlePressIn}) {
         width={Dimensions.get("window").width}
         // height={Dimensions.get('window').height/2}
         height={300}
-        style={{ paddingBottom: 10 }}
+        //style={{ paddingBottom: 10 }}
       >
         <VictoryPie
           data={data}
@@ -110,12 +110,6 @@ export default function PieChart({colours, data, handlePressIn}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  title: {
-    fontWeight: "900",
-    fontSize: 50,
-    alignSelf: "center",
-    paddingVertical: 10,
   },
   button: {
     width: "75%",

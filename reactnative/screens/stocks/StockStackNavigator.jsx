@@ -7,12 +7,22 @@ import TransactionData from "./StockTransactionData";
 import LineChartScreen from "reactnative/screens/charts/LineChart.js";
 import PlaidComponent from "./AddStocksScreen";
 import StockDetails from "./StockDetails";
+import { useTheme } from "reactnative/src/theme/ThemeProvider";
 
 const Stack = createStackNavigator();
 
 export default function StockStackNavigator() {
+
+  const {dark, colors, setScheme} = useTheme();
+
     return (
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={
+          {
+            headerStyle: {backgroundColor: colors.background},
+            headerTitleStyle: {color: colors.text},
+          }}
+      >
         <Stack.Screen name="Stock Account List" component={SuccessComponent}
                 options={({ navigation }) => ({
                   headerRight: () => (
