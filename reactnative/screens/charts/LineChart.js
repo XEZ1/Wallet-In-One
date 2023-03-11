@@ -42,19 +42,15 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     let color1 = 'green';
     const data = graphData;
 
-
-    if (data && data.length > 0) {
-        color1 = colors.secondary;
-    }
     
-    // if (data && data.length > 0) {
-    //     if (data[0]?.value > data[data.length -1]?.value){
-    //         color1 = 'blue';
-    //     } 
-    //     else {
-    //         color1 = 'green';
-    //     }
-    // } 
+    if (data && data.length > 0) {
+        if (data[0]?.value > data[data.length -1]?.value){
+            color1 = 'red';
+        } 
+        else {
+            color1 = 'green';
+        }
+    } 
     
 
     return (
