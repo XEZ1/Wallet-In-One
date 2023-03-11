@@ -39,24 +39,20 @@ def initiate_plaid_link(request):
     for product in prods:
         products.append(Products(product))
     
-    try:
-        request = LinkTokenCreateRequest(
-            products=products,
-            client_name="KCL",
-            language='en',
-            country_codes=list(map(lambda x: CountryCode(x), ['US'])),
-            #institution_id="ins_117181",
-            user=LinkTokenCreateRequestUser(
-                client_user_id=str(request.user.id)
-            )
+    request = LinkTokenCreateRequest(
+        products=products,
+        client_name="KCL",
+        language='en',
+        country_codes=list(map(lambda x: CountryCode(x), ['US'])),
+        user=LinkTokenCreateRequestUser(
+            client_user_id=str(request.user.id)
         )
+    )
     # create link token
-        response = client.link_token_create(request)
-        link_token = response['link_token']
-        return Response({'link_token': link_token})
-    except plaid.ApiException as e:
-        print(response)
-        return json.loads(e.body)
+    response = client.link_token_create(request)
+    link_token = response['link_token']
+    return Response({'link_token': link_token})
+
 
 
 @api_view(['POST'])
@@ -68,10 +64,10 @@ def get_access_token(request):
             public_token=public_token)
         exchange_response = client.item_public_token_exchange(exchange_request)
         access_token = exchange_response['access_token']
-        item_id = exchange_response['item_id']
-        return Response({'access_token': access_token, 'item_id': item_id})
+        return Response({'access_token': access_token})
     except plaid.ApiException as e:
-        return json.loads(e.body)
+        return Response({"Error": json.loads(e.body)}, status=400)
+
     
 @api_view(['POST'])
 def get_balance(request):

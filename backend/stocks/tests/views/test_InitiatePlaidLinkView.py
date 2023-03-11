@@ -16,7 +16,7 @@ class InitiatePlaidLinkTestCase(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.get(id=3)  
+        self.user = User.objects.get(id=3)
         self.client.force_authenticate(self.user)
         self.url = reverse('initiate_plaid_link')
 
@@ -46,3 +46,4 @@ class InitiatePlaidLinkTestCase(TestCase):
         self.assertEqual(link_token_info['metadata']['country_codes'], [CountryCode("US")])
         self.assertEqual(link_token_info['metadata']['initial_products'], [Products("investments"), Products("transactions")])
         self.assertEqual(link_token_info['metadata']['language'], 'en')
+    
