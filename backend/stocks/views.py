@@ -79,7 +79,7 @@ def get_balance(request):
         response = client.accounts_get(request)
         return Response(response.to_dict())
     except plaid.ApiException as e:
-        return json.loads(e.body)
+        return Response({"Error": json.loads(e.body)}, status=400)
         
 
 @api_view(['POST'])

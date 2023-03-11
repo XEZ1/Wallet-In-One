@@ -8,7 +8,7 @@ urlpatterns = [
     path('add_stock_account/', addAccount.as_view(), name='add_stock_account'),
     path('list_accounts/', listAccounts),
     path('get_access_token/', get_access_token, name='get_access_token'),
-    path('get_balance/', get_balance),
+    path('get_balance/', get_balance, name='get_balance'),
     path('get_transactions/', get_transactions),
     path('list_transactions/<str:stock>/', listTransactions),
     path('add_transaction_account/', AddTransactions.as_view(), name='add_transaction_account'),
