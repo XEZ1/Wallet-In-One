@@ -169,6 +169,8 @@ class addStock(generics.CreateAPIView):
 
 @api_view(['DELETE'])
 def deleteAccount(request, stockAccount):
+    if StockAccount.objects.filter(account_id=stockAccount).count() == 0:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     stock_account = StockAccount.objects.get(account_id=stockAccount)
     if stock_account.user != request.user:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
