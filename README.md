@@ -84,6 +84,17 @@ Run all tests with:
 $ yarn test
 ```
 
+## Account for use
+There are multiple assets that can be connected to the app including Bank Accounts, Crypto Wallets, Crypto Exchanges and Stock Brokers. Below are listed some accounts to use for testing purposes. We reccomeend using personal accounts where possible.
+### Bank Accounts
+### Crypto Wallets
+### Crypto Exchanges
+### Stock Brokers
+From the 'Select your institution' page select Vanguard
+Credentials to use are
+- User Name: user_good
+- Password: pass_good
+Choose either 'Plaid IRA' or 'Plaid 401k'
 
 ## Sources
 The packages used by this application are specified in `requirements.txt`
