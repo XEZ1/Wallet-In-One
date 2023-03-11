@@ -85,18 +85,18 @@ def get_balance(request):
 @api_view(['POST'])
 def get_logo(request):
     client = setUpClient()
-    try:
-        options = InstitutionsSearchRequestOptions(include_optional_metadata=True)
-        request = InstitutionsSearchRequest(
-            query=request.data.get('name'),
-            products=None,
-            country_codes=list(map(lambda x: CountryCode(x), ['US'])),
-            options=options
-        )
-        institution_response = client.institutions_search(request)
+    options = InstitutionsSearchRequestOptions(include_optional_metadata=True)
+    request = InstitutionsSearchRequest(
+        query=request.data.get('name'),
+        products=None,
+        country_codes=list(map(lambda x: CountryCode(x), ['US'])),
+        options=options
+    )
+    institution_response = client.institutions_search(request)
+    if len(institution_response.institutions) != 0:
         return Response({'logo': institution_response.institutions[0].logo})
-    except plaid.ApiException as e:
-        return json.loads(e.body)
+    else:
+        return Response({"Error": 'Institution Does Not Exist'}, status=400)
 
 @api_view(['POST'])
 def get_stocks(request):
@@ -122,10 +122,9 @@ def get_transactions(request):
             options=options
         )
         response = client.investments_transactions_get(request)
-        print((response.to_dict()))
         return Response(response.to_dict())
     except plaid.ApiException as e:
-        return json.loads(e.body)
+        return Response({"Error": json.loads(e.body)}, status=400)
 
 
 class addAccount(generics.CreateAPIView):

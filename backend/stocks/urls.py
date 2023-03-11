@@ -9,7 +9,7 @@ urlpatterns = [
     path('list_accounts/', listAccounts),
     path('get_access_token/', get_access_token, name='get_access_token'),
     path('get_balance/', get_balance, name='get_balance'),
-    path('get_transactions/', get_transactions),
+    path('get_transactions/', get_transactions, name='get_transactions'),
     path('list_transactions/<str:stock>/', listTransactions),
     path('add_transaction_account/', AddTransactions.as_view(), name='add_transaction_account'),
     path('get_stocks/', get_stocks, name='get_stocks'),
@@ -17,7 +17,7 @@ urlpatterns = [
     path('get_transaction/<str:id>/', getTransaction),
     path('add_stock/', addStock.as_view(), name='add_stock'),
     path('list_stocks/<str:stockAccount>/', listStocks),
-    path('get_logo/', get_logo),
+    path('get_logo/', get_logo, name='get_logo'),
     path('get_metrics/', getMetrics),
     path('get_account/<str:account_id>/', getAccount)
 ]

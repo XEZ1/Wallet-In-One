@@ -5,7 +5,7 @@ from accounts.models import User
 from rest_framework import status
 from stocks.services import setUpClient
 
-class StocksPlaidViewTestCase(TestCase):
+class TransactionsPlaidViewTestCase(TestCase):
     fixtures = [
         'stocks/tests/fixtures/user.json',
     ]
@@ -14,19 +14,18 @@ class StocksPlaidViewTestCase(TestCase):
         self.client = APIClient()
         self.user = User.objects.get(id=3)  
         self.client.force_authenticate(self.user)
-        self.url = reverse('get_stocks')
+        self.url = reverse('get_transactions')
         self.access_token = 'access-sandbox-c314b575-cc3d-4897-ae93-c792eb4c2d7c'
 
     def test_url(self):
-        self.assertEqual(self.url,'/stocks/get_stocks/')
+        self.assertEqual(self.url,'/stocks/get_transactions/')
 
     def test_response(self):
         body = {'access_token': self.access_token}
         response = self.client.post(self.url, body)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('accounts', response.data)
-        self.assertIn('holdings', response.data)
-        self.assertIn('securities', response.data)
+        self.assertIn('investment_transactions', response.data)
+        self.assertIn('investment_transaction_id', response.data['investment_transactions'][0])
 
     def test_get_is_not_allowed(self):
         body = {'access_token': self.access_token}

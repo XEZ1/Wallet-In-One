@@ -4,8 +4,6 @@ from django.urls import reverse
 from accounts.models import User
 from rest_framework import status
 from stocks.services import setUpClient
-from plaid.model.sandbox_public_token_create_request import SandboxPublicTokenCreateRequest
-from plaid.model.products import Products
 
 class BalanceViewTestCase(TestCase):
     fixtures = [
