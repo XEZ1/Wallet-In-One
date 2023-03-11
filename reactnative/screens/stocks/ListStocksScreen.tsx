@@ -133,7 +133,6 @@ const SuccessComponent = (props) => {
                       graph_version={2}
                       height={75}
                       width={350}
-                      color={"blue"}
                   />}
 
                 </TouchableOpacity>
