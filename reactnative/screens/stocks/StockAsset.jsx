@@ -229,7 +229,7 @@ export default function StockAsset({ route, navigation, }){
               <View style={stylesInternal.table}>
                   {data.tableData.length > 0 ? (
                     <View>
-                      <Text style={[{textAlign: 'center', alignSelf: 'center', color: colors.text}]}>Select Row to view transaction details.{"\n"}</Text>
+                      <Text style={[{textAlign: 'center', alignSelf: 'center', color: colors.text}]}>Press on any transaction to view in depth details.{"\n"}</Text>
                       
                       <Table borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
                         <Row data={data.tableHead} style={stylesInternal.head} />

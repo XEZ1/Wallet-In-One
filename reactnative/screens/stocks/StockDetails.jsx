@@ -141,7 +141,7 @@ export default function StockDetails({ route, navigation }){
                   </Table>
                 </View>
               ) : (
-                <Text style={[{textAlign: 'center', alignSelf: 'center'}]}>... Loading</Text>
+                <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>... Loading</Text>
               )}
           </View>
           )}
