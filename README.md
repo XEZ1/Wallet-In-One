@@ -84,7 +84,7 @@ Run all tests with:
 $ yarn test
 ```
 
-## Account for use
+## Accounts for use
 There are multiple assets that can be connected to the app including Bank Accounts, Crypto Wallets, Crypto Exchanges and Stock Brokers. Below are listed some accounts to use for testing purposes. We reccomend using personal accounts where possible.
 ### Bank Accounts
 - Account details are not available for security reasons, users must connect thier own personal accounts.
