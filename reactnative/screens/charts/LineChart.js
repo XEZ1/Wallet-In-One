@@ -4,12 +4,14 @@ import { StyleSheet, Text, ScrollView, View, Dimensions, Button, TouchableHighli
 import data from "./chartData.json"
 import { LineChart } from 'react-native-wagmi-charts';
 import {useEffect, useState} from "react";
+import { useTheme } from "reactnative/src/theme/ThemeProvider";
 
 import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 
 export default function LineChartScreen({transactions, graph_version, height, width, stockAccountBalance})
 {
     const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
+    const {dark, colors, setScheme } = useTheme();
     
 
     let graph_data = transactions.map((item) => [item.amount, item.date]);
@@ -42,13 +44,17 @@ export default function LineChartScreen({transactions, graph_version, height, wi
 
 
     if (data && data.length > 0) {
-        if (data[0]?.value > data[data.length -1]?.value){
-            color1 = 'red';
-        } 
-        else {
-            color1 = 'green';
-        }
-    }      
+        color1 = colors.secondary;
+    }
+    
+    // if (data && data.length > 0) {
+    //     if (data[0]?.value > data[data.length -1]?.value){
+    //         color1 = 'blue';
+    //     } 
+    //     else {
+    //         color1 = 'green';
+    //     }
+    // } 
     
 
     return (

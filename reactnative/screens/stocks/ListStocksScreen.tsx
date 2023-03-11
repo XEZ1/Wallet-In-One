@@ -15,6 +15,9 @@ import { FlatList } from 'react-native-gesture-handler';
 import { api_url } from '../../authentication';
 import { Button, Image } from 'react-native';
 import { auth_get } from '../../authentication';
+import { useTheme } from "reactnative/src/theme/ThemeProvider";
+import { styles } from "reactnative/screens/All_Styles.style.js";
+
 
 import LineChartScreen from '../charts/LineChart';
 // import LineChartScreen from '../../charts/LineChart';
@@ -23,6 +26,34 @@ const SuccessComponent = (props) => {
     const [list, setList] = useState()
     const isFocused = useIsFocused()
     const [transactions, setTransactions] = useState({});
+    const {dark, colors, setScheme } = useTheme();
+
+    const stylesInternal = StyleSheet.create({
+      item:{
+        padding: 20,
+        borderRadius: 10,
+        backgroundColor: colors.primary,
+      },
+      row:{
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+      },
+      name:{
+        color: "black",
+        fontWeight: 'bold',
+        fontSize: 16,
+        fontFamily: 'sans-serif',
+      },
+      ins_name:{
+        color: "black",
+        fontSize: 15,
+        fontFamily: 'sans-serif',
+      },
+      separator: {
+        height: 1,
+        backgroundColor: "#3f3f46",
+      },
+    });
 
       useEffect(() => {
         const listAccounts = async () => {
@@ -53,17 +84,14 @@ const SuccessComponent = (props) => {
         }
       }, [isFocused, list, getTransactions]);
 
-      const ItemSeparator = () => <View style={styles.separator} />;
+      const ItemSeparator = () => <View style={stylesInternal.separator} />;
     return (
-        <View>
-          <View>
-            {/* <Text>Accounts</Text> */}
-          </View>
+        <View style={ styles(dark, colors).container }>
           <View>
             <FlatList data={list} ItemSeparatorComponent={() => <View style={{height: 8}} />} renderItem={({item, index}) =>{
               return (
                 
-                <TouchableOpacity style={[styles.item, {backgroundColor: '#fafafa'}]} onPress={()=> props.navigation.navigate('StockAsset', {
+                <TouchableOpacity style={stylesInternal.item} onPress={()=> props.navigation.navigate('StockAsset', {
                     accountID: item.account_id, 
                     accessToken: item.access_token, 
                     transactions: transactions[item.account_id],
@@ -71,28 +99,28 @@ const SuccessComponent = (props) => {
                     balance: item.balance
                   }) }>
 
-                  <View style={styles.row}>
-                  {item.institution_logo !== null && 
-                    <Image
-                      style={{ width: 40, height: 40 }}
-                      source={{ uri: `data:image/png;base64,${item.institution_logo}` }}
-                    />
-                  }
+                  <View style={stylesInternal.row}>
+                    {item.institution_logo !== null && 
+                      <Image
+                        style={{ width: 40, height: 40 }}
+                        source={{ uri: `data:image/png;base64,${item.institution_logo}` }}
+                      />
+                    }
 
-                  {item.institution_logo === null && 
-                    <Image
-                      style={{ width: 40, height: 40 }}
-                      source={{ uri: 'https://kriptomat.io/wp-content/uploads/t_hub/usdc-x2.png' }}
-                    />
-                  }
+                    {item.institution_logo === null && 
+                      <Image
+                        style={{ width: 40, height: 40 }}
+                        source={{ uri: 'https://kriptomat.io/wp-content/uploads/t_hub/usdc-x2.png' }}
+                      />
+                    }
                     <View style={{flexDirection: "column", flex: 1}}>
-                      <Text style={styles.name}>  {item.name}</Text>
-                      <Text style={[styles.ins_name, {fontSize: 11}]}>   {item.institution_name} • {item.balance_currency}</Text>
+                      <Text style={stylesInternal.name}>  {item.name}</Text>
+                      <Text style={[stylesInternal.ins_name, {fontSize: 11}]}>   {item.institution_name} • {item.balance_currency}</Text>
                     </View>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Text style={[styles.ins_name, {fontWeight: 'bold', fontSize: 14, height: 19}]}>£{parseInt(item.balance)}</Text>
+                      <Text style={[stylesInternal.ins_name, {fontWeight: 'bold', fontSize: 14, height: 19}]}>£{parseInt(item.balance)}</Text>
                       <View style={{height: 16}}>
-                        <Text style={[styles.ins_name, { fontSize: 12}]}>.{(item.balance).toString().split('.')[1]}</Text>
+                        <Text style={[stylesInternal.ins_name, { fontSize: 12}]}>.{(item.balance).toString().split('.')[1]}</Text>
                       </View>
                     </View>
 
@@ -105,43 +133,17 @@ const SuccessComponent = (props) => {
                       graph_version={2}
                       height={75}
                       width={350}
+                      color={"blue"}
                   />}
 
                 </TouchableOpacity>
               )
             }}
-            ListEmptyComponent={<Text>{'\nYou have no stock accounts\n'}</Text>}
+            ListEmptyComponent={<Text style={styles(dark, colors).text}>{'\nYou have no stock accounts\n'}</Text>}
             />
           </View>
         </View>
       );
     };
-
-  const styles = StyleSheet.create({
-      item:{
-        padding: 20,
-        borderRadius: 10,
-      },
-      row:{
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-      },
-      name:{
-        color: "black",
-        fontWeight: 'bold',
-        fontSize: 16,
-        fontFamily: 'sans-serif',
-      },
-      ins_name:{
-        color: "black",
-        fontSize: 15,
-        fontFamily: 'sans-serif',
-      },
-      separator: {
-        height: 1,
-        backgroundColor: "#3f3f46",
-      },
-    });
-
 
 export default SuccessComponent;
