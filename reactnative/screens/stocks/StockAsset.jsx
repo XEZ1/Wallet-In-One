@@ -52,6 +52,7 @@ export default function StockAsset({ route, navigation, }){
       justifyContent: 'center',
       backgroundColor: '#fff',
       paddingTop: 20,
+      backgroundColor: colors.background,
     },
     head: {
       height: 44,
@@ -227,7 +228,7 @@ export default function StockAsset({ route, navigation, }){
               <View style={stylesInternal.table}>
                   {data.tableData.length > 0 ? (
                     <View>
-                      <Text style={[{textAlign: 'center', alignSelf: 'center'}]}>Select Row to view transaction details.{"\n"}</Text>
+                      <Text style={[{textAlign: 'center', alignSelf: 'center', color: colors.text}]}>Select Row to view transaction details.{"\n"}</Text>
                       
                       <Table borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
                         <Row data={data.tableHead} style={stylesInternal.head} />
@@ -244,7 +245,7 @@ export default function StockAsset({ route, navigation, }){
 
                     </View>
                   ) : (
-                    <Text style={[{textAlign: 'center', alignSelf: 'center'}]}>No data available</Text>
+                    <Text style={[{textAlign: 'center', alignSelf: 'center', color: colors.text}]}>No data available</Text>
                   )}
               </View>
           )}
@@ -274,7 +275,7 @@ export default function StockAsset({ route, navigation, }){
               />)
             }
 
-          <View style={{marginTop: 100}}>
+          <View style={{marginTop: 40, marginBottom: 30}}>
             <Button title="REMOVE" color="red" onPress={async () => {await deleteAccount(), navigation.navigate('Stock Account List')}} />
           </View>
         </View>
