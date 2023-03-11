@@ -107,6 +107,15 @@ class GenericCryptoExchanges(APIView):
         for serializer in serializer_array:
             exchange = CryptoExchangeAccount.objects.get(api_key=serializer['api_key'])
             serializer.update({'balance': CurrentMarketPriceFetcher(request.user).get_exchange_balance(exchange)})
+            transactions = Transaction.objects.filter(crypto_exchange_object=exchange).order_by('timestamp')
+            transaction_list = []
+            for transaction in transactions.iterator():
+                transaction_dict = {'asset': transaction.asset,
+                                    'transaction_type': transaction.transaction_type,
+                                    'amount': transaction.amount,
+                                    'date': transaction.timestamp}
+                transaction_list.append(transaction_dict)
+            serializer.update({'transactions': transaction_list})
         print(serializer_array)
         return Response(serializer_array)
 

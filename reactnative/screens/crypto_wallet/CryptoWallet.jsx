@@ -141,7 +141,7 @@ export default function CryptoWallet(props) {
 
         <View style={[styles.walletList]}>
         {
-          exchanges.map((item, index)=> <ExchangeAsset key={index} item={item} navigation={props.navigation} />)
+          exchanges.map((item, index)=> <ExchangeAsset key={index} item={item} removeExchange={removeExchange} navigation={props.navigation} />)
         }
         </View>
 
