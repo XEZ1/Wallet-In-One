@@ -11,10 +11,59 @@ describe('<DeveloperInfoScreen />', () => {
         expect(navigate).toHaveBeenCalledWith('About Us');
     })
 
-    it('github button test', () => {
+    it('github button test krishna', () => {
         const github = jest.spyOn(Linking, 'openURL');
         const { getByTestId } = render(<DeveloperInfoScreen/>);
-        fireEvent.press(getByTestId('GithubButtonTest'));
+        fireEvent.press(getByTestId('GithubButtonTestKrishna'));
         expect(github).toHaveBeenCalledWith('https://github.com/krishnapk7');
+    })
+
+    it('github button test abbas', () => {
+        const github = jest.spyOn(Linking, 'openURL');
+        const { getByTestId } = render(<DeveloperInfoScreen/>);
+        fireEvent.press(getByTestId('GithubButtonTestAbbas'));
+        expect(github).toHaveBeenCalledWith('https://github.com/AbbasBinVakas');
+    })
+
+    it('github button test yusuf', () => {
+        const github = jest.spyOn(Linking, 'openURL');
+        const { getByTestId } = render(<DeveloperInfoScreen/>);
+        fireEvent.press(getByTestId('GithubButtonTestYusuf'));
+        expect(github).toHaveBeenCalledWith('https://github.com/YusufKCL');
+    })
+
+    it('github button test ezat', () => {
+        const github = jest.spyOn(Linking, 'openURL');
+        const { getByTestId } = render(<DeveloperInfoScreen/>);
+        fireEvent.press(getByTestId('GithubButtonTestEzat'));
+        expect(github).toHaveBeenCalledWith('https://github.com/XEZ1');
+    })
+
+    it('github button test shozab', () => {
+        const github = jest.spyOn(Linking, 'openURL');
+        const { getByTestId } = render(<DeveloperInfoScreen/>);
+        fireEvent.press(getByTestId('GithubButtonTestShozab'));
+        expect(github).toHaveBeenCalledWith('https://github.com/Shozab-N18');
+    })
+
+    it('github button test jamal', () => {
+        const github = jest.spyOn(Linking, 'openURL');
+        const { getByTestId } = render(<DeveloperInfoScreen/>);
+        fireEvent.press(getByTestId('GithubButtonTestJamal'));
+        expect(github).toHaveBeenCalledWith('https://github.com/JamalBoustani');
+    })
+
+    it('github button test michael', () => {
+        const github = jest.spyOn(Linking, 'openURL');
+        const { getByTestId } = render(<DeveloperInfoScreen/>);
+        fireEvent.press(getByTestId('GithubButtonTestMichael'));
+        expect(github).toHaveBeenCalledWith('https://github.com/mohawk49');
+    })
+
+    it('github button test matushan', () => {
+        const github = jest.spyOn(Linking, 'openURL');
+        const { getByTestId } = render(<DeveloperInfoScreen/>);
+        fireEvent.press(getByTestId('GithubButtonTestMatushan'));
+        expect(github).toHaveBeenCalledWith('https://github.com/mrmatyog');
     })
 })
