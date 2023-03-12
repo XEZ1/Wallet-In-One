@@ -23,6 +23,7 @@ import CoinbaseCredentials from "../cryptoExchanges/CoinbaseExchange";
 import KrakenCredentials from "../cryptoExchanges/KrakenExchange";
 import CryptoExchanges from "../cryptoExchanges/CryptoExchanges";
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
+import ExchangeTransactions from "../cryptoExchanges/ExchangeTransactions";
 
 import StockStackNavigator from "../stocks/StockStackNavigator";
 
@@ -92,6 +93,13 @@ export default function MainStackNavigator() {
       <Stack.Screen name="Crypto Wallet Insights" component={CryptoWalletInsights} />
 
       <Stack.Screen name="Crypto exchanges" component={CryptoExchanges} />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="ExchangeTransactions"
+        component={ExchangeTransactions}
+      />
       <Stack.Screen name="Binance" component={BinanceCredentials} />
       <Stack.Screen name="Huobi" component={HuobiCredentials} />
       <Stack.Screen name="Gateio" component={GateioCredentials} />

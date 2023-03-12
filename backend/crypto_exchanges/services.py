@@ -15,6 +15,7 @@ class BinanceFetcher:
     def __init__(self, api_key, secret_key):
         self.api_key = api_key
         self.secret_key = secret_key
+        self.symbols = ['BTCUSDT', 'ETHUSDT', 'ADAUSDT', 'XRPUSDT', 'SOLUSDT']
 
     def get_account_data(self):
         endpoint = "https://api.binance.com/api"
@@ -30,6 +31,23 @@ class BinanceFetcher:
     def current_time(self):
         return round(time.time() * 1000)
 
+    def hash_for_transactions(self, params):
+        query_string = '&'.join([f"{k}={v}" for k, v in params.items()])
+        return hmac.new(self.secret_key.encode('utf-8'), query_string.encode('utf-8'), sha256).hexdigest()
+
+    def get_trading_history(self):
+        to_return = {}
+        for symbol in self.symbols:
+            timestamp = str(self.current_time())
+            params = {'symbol': symbol, 'timestamp': timestamp}
+            signature = self.hash_for_transactions(params)
+            request_url = "https://api.binance.com/api/v3/myTrades"
+            headers = {'X-MBX-APIKEY': self.api_key}
+            response = requests.get(request_url, headers=headers, params={**params, **{'signature': signature}})
+            to_return[symbol] = response.json()
+
+        return to_return
+
 
 # Class was implemented according to: "https://huobiapi.github.io/docs/spot/v1/en/#change-log"
 class HuobiFetcher:
@@ -37,6 +55,7 @@ class HuobiFetcher:
     def __init__(self, api_key, secret_key):
         self.api_key = api_key
         self.secret_key = secret_key
+        self.symbols = ['btc', 'eth', 'cspr', 'sol', 'ada', 'xrp']
 
     def get_account_IDs(self):
         # Get account IDs
@@ -93,6 +112,72 @@ class HuobiFetcher:
 
             return response.json()['data']['list']
 
+    def get_trading_history(self, limit=10):
+        to_return = []
+        symbol_withdrawal_deposit = []
+        for symbol in self.symbols:
+            success = False
+            to_return += symbol_withdrawal_deposit
+            while not success:
+                try:
+                    symbol_withdrawal_deposit = []
+
+                    # Get deposit history for the specified currency
+                    timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
+                    params = {
+                        'AccessKeyId': self.api_key,
+                        'SignatureMethod': 'HmacSHA256',
+                        'SignatureVersion': '2',
+                        'Timestamp': timestamp,
+                        'currency': symbol,
+                        'type': 'deposit',
+                        'size': limit
+                    }
+
+                    method = 'GET'
+                    endpoint = '/v1/query/deposit-withdraw'
+                    base_uri = 'api.huobi.pro'
+
+                    sorted_params = sorted(params.items(), key=lambda x: x[0])
+                    encoded_params = urlencode(sorted_params, quote_via=quote_plus)
+
+                    pre_signed_text = '\n'.join([method, base_uri, endpoint, encoded_params])
+                    hash_code = hmac.new(self.secret_key.encode(), pre_signed_text.encode(), sha256).digest()
+                    signature = b64encode(hash_code).decode()
+
+                    url = f"https://{base_uri}{endpoint}?{encoded_params}&Signature={signature}"
+                    response = requests.get(url)
+                    symbol_withdrawal_deposit += response.json()['data']
+                    # print(response.json()['data'])
+
+                    # Get withdrawal history for the specified currency
+                    params = {
+                        'AccessKeyId': self.api_key,
+                        'SignatureMethod': 'HmacSHA256',
+                        'SignatureVersion': '2',
+                        'Timestamp': timestamp,
+                        'currency': symbol,
+                        'type': 'withdraw',
+                        'size': limit
+                    }
+
+                    sorted_params = sorted(params.items(), key=lambda x: x[0])
+                    encoded_params = urlencode(sorted_params, quote_via=quote_plus)
+
+                    pre_signed_text = '\n'.join([method, base_uri, endpoint, encoded_params])
+                    hash_code = hmac.new(self.secret_key.encode(), pre_signed_text.encode(), sha256).digest()
+                    signature = b64encode(hash_code).decode()
+
+                    url = f"https://{base_uri}{endpoint}?{encoded_params}&Signature={signature}"
+                    response = requests.get(url)
+                    symbol_withdrawal_deposit += response.json()['data']
+                    # print(response.json()['data'])
+                    success = True
+
+                except TypeError:
+                    symbol_withdrawal_deposit = []
+
+        return to_return
 
 # Class was implemented according to: "https://www.gate.io/docs/developers/apiv4/en/"
 class GateioFetcher:
@@ -100,6 +185,21 @@ class GateioFetcher:
     def __init__(self, api_key, secret_key):
         self.api_key = api_key
         self.secret_key = secret_key
+        self.symbols = ['BTC_USDT', 'ETH_USDT', 'ADA_USDT', 'XRP_USDT', 'SOL_USDT', 'ARV_USDT']
+        self.host = "https://api.gateio.ws"
+        self.prefix = "/api/v4"
+        self.headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+
+    # This method of getting the right signature was specified in the API docs and modified by me.
+    # https://www.gate.io/docs/developers/apiv4/en/#authentication
+    def gen_sign(self, method, url, query_string=None, payload_string=None):
+        timestamp = time.time()
+        message = sha512()
+        message.update((payload_string or "").encode('utf-8'))
+        hashed_payload = message.hexdigest()
+        path = '%s\n%s\n%s\n%s\n%s' % (method, url, query_string or "", hashed_payload, timestamp)
+        signature = hmac.new(self.secret_key.encode('utf-8'), path.encode('utf-8'), sha512).hexdigest()
+        return {'KEY': self.api_key, 'Timestamp': str(timestamp), 'SIGN': signature}
 
     def get_account_data(self):
         endpoint = "https://api.gateio.ws/api/v4/spot/accounts"
@@ -117,16 +217,16 @@ class GateioFetcher:
 
         return response.json()
 
-    # This method of getting the right signature was specified in the API docs and modified by me.
-    # https://www.gate.io/docs/developers/apiv4/en/#authentication
-    def gen_sign(self, method, url, query_string=None, payload_string=None):
-        timestamp = time.time()
-        message = sha512()
-        message.update((payload_string or "").encode('utf-8'))
-        hashed_payload = message.hexdigest()
-        path = '%s\n%s\n%s\n%s\n%s' % (method, url, query_string or "", hashed_payload, timestamp)
-        signature = hmac.new(self.secret_key.encode('utf-8'), path.encode('utf-8'), sha512).hexdigest()
-        return {'KEY': self.api_key, 'Timestamp': str(timestamp), 'SIGN': signature}
+    def get_trading_history(self, limit=10):
+        to_return = {}
+        for currency_pair in self.symbols:
+            url = f"/spot/trades?currency_pair={currency_pair}&limit={limit}"
+            sign_headers = self.gen_sign('GET', self.prefix + url)
+            self.headers.update(sign_headers)
+            r = requests.request('GET', self.host + self.prefix + url, headers=self.headers)
+            to_return[currency_pair] = r.json()
+
+        return to_return
 
 
 # Class was implemented according to: "https://coinlist.co/help/api"
@@ -193,6 +293,57 @@ class CoinListFetcher:
     def prehash(self, timestamp, method, path, body):
         return timestamp + method.upper() + path + (body or '')
 
+    def get_trading_history(self):
+        endpoint = 'https://trade-api.coinlist.co'
+        path = '/v1/accounts/'
+        timestamp = str(int(time.time()))
+        request_url = f"{endpoint}{path}"
+        body = None
+        method = 'GET'
+
+        prehashed = self.prehash(timestamp, method, path, body)
+        secret = b64decode(self.secret_key)
+        signature = self.sha265hmac(prehashed, secret)
+
+        headers = {
+            'Content-Type': 'application/json',
+            'CL-ACCESS-KEY': self.api_key,
+            'CL-ACCESS-SIG': signature,
+            'CL-ACCESS-TIMESTAMP': timestamp
+        }
+
+        response_id = requests.get(url=request_url, headers=headers)
+
+        if 'accounts' not in response_id.json():
+            return response_id.json()
+
+        # We retrieved ID addresses of sub-accounts, its time to retrieve the actual data
+        to_return = {}
+        for account_id in response_id.json()['accounts']:
+            endpoint = 'https://trade-api.coinlist.co'
+            #path = f"""/v1/accounts/{account_id['trader_id']}"""
+            path = f"/v1/accounts/{account_id['trader_id']}/ledger"
+            timestamp = str(int(time.time()))
+            request_url = f"{endpoint}{path}"
+            body = None
+            method = 'GET'
+
+            prehashed = self.prehash(timestamp, method, path, body)
+            secret = b64decode(self.secret_key)
+            signature = self.sha265hmac(prehashed, secret)
+
+            headers = {
+                'Content-Type': 'application/json',
+                'CL-ACCESS-KEY': self.api_key,
+                'CL-ACCESS-SIG': signature,
+                'CL-ACCESS-TIMESTAMP': timestamp
+            }
+
+            response = requests.get(url=request_url, headers=headers)
+            to_return.update(response.json())
+
+        return to_return
+
 
 # Class was implemented according to: "https://docs.cloud.coinbase.com/exchange/docs/requests"
 # Create custom authentication for Coinbase API
@@ -244,6 +395,15 @@ class CoinBaseFetcher:
 
         return data_to_return
 
+    def get_trading_history(self):
+        auth = CoinBaseAuthorisation(self.api_key, self.secret_key)
+        # api_url = "https://api.coinbase.com/api/v3/brokerage/transaction_summary"
+        api_url = "https://api.coinbase.com/api/v3/brokerage/orders/historical/fills"
+
+        response = requests.get(api_url, auth=auth)
+
+        return response.json()
+
 
 # Class was implemented according to: "https://docs.kraken.com/rest/"
 class KrakenFetcher:
@@ -265,6 +425,21 @@ class KrakenFetcher:
         # Construct the request and print the result
         url = 'https://api.kraken.com'
         path = '/0/private/Balance'
+        timestamp = {"nonce": str(int(1000 * time.time()))}
+
+        headers = {
+            'API-Key': self.api_key,
+            'API-Sign': self.signature(path, timestamp, self.secret_key),
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
+        response = requests.post((url + path), headers=headers, data=timestamp)
+
+        return response.json()
+
+    def get_trading_history(self):
+        url = 'https://api.kraken.com'
+        path = '/0/private/TradesHistory'
         timestamp = {"nonce": str(int(1000 * time.time()))}
 
         headers = {
@@ -323,9 +498,7 @@ class CurrentMarketPriceFetcher:
             balance += self.get_crypto_price(token.asset) * (token.free_amount + token.locked_amount)
         return round(balance, 2)
 
-    def chart_breakdown_crypto_exchanges(self):
-        exchanges = CryptoExchangeAccount.objects.filter(user=self.user)
-        if exchanges.exists():
-            return [{'x': exchange.crypto_exchange_name,
-                     'y': self.get_exchange_balance(exchange)}
-                    for exchange in exchanges]
+    def get_exchange_token_breakdown(self, exchange):
+        tokens = Token.objects.filter(crypto_exchange_object=exchange)
+        return [{'x': token.asset, 'y': round(self.get_crypto_price(token.asset) * (token.free_amount +
+                token.locked_amount), 2)} for token in tokens]
