@@ -1,212 +1,186 @@
-import React, { useEffect, useState } from 'react';
-import { Text, ScrollView, Dimensions, TouchableOpacity, StyleSheet } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+import React, { useEffect, useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
+import { StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity, View, } from "react-native";
+import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer, VictoryStack } from "victory-native";
 
-import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer } from "victory-native";
+import { useTheme } from "reactnative/src/theme/ThemeProvider";
+import { auth_get, auth_post } from "../../authentication";
+import { styles } from "reactnative/screens/All_Styles.style.js";
 
-import fixture from "../charts/chartData.json"
-import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-
-import {auth_get} from '../../authentication'
-
-import {styles} from 'reactnative/screens/All_Styles.style.js'
-
+import NoWallets from "./chartComponents/noWallets";
+import PieChart from "./chartComponents/pieChart";
+import BarChart from "./chartComponents/barChart"
+import StackedChart from "./chartComponents/stackedBarChart";
+import fixture from "../charts/chartData.json";
+import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
+import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
 
 export default function HomePage({ navigation }) {
-  const [baseData, setBaseData ] = useState(fixture);
-  const {dark, colors, setScheme} = useTheme();
-  const [data, setNewData] = useState(baseData.all);
-  const [pressed, setPressed ] = useState(false);
-  const isFocused = useIsFocused()
+  const {dark, colors, setScheme } = useTheme();
+  const isFocused = useIsFocused();
+  const [chartType, setChartType] = useState("pie"); // Default chart is pie chart
 
-  const stylesInternal = StyleSheet.create({
-    victoryLabelSmall: {
-      fontSize: 17,
-      fill: colors.text,
-    },
-    victoryLabelBig: {
-      fontSize: 27,
-      fontWeight: '700',
-      fill: colors.text,
-    },
-    victoryLabelBar: {
-      fontSize: 22,
-      fontWeight: '900',
-      fill: colors.text,
-    },
-  });
-  
+  const [baseData, setBaseData] = useState(fixture);
+  const [data, setNewData] = useState(baseData.all);
+  const [pressed, setPressed] = useState(null);
+  const { wallets, fetchWallets, removeWallet } = useCryptoWallet();
+  const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
+
   // Uncomment to show bank data from backend
 
-
-  useEffect(() =>{
+  useEffect(() => {
     const fetchData = async () => {
-        const response = await auth_get('/graph_data/')
-        console.log('fetch graph data', response.status)
-        if (response.status == 200){
-          setBaseData(response.body)
-          setNewData(response.body.all)
-          setPressed(false)
+      const response = await auth_get("/graph_data/");
+      console.log("fetch graph data", response.status);
+      if (response.status == 200) {
+        setBaseData(response.body);
+        setNewData(response.body.all);
+        setPressed(null);
+      }
+    };
+    if (isFocused) {
+      fetchData();
+    }
+    fetchWallets();
+  }, [isFocused]);
+
+  const handlePressIn = async (event, datapoint) => {
+    var index = datapoint.index;
+    
+    if (pressed) {
+      if (pressed == "Banks"){
+        var bankData = baseData["Banks"][index]
+        if (bankData.id){
+          navigation.navigate('Bank Transactions', {accountID: bankData.id})
+          return
+        }
+      } else if (pressed === "Cryptocurrency from wallets") {
+        var cryptoData = baseData["Cryptocurrency from wallets"][index]
+        var wallet = wallets.find(x => x.id === cryptoData.id)
+        if (cryptoData.id) {
+          navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
+          return
         }
       }
-      if(isFocused){fetchData()}
-  }, [isFocused])
-  
-  const handlePressIn = (event, datapoint) => {
-    if (pressed){
-      setNewData(baseData.all)
-      // navigation.navigate("Bank Transactions", { data: datapoint });
-    }
-    else{
-      const dataPoint = data[datapoint.index];
-      if (baseData[dataPoint.x]){
-        setNewData(baseData[dataPoint.x]);
+      else if (pressed == "Stock Accounts") {
+        var stockData = baseData["Stock Accounts"][index]
+        if (stockData.id) {
+          var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
+          const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
+          navigation.navigate("Stock Account Transactions", {
+            accountID: stockData.id, 
+            accessToken: response.body.access_token, 
+            transactions: res.body,
+            logo: response.body.logo,
+            balance: response.body.balance
+          })
+        }
+        console.log(stockData.id)
       }
-      else{
-        setNewData(baseData.all.filter((val) => val.x.match(dataPoint.x)));
+      //} 
+      // else if (pressed === "Cryptocurrency from exchanges") {
+      //   var cryptoWalletData = baseData["Cryptocurrency from exchanges"][index]
+      //   var exchange = exchanges.find(x => x.id === cryptoWalletData.id)
+      //   if (cryptoWalletData.id) {
+      //     navigation.navigate("Exchange Detail", { item: exchange, value: cryptoWalletData.y, removeExchange: removeExchange })
+      //     return
+      //   }
+      // }
+      setNewData(baseData.all);
+      setPressed(null)
+    } else {
+      const dataPoint = data[index];
+      const name = dataPoint.x
+      if (baseData[name]) {
+        setNewData(baseData[name]);
+      } else {
+        // If data for single type of asset does not exist, just display that one asset from all.
+        setNewData(baseData.all.filter((val) => val.x.match(name)));
       }
+      setPressed(name);
     }
-    setPressed(!pressed)
+    
   };
 
   let value = 0;
-  data.forEach(jsonObj => {
+  data.forEach((jsonObj) => {
     value += jsonObj.y;
   });
-  value = value.toFixed(2)
+  value = value.toFixed(2);
 
-  const list = data.map(val => val.x);
+  const list = data.map((val) => val.x);
   const colours = ["pink", "turquoise", "lime", "#FA991C"];
 
   let spacing = list.length * 60;
 
-  if(value == 0){
-    return (
-      <ScrollView
-      contentContainerStyle={{
-        flexGrow : 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingBottom: 20, 
-      }}
-      style={styles(dark, colors).container}
-    >
-      <Text style={styles(dark, colors).title}>Wallet-In-One</Text>
-      <Text style={styles(dark, colors).text}>Amount: £{value}</Text>
-      <Text style={styles(dark, colors).text}>Connect your Wallets to See your Funds!</Text>
-      </ScrollView>
-    );
-  }
-  else{
+  const handleChartTypeChange = (type) => {
+    setChartType(type);
+  };
+
+  if (value == 0) {
+    return (<NoWallets/>);
+  } else {
     return (
       <ScrollView
         contentContainerStyle={{
-          flexGrow : 1,
-          justifyContent: 'center',
-          alignItems: 'center',
+          flexGrow: 1,
+          justifyContent: "center",
+          alignItems: "center",
           paddingBottom: 20,
           backgroundColor: colors.background,
         }}
-        style={styles(dark, colors).container}
+        style={styles.container}
       >
-        <VictoryContainer
-        width={Dimensions.get('window').width}
-        height={300}
-        style= {{ paddingBottom: 10}}
-        >    
-        <VictoryPie
-          data={data}
-          innerRadius={100}
-          padAngle={1}
-          cornerRadius= {10}
-          radius= {Dimensions.get('window').width/3}
-          labels={() => null}
-          events={[{
-            target: "data",
-            eventHandlers: {
-              onPressIn: handlePressIn
-            }
-          }]}
-          // animate={{
-          //   duration: 2000,
-          //   easing: "bounce"
-          // }}
-          colorScale={colours}
-          standalone={false}
-          height={300}
-        />
-        <VictoryLabel
-            textAnchor="middle"
-            style={stylesInternal.victoryLabelSmall}
-            // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/5.5}
-            x={Dimensions.get('window').width/2} y={105}
-            text= {"Net Worth"}
-        />
-        <VictoryLabel
-            textAnchor="middle"
-            style={stylesInternal.victoryLabelBig}
-            // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/4.5}
-            x={Dimensions.get('window').width/2} y={125}
-            text= {"£" + value}
-        />
-        <VictoryLabel
-            textAnchor="middle"
-            style={stylesInternal.victoryLabelSmall}
-            // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.7}
-            x={Dimensions.get('window').width/2} y={165}
-            text= {"Assets"}
-        />
-        <VictoryLabel
-            textAnchor="middle"
-            style={stylesInternal.victoryLabelBig}
-            // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.25}
-            x={Dimensions.get('window').width/2} y={185}
-            text= {data.length}
-        />
-        </VictoryContainer>
 
-        <VictoryBar
-          horizontal={true}
-          style={{ data:  { fill: ({ datum }) => colours[list.indexOf(datum.x)] }}}
-          data={data}
-          barWidth={18}
-          padding={40}
-          labels={({ datum }) => "●"+ datum.x}
-          labelComponent={
-            <VictoryLabel 
-              dy={-20}
-              x={30}
-              style={stylesInternal.victoryLabelBar}
-            />
-          }
-          height={spacing}
-          // animate={{
-          //   onExit: {
-          //     duration: 200,
-          //     before: () => ({
-          //       _y: 0,
-          //     })
-          //   },
-          // }}
-          events={[{
-            target: "data",
-            eventHandlers: {
-              onPressIn: handlePressIn
-            }
-          },
-          {
-            target: "labels",
-            eventHandlers: {
-              onPressIn: handlePressIn
-            }
-          }]}
-        />
-        {pressed ? (
-          <TouchableOpacity onPress={()=>{setNewData(baseData.all);setPressed(false)}}>
-            <Text style={styles(dark, colors).button}>Back</Text>
+        {/* Switch Graph Buttons */}
+        <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
+          <TouchableOpacity
+            style={[
+              styles(dark, colors).btn,
+              chartType === "pie" && { backgroundColor: colors.primary },
+            ]}
+            onPress={() => handleChartTypeChange("pie")}
+          >
+          <Text>Pie Chart</Text>
           </TouchableOpacity>
-        ):''}
+          <TouchableOpacity
+            style={[
+              styles(dark, colors).btn,
+              chartType === "stacked" && { backgroundColor: colors.primary },
+            ]}
+            onPress={() => handleChartTypeChange("stacked")}
+          >
+          <Text>Stacked Bar Chart</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30}]}>{pressed}</Text>
+
+        {chartType == "pie" ? 
+          <>
+            <PieChart colours={colours} data={data} handlePressIn={handlePressIn}/>
+            {BarChart(colours, list, data, colors, spacing, handlePressIn)}
+          </>
+          : 
+            <StackedChart data={baseData} />
+        }
+
+        
+        
+        {pressed ? (
+          <TouchableOpacity
+            onPress={() => {
+              setNewData(baseData.all);
+              setPressed(false);
+            }}
+          >
+            <Text style={[styles(dark, colors).button, { color: colors.text }]}>Back</Text>
+          </TouchableOpacity>
+        ) : (
+          ""
+        )}
       </ScrollView>
     );
   }
 }
+

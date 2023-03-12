@@ -25,7 +25,10 @@ import CryptoExchanges from "../cryptoExchanges/CryptoExchanges";
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 import ExchangeTransactions from "../cryptoExchanges/ExchangeTransactions";
 
+import StockStackNavigator from "../stocks/StockStackNavigator";
+
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import CryptoWalletInsights from "../crypto_wallet/CryptoWalletInsights";
 
 const Stack = createStackNavigator();
 
@@ -82,14 +85,12 @@ export default function MainStackNavigator() {
         name="Add Cryptocurrency Wallet or Account"
         component={AddCryptoScreen} />
       <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
         name="WalletAssetDetail"
         component={WalletAssetDetail}
       />
       <Stack.Screen name="WalletSelector" component={WalletSelector} />
-      <Stack.Screen name="WalletConnector" component={WalletConnector} />  
+      <Stack.Screen name="WalletConnector" component={WalletConnector} />
+      <Stack.Screen name="Crypto Wallet Insights" component={CryptoWalletInsights} />
 
       <Stack.Screen name="Crypto exchanges" component={CryptoExchanges} />
       <Stack.Screen
@@ -103,6 +104,7 @@ export default function MainStackNavigator() {
       <Stack.Screen name="Huobi" component={HuobiCredentials} />
       <Stack.Screen name="Gateio" component={GateioCredentials} />
       <Stack.Screen name="CoinList" component={CoinListCredentials} />
+      <Stack.Screen name="Stock Accounts" component={StockStackNavigator} options={{headerShown: false}} />
       <Stack.Screen name="Coinbase" component={CoinbaseCredentials} />
       <Stack.Screen name="Kraken" component={KrakenCredentials} />
   

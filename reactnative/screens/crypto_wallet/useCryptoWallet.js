@@ -1,6 +1,7 @@
 import { useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import { BACKEND_URL } from "@env"
+import {Alert} from "react-native";
 
 /*
   Test BTC Address:
@@ -23,7 +24,7 @@ export default function useCryptoWallet() {
   };
 
   const connectWallet = async (cryptocurrency, symbol, address) => {
-    await fetch(`${BACKEND_URL}/crypto_wallets/`, {
+    const response = await fetch(`${BACKEND_URL}/crypto_wallets/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,13 +36,13 @@ export default function useCryptoWallet() {
         address: address,
       }),
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Bad response from server");
-        return res.json()
-        }
-      )
-      .then((res) => setWallets([...wallets, res])) // Handle 400
       .catch((err) => console.log(err));
+
+    const data = await response.json()
+    //console.log(data)
+
+    if (response.ok) setWallets([...wallets, data])
+    else Alert.alert("Connection Fault", `Error - ${data.address[0].toLowerCase()}`)
   };
 
   const removeWallet = async (id) => {

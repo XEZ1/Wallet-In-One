@@ -3,7 +3,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
-
+# from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
 class User(AbstractUser):
@@ -31,3 +31,5 @@ class User(AbstractUser):
         max_length=25,
         blank=False
     )
+
+    
