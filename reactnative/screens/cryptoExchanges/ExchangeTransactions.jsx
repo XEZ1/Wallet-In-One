@@ -10,6 +10,7 @@ import { LineChart } from 'react-native-wagmi-charts';
 import ExchangeAsset from "./ExchangeAsset";
 import { api_url } from '../../authentication';
 import {Table, Row, Cell} from 'react-native-table-component';
+import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer } from "victory-native";
 
 
 export default function ExchangeTransactions(props) {
@@ -17,9 +18,16 @@ export default function ExchangeTransactions(props) {
   const {dark, colors, setScheme} = useTheme();
   const route = useRoute();
   const [exchangeTransactions, setExchangeTransactions] = useState([]);
+  const [exchangeTokens, setExchangeTokens] = useState([]);
   const { item, removeExchange } = props.route.params;
   const exchange = item.id;
+  const colours = ["pink", "turquoise", "lime", "#FA991C"];
   const stylesInternal = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     exchangeAsset: {
       borderRadius: 10,
       paddingTop: 20,
@@ -34,6 +42,13 @@ export default function ExchangeTransactions(props) {
       fontSize:31,
       paddingTop: 10,
       color: colors.text,
+    },
+    mediumBoldText: {
+      fontWeight:"800",
+      fontSize:25,
+      paddingTop: 10, 
+      color: colors.text,
+      alignItems: 'center',
     },
     mediumText: {
       fontWeight:"200",
@@ -79,11 +94,28 @@ export default function ExchangeTransactions(props) {
     }
   }, []);
 
+  let getExchangeTokens = useCallback(async (exchange) => {
+    try {
+      const response = await fetch(api_url + `/crypto-exchanges/get_token_breakdown/${exchange}/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+        },
+      });
+      let data = await response.json();
+      setExchangeTokens(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
   useEffect(() => {
     if (exchange) {
       getExchangeTransactions(exchange);
+      getExchangeTokens(exchange);
     }
-  }, [exchange, getExchangeTransactions]);
+  }, [exchange, getExchangeTransactions, getExchangeTokens]);
 
   const data = {
     tableHead: ['Pair', 'Amount', 'Type', 'Date'],
@@ -100,6 +132,12 @@ export default function ExchangeTransactions(props) {
       })
     ])
   };
+
+  const exchangeTokens1 = [
+    { x: 'BTC', y: 50 },
+    { x: 'ETH', y: 30 },
+    { x: 'LTC', y: 20 },
+  ];
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: colors.background, paddingHorizontal: 30}}>
@@ -129,8 +167,37 @@ export default function ExchangeTransactions(props) {
         </View>
       </View>
 
-
-      <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
+      <View style={stylesInternal.container}>
+        <Text style={stylesInternal.mediumBoldText}>Coin Breakdown</Text>
+        {exchangeTokens.length == 0 ? (
+          <Text style={styles(dark, colors).text}>Loading...</Text>
+        ) : (
+        <VictoryContainer
+          width={Dimensions.get('window').width}
+          height={250}
+          style= {{ paddingTop: 10}}
+          > 
+          <VictoryPie
+            data={exchangeTokens}
+            innerRadius={70}
+            padAngle={1}
+            cornerRadius= {7}
+            radius= {Dimensions.get('window').width/3.5}
+            colorScale={colours}
+            standalone={false}
+            height={250}
+            labelRadius={60}
+            labelPlacement="parallel"
+            labels={({ datum }) => `${datum.x}: ${datum.y}`}
+            style={{labels:{fill: colors.text, fontSize: 14, fontWeight: "800"}}}
+          />
+        </VictoryContainer>
+        )}
+      </View>  
+      
+      <View style={stylesInternal.container}>
+        <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
+      </View>  
       {data && (
           <View style={[stylesInternal.table, {paddingVertical: 20}]}>
               {data && data.tableData && data.tableData.length > 0 ? (
@@ -149,7 +216,7 @@ export default function ExchangeTransactions(props) {
                   </Table>
                 </View>
               ) : (
-                <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>... Loading</Text>
+                <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>Loading...</Text>
               )}
           </View>
       )}

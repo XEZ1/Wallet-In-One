@@ -497,3 +497,8 @@ class CurrentMarketPriceFetcher:
         for token in tokens:
             balance += self.get_crypto_price(token.asset) * (token.free_amount + token.locked_amount)
         return round(balance, 2)
+
+    def get_exchange_token_breakdown(self, exchange):
+        tokens = Token.objects.filter(crypto_exchange_object=exchange)
+        return [{'x': token.asset, 'y': round(self.get_crypto_price(token.asset) * (token.free_amount +
+                token.locked_amount), 2)} for token in tokens]

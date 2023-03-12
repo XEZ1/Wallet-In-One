@@ -19,6 +19,7 @@ import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
+import { api_url } from '../../authentication';
 
 export default function CryptoWallet(props) {
   const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
@@ -92,7 +93,7 @@ export default function CryptoWallet(props) {
   const handleSubmit = async () => {
     
     try {
-      const response = await fetch('http://10.0.2.2:8000/crypto-exchanges/update', {
+      const response = await fetch(api_url + '/crypto-exchanges/update', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

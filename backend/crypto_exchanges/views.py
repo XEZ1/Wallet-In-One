@@ -34,6 +34,13 @@ def get_transactions(request, exchange):
     return Response(serializer.data)
 
 
+@api_view(['GET'])
+def get_token_breakdown(request, exchange):
+    exchange_obj = CryptoExchangeAccount.objects.get(id=exchange)
+    crypto_data_from_exchanges = CurrentMarketPriceFetcher(request.user).get_exchange_token_breakdown(exchange_obj)
+    return Response(crypto_data_from_exchanges)
+
+
 # Generic class for crypto exchanges
 class GenericCryptoExchanges(APIView):
     __metaclass__ = ABCMeta
