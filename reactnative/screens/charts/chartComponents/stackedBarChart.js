@@ -3,8 +3,6 @@ import { StyleSheet, Text, ScrollView, Dimensions, View, TouchableOpacity } from
 import { VictoryChart, VictoryBar, VictoryLabel, VictoryAxis, VictoryStack } from "victory-native";
 
 
-import { StackedBarChart } from "react-native-chart-kit";
-
 import fixture from "../../charts/chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { Alert } from "react-native"
@@ -36,7 +34,7 @@ export default function StackedChart({ data = fixture.all, handlePressIn  }) {
           dependentAxis
            style={{
                axis: {stroke: 'grey'},
-            tickLabels: {fill: colors.text},
+            tickLabels: {fill: colors.text , fontSize: 12},
              grid: {stroke: 'grey'},
            }}
         />
