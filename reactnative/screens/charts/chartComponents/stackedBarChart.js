@@ -31,13 +31,16 @@ export default function StackedChart({ data = fixture.all  }) {
         <VictoryAxis
           dependentAxis
            style={{
+               axis: {stroke: 'grey'},
+            tickLabels: {fill: colors.text},
              grid: {stroke: 'grey'},
            }}
         />
         <VictoryAxis
           tickValues={[ 1, 2, 3, 4 ,5]}
           style={{
-
+            axis: {stroke: 'grey'},
+            tickLabels: {fill: colors.text},
           }}
         />
         <VictoryStack colorScale={["tomato", "orange", "gold", "purple"]}>
@@ -51,14 +54,14 @@ export default function StackedChart({ data = fixture.all  }) {
           {(data['Cryptocurrency from wallets']?data['Cryptocurrency from wallets']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Crypto\nwallets ", y: i.y }]}
+              data={[{ x: "Crypto\nWallets ", y: i.y }]}
               barWidth={35}
             />
           ))}
           {(data['Cryptocurrency from exchanges']?data['Cryptocurrency from exchanges']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Crypto\nexchanges", y: i.y }]}
+              data={[{ x: "Crypto\nExchanges", y: i.y }]}
               barWidth={35}
             />
           ))}
