@@ -102,6 +102,67 @@ export default function HomePage({ navigation }) {
     
   };
 
+  const handlePressInStacked = async (event, datapoint) => {
+    var index = datapoint.data[0].z;
+    console.log(index)
+    var pressed = datapoint.data[0].name;
+      if (pressed == "Banks"){
+        for (let i = 0; i < baseData["Banks"].length; i++) {
+          if (baseData["Banks"][i].x === index) {
+            var bankData = baseData["Banks"][i]
+            break;
+          }
+        }
+        if (bankData.id){
+          navigation.navigate('Bank Transactions', {accountID: bankData.id})
+          return
+        }
+      } else if (pressed === "Cryptocurrency from wallets") {
+        for (let i = 0; i < baseData["Cryptocurrency from wallets"].length; i++) {
+          if (baseData["Cryptocurrency from wallets"][i].x === index) {
+            var cryptoData = baseData["Cryptocurrency from wallets"][i]
+            break;
+          }
+        }
+        var wallet = wallets.find(x => x.id === cryptoData.id)
+        if (cryptoData.id) {
+          navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
+          return
+        }
+      }
+      else if (pressed == "Stock Accounts") {
+        for (let i = 0; i < baseData["Stock Accounts"].length; i++) {
+          if (baseData["Stock Accounts"][i].x === index) {
+            var stockData = baseData["Stock Accounts"][i]
+            break;
+          }
+        }
+        console.log(stockData)
+        if (stockData.id) {
+          var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
+          const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
+          navigation.navigate("Stock Account Transactions", {
+            accountID: stockData.id, 
+            accessToken: response.body.access_token, 
+            transactions: res.body,
+            logo: response.body.logo,
+            balance: response.body.balance
+          })
+        }
+        console.log(stockData.id)
+      }
+      //} 
+      // else if (pressed === "Cryptocurrency from exchanges") {
+      //   var cryptoWalletData = baseData["Cryptocurrency from exchanges"][index]
+      //   var exchange = exchanges.find(x => x.id === cryptoWalletData.id)
+      //   if (cryptoWalletData.id) {
+      //     navigation.navigate("Exchange Detail", { item: exchange, value: cryptoWalletData.y, removeExchange: removeExchange })
+      //     return
+      //   }
+      // }
+      setNewData(baseData.all);
+    };
+
   let value = 0;
   data.forEach((jsonObj) => {
     value += jsonObj.y;
@@ -162,7 +223,7 @@ export default function HomePage({ navigation }) {
             {BarChart(colours, list, data, colors, spacing, handlePressIn)}
           </>
           : 
-            <StackedChart data={baseData} />
+            <StackedChart data={baseData} handlePressIn={handlePressInStacked}/>
         }
 
         

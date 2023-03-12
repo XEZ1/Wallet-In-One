@@ -7,13 +7,17 @@ import { StackedBarChart } from "react-native-chart-kit";
 
 import fixture from "../../charts/chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import { Alert } from "react-native"
 
-export default function StackedChart({ data = fixture.all  }) {
+export default function StackedChart({ data = fixture.all, handlePressIn  }) {
   
   const {dark, colors, setScheme} = useTheme();
 
   const labels = ["Banks", "Cryptocurrency", "Stocks"]; // ["Crypto-Wallets","Bank","Stocks","Crypto-Exchange"]
 
+  const test = (event, datapoint) => {
+    console.log(datapoint)
+  }
 
   return (
     <ScrollView
@@ -47,29 +51,53 @@ export default function StackedChart({ data = fixture.all  }) {
           {(data['Banks']?data['Banks']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Banks", y: i.y }]}
+              data={[{ x: "Banks", y: i.y, z: i.x, name: "Banks" }]}
               barWidth={35}
             />
           ))}
           {(data['Cryptocurrency from wallets']?data['Cryptocurrency from wallets']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Crypto\nWallets ", y: i.y }]}
+              data={[{ x: "Crypto\nWallets ", y: i.y, z: i.x, name: "Cryptocurrency from wallets" }]}
               barWidth={35}
+              events={[
+                {
+                  target: "data",
+                  eventHandlers: {
+                    onPressIn: handlePressIn,
+                  },
+                },
+              ]}
             />
           ))}
           {(data['Cryptocurrency from exchanges']?data['Cryptocurrency from exchanges']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Crypto\nExchanges", y: i.y }]}
+              data={[{ x: "Crypto\nExchanges", y: i.y, z: i.x, name: "Cryptocurrency from exchanges" }]}
               barWidth={35}
+              events={[
+                {
+                  target: "data",
+                  eventHandlers: {
+                    onPressIn: handlePressIn,
+                  },
+                },
+              ]}
             />
           ))}
           {(data['Stock Accounts']?data['Stock Accounts']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Stocks", y: i.y }]}
+              data={[{ x: "Stocks", y: i.y, z: i.x, name: "Stock Accounts"}]}
               barWidth={35}
+              events={[
+                {
+                  target: "data",
+                  eventHandlers: {
+                    onPressIn: handlePressIn,
+                  },
+                },
+              ]}
             />
           ))}
         </VictoryStack>
