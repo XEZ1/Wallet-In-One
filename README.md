@@ -21,6 +21,9 @@ The software should be a financial hub where people can link their bankcards, cr
 
 ## External resources and libraries used
 reactnative/src/theme folder code partly derived from Youtube video - https://www.youtube.com/watch?v=JD5scyA6v0c
+Plaid API Documentation
+Plaid API Quickstart Repository
+Victory Chart Documentation
 
 ## Features
 Multiple graphs to represent data with dynamic features.
@@ -106,7 +109,7 @@ There are multiple assets that can be connected to the app including Bank Accoun
 - Account details are not available for security reasons, users must connect thier own personal accounts.
 - Please note that by connecting your account Wallet-In-One can NOT access any sensitive information that may put you at risk.
 ### Stock Brokers
-- From the 'Select your institution' page select Vanguard
+- From the 'Select your institution' page select an Institution
 - Credentials to use are
 - - User Name: user_good
 - - Password: pass_good
