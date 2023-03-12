@@ -137,7 +137,7 @@ export default function HomePage({ navigation }) {
           <TouchableOpacity
             style={[
               styles(dark, colors).btn,
-              chartType === "pie" && { backgroundColor: colors.primary },
+              chartType === "pie" && { backgroundColor: 'aliceblue'},
             ]}
             onPress={() => handleChartTypeChange("pie")}
           >
@@ -146,7 +146,7 @@ export default function HomePage({ navigation }) {
           <TouchableOpacity
             style={[
               styles(dark, colors).btn,
-              chartType === "stacked" && { backgroundColor: colors.primary },
+              chartType === "stacked" && { backgroundColor: 'aliceblue'},
             ]}
             onPress={() => handleChartTypeChange("stacked")}
           >
