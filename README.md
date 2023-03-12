@@ -63,6 +63,12 @@ Run all tests with:
 $ python3 manage.py test
 ```
 
+Start the backend of the app:
+
+```
+$ python3 manage.py runserver
+```
+
 ## React Native-Javascript (Frontend)
 
 Navigate to the `reactnative` folder:
@@ -82,6 +88,12 @@ Run all tests with:
 
 ```
 $ yarn test
+```
+
+Start the frontend of the app:
+
+```
+$ npx expo start
 ```
 
 ## Accounts for use
