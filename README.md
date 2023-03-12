@@ -105,6 +105,25 @@ There are multiple assets that can be connected to the app including Bank Accoun
 - Account details are not available for security reasons, users must connect thier own personal accounts.
 - Please note that by connecting your account Wallet-In-One can NOT access any sensitive information that may put you at risk.
 ### Crypto Wallets
+- Since balances and transactions of crypto wallets are public, you may use any public address to connect a wallet. These addresses can be found on Google, but here are some example addresses that can be used.
+- Bitcoin
+  - bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+  - 1P5ZEDWTKTFGxQjZphgWPQUpe554WKDfHQ
+- Bitcoin-Cash
+  - pqx5ej6z9cvxc2c7nw5p4s5kf8nzmzc5cqapu8xprq
+- Litecoin
+  - MGxNPPB7eBoWPUaprtX9v9CXJZoD2465zN
+- Dogecoin
+  - DMvC38mMGgXKJ1QVEBRCo9Kf8U32ApNN2B
+  - 9u2VokzEL1s756PzNoUntcyjzrdgdaHgs7
+- Dash
+  - XpESxaUmonkq8RaLLp46Brx2K39ggQe226
+- Groestlcoin
+    - 3E2p6qP9vh4hFfuVQLsxTAziRDDHJ5DnQj
+- Zcash
+  - t3cKr4YxVPvPBG1mCvzaoTTdBNokohsRJ8n
+- eCash
+  - qr2z7dusk64qn960h9vspf2ezewl0pla9gcpnk35f0
 ### Crypto Exchanges
 - Account details are not available for security reasons, users must connect thier own personal accounts.
 - Please note that by connecting your account Wallet-In-One can NOT access any sensitive information that may put you at risk.
