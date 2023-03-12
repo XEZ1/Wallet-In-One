@@ -103,9 +103,14 @@ export default function HomePage({ navigation }) {
   };
 
   const handlePressInStacked = async (event, datapoint) => {
-    var index = datapoint.data[0].z;
-    console.log(index)
-    var pressed = datapoint.data[0].name;
+    for (let i = 0; i < datapoint.data.length; i++) {
+      if (datapoint.data[i].z) {
+        var index = datapoint.data[i].z;
+        var pressed = datapoint.data[i].name;
+        break;
+      }
+    }
+    console.log(datapoint)
       if (pressed == "Banks"){
         for (let i = 0; i < baseData["Banks"].length; i++) {
           if (baseData["Banks"][i].x === index) {
@@ -131,8 +136,11 @@ export default function HomePage({ navigation }) {
         }
       }
       else if (pressed == "Stock Accounts") {
+        console.log(baseData["Stock Accounts"])
+        console.log(index)
         for (let i = 0; i < baseData["Stock Accounts"].length; i++) {
           if (baseData["Stock Accounts"][i].x === index) {
+            console.log(baseData["Stock Accounts"][i])
             var stockData = baseData["Stock Accounts"][i]
             break;
           }
