@@ -39,24 +39,20 @@ def initiate_plaid_link(request):
     for product in prods:
         products.append(Products(product))
     
-    try:
-        request = LinkTokenCreateRequest(
-            products=products,
-            client_name="KCL",
-            language='en',
-            country_codes=list(map(lambda x: CountryCode(x), ['US'])),
-            #institution_id="ins_117181",
-            user=LinkTokenCreateRequestUser(
-                client_user_id=str(request.user.id)
-            )
+    request = LinkTokenCreateRequest(
+        products=products,
+        client_name="KCL",
+        language='en',
+        country_codes=list(map(lambda x: CountryCode(x), ['US'])),
+        user=LinkTokenCreateRequestUser(
+            client_user_id=str(request.user.id)
         )
+    )
     # create link token
-        response = client.link_token_create(request)
-        link_token = response['link_token']
-        return Response({'link_token': link_token})
-    except plaid.ApiException as e:
-        print(response)
-        return json.loads(e.body)
+    response = client.link_token_create(request)
+    link_token = response['link_token']
+    return Response({'link_token': link_token})
+
 
 
 @api_view(['POST'])
@@ -68,10 +64,10 @@ def get_access_token(request):
             public_token=public_token)
         exchange_response = client.item_public_token_exchange(exchange_request)
         access_token = exchange_response['access_token']
-        item_id = exchange_response['item_id']
-        return Response({'access_token': access_token, 'item_id': item_id})
+        return Response({'access_token': access_token})
     except plaid.ApiException as e:
-        return json.loads(e.body)
+        return Response({"Error": json.loads(e.body)}, status=400)
+
     
 @api_view(['POST'])
 def get_balance(request):
@@ -83,24 +79,24 @@ def get_balance(request):
         response = client.accounts_get(request)
         return Response(response.to_dict())
     except plaid.ApiException as e:
-        return json.loads(e.body)
+        return Response({"Error": json.loads(e.body)}, status=400)
         
 
 @api_view(['POST'])
 def get_logo(request):
     client = setUpClient()
-    try:
-        options = InstitutionsSearchRequestOptions(include_optional_metadata=True)
-        request = InstitutionsSearchRequest(
-            query=request.data.get('name'),
-            products=None,
-            country_codes=list(map(lambda x: CountryCode(x), ['US'])),
-            options=options
-        )
-        institution_response = client.institutions_search(request)
+    options = InstitutionsSearchRequestOptions(include_optional_metadata=True)
+    request = InstitutionsSearchRequest(
+        query=request.data.get('name'),
+        products=None,
+        country_codes=list(map(lambda x: CountryCode(x), ['US'])),
+        options=options
+    )
+    institution_response = client.institutions_search(request)
+    if len(institution_response.institutions) != 0:
         return Response({'logo': institution_response.institutions[0].logo})
-    except plaid.ApiException as e:
-        return json.loads(e.body)
+    else:
+        return Response({"Error": 'Institution Does Not Exist'}, status=400)
 
 @api_view(['POST'])
 def get_stocks(request):
@@ -108,10 +104,9 @@ def get_stocks(request):
     try:
         request = InvestmentsHoldingsGetRequest(access_token=request.data.get('access_token'))
         response = client.investments_holdings_get(request)
-        print((response.to_dict()))
         return Response(response.to_dict())
     except plaid.ApiException as e:
-        return json.loads(e.body)
+        return Response({"Error": json.loads(e.body)}, status=400)
     
 @api_view(['POST'])
 def get_transactions(request):
@@ -127,10 +122,9 @@ def get_transactions(request):
             options=options
         )
         response = client.investments_transactions_get(request)
-        print((response.to_dict()))
         return Response(response.to_dict())
     except plaid.ApiException as e:
-        return json.loads(e.body)
+        return Response({"Error": json.loads(e.body)}, status=400)
 
 
 class addAccount(generics.CreateAPIView):
@@ -175,6 +169,8 @@ class addStock(generics.CreateAPIView):
 
 @api_view(['DELETE'])
 def deleteAccount(request, stockAccount):
+    if StockAccount.objects.filter(account_id=stockAccount).count() == 0:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     stock_account = StockAccount.objects.get(account_id=stockAccount)
     if stock_account.user != request.user:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
