@@ -7,6 +7,7 @@ from .models import *
 @admin.register(Token)
 class TokenAdmin(admin.ModelAdmin):
     list_display = [
+        'id',
         'user',
         'crypto_exchange_object',
         'asset',
@@ -18,6 +19,7 @@ class TokenAdmin(admin.ModelAdmin):
 @admin.register(CryptoExchangeAccount)
 class CryptoExchangeAdmin(admin.ModelAdmin):
     list_display = [
+        'id',
         'user',
         'crypto_exchange_name',
         'api_key',
@@ -28,6 +30,7 @@ class CryptoExchangeAdmin(admin.ModelAdmin):
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
     list_display = [
+        'id',
         'crypto_exchange_object',
         'asset',
         'transaction_type',

@@ -20,7 +20,7 @@ export default function useCryptoExchange() {
   }
 
   const removeExchange = async (id) => {
-    await fetch(`${BACKEND_URL}/crypto-exchanges`, {
+    await fetch(`http://10.0.2.2:8000/crypto-exchanges`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

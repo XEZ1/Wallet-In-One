@@ -141,16 +141,9 @@ export default function CryptoWallet(props) {
 
         <View style={[styles.walletList]}>
         {
-          exchanges.map((item, index)=> <ExchangeAsset key={index} item={item} removeExchange={removeExchange} navigation={props.navigation} />)
+          exchanges.map((item)=> <ExchangeAsset key={item.id} item={item} removeExchange={removeExchange} navigation={props.navigation} />)
         }
         </View>
-
-        {/* <View style={styles.container}>
-          <Text style={styles.title}>Exchanges</Text>
-          {exchanges.map((exchange) => (
-            <ExchangeAsset key={exchange.id} item={exchange} />
-          ))}
-        </View> */}
 
       </ScrollView>
     </SafeAreaView>

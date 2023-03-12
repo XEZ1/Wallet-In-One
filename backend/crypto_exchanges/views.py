@@ -2,12 +2,13 @@ from abc import ABC, ABCMeta, abstractmethod
 from datetime import datetime
 
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from crypto_exchanges.serializers import CryptoExchangeAccountSerializer
+from crypto_exchanges.serializers import *
 from crypto_exchanges.services import *
-from crypto_exchanges.models import *
+from crypto_exchanges.models import Transaction, CryptoExchangeAccount, Token
 
 
 def millis_to_datetime(millis):
@@ -25,6 +26,13 @@ def unix_timestamp_to_datetime(unix_timestamp):
 
 
 # Create your views here.
+@api_view(['GET'])
+def get_transactions(request, exchange):
+    exchange_obj = CryptoExchangeAccount.objects.get(id=exchange)
+    transactions = Transaction.objects.filter(crypto_exchange_object=exchange_obj).order_by('timestamp')
+    serializer = TransactionSerializer(transactions, many=True)
+    return Response(serializer.data)
+
 
 # Generic class for crypto exchanges
 class GenericCryptoExchanges(APIView):
@@ -106,17 +114,8 @@ class GenericCryptoExchanges(APIView):
         serializer_array = serializers.data
         for serializer in serializer_array:
             exchange = CryptoExchangeAccount.objects.get(api_key=serializer['api_key'])
+            serializer.update({'id': exchange.id})
             serializer.update({'balance': CurrentMarketPriceFetcher(request.user).get_exchange_balance(exchange)})
-            transactions = Transaction.objects.filter(crypto_exchange_object=exchange).order_by('timestamp')
-            transaction_list = []
-            for transaction in transactions.iterator():
-                transaction_dict = {'asset': transaction.asset,
-                                    'transaction_type': transaction.transaction_type,
-                                    'amount': transaction.amount,
-                                    'date': transaction.timestamp}
-                transaction_list.append(transaction_dict)
-            serializer.update({'transactions': transaction_list})
-        print(serializer_array)
         return Response(serializer_array)
 
     @abstractmethod
