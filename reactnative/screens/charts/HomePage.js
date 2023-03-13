@@ -76,7 +76,6 @@ export default function HomePage({ navigation }) {
           })
         }
         console.log(stockData.id)
-
       }
       //} 
       // else if (pressed === "Cryptocurrency from exchanges") {
@@ -134,28 +133,28 @@ export default function HomePage({ navigation }) {
       >
 
         {/* Switch Graph Buttons */}
-        <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 20, borderRadius: 30 }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
           <TouchableOpacity
             style={[
               styles(dark, colors).btn,
-              chartType === "pie" && { backgroundColor: "aliceblue" },
+              chartType === "pie" && { backgroundColor: 'aliceblue'},
             ]}
             onPress={() => handleChartTypeChange("pie")}
           >
-            <Text style={styles.chartTypeText}>Pie Chart</Text>
+          <Text>Pie Chart</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles(dark, colors).btn,
-              chartType === "stacked" && { backgroundColor: "aliceblue" },
+              chartType === "stacked" && { backgroundColor: 'aliceblue'},
             ]}
             onPress={() => handleChartTypeChange("stacked")}
           >
-            <Text style={styles.chartTypeText}>Stacked Bar Chart</Text>
+          <Text>Stacked Bar Chart</Text>
           </TouchableOpacity>
         </View>
 
-        <Text >{pressed}</Text>
+        <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30}]}>{pressed}</Text>
 
         {chartType == "pie" ? 
           <>

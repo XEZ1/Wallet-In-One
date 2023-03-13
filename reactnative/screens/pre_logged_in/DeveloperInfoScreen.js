@@ -133,7 +133,8 @@ export default function DeveloperInfoScreen ({ navigation }) {
                     Linking.openURL(
                     "https://github.com/AbbasBinVakas"
                     )
-                }>
+                }
+                testID={'GithubButtonTestAbbas'}>
                 <Image
                 style={styles.iconStyle}
                 source={require('reactnative/assets/github.png')}
@@ -148,7 +149,8 @@ export default function DeveloperInfoScreen ({ navigation }) {
                     Linking.openURL(
                     "https://github.com/YusufKCL"
                     )
-                }>
+                }
+                testID={'GithubButtonTestYusuf'}>
                 <Image
                 style={styles.iconStyle}
                 source={require('reactnative/assets/github.png')}
@@ -163,7 +165,8 @@ export default function DeveloperInfoScreen ({ navigation }) {
                     Linking.openURL(
                     "https://github.com/XEZ1"
                     )
-                }>
+                }
+                testID={'GithubButtonTestEzat'}>
                 <Image
                 style={styles.iconStyle}
                 source={require('reactnative/assets/github.png')}
@@ -178,7 +181,8 @@ export default function DeveloperInfoScreen ({ navigation }) {
                     Linking.openURL(
                     "https://github.com/Shozab-N18"
                     )
-                }>
+                }
+                testID={'GithubButtonTestShozab'}>
                 <Image
                 style={styles.iconStyle}
                 source={require('reactnative/assets/github.png')}
@@ -193,7 +197,8 @@ export default function DeveloperInfoScreen ({ navigation }) {
                     Linking.openURL(
                     "https://github.com/JamalBoustani"
                     )
-                }>
+                }
+                testID={'GithubButtonTestJamal'}>
                 <Image
                 style={styles.iconStyle}
                 source={require('reactnative/assets/github.png')}
@@ -209,7 +214,7 @@ export default function DeveloperInfoScreen ({ navigation }) {
                     "https://github.com/krishnapk7"
                     )
                 }
-                testID={'GithubButtonTest'}>
+                testID={'GithubButtonTestKrishna'}>
                 <Image
                 style={styles.iconStyle}
                 source={require('reactnative/assets/github.png')}
@@ -224,7 +229,8 @@ export default function DeveloperInfoScreen ({ navigation }) {
                     Linking.openURL(
                     "https://github.com/mohawk49"
                     )
-                }>
+                }
+                testID={'GithubButtonTestMichael'}>
                 <Image
                 style={styles.iconStyle}
                 source={require('reactnative/assets/github.png')}
@@ -239,7 +245,8 @@ export default function DeveloperInfoScreen ({ navigation }) {
                     Linking.openURL(
                     "https://github.com/mrmatyog"
                     )
-                }>
+                }
+                testID={'GithubButtonTestMatushan'}>
                 <Image
                 style={styles.iconStyle}
                 source={require('reactnative/assets/github.png')}

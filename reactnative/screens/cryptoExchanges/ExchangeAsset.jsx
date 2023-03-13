@@ -7,39 +7,39 @@ import {
     TouchableWithoutFeedback,
     View,
   } from "react-native";
-  import React, {useEffect, useState} from "react";
-  import getCryptoIcon from "../crypto_wallet/icons/icon";
-  import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import React, {useEffect, useState} from "react";
+import getCryptoIcon from "../crypto_wallet/icons/icon";
+import { useTheme } from 'reactnative/src/theme/ThemeProvider';
   
-  export default function ExchangeAsset(props) {
+export default function ExchangeAsset(props) {
   
-    const [cryptoValue, setCryptoValue] = useState(0); {/* Display `-` if not retrievable */}
-    const {dark, colors, setScheme} = useTheme();
+  //const [cryptoValue, setCryptoValue] = useState(0); {/* Display `-` if not retrievable */}
+  const {dark, colors, setScheme} = useTheme();
   
-    const styles = StyleSheet.create({
-      exchangeAsset: {
-        padding: 10,
-        marginVertical: 5,
-        borderRadius: 10,
-        flexDirection: "row",
-      },
-      exchangeAssetTitle: {
-        fontWeight: "700",
-        flex: 1,
-      },
-      exchangeAssetImage: {
-        width: 30,
-        height: 30,
-      },
-    });
+  const styles = StyleSheet.create({
+    exchangeAsset: {
+      padding: 10,
+      marginVertical: 5,
+      borderRadius: 10,
+      flexDirection: "row",
+    },
+    exchangeAssetTitle: {
+      fontWeight: "700",
+      flex: 1,
+    },
+    exchangeAssetImage: {
+      width: 30,
+      height: 30,
+    },
+  });
     
   
   
     return (
       <TouchableWithoutFeedback
         onPress={() =>
-          props.navigation.navigate("f",
-            { item: props.item, value: props.item.crypto_exchange_name })
+          props.navigation.navigate("ExchangeTransactions",
+            { item: props.item, removeExchange: props.removeExchange})
         }
       >
         <View style={[styles.exchangeAsset, {backgroundColor: colors.primary}]}>

@@ -10,4 +10,6 @@ urlpatterns = [
     path('crypto-exchanges/coinlist', views.CoinListView.as_view(), name='coinlist'),
     path('crypto-exchanges/coinbase', views.CoinBaseView.as_view(), name='coinbase'),
     path('crypto-exchanges/kraken', views.KrakenView.as_view(), name='kraken'),
+    path('crypto-exchanges/get_transactions/<int:exchange>/', views.get_transactions),
+    path('crypto-exchanges/get_token_breakdown/<int:exchange>/', views.get_token_breakdown),
 ]

@@ -29,16 +29,20 @@ export default function StackedChart({ data = fixture.all  }) {
       {/*domain={{ x: [1, 4] }}*/}
       <VictoryChart  domainPadding={{ x: 20, y: 20 }} >
         <VictoryAxis
-            tickValues={[ 1, 2, 3, 4 ,5]}
-             // set the domain to include values up to 20
-            fixLabelOverlap={true}
-            //tickFormat ={["Banks", "Cryptocurrency","Crypto-exchanges" ,"Stocks"]}
-            //height={10000}
-            //padding={{ top: 20, bottom: 60 }}
-            //width={400}
+          dependentAxis
+           style={{
+               axis: {stroke: 'grey'},
+            tickLabels: {fill: colors.text},
+             grid: {stroke: 'grey'},
+           }}
         />
-        <VictoryAxis dependentAxis />
-        {/*try brown also*/}
+        <VictoryAxis
+          tickValues={[ 1, 2, 3, 4 ,5]}
+          style={{
+            axis: {stroke: 'grey'},
+            tickLabels: {fill: colors.text},
+          }}
+        />
         <VictoryStack colorScale={["tomato", "orange", "gold", "purple"]}>
           {(data['Banks']?data['Banks']:[]).map(i => (
             <VictoryBar
@@ -50,21 +54,21 @@ export default function StackedChart({ data = fixture.all  }) {
           {(data['Cryptocurrency from wallets']?data['Cryptocurrency from wallets']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Crypto from wallets ", y: i.y }]}
+              data={[{ x: "Crypto\nWallets ", y: i.y }]}
               barWidth={35}
             />
           ))}
           {(data['Cryptocurrency from exchanges']?data['Cryptocurrency from exchanges']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Cryptocurrency from exchanges", y: i.y }]}
+              data={[{ x: "Crypto\nExchanges", y: i.y }]}
               barWidth={35}
             />
           ))}
           {(data['Stock Accounts']?data['Stock Accounts']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Stock Accounts", y: i.y }]}
+              data={[{ x: "Stocks", y: i.y }]}
               barWidth={35}
             />
           ))}

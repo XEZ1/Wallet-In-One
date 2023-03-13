@@ -156,20 +156,30 @@ export default function Navigation() {
 }
 
 function HomePageNavigator() {
-  return (<Stack.Navigator>
-    <Stack.Screen
-      name='Home Page'
-      component={HomePage}
-     />
-    <Stack.Screen
-      name='Bank Transactions'
-      component={BankTransactionsScreen} />
-    <Stack.Screen
-      name='Wallet Detail'
-      component={WalletAssetDetail} />
-    <Stack.Screen
-      name='Stock Account Transactions'
-      component={StockAsset} />
-  </Stack.Navigator>)
+
+  const {dark, colors, setScheme} = useTheme();
+  
+  return (
+    <Stack.Navigator
+      screenOptions={
+        {
+          headerStyle: {backgroundColor: colors.background},
+          headerTitleStyle: {color: colors.text},
+        }}
+    >
+      <Stack.Screen
+        name='Home Page'
+        component={HomePage}
+      />
+      <Stack.Screen
+        name='Bank Transactions'
+        component={BankTransactionsScreen} />
+      <Stack.Screen
+        name='Wallet Detail'
+        component={WalletAssetDetail} />
+      <Stack.Screen
+        name='Stock Account Transactions'
+        component={StockAsset} />
+    </Stack.Navigator>)
 }
 

@@ -3,6 +3,7 @@ import { StyleSheet, Pressable, View, Text, TextInput, Button, Alert } from 'rea
 import * as SecureStore from "expo-secure-store";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {styles} from 'reactnative/screens/All_Styles.style.js'
+import { api_url } from '../../authentication';
 
 export default function CoinListCredentials({ navigation }) {
   const [apiKey, setApiKey] = useState('');
@@ -16,7 +17,7 @@ export default function CoinListCredentials({ navigation }) {
     }
 
     try {
-      const response = await fetch('http://10.0.2.2:8000/crypto-exchanges/coinlist', {
+      const response = await fetch(api_url + '/crypto-exchanges/coinlist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

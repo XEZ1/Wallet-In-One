@@ -19,6 +19,7 @@ import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
+import { api_url } from '../../authentication';
 
 export default function CryptoWallet(props) {
   const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
@@ -97,7 +98,7 @@ export default function CryptoWallet(props) {
   const handleSubmit = async () => {
     
     try {
-      const response = await fetch('http://10.0.2.2:8000/crypto-exchanges/update', {
+      const response = await fetch(api_url + '/crypto-exchanges/update', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -152,16 +153,9 @@ export default function CryptoWallet(props) {
         <Text style={[styles.cryptoWalletSubtitle, {color: colors.text}]}>Exchanges</Text>
         <View style={[styles.walletList]}>
         {
-          exchanges.map((item, index)=> <ExchangeAsset key={index} item={item} navigation={props.navigation} />)
+          exchanges.map((item)=> <ExchangeAsset key={item.id} item={item} removeExchange={removeExchange} navigation={props.navigation} />)
         }
         </View>
-
-        {/* <View style={styles.container}>
-          <Text style={styles.title}>Exchanges</Text>
-          {exchanges.map((exchange) => (
-            <ExchangeAsset key={exchange.id} item={exchange} />
-          ))}
-        </View> */}
 
       </ScrollView>
     </SafeAreaView>
