@@ -51,6 +51,14 @@ export default function StackedChart({ data = fixture.all, handlePressIn  }) {
               key={i}
               data={[{ x: "Banks", y: i.y, z: i.x, name: "Banks" }]}
               barWidth={35}
+              events={[
+                {
+                  target: "data",
+                  eventHandlers: {
+                    onPressIn: handlePressIn,
+                  },
+                },
+              ]}
             />
           ))}
           {(data['Cryptocurrency from wallets']?data['Cryptocurrency from wallets']:[]).map(i => (

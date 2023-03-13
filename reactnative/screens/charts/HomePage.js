@@ -110,6 +110,7 @@ export default function HomePage({ navigation }) {
         break;
       }
     }
+    console.log(index)
     console.log(datapoint)
       if (pressed == "Banks"){
         for (let i = 0; i < baseData["Banks"].length; i++) {
