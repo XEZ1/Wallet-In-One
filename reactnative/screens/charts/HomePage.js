@@ -23,6 +23,7 @@ export default function HomePage({ navigation }) {
   const [baseData, setBaseData] = useState(fixture);
   const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed] = useState(null);
+  const [colorScheme, setColors] = useState(["pink", "turquoise", "lime", "#FA991C"]);
   const { wallets, fetchWallets, removeWallet } = useCryptoWallet();
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
 
@@ -36,6 +37,7 @@ export default function HomePage({ navigation }) {
         setBaseData(response.body);
         setNewData(response.body.all);
         setPressed(null);
+        setColors(["pink", "turquoise", "lime", "#FA991C"]);
       }
     };
     if (isFocused) {
@@ -46,11 +48,13 @@ export default function HomePage({ navigation }) {
 
   const handlePressIn = async (event, datapoint) => {
     var index = datapoint.index;
+    console.log(datapoint.style["fill"])
     
     if (pressed) {
       if (pressed == "Banks"){
         var bankData = baseData["Banks"][index]
         if (bankData.id){
+          setColors(["pink", "turquoise", "lime", "#FA991C"])
           navigation.navigate('Bank Transactions', {accountID: bankData.id})
           return
         }
@@ -58,6 +62,7 @@ export default function HomePage({ navigation }) {
         var cryptoData = baseData["Cryptocurrency from wallets"][index]
         var wallet = wallets.find(x => x.id === cryptoData.id)
         if (cryptoData.id) {
+          setColors(["pink", "turquoise", "lime", "#FA991C"])
           navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
           return
         }
@@ -67,6 +72,7 @@ export default function HomePage({ navigation }) {
         if (stockData.id) {
           var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
           const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
+          setColors(["pink", "turquoise", "lime", "#FA991C"])
           navigation.navigate("Stock Account Transactions", {
             accountID: stockData.id, 
             accessToken: response.body.access_token, 
@@ -90,6 +96,7 @@ export default function HomePage({ navigation }) {
       setPressed(null)
     } else {
       const dataPoint = data[index];
+      setColors([datapoint.style["fill"], "red", "blue", "yellow", "#800000", "#a9a9a9", "#fffac8", "#E7E9B9", "#6B238F"])
       const name = dataPoint.x
       if (baseData[name]) {
         setNewData(baseData[name]);
@@ -179,7 +186,7 @@ export default function HomePage({ navigation }) {
   value = value.toFixed(2);
 
   const list = data.map((val) => val.x);
-  const colours = ["pink", "turquoise", "lime", "#FA991C"];
+  const colours = ["pink"];
 
   let spacing = list.length * 60;
 
@@ -228,8 +235,8 @@ export default function HomePage({ navigation }) {
 
         {chartType == "pie" ? 
           <>
-            <PieChart colours={colours} data={data} handlePressIn={handlePressIn}/>
-            {BarChart(colours, list, data, colors, spacing, handlePressIn)}
+            <PieChart colours={colorScheme} data={data} handlePressIn={handlePressIn}/>
+            {BarChart(colorScheme, list, data, colors, spacing, handlePressIn)}
           </>
           : 
             <StackedChart data={baseData} handlePressIn={handlePressInStacked}/>
@@ -242,6 +249,7 @@ export default function HomePage({ navigation }) {
             onPress={() => {
               setNewData(baseData.all);
               setPressed(false);
+              setColors(["pink", "turquoise", "lime", "#FA991C"]);
             }}
           >
             <Text style={[styles(dark, colors).button, { color: colors.text }]}>Back</Text>
