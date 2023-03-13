@@ -7,25 +7,6 @@ from .util import main_image_color
 class URLSerializer(serializers.Serializer):
     url = serializers.URLField()
 
-class OldAccountSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Account
-        fields = '__all__'
-    
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        data = get_account_data(instance.id)
-        details = get_account_details(instance.id)
-        institution = get_institution(data['institution_id'])
-
-        representation.update({
-            'data': data,
-            'details': details,
-            'institution': institution,
-        })
-
-        return representation
-
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
@@ -43,9 +24,6 @@ class AccountSerializer(serializers.ModelSerializer):
         })
 
         return representation
-
-class AmountSerializer(serializers.Serializer):
-    amount = MoneyField(max_digits=11, decimal_places=2)
 
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
