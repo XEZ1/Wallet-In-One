@@ -36,7 +36,9 @@ class AddTransactionViewTestCase(TestCase):
             "account_owner": '',
             "transaction_code": '',
             "investment_transaction_id": "Test Transaction",
-            "security_id": "Test ID"
+            "security_id": "Test ID",
+            "latitude": 35.5,
+            "longitude": 77
         }
         self.url = reverse('add_transaction_account')
 
