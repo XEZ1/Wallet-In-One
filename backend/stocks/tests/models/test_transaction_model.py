@@ -21,7 +21,6 @@ class TransactionModelTestCase(TestCase):
     def _assert_transaction_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.transaction.full_clean()
-
     # account_id field tests
 
     def test_account_id_is_valid(self):
@@ -437,6 +436,49 @@ class TransactionModelTestCase(TestCase):
         self.transaction.transaction_code = "invalid choice"
         self._assert_transaction_is_invalid()
 
+    def test_latitude_field(self):
+        field = Transaction._meta.get_field('latitude')
+        self.assertIsInstance(field, models.FloatField)
+        self.assertFalse(field.null)
+        self.assertFalse(field.blank)
+
+    def test_latitude_cannot_be_blank(self):
+        self.transaction.latitude = ''
+        self._assert_transaction_is_invalid()
+    
+    def test_latitude_cannot_be_none(self):
+        self.transaction.latitude = None
+        self._assert_transaction_is_invalid()
+
+    def test_decimal_latitude(self):
+        self.transaction.latitude = 0.5
+        self.assertIsInstance(self.transaction.latitude, float)
+
+    def test_integer_latitude(self):
+        self.transaction.latitude = 1
+        self.assertIsInstance(self.transaction.latitude, int)
+
+    def test_longitude_field(self):
+        field = Transaction._meta.get_field('longitude')
+        self.assertIsInstance(field, models.FloatField)
+        self.assertFalse(field.null)
+        self.assertFalse(field.blank)
+
+    def test_longitude_cannot_be_blank(self):
+        self.transaction.longitude = ''
+        self._assert_transaction_is_invalid()
+    
+    def test_longitude_cannot_be_none(self):
+        self.transaction.longitude = None
+        self._assert_transaction_is_invalid()
+
+    def test_decimal_longitude(self):
+        self.transaction.longitude = 0.5
+        self.assertIsInstance(self.transaction.latitude, float)
+
+    def test_integer_longitude(self):
+        self.transaction.longitude = 1
+        self.assertIsInstance(self.transaction.longitude, int)
     # transaction_type field tests
 
     # def test_transaction_type_is_valid(self):
