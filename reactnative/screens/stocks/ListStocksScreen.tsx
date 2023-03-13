@@ -95,7 +95,10 @@ const SuccessComponent = (props) => {
                     accessToken: item.access_token, 
                     transactions: transactions[item.account_id],
                     logo: item.institution_logo,
-                    balance: item.balance
+                    balance: item.balance,
+                    name: item.institution_name,
+                    account_name: item.name,
+                    balance_currency: item.balance_currency
                   }) }>
 
                   <View style={stylesInternal.row}>

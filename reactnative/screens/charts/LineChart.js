@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, ScrollView, View, Dimensions, Button, TouchableHighlight, Alert,TouchableOpacity } from 'react-native';
 
 import data from "./chartData.json"
-import { LineChart } from 'react-native-wagmi-charts';
+import { LineChart, CandlestickChart } from 'react-native-wagmi-charts';
 import {useEffect, useState} from "react";
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 
@@ -39,6 +39,16 @@ export default function LineChartScreen({transactions, graph_version, height, wi
             percentageChange = '+' + percentageChange
         }
     }
+
+    let priceChange = null
+    if(graphData && graphData.length > 0){
+        priceChange = (((stockAccountBalance - graphData[0].value) - graphData[0].value)).toFixed(2);
+        if(priceChange > 0){
+            priceChange = '+' + priceChange
+        }
+    }
+
+
     let color1 = 'green';
     const data = graphData;
 
@@ -51,7 +61,46 @@ export default function LineChartScreen({transactions, graph_version, height, wi
             color1 = 'green';
         }
     } 
-    
+
+    const transformedData = data.reduce((acc, transaction) => {
+        const date = new Date(transaction.timestamp);
+        const month = `${date.getFullYear()}-${date.getMonth() + 1}`;
+
+        if (!acc[month]) {
+            acc[month] = {
+                high: transaction.value,
+                low: transaction.value,
+                open: transaction.value,
+                close: transaction.value,
+            };
+        } 
+        else {
+            if (transaction.value > acc[month].high) {
+                acc[month].high = transaction.value;
+            }
+
+            if (transaction.value < acc[month].low) {
+                acc[month].low = transaction.value;
+            }
+
+            acc[month].close = transaction.value;
+        }
+
+        return acc;
+    }, {});
+      
+    const candlestickData = Object.keys(transformedData).map((key) => {
+        const [year, month] = key.split('-');
+        return {
+            timestamp: (new Date(year, month - 1)).getTime(),
+            open: parseFloat(transformedData[key].open.toFixed(2)),
+            close: parseFloat(transformedData[key].close.toFixed(2)),
+            high: parseFloat(transformedData[key].high.toFixed(2)),
+            low: parseFloat(transformedData[key].low.toFixed(2)),
+        };
+    });
+      
+    // console.log(candlestickData);
 
     return (
         <View >
@@ -59,7 +108,13 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                 <>
                     {/* Interactive graph */}
                     { graph_version == 1 && 
-                    <><Text style={{ textAlign: 'center', color: color1, fontSize: 20, fontWeight: 'bold' }}>{percentageChange}%</Text><LineChart.Provider data={graphData}>
+                        <>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}>{priceChange}</Text>
+                            <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}> ({percentageChange}%)</Text>
+                        </View>
+
+                        <LineChart.Provider data={graphData}>
                             <LineChart height={height} width={width}>
                                 <LineChart.Path color={color1}>
                                     <LineChart.Gradient />
@@ -68,24 +123,79 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                                 <LineChart.CursorLine />
                                 <LineChart.CursorCrosshair />
                             </LineChart>
-                            <LineChart.PriceText style={{ color: colors.text }}/>
-                            <LineChart.DatetimeText style={{ color: colors.text }} />
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ marginHorizontal: 1, fontSize: 13}}>Balance: </Text>
+                                <LineChart.PriceText style={{ color: colors.text, fontSize: 13 }}/>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ marginHorizontal: 1, fontSize: 13}}>Date: </Text>
+                                <LineChart.DatetimeText style={{ color: colors.text, fontSize: 13 }} />
+                            </View>
+
                         </LineChart.Provider></>
                     }
 
 
                     {/* Static graph */}   
                     { graph_version == 2 &&
-                    <><Text style={{ textAlign: 'right', marginLeft: 'auto', color: color1, fontSize: 11 }}>{percentageChange}%</Text><LineChart.Provider data={graphData}>
+                    <><Text style={{ textAlign: 'right', marginLeft: 'auto', color: color1, fontSize: 11 }}>{percentageChange}%</Text>
+                    <LineChart.Provider data={graphData}>
                             <LineChart width={width} height={height}>
                                 <LineChart.Path color={color1}>
                                     <LineChart.Gradient />
                                 </LineChart.Path>
                                 {/* <LineChart.CursorCrosshair>
-        <LineChart.Tooltip />
-    </LineChart.CursorCrosshair> */}
+                                    <LineChart.Tooltip />
+                                </LineChart.CursorCrosshair> */}
                             </LineChart>
                         </LineChart.Provider></>
+                    }
+                    {/* Candelstick graph */}   
+                    { graph_version == 3 &&
+                        <>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}>{priceChange}</Text>
+                            <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}> ({percentageChange}%)</Text>
+                        </View>
+
+                        <CandlestickChart.Provider data={candlestickData}>
+                            <CandlestickChart height={height} width={width}>
+                                <CandlestickChart.Candles />
+                                <CandlestickChart.Crosshair />
+                            </CandlestickChart>
+                            
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ marginHorizontal: 8, fontSize: 12 }}>Opening Price:</Text>
+                                    <CandlestickChart.PriceText type="open" style={{ color: colors.text, fontSize: 12 }} />
+                                </View>
+
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ marginHorizontal: 8, fontSize: 12  }}>Highest Price: </Text>
+                                    <CandlestickChart.PriceText type="high" style={{ color: colors.text, fontSize: 12 }} />
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ marginHorizontal: 8, fontSize: 12  }}>Closing Price:</Text>
+                                    <CandlestickChart.PriceText type="close" style={{ color: colors.text, fontSize: 12 }} />
+                                </View>
+
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ marginHorizontal: 8, fontSize: 12 }}>Lowest Price:</Text>
+                                    <CandlestickChart.PriceText type="low" style={{ color: colors.text, fontSize: 12 }} />
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={{ marginHorizontal: 1, fontSize: 12}}>Date:</Text>
+                                <CandlestickChart.DatetimeText style={{ fontSize: 12 }} />
+                            </View>
+
+                        </CandlestickChart.Provider></>
                     }
                 </>
             ) : (<Text style={[styles.emptyText, {textAlign: 'center', alignSelf: 'center', color: colors.text}]}>No data available</Text>)}
