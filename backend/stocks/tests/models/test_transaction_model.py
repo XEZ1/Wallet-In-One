@@ -116,35 +116,6 @@ class TransactionModelTestCase(TestCase):
         self.transaction.unofficial_currency_code = None
         self.assertIsNone(self.transaction.unofficial_currency_code)
 
-    # category field tests
-    
-    # def test_category_is_valid(self):
-    #     field = Transaction._meta.get_field('category')
-    #     self.assertIsInstance(field, models.JSONField)
-
-    # def test_category_blank_allowed(self):
-    #     self.transaction.category = ''
-    #     self.assertEqual(self.transaction.category, '')
-
-
-    # category_id field tests
-
-    # def test_category_id_is_valid(self):
-    #     field = Transaction._meta.get_field('category_id')
-    #     self.assertEqual(field.max_length, 50)
-    #     self.assertIsInstance(field, models.CharField)
-    #     self.assertFalse(field.blank)
-    #     self.assertFalse(field.null)
-
-    # def test_category_id_more_than_max_length_not_allowed(self):
-    #     self.transaction.category_id ='a' * 51
-    #     self._assert_transaction_is_invalid()
-
-    # def test_category_id_less_than_max_length_is_allowed(self):
-    #     self.transaction.category_id ='a' * 30
-    #     self.assertIsInstance(self.transaction.category_id, str)
-
-
     # date field tests
 
     def test_date_is_valid(self):
@@ -209,14 +180,6 @@ class TransactionModelTestCase(TestCase):
         self.transaction.authorized_datetime = None
         self.assertIsNone(self.transaction.authorized_datetime)
 
-    # location field tests
-
-    # def test_location_is_valid(self):
-    #     field = Transaction._meta.get_field('location')
-    #     self.assertIsInstance(field, models.ForeignKey)
-    #     self.assertFalse(field.blank)
-    #     self.assertFalse(field.null)
-
     # name field tests
 
     def test_name_is_valid(self):
@@ -267,55 +230,6 @@ class TransactionModelTestCase(TestCase):
         self.transaction.merchant_name = None
         self.assertIsNone(self.transaction.merchant_name)
 
-    # payment_channel field tests
-
-    # def test_payment_channel_is_valid(self):
-    #     field = Transaction._meta.get_field('payment_channel')
-    #     self.assertIsInstance(field, models.CharField)
-    #     self.assertEqual(field.max_length, 20)
-    #     self.assertFalse(field.blank)
-    #     self.assertFalse(field.null)
-
-    # def test_payment_channel_more_than_max_length_not_allowed(self):
-    #     self.transaction.payment_channel ='a' * 21
-    #     self._assert_transaction_is_invalid()
-
-    # def test_payment_channel_less_than_max_length_is_allowed(self):
-    #     self.transaction.payment_channel ='a' * 8
-    #     self.assertIsInstance(self.transaction.payment_channel, str)
-
-    # def test_payment_channel_blank_not_allowed(self):
-    #     self.transaction.payment_channel = ''
-    #     self._assert_transaction_is_invalid()
-
-    # def test_payment_channel_null_not_allowed(self):
-    #     self.transaction.payment_channel = None
-    #     self._assert_transaction_is_invalid()
-
-    # def test_payment_channel_valid_choice(self):
-    #     self.transaction.payment_channel = "online"
-    #     self.assertIsInstance(self.transaction.payment_channel, str)
-
-    # def test_payment_channel_invalid_choice(self):
-    #     self.transaction.payment_channel = "invalid choice"
-    #     self._assert_transaction_is_invalid()
-
-    # pending field tests
-
-    # def test_pending_is_valid(self):
-    #     field = Transaction._meta.get_field('pending')
-    #     self.assertIsInstance(field, models.BooleanField)
-    #     self.assertFalse(field.blank)
-    #     self.assertFalse(field.null)
-
-    # def test_pending_blank_not_allowed(self):
-    #     self.transaction.pending = ''
-    #     self._assert_transaction_is_invalid()
-
-    # def test_pending_null_not_allowed(self):
-    #     self.transaction.pending = None
-    #     self._assert_transaction_is_invalid()
-
     # pending_transaction_id field tests
 
     def test_pending_transaction_id_is_valid(self):
@@ -365,35 +279,6 @@ class TransactionModelTestCase(TestCase):
     def test_account_owner_null_allowed(self):
         self.transaction.account_owner = None
         self.assertIsNone(self.transaction.account_owner)
-
-    # transaction_id field tests
-
-    # def test_transaction_id_is_valid(self):
-    #     field = Transaction._meta.get_field('transaction_id')
-    #     self.assertIsInstance(field, models.CharField)
-    #     self.assertEqual(field.max_length, 100)
-    #     self.assertFalse(field.blank)
-    #     self.assertFalse(field.null)
-
-    # def test_transaction_id_more_than_max_length_not_allowed(self):
-    #     self.transaction.transaction_id ='a' * 101
-    #     self._assert_transaction_is_invalid()
-
-    # def test_transaction_id_less_than_max_length_is_allowed(self):
-    #     self.transaction.transaction_id ='a' * 47
-    #     self.assertIsInstance(self.transaction.transaction_id, str)
-
-    # def test_transaction_id_blank_not_allowed(self):
-    #     self.transaction.transaction_id = ''
-    #     self._assert_transaction_is_invalid()
-
-    # def test_transaction_id_null_not_allowed(self):
-    #     self.transaction.transaction_id = None
-    #     self._assert_transaction_is_invalid()
-
-    # def test_transaction_id_is_unique(self):
-    #     with self.assertRaises(IntegrityError):
-    #         Transaction.objects.create(transaction_id='lPNjeW1nR6CDn5okmGQ6hEpMo4lLNoSrzqDje')
 
     # transaction_code field tests
 
@@ -479,39 +364,3 @@ class TransactionModelTestCase(TestCase):
     def test_integer_longitude(self):
         self.transaction.longitude = 1
         self.assertIsInstance(self.transaction.longitude, int)
-    # transaction_type field tests
-
-    # def test_transaction_type_is_valid(self):
-    #     field = Transaction._meta.get_field('transaction_type')
-    #     self.assertIsInstance(field, models.CharField)
-    #     self.assertEqual(field.max_length, 30)
-    #     self.assertFalse(field.blank)
-    #     self.assertFalse(field.null)
-
-    # def test_transaction_type_more_than_max_length_not_allowed(self):
-    #     self.transaction.transaction_code ='a' * 31
-    #     self._assert_transaction_is_invalid()
-
-    # def test_transaction_type_less_than_max_length_is_allowed(self):
-    #     self.transaction.transaction_type ='a' * 2
-    #     self.assertIsInstance(self.transaction.transaction_type, str)
-
-    # def test_transaction_type_blank_not_allowed(self):
-    #     self.transaction.transaction_type = ''
-    #     self._assert_transaction_is_invalid()
-
-    # def test_transaction_type_null_not_allowed(self):
-    #     self.transaction.transaction_type = None
-    #     self._assert_transaction_is_invalid()
-
-    # def test_transaction_type_valid_choice(self):
-    #     self.transaction.transaction_type = "digital"
-    #     self.assertIsInstance(self.transaction.transaction_type, str)
-
-    # def test_transaction_type_valid_choice_2(self):
-    #     self.transaction.transaction_type = "special"
-    #     self.assertIsInstance(self.transaction.transaction_type, str)
-
-    # def test_transaction_type_invalid_choice(self):
-    #     self.transaction.transaction_type = "invalid choice"
-    #     self._assert_transaction_is_invalid()
