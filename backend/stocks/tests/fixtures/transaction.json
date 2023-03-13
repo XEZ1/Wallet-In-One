@@ -19,7 +19,9 @@
             "merchant_name": "Apple",
             "pending_transaction_id": null,
             "account_owner": null,
-            "transaction_code": null
+            "transaction_code": null,
+            "latitude": 35.5,
+            "longitude": 37
         }
     }
 ]

@@ -21,16 +21,6 @@ class Stock(models.Model):
     quantity = models.FloatField()
     security_id = models.CharField(max_length=100, blank=False, null=False)
 
-# class Location(models.Model):
-#     address = models.CharField(max_length=100, default=None, blank=True, null=True)
-#     city = models.CharField(max_length=100, default=None, blank=True, null=True)
-#     region = models.CharField(max_length=50, default=None, blank=True, null=True)
-#     postal_code = models.CharField(max_length=100, default=None, blank=True, null=True)
-#     country = models.CharField(max_length=50, default=None, blank=True, null=True)
-#     lat = models.FloatField(default=None, blank=True, null=True)
-#     lon = models.FloatField(default=None, blank=True, null=True)
-#     store_number = models.CharField(max_length=100, default=None, blank=True, null=True)
-
 class Transaction(models.Model):
     stock = models.ForeignKey(StockAccount, on_delete=models.CASCADE, blank=False)
     account_id = models.CharField(max_length=100, blank=False, null=False)
@@ -38,33 +28,21 @@ class Transaction(models.Model):
     quantity = models.FloatField(blank=False,null=False) 
     price = models.FloatField(blank=False,null=False) 
     fees = models.FloatField(blank=False,null=True) 
+    latitude = models.FloatField(blank=False)
+    longitude = models.FloatField(blank=False)
     # cancel_transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)
     iso_currency_code = models.CharField(max_length=30, blank=False, null=True)
     # Always null if unofficial_currency_code is non-null.
     unofficial_currency_code = models.CharField(max_length=100, blank=False, null=True)
-    # Always null if iso_currency_code is non-null.
-    # Unofficial currency codes are used for currencies that do not have official ISO currency codes,
-    # such as cryptocurrencies and the currencies of certain countries.
-    # category = models.JSONField(encoder=None)
-    # category_id = models.CharField(max_length=50, blank=False, null=False)
+
     date = models.DateField(blank=False, null=False)
     datetime = models.DateTimeField(blank=True, null=True)
     authorized_date = models.DateField(blank=True, null=True)
     authorized_datetime = models.DateTimeField(blank=True, null=True)
-    # location = models.JSONField(encoder=None)#models.ForeignKey(Location, on_delete = models.CASCADE)
+
     name = models.CharField(max_length=100, blank=False, null=False)
     merchant_name = models.CharField(max_length=50, blank=True, null=True)
-    # payment_channel = models.CharField(
-    #     max_length=20,
-    #     blank=False,
-    #     null=False,
-    #     choices=(
-    #         ("online", "Online"), # transactions that took place online.
-    #         ("in store", "In Store"), # transactions that were made at a physical location.
-    #         ("other", "Other") # transactions that relate to banks, e.g. fees or deposits.
-    #     )
-    # )
-    # pending = models.BooleanField(blank=False,null=False)
+
     pending_transaction_id = models.CharField(max_length=100, blank=True, null=True)
     account_owner = models.CharField(max_length=50, blank=True, null=True)
     investment_transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)#transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)
@@ -88,16 +66,5 @@ class Transaction(models.Model):
             ("transfer", "Transfer") # Transfer of money between accounts.
         )
     )
-    # The transaction_code field is only populated for European institutions. For institutions in the US and Canada, this field is set to null.
-    # transaction_type = models.CharField(
-    #     max_length=30,
-    #     blank=False,
-    #     null=False,
-    #     choices = (
-    #         ("investment", "Investment"), # Investment account. In API versions 2018-05-22 and earlier, this type is called brokerage instead.
-    #         ("credit", "Credit"), #  Credit card.
-    #         ("depository", "Depository"), #  Depository account.
-    #         ("loan", "Loan") # Loan account
-    #     )
-    # )
+
 
