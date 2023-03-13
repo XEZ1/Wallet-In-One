@@ -27,14 +27,15 @@ export default function SignUpScreen({ navigation }) {
 
   const [errors, setErrors] = useState({});
 
-  const sendNotification = async () => {
-    await Notifications.requestPermissionsAsync();
-    await Notifications.presentNotificationAsync({
-      title: "Sign Up Successful",
-      body: "You have successfully created an account.",
-      ios: { _displayInForeground: true },
-    });
-  };
+  Notifications.setNotificationHandler({
+    handleNotification: async () => {
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      };
+    },
+  });
 
   //192.168.1.81,10.0.2.2
   const signUpHandler = () => {
@@ -56,15 +57,19 @@ export default function SignUpScreen({ navigation }) {
       .then((res) =>
         res.json().then((data) => ({ status: res.status, body: data }))
       )
-      .then((data) => {
+      .then(async (data) => {
         // console.log('Response:', data);
         if (data["status"] == 400) {
           setErrors(data["body"]);
           Alert.alert("Error", "There were some errors");
         } else if (data["status"] == 201) {
           Alert.alert("Success", "Account created successfully");
-          sendNotification();
-          login(username, password, user, setUser);
+          await Notifications.scheduleNotificationAsync({ content: {
+          title: "You have successfully signed up!",
+          body: "You can now access all the features of the app.",
+        },
+        trigger: null, });
+          await login(username, password, user, setUser);
         }
       })
       .catch((error) => {

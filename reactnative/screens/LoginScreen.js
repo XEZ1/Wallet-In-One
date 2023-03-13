@@ -38,14 +38,25 @@ export default function SignUpScreen({ navigation }) {
       sendLogInNotification();
     }
   };
+Notifications.setNotificationHandler({
+    handleNotification: async () => {
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      };
+    },
+  });
+
 
   const sendLogInNotification = async () => {
     await Notifications.requestPermissionsAsync();
-    await Notifications.presentNotificationAsync({
-      title: "Login Successful",
-      body: "You have successfully logged in.",
-      ios: { _displayInForeground: true },
-    });
+    await Notifications.scheduleNotificationAsync({ content: {
+          title: "You have successfully logged in!",
+          body: "You can now access all the features of the app.",
+        },
+        trigger: null, });
+
   };
 
   const inputStyle = (name) => {

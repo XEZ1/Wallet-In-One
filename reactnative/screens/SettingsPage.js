@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   ScrollView,
   Appearance,
-  AsyncStorage,
+  //AsyncStorage,
   FlatList,
   TouchableHighlight
 } from 'react-native';
 
+import * as Notifications from "expo-notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from 'expo-secure-store';
 import { logout } from '../authentication';
 import { useContext } from 'react';
@@ -146,14 +148,31 @@ export default function SettingsPage ({ navigation }) {
   //   }
   //   loadDarkModeSettings();
   // }, []);
+  Notifications.setNotificationHandler({
+    handleNotification: async () => {
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      };
+    },
+  });
+
 
 
   //Toggle and save notification setting
   const toggleNotifications = async () => {
-      setNotifications(previousState => !previousState);
+     setNotifications((previousState) => !previousState);
       const notificationSettings = (!notifications).toString();
-      await  SecureStore.setItemAsync('notificationSettings', (!notifications).toString());
-      sendNotification(notificationSettings);
+      await AsyncStorage.setItem("notificationSettings", notificationSettings);
+      //sendNotification(notificationSettings);
+    if (notificationSettings === "true") {
+      Notifications.requestPermissionsAsync();
+      Notifications.scheduleNotificationAsync({ content: {
+          title: "Notifications enabled!",
+        },
+        trigger: null, });
+    }
 
   };
 
@@ -168,7 +187,12 @@ export default function SettingsPage ({ navigation }) {
         await SecureStore.deleteItemAsync('darkModeSettings');
       }
       const notificationSettings = notifications.toString();
-      sendThemeNotification(notificationSettings);
+      if (notificationSettings === "true") {
+      Notifications.requestPermissionsAsync();
+      Notifications.scheduleNotificationAsync({ content: {
+          title: "Theme changed successfully!",},
+        trigger: null, });
+    }
   };
 
   
