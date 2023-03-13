@@ -37,7 +37,7 @@ def get_transactions(request, exchange):
 @api_view(['GET'])
 def get_token_breakdown(request, exchange):
     exchange_obj = CryptoExchangeAccount.objects.get(id=exchange)
-    crypto_data_from_exchanges = CurrentMarketPriceFetcher(request.user).get_exchange_token_breakdown(exchange_obj)
+    crypto_data_from_exchanges = sorted(CurrentMarketPriceFetcher(request.user).get_exchange_token_breakdown(exchange_obj), key=lambda d: d['y'])
     return Response(crypto_data_from_exchanges)
 
 

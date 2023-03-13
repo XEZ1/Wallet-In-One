@@ -1,4 +1,4 @@
-import {Button, Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, View, ScrollView} from "react-native";
+import {Button, Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View, ScrollView} from "react-native";
 import { useRoute } from "@react-navigation/native";
 import * as SecureStore from 'expo-secure-store';
 import React, {useEffect, useState, useCallback} from "react";
@@ -11,7 +11,7 @@ import ExchangeAsset from "./ExchangeAsset";
 import { api_url } from '../../authentication';
 import {Table, Row, Cell} from 'react-native-table-component';
 import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer } from "victory-native";
-
+import BarChart from "../charts/chartComponents/barChart";
 
 export default function ExchangeTransactions(props) {
 
@@ -21,7 +21,6 @@ export default function ExchangeTransactions(props) {
   const [exchangeTokens, setExchangeTokens] = useState([]);
   const { item, removeExchange } = props.route.params;
   const exchange = item.id;
-  const colours = ["pink", "turquoise", "lime", "#FA991C"];
   const stylesInternal = StyleSheet.create({
     container: {
       flex: 1,
@@ -133,15 +132,31 @@ export default function ExchangeTransactions(props) {
     ])
   };
 
-  const exchangeTokens1 = [
-    { x: 'BTC', y: 50 },
-    { x: 'ETH', y: 30 },
-    { x: 'LTC', y: 20 },
-  ];
+  const [chartType, setChartType] = useState("pie");
+  const handleChartTypeChange = (type) => {
+    setChartType(type);
+  };
+  const tokenList = exchangeTokens.map((val) => val.x);
+  const colours = []
+  for (let i = 0; i < tokenList.length; i++) {
+    const token = tokenList[i];
+    let hex = '';
+    
+    for (let j = 0; j < 3; j++) {
+      const charCode = token.charCodeAt(j);
+      const hexByte = (charCode * 30).toString(16).slice(2, 4);
+      hex += hexByte;
+    }
+  
+    colours.push('#'+hex);
+  }
+  const handlePressIn = ()=>{};
+
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: colors.background, paddingHorizontal: 30}}>
 
+      {/* Back arrow and remove button */}
       <View style={[styles(dark, colors).container, {flexDirection: 'row', alignItems: "flex-end"}]}>
         <TouchableWithoutFeedback onPress={() => props.navigation.goBack()} style={{flex: 1}}>
           <Text style={styles(dark, colors).backArrow}>←</Text>
@@ -156,7 +171,7 @@ export default function ExchangeTransactions(props) {
         </Pressable>
       </View>
 
-
+      {/* Exchange logo, title and balance */}
       <View style={[stylesInternal.exchangeAsset, styles(dark, colors).container, {flexDirection: 'row'}]}>
         <Image
           style={stylesInternal.exchangeAssetImage}
@@ -167,34 +182,76 @@ export default function ExchangeTransactions(props) {
         </View>
       </View>
 
-      <View style={stylesInternal.container}>
-        <Text style={stylesInternal.mediumBoldText}>Coin Breakdown</Text>
-        {exchangeTokens.length == 0 ? (
-          <Text style={styles(dark, colors).text}>Loading...</Text>
-        ) : (
-        <VictoryContainer
-          width={Dimensions.get('window').width}
-          height={250}
-          style= {{ paddingTop: 10}}
-          > 
-          <VictoryPie
-            data={exchangeTokens}
-            innerRadius={70}
-            padAngle={1}
-            cornerRadius= {7}
-            radius= {Dimensions.get('window').width/3.5}
-            colorScale={colours}
-            standalone={false}
-            height={250}
-            labelRadius={60}
-            labelPlacement="parallel"
-            labels={({ datum }) => `${datum.x}: ${datum.y}`}
-            style={{labels:{fill: colors.text, fontSize: 14, fontWeight: "800"}}}
-          />
-        </VictoryContainer>
-        )}
-      </View>  
-      
+      {/* Switch Menus Buttons */}
+      <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
+        <TouchableOpacity
+          style={[
+            styles(dark, colors).btn,
+            chartType === "pie" && { backgroundColor: 'aliceblue'},
+          ]}
+          onPress={() => handleChartTypeChange("pie")}
+        >
+        <Text>Coin Breakdown</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles(dark, colors).btn,
+            chartType === "transactions" && { backgroundColor: 'aliceblue'},
+          ]}
+          onPress={() => handleChartTypeChange("transactions")}
+        >
+        <Text>Transactions</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Pie chart and transactions table */}    
+      {chartType == "pie" ?
+        <View style={stylesInternal.container}>
+          <Text style={stylesInternal.mediumBoldText}>Coin Breakdown</Text>
+          {exchangeTokens.length == 0 ? (
+            <Text style={styles(dark, colors).text}>Loading...</Text>
+          ) : (
+          <>
+          <VictoryContainer
+            width={Dimensions.get('window').width}
+            height={330}
+            style= {{ paddingTop: 0}}
+            > 
+            <VictoryPie
+              data={exchangeTokens}
+              innerRadius={90}
+              padAngle={1}
+              cornerRadius= {10}
+              radius= {Dimensions.get('window').width/3}
+              colorScale={colours}
+              standalone={false}
+              height={330}
+              labelRadius={80}
+              labelPlacement="parallel"
+              labels={({ datum }) => `${datum.x}: ${datum.y}`}
+              style={{labels:{fill: colors.text, fontSize: 14, fontWeight: "800"}}}
+            />
+            <VictoryLabel
+              textAnchor="middle"
+              style={{ fontSize: 27, fill: colors.text }}
+              x={Dimensions.get("window").width / 2}
+              y={145}
+              text={"Assets"}
+            />
+            <VictoryLabel
+              textAnchor="middle"
+              style={{ fontSize: 37, fontWeight: "700", fill: colors.text }}
+              x={Dimensions.get("window").width / 2}
+              y={180}
+              text={exchangeTokens.length}
+            />
+          </VictoryContainer>
+          {BarChart(colours, tokenList, exchangeTokens, colors, (tokenList.length*60), handlePressIn)}
+          </>
+          )}
+        </View>  
+       : 
+      <> 
       <View style={stylesInternal.container}>
         <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
       </View>  
@@ -208,8 +265,8 @@ export default function ExchangeTransactions(props) {
                       style={[stylesInternal.header, {backgroundColor: dark ? "#21201E" : "#D3D3D3"}]}
                       textStyle={{ fontWeight: 'bold', color: colors.text, fontSize: 17 }}
                     />
-                    {data.tableData.map((rowData) => (
-                      <Row data={rowData.map((cellData, cellIndex) => (<Cell key={cellIndex} data={cellData} textStyle={{color: colors.text}} />))} 
+                    {data.tableData.map((rowData, rowIndex) => (
+                      <Row key={rowIndex} data={rowData.map((cellData, cellIndex) => (<Cell key={cellIndex} data={cellData} textStyle={{color: colors.text}} />))} 
                         style={[stylesInternal.row, {backgroundColor: rowData[2] == "sell" ? dark ? "#8b0000" : "#f87171" : rowData[2] == "buy" ? dark ? "#006400" : "#90ee90" : dark ? "#323232" : "#f3f3f3"}]}
                       />
                     ))}
@@ -219,7 +276,8 @@ export default function ExchangeTransactions(props) {
                 <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>Loading...</Text>
               )}
           </View>
-      )}
+      )}</>
+      }
     </ScrollView>
   );
 
