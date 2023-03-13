@@ -33,11 +33,21 @@ export default function TransactionData({ route, navigation }){
         color: "white",
         fontSize: 18,
       },
+        mapContainer: {
+    height: '38%',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+    screen: {
+    flex: 1,
+    padding: 20,
+  },
+    transaction: {
+    flex: 1,
+  },
     });
 
-export default function TransactionData({ route, navigation }) {
-  const isFocused = useIsFocused();
-  const [data, setTransactions] = useState();
 
   useEffect(() => {
     const getTransaction = async (id) => {
@@ -127,7 +137,8 @@ export default function TransactionData({ route, navigation }) {
 // });
 
     return (
-      <ScrollView style={[styles(dark, colors).container, {padding: 20}]}>
+      <View style={stylesInternal.screen}>
+        <View style={stylesInternal.transaction}>
         {/* <Text style={stylesInternal.text}>Transaction Data{"\n"}</Text> */}
 
         {data ? (
@@ -155,11 +166,25 @@ export default function TransactionData({ route, navigation }) {
 
             <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Fees</Text>
             <Text style={styles(dark, colors).text}>£ {data.fees}{"\n"}</Text>
+                 <View style={stylesInternal.mapContainer}>
+      <MapView
+          style={stylesInternal.map}
+          initialRegion={{
+            latitude: data.latitude,
+            longitude: data.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        >
+      <Marker coordinate={{ latitude: data.latitude, longitude: data.longitude }} />
+        </MapView>
+    </View>
           </View>
         ):(<Text style={styles(dark, colors).text}>Loading...</Text>)}
 
         {/* <Text>{JSON.stringify(data)}</Text> */}
-      </ScrollView>
+        </View>
+      </View>
   );
     
-}}
+}
