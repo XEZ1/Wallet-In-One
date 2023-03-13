@@ -137,18 +137,23 @@ export default function ExchangeTransactions(props) {
     setChartType(type);
   };
   const tokenList = exchangeTokens.map((val) => val.x);
-  const colours = []
+  const colours = [];
   for (let i = 0; i < tokenList.length; i++) {
     const token = tokenList[i];
     let hex = '';
-    
-    for (let j = 0; j < 3; j++) {
-      const charCode = token.charCodeAt(j);
-      const hexByte = (charCode * 30).toString(16).slice(2, 4);
-      hex += hexByte;
+    if (token.length >= 3) {
+      for (let j = 0; j < 3; j++) {
+        const charCode = token.charCodeAt(j);
+        const hexByte = (charCode * 3.2).toString(16).slice(0, 2);
+        hex += hexByte;
+      }
+      colours.push('#' + hex);
+    } else {
+      // less than 3 chars
+      const charCode = token.charCodeAt(0);
+      const hexByte = (charCode * 412).toString(16).slice(0, 6);
+      colours.push('#' + hexByte);
     }
-  
-    colours.push('#'+hex);
   }
   const handlePressIn = ()=>{};
 
