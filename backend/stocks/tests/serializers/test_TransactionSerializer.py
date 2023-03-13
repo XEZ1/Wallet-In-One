@@ -197,6 +197,20 @@ class TransactionSerializerTestCase(TestCase):
         self.assertFalse(serializer.is_valid())
         self.assertTrue(serializer.errors == {'non_field_errors': [ErrorDetail(string='No data provided', code='null')]})
 
+    def test_invalid_latitude(self):
+        self.serializer_input['latitude'] = None
+        serializer = self.initiate_serializer()
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(set(serializer.errors.keys()), set(['latitude']))
+        self.assertTrue(serializer.errors == {'latitude': [ErrorDetail(string='This field may not be null.', code='null')]})
+
+    def test_invalid_longitude(self):
+        self.serializer_input['longitude'] = None
+        serializer = self.initiate_serializer()
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(set(serializer.errors.keys()), set(['longitude']))
+        self.assertTrue(serializer.errors == {'longitude': [ErrorDetail(string='This field may not be null.', code='null')]})
+
     def test_validated_data(self):
         serializer = self.initiate_serializer()
         self.assertTrue(serializer.is_valid())
