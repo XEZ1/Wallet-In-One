@@ -11,7 +11,7 @@ from rest_framework.exceptions import APIException
 from rest_framework.views import APIView
 
 from .services import get_institutions, create_requisition, delete_all_requisitions, get_requisitions, get_account_data, total_user_balance, get_institution, update_user_accounts
-from .serializers import URLSerializer, OldAccountSerializer, TransactionSerializer, AccountSerializer, format_money
+from .serializers import URLSerializer, TransactionSerializer, AccountSerializer, format_money
 from .models import Account, Transaction
 from .util import calculate_balance_history, calculate_metrics_all
 from djmoney.money import Money
