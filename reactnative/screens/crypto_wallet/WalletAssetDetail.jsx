@@ -8,6 +8,7 @@ import {styles} from 'reactnative/screens/All_Styles.style.js';
 import { LineChart } from 'react-native-wagmi-charts';
 import WalletAsset from "./WalletAsset";
 import LineChartScreen from "../charts/LineChart";
+import SwitchSelector from "react-native-switch-selector";
 
 export default function WalletAssetDetail(props) {
 
@@ -49,8 +50,17 @@ export default function WalletAssetDetail(props) {
 
     }, []);
 
-    // setGraphData(graphData.sort((a, b) => new Date(b[1]) - new Date(a[1])));
+  const [graphVersion,setGraphVersion] = React.useState(4);
 
+  const toggleGraphVersion = () => {
+    if (graphVersion == 4){
+      setGraphVersion(3);
+    }
+    else if (graphVersion == 3){
+      setGraphVersion(4);
+    }
+  };
+  // console.log(graphData[graphData.length-1].value);
 
   const data = graphData
 
@@ -127,12 +137,29 @@ export default function WalletAssetDetail(props) {
         </View>
       </Pressable>
 
+      <SwitchSelector
+        initial={0}
+        onPress={() => toggleGraphVersion()}
+        // textColor="#7a44cf"
+        selectedColor="#fff"
+        buttonColor="#7a44cf"
+        borderColor="#7a44cf"
+        hasPadding
+        options={[    
+          { label: "Line Chart"},  
+          { label: "Candlestick Chart"} 
+        ]}
+        imageStyle={{ width: 20, height: 20 }}
+        textStyle={{ fontWeight: 'bold' }}
+      />
+
+
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Graph</Text>
       {graphData.length <= 2 ? (
         <Text style={{color: colors.text}}>Not enough data to display graph.</Text>
       ) : (
         <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
-          <LineChart.Provider data={data}>
+          {/* <LineChart.Provider data={data}>
             <LineChart height={SIZE / 2} width={SIZE * 0.85}>
               <LineChart.Path color={colors.text}/>
               <LineChart.CursorCrosshair color={colors.text}>
@@ -147,13 +174,13 @@ export default function WalletAssetDetail(props) {
 
               </LineChart.CursorCrosshair>
             </LineChart>
-          </LineChart.Provider>
+          </LineChart.Provider> */}
 
           {graphData && 
             <LineChartScreen 
               transactions={undefined}
-              // current_balance={graphData[0].value}
-              graph_version={3}
+              current_balance={graphData[graphData.length-1].value}
+              graph_version={graphVersion}
               height={SIZE / 2} 
               width={SIZE * 0.85}
               data={graphData}

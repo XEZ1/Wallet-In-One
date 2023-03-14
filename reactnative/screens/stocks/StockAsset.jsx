@@ -11,6 +11,7 @@ import { auth_delete } from '../../authentication';
 import { auth_get } from '../../authentication';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
+import SwitchSelector from "react-native-switch-selector";
 
 export default function StockAsset({ route, navigation, }){
   const [stocks, setStocks] = useState()
@@ -192,14 +193,15 @@ export default function StockAsset({ route, navigation, }){
 
   const [graphVersion,setGraphVersion] = React.useState(1);
   
-  const toggleGraph = () => {
-    if (graphVersion == 1){
-      setGraphVersion(3);
-    }
-    else if (graphVersion == 3){
-      setGraphVersion(1);
-    }
-  };
+    const toggleGraphVersion = () => {
+      if (graphVersion == 1){
+        setGraphVersion(3);
+      }
+      else if (graphVersion == 3){
+        setGraphVersion(1);
+      }
+    };
+
 
     return(
       <FlatList
@@ -235,6 +237,22 @@ export default function StockAsset({ route, navigation, }){
 
           </View>
 
+          <SwitchSelector
+            initial={0}
+            onPress={() => toggleGraphVersion()}
+            // textColor="#7a44cf"
+            selectedColor="#fff"
+            buttonColor="#7a44cf"
+            borderColor="#7a44cf"
+            hasPadding
+            options={[    
+              { label: "Line Chart"},  
+              { label: "Candlestick Chart"} 
+            ]}
+            imageStyle={{ width: 20, height: 20 }} // specify the style for the image
+            textStyle={{ fontWeight: 'bold' }} // specify the style for the text
+          />
+
 
           {transactions && 
             <LineChartScreen 
@@ -252,11 +270,11 @@ export default function StockAsset({ route, navigation, }){
             <View style={stylesInternal.timeButton}><Button onPress={last_week} title="D"/></View>
           </View>
 
-          <Button
+          {/* <Button
               onPress={toggleGraph}
               title={graphVersion == 1 ? "Line Chart" : "Candle Stick Chart"}
               color="#fcd34d"
-          />
+          /> */}
 
           <Button
               onPress={toggleTable}

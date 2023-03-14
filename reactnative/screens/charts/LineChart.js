@@ -8,13 +8,13 @@ import { useTheme } from "reactnative/src/theme/ThemeProvider";
 
 import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 
-export default function LineChartScreen({transactions, graph_version, height, width, current_balance,data})
+export default function LineChartScreen({transactions, graph_version, height, width, current_balance, data})
 {
     const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
     const {dark, colors, setScheme } = useTheme();
 
     useEffect(() => {
-        if(transactions != null){
+        if(data == null){
             let graph_data = transactions.map((item) => [item.amount, item.date]);
             graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
 
@@ -108,12 +108,14 @@ export default function LineChartScreen({transactions, graph_version, height, wi
             percentageChange = '+' + percentageChange;
         }
         
-        priceChange = (((new_value) - old_value)).toFixed(2);
+        priceChange = (((new_value) - old_value)).toFixed(3);
         if(priceChange > 0){
             priceChange = '+' + priceChange;
         }
     }
     // calculateChange(current_balance, graphData[0].value);
+    console.log(graph_version);
+    console.log(graphData);
 
     if(graph_version != 3){
         calculateChange(current_balance, graphData[0].value);
@@ -222,6 +224,32 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                             </View>
 
                         </CandlestickChart.Provider></>
+                    }
+
+                    {/* Interactive graph WalletAssetVersion */}
+                    { graph_version == 4 && 
+                        <>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}>{priceChange}</Text>
+                            <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}> ({percentageChange}%)</Text>
+                        </View>
+
+                        <LineChart.Provider data={data}>
+                            <LineChart height={height} width={width}>
+                            <LineChart.Path color={colors.text}/>
+                            <LineChart.CursorCrosshair color={colors.text}>
+
+                                <LineChart.Tooltip textStyle={{color: colors.text}}>
+                                <LineChart.PriceText precision={10} style={{color: colors.text}} />
+                                </LineChart.Tooltip>
+
+                                <LineChart.Tooltip position="bottom" >
+                                <LineChart.DatetimeText style={{color: colors.text}} />
+                                </LineChart.Tooltip>
+
+                            </LineChart.CursorCrosshair>
+                            </LineChart>
+                        </LineChart.Provider></>
                     }
                 </>
             ) : (<Text style={[styles.emptyText, {textAlign: 'center', alignSelf: 'center', color: colors.text}]}>No data available</Text>)}

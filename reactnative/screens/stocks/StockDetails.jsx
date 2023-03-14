@@ -11,7 +11,7 @@ import LineChartScreen from '../charts/LineChart';
 
 export default function StockDetails({ route, navigation }){
 
-  const [stockTransactions, setStockTransactions] = useState([]);
+  const [stockTransactions, setStockTransactions] = useState();
   const stock = route.params.stock;
   const {dark, colors, setScheme } = useTheme();
 
@@ -42,7 +42,7 @@ export default function StockDetails({ route, navigation }){
 
   // console.log(stockTransactions);
 
-  const current_balance = stockTransactions.map(item => item.amount).reduce((acc, current) => acc + current, 0);
+  const current_balance = stockTransactions?.map(item => item.amount).reduce((acc, current) => acc + current, 0);
   
 
   const data = {
