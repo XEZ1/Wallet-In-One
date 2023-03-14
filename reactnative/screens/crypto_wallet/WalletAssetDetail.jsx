@@ -7,7 +7,7 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {styles} from 'reactnative/screens/All_Styles.style.js';
 import { LineChart } from 'react-native-wagmi-charts';
 import WalletAsset from "./WalletAsset";
-
+import LineChartScreen from "../charts/LineChart";
 
 export default function WalletAssetDetail(props) {
 
@@ -48,6 +48,8 @@ export default function WalletAssetDetail(props) {
     setGraphData(points)
 
     }, []);
+
+    // setGraphData(graphData.sort((a, b) => new Date(b[1]) - new Date(a[1])));
 
 
   const data = graphData
@@ -146,7 +148,19 @@ export default function WalletAssetDetail(props) {
               </LineChart.CursorCrosshair>
             </LineChart>
           </LineChart.Provider>
+
+          {graphData && 
+            <LineChartScreen 
+              transactions={undefined}
+              // current_balance={graphData[0].value}
+              graph_version={3}
+              height={SIZE / 2} 
+              width={SIZE * 0.85}
+              data={graphData}
+          />}
+
         </View>
+
       )
 
       }

@@ -8,99 +8,125 @@ import { useTheme } from "reactnative/src/theme/ThemeProvider";
 
 import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 
-export default function LineChartScreen({transactions, graph_version, height, width, stockAccountBalance})
+export default function LineChartScreen({transactions, graph_version, height, width, current_balance,data})
 {
     const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
     const {dark, colors, setScheme } = useTheme();
-    
-
-    let graph_data = transactions.map((item) => [item.amount, item.date]);
-    graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
 
     useEffect(() => {
-    let points = [];
-    let balance = stockAccountBalance;
+        if(transactions != null){
+            let graph_data = transactions.map((item) => [item.amount, item.date]);
+            graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
 
-    for (let i = 0; i < graph_data.length; i++) {
-      let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
-      balance -= graph_data[i][0]
-      points = [point, ...points]
-    }
-    if (points.length > 0) {
-        points[points.length - 1].value = parseFloat(points[points.length - 1].value);
-    }
-    setGraphData(points)
-}, [transactions, stockAccountBalance]);
-    
-    let percentageChange = null
-    if(graphData && graphData.length > 0){
-        percentageChange = (((stockAccountBalance - graphData[0].value) / graphData[0].value) * 100).toFixed(2);
-        if(percentageChange > 0){
-            percentageChange = '+' + percentageChange
+            let points = [];
+            let balance = current_balance;
+
+            for (let i = 0; i < graph_data.length; i++) {
+                let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
+                balance -= graph_data[i][0]
+                points = [point, ...points]
+            }
+            if (points.length > 0) {
+                points[points.length - 1].value = parseFloat(points[points.length - 1].value);
+            }
+            setGraphData(points)
+        } else{
+            setGraphData(data);
         }
-    }
-
-    let priceChange = null
-    if(graphData && graphData.length > 0){
-        priceChange = (((stockAccountBalance - graphData[0].value) - graphData[0].value)).toFixed(2);
-        if(priceChange > 0){
-            priceChange = '+' + priceChange
-        }
-    }
-
-
-    let color1 = 'green';
-    const data = graphData;
-
+        // console.log("graphData");
+        // console.log(graphData);
+    }, [transactions]);
+    // console.log("graphData2");
+    //     console.log(graphData);
+    let color1 = '';
     
-    if (data && data.length > 0) {
-        if (data[0]?.value > data[data.length -1]?.value){
+    if (graphData && graphData.length > 0) {
+        if (graphData[0]?.value > graphData[graphData.length -1]?.value){
             color1 = 'red';
         } 
         else {
             color1 = 'green';
         }
     } 
+    // console.log(graphData);
 
-    const transformedData = data.reduce((acc, transaction) => {
-        const date = new Date(transaction.timestamp);
-        const month = `${date.getFullYear()}-${date.getMonth() + 1}`;
+    let candlestickData = null;
 
-        if (!acc[month]) {
-            acc[month] = {
-                high: transaction.value,
-                low: transaction.value,
-                open: transaction.value,
-                close: transaction.value,
+    if(graph_version == 3){
+        const transformedData = graphData.reduce((acc, transaction) => {
+            const date = new Date(transaction.timestamp);
+            const month = `${date.getFullYear()}-${date.getMonth() + 1}`;
+
+            if (!acc[month]) {
+                acc[month] = {
+                    high: transaction.value,
+                    low: transaction.value,
+                    open: transaction.value,
+                    close: transaction.value,
+                };
+            } 
+            else {
+                if (transaction.value > acc[month].high) {
+                    acc[month].high = transaction.value;
+                }
+
+                if (transaction.value < acc[month].low) {
+                    acc[month].low = transaction.value;
+                }
+
+                acc[month].close = transaction.value;
+            }
+
+            return acc;
+        }, {});
+        
+        candlestickData = Object.keys(transformedData).map((key) => {
+            const [year, month] = key.split('-');
+            return {
+                timestamp: (new Date(year, month - 1)).getTime(),
+                open: parseFloat(transformedData[key].open.toFixed(2)),
+                close: parseFloat(transformedData[key].close.toFixed(2)),
+                high: parseFloat(transformedData[key].high.toFixed(2)),
+                low: parseFloat(transformedData[key].low.toFixed(2)),
             };
-        } 
-        else {
-            if (transaction.value > acc[month].high) {
-                acc[month].high = transaction.value;
-            }
+        });
 
-            if (transaction.value < acc[month].low) {
-                acc[month].low = transaction.value;
-            }
+        // candlestickData = candlestickData.sort((a, b) => new Date(b[1]) - new Date(a[1]));
+    }
 
-            acc[month].close = transaction.value;
+    let percentageChange = null;
+    let priceChange = null;
+    
+    function calculateChange(new_value, old_value) {
+        if (old_value != 0){
+            percentageChange = (((new_value - old_value) / old_value) * 100).toFixed(2);
         }
+        else{
+            percentageChange = '0 ERR';
+        }
+        if (percentageChange > 0) {
+            percentageChange = '+' + percentageChange;
+        }
+        
+        priceChange = (((new_value) - old_value)).toFixed(2);
+        if(priceChange > 0){
+            priceChange = '+' + priceChange;
+        }
+    }
+    // calculateChange(current_balance, graphData[0].value);
 
-        return acc;
-    }, {});
-      
-    const candlestickData = Object.keys(transformedData).map((key) => {
-        const [year, month] = key.split('-');
-        return {
-            timestamp: (new Date(year, month - 1)).getTime(),
-            open: parseFloat(transformedData[key].open.toFixed(2)),
-            close: parseFloat(transformedData[key].close.toFixed(2)),
-            high: parseFloat(transformedData[key].high.toFixed(2)),
-            low: parseFloat(transformedData[key].low.toFixed(2)),
-        };
-    });
-      
-    // console.log(candlestickData);
+    if(graph_version != 3){
+        calculateChange(current_balance, graphData[0].value);
+    }
+    else if (current_balance != null){
+        calculateChange(current_balance, candlestickData[0].open);
+    }
+    else{
+        calculateChange(candlestickData[candlestickData.length-1].close, candlestickData[0].open);
+    }
+
+    console.log(candlestickData);
+    // console.log(graphData);
 
     return (
         <View >

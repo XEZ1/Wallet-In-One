@@ -131,7 +131,7 @@ const SuccessComponent = (props) => {
                   {transactions[item.account_id] && 
                     <LineChartScreen 
                       transactions={transactions[item.account_id]}
-                      stockAccountBalance={item.balance}
+                      current_balance={item.balance}
                       graph_version={2}
                       height={75}
                       width={350}

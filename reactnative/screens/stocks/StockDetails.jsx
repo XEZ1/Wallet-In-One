@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity,StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity,StyleSheet, Dimensions } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect, useCallback } from 'react';
@@ -7,12 +7,15 @@ import { api_url } from '../../authentication';
 import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
+import LineChartScreen from '../charts/LineChart';
 
 export default function StockDetails({ route, navigation }){
 
   const [stockTransactions, setStockTransactions] = useState([]);
   const stock = route.params.stock;
   const {dark, colors, setScheme } = useTheme();
+
+  const {width: SIZE} = Dimensions.get('window');
 
   let getStockTransactions = useCallback(async (stock) => {
     try {
@@ -25,17 +28,9 @@ export default function StockDetails({ route, navigation }){
       });
       let data = await response.json();
       data = data.filter(item => item.security_id === route.params.stock.security_id);
-      // data.map(item => console.log("item.name"));
-      data.map(item => console.log(item.name));
-      // data.map(item => console.log("item.security_id"));
-      data.map(item => console.log(item.security_id));
-      // data.map(item => console.log("route.params.security_id"));
-      data.map(item => console.log(route.params.security_id));
-      
-
       setStockTransactions(data);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   }, []);
 
@@ -45,14 +40,14 @@ export default function StockDetails({ route, navigation }){
     }
   }, [stock, getStockTransactions]);
 
-//  setStockTransactions(stockTransactions.filter(item => {
-//       item.security_id == route.params.security_id
-//   }));
+  // console.log(stockTransactions);
+
+  const current_balance = stockTransactions.map(item => item.amount).reduce((acc, current) => acc + current, 0);
   
 
   const data = {
     tableHead: ['ID', 'Amount', 'Date', 'Quantity', 'Fees'],
-    tableData: stockTransactions.map(item => [
+    tableData: stockTransactions?.map(item => [
       item.id,
       (item.amount).toFixed(2),
       item.date,
@@ -122,7 +117,29 @@ export default function StockDetails({ route, navigation }){
           </View>
         ):(<Text style={styles(dark, colors).text}>Loading...</Text>)}
 
-        {/* <Text>{JSON.stringify(data)}</Text> */}
+          {/* {data.tableHead && 
+            <LineChartScreen 
+              transactions={}
+              // current_balance={graphData[0].value}
+              graph_version={1}
+              height={SIZE / 2} 
+              width={SIZE * 0.85}
+              // data={graphData}
+          />} */}
+          <Text style={[styles(dark, colors).textBold, {color: colors.primary, fontSize: 21}]}>Line Graph</Text>
+          {stockTransactions && (
+            <LineChartScreen
+            transactions={stockTransactions} 
+            graph_version={1} 
+            height={SIZE / 2} 
+            width={SIZE * 0.85}
+            current_balance={current_balance}
+            // data={null}
+            />
+          )}
+
+
+        <Text style={[styles(dark, colors).textBold, {color: colors.primary, fontSize: 21}]}>Stock Transactions</Text>
         {data && (
           <View style={stylesInternal.table}>
               {data && data.tableData && data.tableData.length > 0 ? (
