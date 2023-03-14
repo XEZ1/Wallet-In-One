@@ -2,7 +2,7 @@ import {Button, Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithout
 import { useRoute } from "@react-navigation/native";
 import React, {useEffect, useState} from "react";
 //import {LineChart} from "react-native-chart-kit";
-import getCryptoIcon from "./icons/icon";
+import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {styles} from 'reactnative/screens/All_Styles.style.js';
 import { LineChart } from 'react-native-wagmi-charts';

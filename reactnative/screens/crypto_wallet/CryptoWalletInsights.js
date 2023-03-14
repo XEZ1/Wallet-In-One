@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { BACKEND_URL } from "@env"
 import * as SecureStore from "expo-secure-store";
-import getCryptoIcon from "./icons/icon";
+import getCryptoIcon from "../cryptocurrency/icons/icon";
 
 export default function CryptoWalletInsights() {
   const [insights, setInsights] = useState({predicted_balance: {}, received_spent: {}, average_spend: {}});

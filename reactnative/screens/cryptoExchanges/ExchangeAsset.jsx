@@ -8,7 +8,7 @@ import {
     View,
   } from "react-native";
 import React, {useEffect, useState} from "react";
-import getCryptoIcon from "../crypto_wallet/icons/icon";
+import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
   
 export default function ExchangeAsset(props) {

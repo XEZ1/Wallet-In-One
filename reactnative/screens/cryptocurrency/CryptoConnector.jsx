@@ -15,7 +15,7 @@ import {useTheme} from 'reactnative/src/theme/ThemeProvider'
 import exchanges from './exchanges.json'
 import {styles} from 'reactnative/screens/All_Styles.style.js';
 import blockchains from "./blockchains.json";
-import getCryptoIcon from "../crypto_wallet/icons/icon";
+import getCryptoIcon from "./icons/icon";
 
 
 export default function CryptoConnector(props) {

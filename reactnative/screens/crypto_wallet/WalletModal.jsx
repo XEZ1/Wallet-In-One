@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import {createStackNavigator} from "@react-navigation/stack";
-import getCryptoIcon from "./icons/icon";
+import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {styles} from 'reactnative/screens/All_Styles.style.js';
 import coins from '../cryptocurrency/blockchains.json'

@@ -1,7 +1,7 @@
 import {Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View, ScrollView} from "react-native";
 import * as SecureStore from 'expo-secure-store';
 import React, {useEffect, useState, useCallback} from "react";
-import getCryptoIcon from "../crypto_wallet/icons/icon";
+import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { styles } from 'reactnative/screens/All_Styles.style.js';
 import { api_url } from '../../authentication';
