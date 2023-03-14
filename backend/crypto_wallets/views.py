@@ -4,14 +4,14 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
 from crypto_wallets.models import CryptoWallet
-from crypto_wallets.serializers import WalletSerializer
+from crypto_wallets.serializers import CryptoWalletSerializer
 from crypto_wallets.services import calculate_received_spent, calculate_predicted_balance, calculate_average_spend
 
 
 # Create your views here.
 
 class CryptoWalletViewSet(GenericViewSet):
-    serializer_class = WalletSerializer
+    serializer_class = CryptoWalletSerializer
 
     def get_queryset(self):
         return CryptoWallet.objects.filter(user=self.request.user)
@@ -23,7 +23,7 @@ class CryptoWalletViewSet(GenericViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def list(self, request):
-        serializer = self.get_serializer(self.get_queryset(), many=True)
+        serializer = self.get_serializer(self.get_queryset(), many=True, context={'exclude_transactions': True})
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):

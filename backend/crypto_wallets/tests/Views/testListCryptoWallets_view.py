@@ -9,7 +9,7 @@ from rest_framework import status
 from crypto_wallets.views import ListCryptoWallets
 from accounts.models import User
 from crypto_wallets.models import CryptoWallet
-from crypto_wallets.serializers import WalletSerializer
+from crypto_wallets.serializers import CryptoWalletSerializer
 
 
 class ListCryptoWalletTestCase(TestCase):
@@ -53,7 +53,7 @@ class ListCryptoWalletTestCase(TestCase):
     """Test Get"""
     def test_get(self):
         crypto_wallets = CryptoWallet.objects.filter(user=self.user)
-        serializer = WalletSerializer(crypto_wallets)
+        serializer = CryptoWalletSerializer(crypto_wallets)
         # self.url = reverse('crypto_wallets',kwargs={'account_id':'abc'})
         # response = ListCryptoWallets.get(self, request)
         # self.assertEqual(response, serializer)
