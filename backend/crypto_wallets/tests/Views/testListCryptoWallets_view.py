@@ -9,7 +9,7 @@ from rest_framework import status
 from crypto_wallets.views import ListCryptoWallets
 from accounts.models import User
 from crypto_wallets.models import CryptoWallet
-from crypto_wallets.seralizers import WalletSerializer
+from crypto_wallets.serializers import WalletSerializer
 
 
 class ListCryptoWalletTestCase(TestCase):

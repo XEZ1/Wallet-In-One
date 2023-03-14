@@ -1,5 +1,5 @@
 from django.test import TestCase
-from crypto_wallets.seralizers import WalletSerializer
+from crypto_wallets.serializers import WalletSerializer
 from accounts.models import User
 from crypto_wallets.models import CryptoWallet
 from django.urls import reverse

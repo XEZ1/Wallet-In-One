@@ -1,7 +1,7 @@
 """Wallet Transaction serializer unit tests"""
 from django.test import TestCase
 from rest_framework import serializers
-from crypto_wallets.seralizers import WalletTransactionSerializer
+from crypto_wallets.serializers import WalletTransactionSerializer
 
 class WalletTransactionSerializerTestCase(TestCase):
     """Wallet Transaction serializer unit tests"""
