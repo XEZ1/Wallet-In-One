@@ -6,14 +6,15 @@ import Loading from './Loading'
 import { auth_get } from '../../authentication'
 import { BalanceChart } from './BalanceChart'
 import { BankBarChart } from './BankBarChart'
+import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 import { BankBarChart2 } from './BankBarChart'
 
 const SegmentedControl = ({ segments, activeIndex, setActiveIndex }) => {
   return (
-    <View style={styles.segmentContainer}>
+    <View style={stylesInternal.segmentContainer}>
       {segments.map((segment, index) => (
-        <View style={styles.buttonContainer} key={index}>
+        <View style={stylesInternal.buttonContainer} key={index}>
           <Button
             title={segment}
             color={activeIndex === index ? '#007AFF' : 'grey'}
@@ -25,7 +26,7 @@ const SegmentedControl = ({ segments, activeIndex, setActiveIndex }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const stylesInternal = StyleSheet.create({
   segmentContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -116,39 +117,39 @@ export default function BankInsights() {
 
   return (
     <ScrollView>
-    <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: colors.background, marginBottom: 100 }}>
-      <View style={styles.item}>
+    <View style={[ styles(dark, colors).container, {justifyContent: 'flex-start', alignItems: 'center', marginBottom: 100 }]}>
+      <View style={stylesInternal.item}>
         <SegmentedControl segments={['All', '1 Month','3 Month', '6 Month']} activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
       </View>
       
-      <View style={styles.item}>
+      <View style={stylesInternal.item}>
         <View style={{ width: "80%", flexDirection: 'row', justifyContent: 'space-evenly' }}>
-        <View style={styles.columnCenter}>
-            <Text style={{ fontWeight: 'bold' }}>Money In:</Text>
+        <View style={stylesInternal.columnCenter}>
+            <Text style={styles(dark, colors).textBold}>Money In:</Text>
             <Text style={{ color: 'green' }} >£{currentData.total_money_in}</Text>
           </View>
-          <View style={styles.columnCenter}>
-            <Text style={{ fontWeight: 'bold' }}>Money Out:</Text>
+          <View style={stylesInternal.columnCenter}>
+            <Text style={styles(dark, colors).textBold}>Money Out:</Text>
             <Text style={{ color: 'red' }} >£{currentData.total_money_out}</Text>
           </View>
-          <View style={styles.columnCenter}>
-            <Text style={{ fontWeight: 'bold' }}>Net:</Text>
+          <View style={stylesInternal.columnCenter}>
+            <Text style={styles(dark, colors).textBold}>Net:</Text>
             <Text style={{ color: currentData.net>0?'green':'red' }} >£{currentData.net}</Text>
           </View>
         </View>
       </View>
-      <Text>Balance History:</Text>
+      <Text style={styles(dark, colors).text}>Balance History:</Text>
       <BalanceChart rawData={currentData.balance_history} highest={currentData.highest_balance}/>
       {Object.keys(currentData).map((key) => {
         if (!["balance_history",'net','total_money_in','total_money_out','positive','negative','both','bar_data'].includes(key)){
           return (
             <View key={key}>
-              <Text>{key.replace('_', ' ').replace(/\b(\w)/g, k => k.toUpperCase())}: {currentData[key]}</Text>
+              <Text style={styles(dark, colors).text}>{key.replace('_', ' ').replace(/\b(\w)/g, k => k.toUpperCase())}: {currentData[key]}</Text>
             </View>
           )
         }
       })}
-      <View style={styles.item}>
+      <View style={stylesInternal.item}>
         <SegmentedControl segments={['Both', 'Income','Spending']} activeIndex={activeTab} setActiveIndex={setActiveTab} />
       </View>
 
@@ -156,7 +157,7 @@ export default function BankInsights() {
         if (!["balance_history",'net','total_money_in','total_money_out','positive','negative','both','bar_data'].includes(key)){
           return (
             <View key={key}>
-              <Text>{key.replace('_', ' ').replace(/\b(\w)/g, k => k.toUpperCase())}: {currentTabData[key]}</Text>
+              <Text style={styles(dark, colors).text}>{key.replace('_', ' ').replace(/\b(\w)/g, k => k.toUpperCase())}: {currentTabData[key]}</Text>
             </View>
           )
         }

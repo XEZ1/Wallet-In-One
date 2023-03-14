@@ -1,6 +1,9 @@
 import { VictoryChart, VictoryLine, VictoryAxis, VictoryScatter } from "victory-native";	
-import { Text } from "react-native";
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 export function BalanceChart({rawData,highest}) {	
+
+  const {dark, colors, setScheme} = useTheme();
+
 //   const rawData2 = {	
 //     "2023-02-17": "795.11",	
 //     "2023-01-26": "695.11",	
@@ -45,7 +48,9 @@ export function BalanceChart({rawData,highest}) {
         grid: {	
           stroke: "grey",	
           strokeDsharray: "2, 5"	
-        }	
+        },	
+        axis: {stroke: 'grey'},
+        tickLabels: {fill: colors.text , fontSize: 12},
       }}	
     />	
     <VictoryAxis	
@@ -56,7 +61,9 @@ export function BalanceChart({rawData,highest}) {
         grid: {	
           stroke: "grey",	
           strokeDasharray: "2, 5"	
-        }	
+        },
+        axis: {stroke: 'grey'},
+        tickLabels: {fill: colors.text},	
       }}	
     />	
     	
