@@ -1,13 +1,14 @@
 import { useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import { BACKEND_URL } from "@env"
+import { api_url } from '../../authentication';
 
 
 export default function useCryptoExchange() {
   const [exchanges, setExchanges] = useState([]);
 
   const fetchExchanges = async () => {
-    await fetch('http://10.0.2.2:8000/crypto-exchanges', {
+    await fetch(`${api_url}/crypto-exchanges`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -20,7 +21,7 @@ export default function useCryptoExchange() {
   }
 
   const removeExchange = async (id) => {
-    await fetch(`http://10.0.2.2:8000/crypto-exchanges`, {
+    await fetch(`${api_url}/crypto-exchanges`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

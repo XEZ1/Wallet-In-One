@@ -12,6 +12,8 @@ import {
 import useCryptoWallet from "./useCryptoWallet";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import * as SecureStore from "expo-secure-store";
+import exchanges from '../cryptoExchanges/exchanges.json'
+
 
 export default function AddCryptoScreen(props) {
   const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
@@ -130,43 +132,20 @@ export default function AddCryptoScreen(props) {
               Add a cryptocurrency account from an exchange:
             </Text>
           </View>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('Binance')}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Binance</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('Huobi')}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Huobi</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('Gateio')}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Gateio</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('CoinList')}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Coinlist</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('Coinbase')}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Coinbase</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('Kraken')}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Kraken</Text>
-          </TouchableOpacity>
+
+          {
+            exchanges.map((exchange) =>
+              <TouchableOpacity
+                key={exchange.name}
+                onPress={() => props.navigation.navigate('Exchange Credentials', {exchange: exchange.name})}
+                style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
+              >
+                <Text style={styles.buttonText}>{exchange.name}</Text>
+              </TouchableOpacity>)
+          }
+
         </View>
+
 
       </ScrollView>
     </SafeAreaView>
