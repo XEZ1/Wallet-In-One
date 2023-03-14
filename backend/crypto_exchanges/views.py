@@ -37,7 +37,8 @@ def get_transactions(request, exchange):
 @api_view(['GET'])
 def get_token_breakdown(request, exchange):
     exchange_obj = CryptoExchangeAccount.objects.get(id=exchange)
-    crypto_data_from_exchanges = CurrentMarketPriceFetcher(request.user).get_exchange_token_breakdown(exchange_obj)
+    crypto_data_from_exchanges = sorted(
+        CurrentMarketPriceFetcher(request.user).get_exchange_token_breakdown(exchange_obj), key=lambda d: d['y'])
     return Response(crypto_data_from_exchanges)
 
 
@@ -117,8 +118,8 @@ class GenericCryptoExchanges(APIView):
     @abstractmethod
     def get(self, request):
         crypto_exchange_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
-        serializers = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
-        serializer_array = serializers.data
+        account_serializers = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
+        serializer_array = account_serializers.data
         for serializer in serializer_array:
             exchange = CryptoExchangeAccount.objects.get(api_key=serializer['api_key'])
             serializer.update({'id': exchange.id})

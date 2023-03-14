@@ -179,6 +179,7 @@ class HuobiFetcher:
 
         return to_return
 
+
 # Class was implemented according to: "https://www.gate.io/docs/developers/apiv4/en/"
 class GateioFetcher:
 
@@ -321,7 +322,7 @@ class CoinListFetcher:
         to_return = {}
         for account_id in response_id.json()['accounts']:
             endpoint = 'https://trade-api.coinlist.co'
-            #path = f"""/v1/accounts/{account_id['trader_id']}"""
+            # path = f"""/v1/accounts/{account_id['trader_id']}"""
             path = f"/v1/accounts/{account_id['trader_id']}/ledger"
             timestamp = str(int(time.time()))
             request_url = f"{endpoint}{path}"
@@ -500,12 +501,16 @@ class CurrentMarketPriceFetcher:
 
     def get_exchange_token_breakdown(self, exchange):
         tokens = Token.objects.filter(crypto_exchange_object=exchange)
-        return [{'x': token.asset, 'y': round(self.get_crypto_price(token.asset) * (token.free_amount +
-                token.locked_amount), 2)} for token in tokens]
+        result = []
+        for token in tokens:
+            price = self.get_crypto_price(token.asset)
+            value = round(price * (token.free_amount + token.locked_amount), 2)
+            result.append({'x': token.asset + ": " + str(value), 'y': value})
+        return result
 
     def chart_breakdown_crypto_exchanges(self):
         exchanges = CryptoExchangeAccount.objects.filter(user=self.user)
         if exchanges.exists():
             return [{'x': exchange.crypto_exchange_name,
-                     'y': self.get_exchange_balance(exchange)}
+                     'y': self.get_exchange_balance(exchange), 'id': exchange.id}
                     for exchange in exchanges]

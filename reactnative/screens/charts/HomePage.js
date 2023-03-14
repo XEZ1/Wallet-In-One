@@ -44,6 +44,7 @@ export default function HomePage({ navigation }) {
       fetchData();
     }
     fetchWallets();
+    fetchExchanges();
   }, [isFocused]);
 
   const handlePressIn = async (event, datapoint) => {
@@ -83,15 +84,14 @@ export default function HomePage({ navigation }) {
         }
         console.log(stockData.id)
       }
-      //} 
-      // else if (pressed === "Cryptocurrency from exchanges") {
-      //   var cryptoWalletData = baseData["Cryptocurrency from exchanges"][index]
-      //   var exchange = exchanges.find(x => x.id === cryptoWalletData.id)
-      //   if (cryptoWalletData.id) {
-      //     navigation.navigate("Exchange Detail", { item: exchange, value: cryptoWalletData.y, removeExchange: removeExchange })
-      //     return
-      //   }
-      // }
+      else if (pressed === "Cryptocurrency from exchanges") {
+        var cryptoExchangeData = baseData["Cryptocurrency from exchanges"][index]
+        var exchange = exchanges.find(x => x.id === cryptoExchangeData.id)
+        if (cryptoExchangeData.id) {
+          navigation.navigate("ExchangeTransactions", { item: exchange, value: cryptoExchangeData.y, removeExchange: removeExchange })
+          return
+        }
+      }
       setNewData(baseData.all);
       setPressed(null)
     } else {
@@ -167,15 +167,19 @@ export default function HomePage({ navigation }) {
         }
         console.log(stockData.id)
       }
-      //} 
-      // else if (pressed === "Cryptocurrency from exchanges") {
-      //   var cryptoWalletData = baseData["Cryptocurrency from exchanges"][index]
-      //   var exchange = exchanges.find(x => x.id === cryptoWalletData.id)
-      //   if (cryptoWalletData.id) {
-      //     navigation.navigate("Exchange Detail", { item: exchange, value: cryptoWalletData.y, removeExchange: removeExchange })
-      //     return
-      //   }
-      // }
+      else if (pressed === "Cryptocurrency from exchanges") {
+        for (let i = 0; i < baseData["Cryptocurrency from exchanges"].length; i++) {
+          if (baseData["Cryptocurrency from exchanges"][i].x === index) {
+            var cryptoData = baseData["Cryptocurrency from exchanges"][i]
+            break;
+          }
+        }
+        var exchange = exchanges.find(x => x.id === cryptoData.id)
+        if (cryptoData.id) {
+          navigation.navigate("ExchangeTransactions", { item: exchange, value: cryptoData.y, removeExchange: removeExchange })
+          return
+        }
+      }
       setNewData(baseData.all);
     };
 
