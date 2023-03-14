@@ -13,7 +13,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import getCryptoIcon from "./icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {styles} from 'reactnative/screens/All_Styles.style.js';
-import coins from './blockchains.json'
+import coins from '../cryptocurrency/blockchains.json'
 
 
 export default function WalletConnector(props) {

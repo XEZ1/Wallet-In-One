@@ -10,15 +10,15 @@ import {
   Alert,
   Image,
 } from "react-native";
-import useCryptoWallet from "./useCryptoWallet";
+import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 import {useTheme} from 'reactnative/src/theme/ThemeProvider'
-import exchanges from '../cryptoExchanges/exchanges.json'
+import exchanges from './exchanges.json'
 import {styles} from 'reactnative/screens/All_Styles.style.js';
 import blockchains from "./blockchains.json";
-import getCryptoIcon from "./icons/icon";
+import getCryptoIcon from "../crypto_wallet/icons/icon";
 
 
-export default function AddCryptoScreen(props) {
+export default function CryptoConnector(props) {
 
   const {wallets, fetchWallets, connectWallet, removeWallet} = useCryptoWallet();
   const {dark, colors, setScheme} = useTheme();

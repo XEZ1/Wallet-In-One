@@ -12,16 +12,16 @@ import {
   View,
   Alert,
 } from "react-native";
-import useCryptoWallet from "./useCryptoWallet";
+import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
-import WalletAsset from "./WalletAsset";
+import WalletAsset from "../crypto_wallet/WalletAsset";
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
 import { api_url } from '../../authentication';
 
-export default function CryptoWallet(props) {
+export default function CryptoList(props) {
   const { wallets, listWallets, connectWallet, removeWallet } = useCryptoWallet();
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
   const {dark, colors, setScheme} = useTheme();

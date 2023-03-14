@@ -9,10 +9,10 @@ import BankTransactionsScreen from "../banking/BankTransactionsScreen";
 import MainAccountPage from "./MainAccountPage";
 
 //Crypto Wallet Screens
-import CryptoWallet from "../crypto_wallet/CryptoWallet";
+import CryptoList from "../cryptocurrency/CryptoList";
 import WalletAssetDetail from "../crypto_wallet/WalletAssetDetail";
 import WalletConnector from "../crypto_wallet/WalletModal";
-import AddCryptoScreen from "../crypto_wallet/AddCryptoScreen"
+import CryptoConnector from "../cryptocurrency/CryptoConnector"
 
 //Crypto Exchanges Screens
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
@@ -66,7 +66,7 @@ export default function MainStackNavigator() {
       />
       <Stack.Screen 
         name="Crypto Wallets & Exchanges"
-        component={CryptoWallet}
+        component={CryptoList}
         options={({ navigation }) => ({
           headerRight: () => (
             <TouchableOpacity 
@@ -79,7 +79,7 @@ export default function MainStackNavigator() {
       })}/>
       <Stack.Screen
         name="Add Cryptocurrency Wallet or Account"
-        component={AddCryptoScreen} />
+        component={CryptoConnector} />
       <Stack.Screen
         name="WalletAssetDetail"
         component={WalletAssetDetail}
