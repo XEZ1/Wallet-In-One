@@ -96,7 +96,7 @@ export default function HomePage({ navigation }) {
     } else {
       const dataPoint = data[index];
       let col = datapoint.style["fill"]
-      if(typeof col != 'string' || col === "black"){
+      if(typeof col != 'string' || col === "black" || col === "white"){
         col = originalColours[list.indexOf(datapoint.datum["x"])]
       }
       setColors([col, "red", "blue", "yellow", "#800000", "#a9a9a9", "#fffac8", "#E7E9B9", "#6B238F"])
