@@ -24,7 +24,7 @@ export default function HomePage({ navigation }) {
   const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed] = useState(null);
   const [colorScheme, setColors] = useState(["pink", "turquoise", "lime", "#FA991C"]);
-  const { wallets, fetchWallets, removeWallet } = useCryptoWallet();
+  const { wallets, listWallets, removeWallet } = useCryptoWallet();
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
 
   // Uncomment to show bank data from backend
@@ -43,7 +43,7 @@ export default function HomePage({ navigation }) {
     if (isFocused) {
       fetchData();
     }
-    fetchWallets();
+    listWallets();
     fetchExchanges();
   }, [isFocused]);
 

@@ -22,7 +22,7 @@ import * as SecureStore from "expo-secure-store";
 import { api_url } from '../../authentication';
 
 export default function CryptoWallet(props) {
-  const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
+  const { wallets, listWallets, connectWallet, removeWallet } = useCryptoWallet();
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
   const {dark, colors, setScheme} = useTheme();
 
@@ -91,7 +91,7 @@ export default function CryptoWallet(props) {
   });
 
   useEffect(() => {
-    fetchWallets();
+    listWallets();
     fetchExchanges();
   }, []);
 
@@ -146,7 +146,7 @@ export default function CryptoWallet(props) {
         />
         <View style={[styles.walletList]}>
         {
-          wallets.map((item)=> <WalletAsset key={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
+          wallets.map((item)=> <WalletAsset key={item.id} id={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
         }
         </View>
 

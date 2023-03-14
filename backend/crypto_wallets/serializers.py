@@ -17,7 +17,11 @@ class CryptoWalletSerializer(serializers.ModelSerializer):
     class Meta:
         model = CryptoWallet
         fields = "__all__"
-        extra_kwargs = {'balance': {'required': False}, 'received': {'required': False}, 'spent': {'required': False}, 'output_count': {'required': False}, 'unspent_output_count': {'required': False}}
+        extra_kwargs = dict(balance={'required': False},
+                            received={'required': False},
+                            spent={'required': False},
+                            output_count={'required': False},
+                            unspent_output_count={'required': False})
 
     def get_fields(self):
         fields = super().get_fields()
