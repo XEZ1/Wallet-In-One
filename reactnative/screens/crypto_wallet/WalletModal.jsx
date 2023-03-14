@@ -13,64 +13,10 @@ import {createStackNavigator} from "@react-navigation/stack";
 import getCryptoIcon from "./icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {styles} from 'reactnative/screens/All_Styles.style.js';
-import coins from './coins.json'
-
-const Stack = createStackNavigator();
-
-export function WalletSelector(props) {
-
-  const { connectWallet } = props.route.params;
-  const {dark, colors, setScheme} = useTheme();
-
-  const stylesInternal = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingTop: 20,
-    },
-    cryptoItem: {
-      padding: 10,
-      margin: 10,
-      borderRadius: 10,
-      alignItems: "center",
-      justifyContent: 'center',
-      backgroundColor: colors.primary,
-    },
-  });
-
-  return(
-    <ScrollView style={[styles(dark, colors).container, {paddingTop: 30}]}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <View style={{ flex: 1, flexDirection: "column" }}>
-          <Text style={[styles(dark, colors).largeTextBold, {alignSelf: "center"}]}>Connect Wallet</Text>
-        </View>
-      </View>
-
-      <View style={{flex: 1}}>
-        {
-          coins.map((coin) =>
-            <TouchableOpacity
-              key={coin.symbol}
-              onPress={() => props.navigation.navigate("WalletConnector", {connectWallet: connectWallet, cryptocurrency: coin.name, symbol: coin.symbol})}
-            >
-              <View style={[stylesInternal.cryptoItem]}>
-                <Image
-                  style={{width: 64, height: 64}}
-                  source={getCryptoIcon(coin.symbol)}
-                />
-                <Text style={[styles(dark, colors).textBold, {fontSize: 20}]}>{coin.name}</Text>
-              </View>
-            </TouchableOpacity>
-          )
-
-        }
-      </View>
-
-    </ScrollView>
-  )
-}
+import coins from './blockchains.json'
 
 
-export function WalletConnector(props) {
+export default function WalletConnector(props) {
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const { connectWallet, cryptocurrency, symbol } = props.route.params;

@@ -11,7 +11,7 @@ import MainAccountPage from "./MainAccountPage";
 //Crypto Wallet Screens
 import CryptoWallet from "../crypto_wallet/CryptoWallet";
 import WalletAssetDetail from "../crypto_wallet/WalletAssetDetail";
-import { WalletConnector, WalletSelector } from "../crypto_wallet/WalletModal";
+import WalletConnector from "../crypto_wallet/WalletModal";
 import AddCryptoScreen from "../crypto_wallet/AddCryptoScreen"
 
 //Crypto Exchanges Screens
@@ -84,7 +84,6 @@ export default function MainStackNavigator() {
         name="WalletAssetDetail"
         component={WalletAssetDetail}
       />
-      <Stack.Screen name="WalletSelector" component={WalletSelector} />
       <Stack.Screen name="WalletConnector" component={WalletConnector} />
       <Stack.Screen name="Crypto Wallet Insights" component={CryptoWalletInsights} />
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import {
   TouchableOpacity,
   Dimensions,
@@ -8,18 +8,22 @@ import {
   Text,
   View,
   Alert,
+  Image,
 } from "react-native";
 import useCryptoWallet from "./useCryptoWallet";
-import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-import * as SecureStore from "expo-secure-store";
+import {useTheme} from 'reactnative/src/theme/ThemeProvider'
 import exchanges from '../cryptoExchanges/exchanges.json'
+import {styles} from 'reactnative/screens/All_Styles.style.js';
+import blockchains from "./blockchains.json";
+import getCryptoIcon from "./icons/icon";
 
 
 export default function AddCryptoScreen(props) {
-  const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
+
+  const {wallets, fetchWallets, connectWallet, removeWallet} = useCryptoWallet();
   const {dark, colors, setScheme} = useTheme();
 
-  const styles = StyleSheet.create({
+  const stylesInternal = StyleSheet.create({
     cryptoWalletTitle: {
       fontWeight: "900",
       fontSize: 40,
@@ -60,94 +64,88 @@ export default function AddCryptoScreen(props) {
       borderRadius: 10,
       marginVertical: 10,
       backgroundColor: colors.primary,
-      alignSelf: 'center', // center the button horizontally
+      alignSelf: 'center',
     },
     buttonText: {
       textAlign: 'center',
       fontWeight: 'bold',
       color: colors.text,
-    }
+    },
+    cryptoItem: {
+      padding: 10,
+      margin: 10,
+      borderRadius: 10,
+      alignItems: "center",
+      justifyContent: 'center',
+      backgroundColor: colors.primary,
+    },
+    walletAsset: {
+      padding: 10,
+      marginVertical: 5,
+      borderRadius: 10,
+      flexDirection: "row",
+    },
+    walletAssetTitle: {
+      fontWeight: "700",
+      flex: 1,
+    },
+    walletAssetImage: {
+      width: 30,
+      height: 30,
+    },
   });
 
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <ScrollView>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "column",
-              justifyContent: "center",
-            }}
+    <ScrollView style={[styles(dark, colors).container, {padding: 20}]}>
+
+      <View style={{flexDirection: "row", alignItems: "center"}}>
+        <View style={{flex: 1, flexDirection: "column"}}>
+          <Text style={[styles(dark, colors).largeTextBold, {alignSelf: "center"}]}>Connect Wallet</Text>
+        </View>
+      </View>
+
+      {
+        blockchains.map((blockchain) =>
+
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate("WalletConnector",
+              {connectWallet: connectWallet, cryptocurrency: blockchain.name, symbol: blockchain.symbol})}
           >
-            <View style={{ marginRight: 20 }}>
-              <Text style={[styles.cryptoWalletTitle, {color: colors.text}]}>Add Cryptocurrency</Text>
+
+            <View style={[stylesInternal.walletAsset, {backgroundColor: colors.primary}]}>
+
+              <View style={{alignItems: "center", justifyContent: "center", paddingRight: 10}}>
+                <Image style={stylesInternal.walletAssetImage} source={getCryptoIcon(blockchain.symbol)}/>
+              </View>
+
+              <Text style={{fontSize: 25, fontWeight: "700", color: colors.text}}>
+                {blockchain.name}
+              </Text>
+
             </View>
-          </View>
+
+          </TouchableOpacity>
+        )
+      }
+
+      <View style={{flexDirection: "row", alignItems: "center"}}>
+        <View style={{flex: 1, flexDirection: "column"}}>
+          <Text style={[styles(dark, colors).largeTextBold, {alignSelf: "center"}]}>Connect Exchange</Text>
         </View>
+      </View>
 
-        <View style={styles.container}>
-          <View
-            style={[
-              styles.titleContainer,
-              {
-                borderWidth: 1,
-                borderColor: colors.text,
-                padding: 10,
-                borderRadius: 10,
-                width: Dimensions.get('window').width - 40,
-                alignSelf: "center",
-              },
-            ]}
+      {
+        exchanges.map((exchange) =>
+          <TouchableOpacity
+            key={exchange.name}
+            onPress={() => props.navigation.navigate('Exchange Credentials', {exchange: exchange.name})}
+            style={[stylesInternal.button, {width: Dimensions.get('window').width - 40}]}
           >
-            <Text style={styles.title}>
-              Add a cryptocurrency wallet from the blockchain:
-            </Text>
-          </View>
-        </View>
+            <Text style={stylesInternal.buttonText}>{exchange.name}</Text>
+          </TouchableOpacity>)
+      }
 
-        <TouchableOpacity
-            onPress={() => props.navigation.navigate("WalletSelector", {connectWallet: connectWallet})}
-            style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-          >
-            <Text style={styles.buttonText}>Add Wallet</Text>
-        </TouchableOpacity>
-
-        <View style={styles.container}>
-          <View
-            style={[
-              styles.titleContainer,
-              {
-                borderWidth: 1,
-                borderColor: colors.text,
-                padding: 10,
-                borderRadius: 10,
-                width: Dimensions.get('window').width - 40,
-                alignSelf: "center",
-              },
-            ]}
-          >
-            <Text style={styles.title}>
-              Add a cryptocurrency account from an exchange:
-            </Text>
-          </View>
-
-          {
-            exchanges.map((exchange) =>
-              <TouchableOpacity
-                key={exchange.name}
-                onPress={() => props.navigation.navigate('Exchange Credentials', {exchange: exchange.name})}
-                style={[styles.button, { width: Dimensions.get('window').width - 40 }]}
-              >
-                <Text style={styles.buttonText}>{exchange.name}</Text>
-              </TouchableOpacity>)
-          }
-
-        </View>
-
-
-      </ScrollView>
-    </SafeAreaView>
+    </ScrollView>
   );
 }
