@@ -34,6 +34,7 @@ import { setStatusBarHidden } from 'expo-status-bar';
 import WalletAssetDetail from "./screens/crypto_wallet/WalletAssetDetail";
 
 import StockAsset from './screens/stocks/StockAsset';
+import ExchangeTransactions from './screens/cryptoExchanges/ExchangeTransactions';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -180,6 +181,9 @@ function HomePageNavigator() {
       <Stack.Screen
         name='Stock Account Transactions'
         component={StockAsset} />
+        <Stack.Screen
+        name='ExchangeTransactions'
+        component={ExchangeTransactions} />
     </Stack.Navigator>)
 }
 

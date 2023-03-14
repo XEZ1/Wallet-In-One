@@ -1,22 +1,17 @@
-import {Button, Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View, ScrollView} from "react-native";
-import { useRoute } from "@react-navigation/native";
+import {Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View, ScrollView} from "react-native";
 import * as SecureStore from 'expo-secure-store';
 import React, {useEffect, useState, useCallback} from "react";
-//import {LineChart} from "react-native-chart-kit";
 import getCryptoIcon from "../crypto_wallet/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { styles } from 'reactnative/screens/All_Styles.style.js';
-import { LineChart } from 'react-native-wagmi-charts';
-import ExchangeAsset from "./ExchangeAsset";
 import { api_url } from '../../authentication';
 import {Table, Row, Cell} from 'react-native-table-component';
-import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer } from "victory-native";
+import { VictoryPie, VictoryLabel, VictoryContainer } from "victory-native";
 import BarChart from "../charts/chartComponents/barChart";
 
 export default function ExchangeTransactions(props) {
 
-  const {dark, colors, setScheme} = useTheme();
-  const route = useRoute();
+  const {dark, colors } = useTheme();
   const [exchangeTransactions, setExchangeTransactions] = useState([]);
   const [exchangeTokens, setExchangeTokens] = useState([]);
   const { item, removeExchange } = props.route.params;
@@ -229,12 +224,8 @@ export default function ExchangeTransactions(props) {
               cornerRadius= {10}
               radius= {Dimensions.get('window').width/3}
               colorScale={colours}
-              standalone={false}
               height={330}
-              labelRadius={80}
-              labelPlacement="parallel"
-              labels={({ datum }) => `${datum.x}: ${datum.y}`}
-              style={{labels:{fill: colors.text, fontSize: 14, fontWeight: "800"}}}
+              labels={() => null}
             />
             <VictoryLabel
               textAnchor="middle"
