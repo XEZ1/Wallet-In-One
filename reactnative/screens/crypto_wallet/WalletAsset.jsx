@@ -52,7 +52,7 @@ export default function WalletAsset(props) {
     <TouchableOpacity
       onPress={() =>
         props.navigation.navigate("WalletAssetDetail",
-          { item: props.item, value: cryptoValue * props.item.balance, removeWallet: props.removeWallet })
+          { id: props.item.id, value: cryptoValue * props.item.balance, removeWallet: props.removeWallet })
       }
     >
       <View style={[styles.walletAsset, {backgroundColor: colors.primary}]}>

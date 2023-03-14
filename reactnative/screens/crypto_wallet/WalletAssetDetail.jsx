@@ -35,7 +35,7 @@ export default function WalletAssetDetail(props) {
     }
   });
 
-  const { item, value, removeWallet } = props.route.params;
+  const { id, item, value, removeWallet } = props.route.params;
   const [ walletData, setWalletData ] = useState({transactions:[]})
   //const walletData = retrieveWallet();
   const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
@@ -60,7 +60,7 @@ export default function WalletAssetDetail(props) {
 
 
 
-    retrieveWallet(item.id);
+    retrieveWallet(id);
     //console.log(walletData);
 
 
