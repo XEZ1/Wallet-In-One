@@ -14,6 +14,9 @@ import WalletAssetDetail from "../crypto_wallet/WalletAssetDetail";
 import { WalletConnector, WalletSelector } from "../crypto_wallet/WalletModal";
 import AddCryptoScreen from "../crypto_wallet/AddCryptoScreen"
 
+//Crypto Exchanges Screens
+import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
+import ExchangeTransactions from "../cryptoExchanges/ExchangeTransactions";
 
 import StockStackNavigator from "../stocks/StockStackNavigator";
 
@@ -86,6 +89,14 @@ export default function MainStackNavigator() {
       <Stack.Screen name="Crypto Wallet Insights" component={CryptoWalletInsights} />
 
       <Stack.Screen name="Exchange Credentials" component={ExchangeCredentials} />
+
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="ExchangeTransactions"
+        component={ExchangeTransactions}
+      />
 
       <Stack.Screen name="Stock Accounts" component={StockStackNavigator} options={{headerShown: false}} />
 

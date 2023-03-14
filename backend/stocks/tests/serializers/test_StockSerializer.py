@@ -22,7 +22,8 @@ class StockSerializerTestCase(TestCase):
             'quantity': 10,
             'stockAccount': self.stockAccount.account_id,
             'ticker_symbol': 'TEST',
-            'institution_price': Money(100, 'GBP')
+            'institution_price': Money(100, 'GBP'),
+            'security_id': '123'
         }
 
 
@@ -42,7 +43,7 @@ class StockSerializerTestCase(TestCase):
         serializer = self.initiate_serializer()
         self.assertTrue(serializer.is_valid())
         data = serializer.data
-        self.assertCountEqual(data.keys(), set(['name', 'quantity', 'stockAccount', 'ticker_symbol', 'institution_price']))
+        self.assertCountEqual(data.keys(), set(['name', 'quantity', 'stockAccount', 'ticker_symbol', 'institution_price', 'security_id']))
 
     def test_invalid_name(self):
         self.serializer_input['name'] = ''
@@ -79,6 +80,13 @@ class StockSerializerTestCase(TestCase):
         self.assertEqual(set(serializer.errors.keys()), set(['stockAccount']))
         self.assertTrue(serializer.errors == {'stockAccount': [ErrorDetail(string='Invalid pk "123456789" - object does not exist.', code='does_not_exist')]})
 
+    def test_invalid_security_id(self):
+        self.serializer_input['security_id'] = ''
+        serializer = self.initiate_serializer()
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(set(serializer.errors.keys()), set(['security_id']))
+        self.assertTrue(serializer.errors == {'security_id': [ErrorDetail(string='This field may not be blank.', code='blank')]})
+
     def test_serializer_cannot_be_empty(self):
         self.serializer_input = ''
         serializer = self.initiate_serializer()
@@ -99,7 +107,8 @@ class StockSerializerTestCase(TestCase):
             'quantity': 10,
             'stockAccount': self.stockAccount,
             'ticker_symbol': 'TEST',
-            'institution_price': Money(100, 'GBP')
+            'institution_price': Money(100, 'GBP'),
+            'security_id': '123'
         })
         self.assertTrue(serializer.errors == {})
 

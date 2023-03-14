@@ -18,9 +18,8 @@ export default function NoWallets() {
       style={styles.container}
     >
       <Text style={[styles(dark, colors).text, {textAlign: "center"}]}>
-        Wallet-In-One
-        {'\n'}Amount: £0
-        {'\n'}Connect your Wallets to See your Funds!
+        Welcome to Wallet-In-One!
+        {'\n'}Connect your Assets to See your Funds
       </Text>
     </ScrollView>);
   }

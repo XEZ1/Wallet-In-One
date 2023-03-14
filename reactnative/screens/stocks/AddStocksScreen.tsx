@@ -6,10 +6,14 @@ import * as SecureStore from 'expo-secure-store';
 import { api_url } from '../../authentication';
 import { useIsFocused } from '@react-navigation/native';
 import { auth_post } from '../../authentication';
+import { useTheme } from "reactnative/src/theme/ThemeProvider";
+import { styles } from "reactnative/screens/All_Styles.style.js";
+
 
 import {Alert, Modal, StyleSheet, Pressable, View, Animated} from 'react-native';
 
 const { width, height } = Dimensions.get('window');
+
 
 const PlaidComponent = ({ navigation }) => {
   const [linkToken, setLinkToken] = useState<string | undefined>(undefined)
@@ -22,6 +26,41 @@ const PlaidComponent = ({ navigation }) => {
   let securities = null
 
   let data_response = null
+
+  const stylesInternal = StyleSheet.create({
+    modalView: {
+      margin: 20,
+      backgroundColor: 'white',
+      borderRadius: 20,
+      padding: 35,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    button: {
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2,
+    },
+    buttonClose: {
+      backgroundColor: '#2196F3',
+    },
+    textStyle: {
+      color: 'white',
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: 'center',
+    },
+  });
 
 
   const addAccount = async (account, success) => {
@@ -95,6 +134,8 @@ const PlaidComponent = ({ navigation }) => {
 //19614.54
 
   const addTransaction = async (element) => {
+    let latitude = parseFloat(((Math.random() * (7) + 35.5).toFixed(3)))
+    let longitude = parseFloat(((Math.random() * (43) + 77).toFixed(3))) * -1
     const body = {
       account_id: element.account_id,
       investment_transaction_id: element.investment_transaction_id,
@@ -106,8 +147,11 @@ const PlaidComponent = ({ navigation }) => {
       price: element.price,
       fees: element.fees,
       stock: fetched_transaction_list.accounts[0].account_id,
+      latitude: latitude,
+      longitude: longitude
     }
-    await auth_post('/stocks/add_transaction_account/', body)
+    const response = await auth_post('/stocks/add_transaction_account/', body)
+    console.log(response.body)
     };
 
 
@@ -145,6 +189,8 @@ const PlaidComponent = ({ navigation }) => {
       }).start();
     }
   }, [modalVisible]);
+
+  const {dark, colors, setScheme } = useTheme();
 
   return (
     <>
@@ -189,8 +235,8 @@ const PlaidComponent = ({ navigation }) => {
         setModalVisible(false);
       }}
     >
-    <Animated.View style={[styles.modal, { transform: [{ scaleX: scaleValue.x }, { scaleY: scaleValue.y }] }]}>
-      <View style={styles.modalView}>
+    <Animated.View style={[stylesInternal.modal, { transform: [{ scaleX: scaleValue.x }, { scaleY: scaleValue.y }] }]}>
+      <View style={stylesInternal.modalView}>
         {modalText == "Stock account has been successfully added." && 
           <Image
             style={{ width: 100, height: 100 }}
@@ -203,9 +249,9 @@ const PlaidComponent = ({ navigation }) => {
             source={{ uri: 'http://www.setra.com/hubfs/Sajni/crc_error.jpg' }}
           />
         }
-        <Text style={styles.modalText}>{modalText}</Text>
+        <Text style={stylesInternal.modalText}>{modalText}</Text>
         <Pressable
-          style={[styles.button, styles.buttonClose]}
+          style={[stylesInternal.button, stylesInternal.buttonClose]}
           onPress={() => {
             Animated.timing(scaleValue, {
               toValue: 0,
@@ -215,7 +261,7 @@ const PlaidComponent = ({ navigation }) => {
             navigation.navigate("Stock Account List")
           }}
         >
-        <Text style={styles.textStyle}>Exit</Text>
+        <Text style={stylesInternal.textStyle}>Exit</Text>
         </Pressable>
       </View>
     </Animated.View>
@@ -224,44 +270,5 @@ const PlaidComponent = ({ navigation }) => {
     </>
   );
 };
-
-
-const styles = StyleSheet.create({
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  modal: {
-    
-  }
-});
 
 export default PlaidComponent;

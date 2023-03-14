@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Pressable, View, Text, TextInput, Button, Alert } from 'react-native';
 import * as SecureStore from "expo-secure-store";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
-import { BACKEND_URL } from "@env"
+import { api_url } from '../../authentication';
 
 
 export default function ExchangeCredentials({ route, navigation }) {
@@ -18,7 +18,7 @@ export default function ExchangeCredentials({ route, navigation }) {
     }
 
     try {
-      const response = await fetch(`http://10.0.2.2:8000/crypto-exchanges/${exchange.toLowerCase()}`, {
+      const response = await fetch(`${api_url}/crypto-exchanges/${exchange.toLowerCase()}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -3,17 +3,19 @@ import { StyleSheet, Text, ScrollView, Dimensions, View, TouchableOpacity } from
 import { VictoryChart, VictoryBar, VictoryLabel, VictoryAxis, VictoryStack } from "victory-native";
 
 
-import { StackedBarChart } from "react-native-chart-kit";
-
 import fixture from "../../charts/chartData.json"
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import { Alert } from "react-native"
 
-export default function StackedChart({ data = fixture.all  }) {
+export default function StackedChart({ data = fixture.all, handlePressIn  }) {
   
   const {dark, colors, setScheme} = useTheme();
 
   const labels = ["Banks", "Cryptocurrency", "Stocks"]; // ["Crypto-Wallets","Bank","Stocks","Crypto-Exchange"]
 
+  const test = (event, datapoint) => {
+    console.log(datapoint)
+  }
 
   return (
     <ScrollView
@@ -29,43 +31,79 @@ export default function StackedChart({ data = fixture.all  }) {
       {/*domain={{ x: [1, 4] }}*/}
       <VictoryChart  domainPadding={{ x: 20, y: 20 }} >
         <VictoryAxis
-            tickValues={[ 1, 2, 3, 4 ,5]}
-             // set the domain to include values up to 20
-            fixLabelOverlap={true}
-            //tickFormat ={["Banks", "Cryptocurrency","Crypto-exchanges" ,"Stocks"]}
-            //height={10000}
-            //padding={{ top: 20, bottom: 60 }}
-            //width={400}
+          dependentAxis
+           style={{
+               axis: {stroke: 'grey'},
+            tickLabels: {fill: colors.text , fontSize: 12},
+             grid: {stroke: 'grey'},
+           }}
         />
-        <VictoryAxis dependentAxis />
-        {/*try brown also*/}
+        <VictoryAxis
+          tickValues={[ 1, 2, 3, 4 ,5]}
+          style={{
+            axis: {stroke: 'grey'},
+            tickLabels: {fill: colors.text},
+          }}
+        />
         <VictoryStack colorScale={["tomato", "orange", "gold", "purple"]}>
           {(data['Banks']?data['Banks']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Banks", y: i.y }]}
+              data={[{ x: "Banks", y: i.y, z: i.x, name: "Banks" }]}
               barWidth={35}
+              events={[
+                {
+                  target: "data",
+                  eventHandlers: {
+                    onPressIn: handlePressIn,
+                  },
+                },
+              ]}
             />
           ))}
           {(data['Cryptocurrency from wallets']?data['Cryptocurrency from wallets']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Crypto from wallets ", y: i.y }]}
+              data={[{ x: "Crypto\nWallets ", y: i.y, z: i.x, name: "Cryptocurrency from wallets" }]}
               barWidth={35}
+              events={[
+                {
+                  target: "data",
+                  eventHandlers: {
+                    onPressIn: handlePressIn,
+                  },
+                },
+              ]}
             />
           ))}
           {(data['Cryptocurrency from exchanges']?data['Cryptocurrency from exchanges']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Cryptocurrency from exchanges", y: i.y }]}
+              data={[{ x: "Crypto\nExchanges", y: i.y, z: i.x, name: "Cryptocurrency from exchanges" }]}
               barWidth={35}
+              events={[
+                {
+                  target: "data",
+                  eventHandlers: {
+                    onPressIn: handlePressIn,
+                  },
+                },
+              ]}
             />
           ))}
           {(data['Stock Accounts']?data['Stock Accounts']:[]).map(i => (
             <VictoryBar
               key={i}
-              data={[{ x: "Stock Accounts", y: i.y }]}
+              data={[{ x: "Stocks", y: i.y, z: i.x, name: "Stock Accounts"}]}
               barWidth={35}
+              events={[
+                {
+                  target: "data",
+                  eventHandlers: {
+                    onPressIn: handlePressIn,
+                  },
+                },
+              ]}
             />
           ))}
         </VictoryStack>

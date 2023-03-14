@@ -23,6 +23,7 @@ export default function HomePage({ navigation }) {
   const [baseData, setBaseData] = useState(fixture);
   const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed] = useState(null);
+  const [colorScheme, setColors] = useState(["pink", "turquoise", "lime", "#FA991C"]);
   const { wallets, fetchWallets, removeWallet } = useCryptoWallet();
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
 
@@ -36,21 +37,25 @@ export default function HomePage({ navigation }) {
         setBaseData(response.body);
         setNewData(response.body.all);
         setPressed(null);
+        setColors(["pink", "turquoise", "lime", "#FA991C"]);
       }
     };
     if (isFocused) {
       fetchData();
     }
     fetchWallets();
+    fetchExchanges();
   }, [isFocused]);
 
   const handlePressIn = async (event, datapoint) => {
     var index = datapoint.index;
+    console.log(datapoint.style["fill"])
     
     if (pressed) {
       if (pressed == "Banks"){
         var bankData = baseData["Banks"][index]
         if (bankData.id){
+          setColors(["pink", "turquoise", "lime", "#FA991C"])
           navigation.navigate('Bank Transactions', {accountID: bankData.id})
           return
         }
@@ -58,6 +63,7 @@ export default function HomePage({ navigation }) {
         var cryptoData = baseData["Cryptocurrency from wallets"][index]
         var wallet = wallets.find(x => x.id === cryptoData.id)
         if (cryptoData.id) {
+          setColors(["pink", "turquoise", "lime", "#FA991C"])
           navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
           return
         }
@@ -67,6 +73,7 @@ export default function HomePage({ navigation }) {
         if (stockData.id) {
           var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
           const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
+          setColors(["pink", "turquoise", "lime", "#FA991C"])
           navigation.navigate("Stock Account Transactions", {
             accountID: stockData.id, 
             accessToken: response.body.access_token, 
@@ -76,21 +83,20 @@ export default function HomePage({ navigation }) {
           })
         }
         console.log(stockData.id)
-
       }
-      //} 
-      // else if (pressed === "Cryptocurrency from exchanges") {
-      //   var cryptoWalletData = baseData["Cryptocurrency from exchanges"][index]
-      //   var exchange = exchanges.find(x => x.id === cryptoWalletData.id)
-      //   if (cryptoWalletData.id) {
-      //     navigation.navigate("Exchange Detail", { item: exchange, value: cryptoWalletData.y, removeExchange: removeExchange })
-      //     return
-      //   }
-      // }
+      else if (pressed === "Cryptocurrency from exchanges") {
+        var cryptoExchangeData = baseData["Cryptocurrency from exchanges"][index]
+        var exchange = exchanges.find(x => x.id === cryptoExchangeData.id)
+        if (cryptoExchangeData.id) {
+          navigation.navigate("ExchangeTransactions", { item: exchange, value: cryptoExchangeData.y, removeExchange: removeExchange })
+          return
+        }
+      }
       setNewData(baseData.all);
       setPressed(null)
     } else {
       const dataPoint = data[index];
+      setColors([datapoint.style["fill"], "red", "blue", "yellow", "#800000", "#a9a9a9", "#fffac8", "#E7E9B9", "#6B238F"])
       const name = dataPoint.x
       if (baseData[name]) {
         setNewData(baseData[name]);
@@ -103,6 +109,80 @@ export default function HomePage({ navigation }) {
     
   };
 
+  const handlePressInStacked = async (event, datapoint) => {
+    for (let i = 0; i < datapoint.data.length; i++) {
+      if (datapoint.data[i].z) {
+        var index = datapoint.data[i].z;
+        var pressed = datapoint.data[i].name;
+        break;
+      }
+    }
+    console.log(index)
+    console.log(datapoint)
+      if (pressed == "Banks"){
+        for (let i = 0; i < baseData["Banks"].length; i++) {
+          if (baseData["Banks"][i].x === index) {
+            var bankData = baseData["Banks"][i]
+            break;
+          }
+        }
+        if (bankData.id){
+          navigation.navigate('Bank Transactions', {accountID: bankData.id})
+          return
+        }
+      } else if (pressed === "Cryptocurrency from wallets") {
+        for (let i = 0; i < baseData["Cryptocurrency from wallets"].length; i++) {
+          if (baseData["Cryptocurrency from wallets"][i].x === index) {
+            var cryptoData = baseData["Cryptocurrency from wallets"][i]
+            break;
+          }
+        }
+        var wallet = wallets.find(x => x.id === cryptoData.id)
+        if (cryptoData.id) {
+          navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
+          return
+        }
+      }
+      else if (pressed == "Stock Accounts") {
+        console.log(baseData["Stock Accounts"])
+        console.log(index)
+        for (let i = 0; i < baseData["Stock Accounts"].length; i++) {
+          if (baseData["Stock Accounts"][i].x === index) {
+            console.log(baseData["Stock Accounts"][i])
+            var stockData = baseData["Stock Accounts"][i]
+            break;
+          }
+        }
+        console.log(stockData)
+        if (stockData.id) {
+          var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
+          const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
+          navigation.navigate("Stock Account Transactions", {
+            accountID: stockData.id, 
+            accessToken: response.body.access_token, 
+            transactions: res.body,
+            logo: response.body.logo,
+            balance: response.body.balance
+          })
+        }
+        console.log(stockData.id)
+      }
+      else if (pressed === "Cryptocurrency from exchanges") {
+        for (let i = 0; i < baseData["Cryptocurrency from exchanges"].length; i++) {
+          if (baseData["Cryptocurrency from exchanges"][i].x === index) {
+            var cryptoData = baseData["Cryptocurrency from exchanges"][i]
+            break;
+          }
+        }
+        var exchange = exchanges.find(x => x.id === cryptoData.id)
+        if (cryptoData.id) {
+          navigation.navigate("ExchangeTransactions", { item: exchange, value: cryptoData.y, removeExchange: removeExchange })
+          return
+        }
+      }
+      setNewData(baseData.all);
+    };
+
   let value = 0;
   data.forEach((jsonObj) => {
     value += jsonObj.y;
@@ -110,7 +190,7 @@ export default function HomePage({ navigation }) {
   value = value.toFixed(2);
 
   const list = data.map((val) => val.x);
-  const colours = ["pink", "turquoise", "lime", "#FA991C"];
+  const colours = ["pink"];
 
   let spacing = list.length * 60;
 
@@ -134,36 +214,36 @@ export default function HomePage({ navigation }) {
       >
 
         {/* Switch Graph Buttons */}
-        <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 20, borderRadius: 30 }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
           <TouchableOpacity
             style={[
               styles(dark, colors).btn,
-              chartType === "pie" && { backgroundColor: "aliceblue" },
+              chartType === "pie" && { backgroundColor: 'aliceblue'},
             ]}
             onPress={() => handleChartTypeChange("pie")}
           >
-            <Text style={styles.chartTypeText}>Pie Chart</Text>
+          <Text>Pie Chart</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles(dark, colors).btn,
-              chartType === "stacked" && { backgroundColor: "aliceblue" },
+              chartType === "stacked" && { backgroundColor: 'aliceblue'},
             ]}
             onPress={() => handleChartTypeChange("stacked")}
           >
-            <Text style={styles.chartTypeText}>Stacked Bar Chart</Text>
+          <Text>Stacked Bar Chart</Text>
           </TouchableOpacity>
         </View>
 
-        <Text >{pressed}</Text>
+        <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30}]}>{pressed}</Text>
 
         {chartType == "pie" ? 
           <>
-            <PieChart colours={colours} data={data} handlePressIn={handlePressIn}/>
-            {BarChart(colours, list, data, colors, spacing, handlePressIn)}
+            <PieChart colours={colorScheme} data={data} handlePressIn={handlePressIn}/>
+            {BarChart(colorScheme, list, data, colors, spacing, handlePressIn)}
           </>
           : 
-            <StackedChart data={baseData} />
+            <StackedChart data={baseData} handlePressIn={handlePressInStacked}/>
         }
 
         
@@ -173,6 +253,7 @@ export default function HomePage({ navigation }) {
             onPress={() => {
               setNewData(baseData.all);
               setPressed(false);
+              setColors(["pink", "turquoise", "lime", "#FA991C"]);
             }}
           >
             <Text style={[styles(dark, colors).button, { color: colors.text }]}>Back</Text>

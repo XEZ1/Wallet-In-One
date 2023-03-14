@@ -170,3 +170,37 @@ class StockModelTestCase(TestCase):
         with self.assertRaises(CurrencyDoesNotExist):
             self.stock.institution_price = Money(100, 'Gold')
         self._assert_stock_is_valid(self.stock)
+
+    def test_security_id_field(self):
+        field = Stock._meta.get_field('security_id')
+        self.assertIsInstance(field, models.CharField)
+        self.assertEqual(field.max_length, 100)
+        self.assertFalse(field.blank)
+
+    def test_security_id_cannot_be_blank(self):
+        self.stock.security_id = ''
+        self._assert_stock_is_invalid(self.stock)
+
+    def test_security_id_cannot_be_none(self):
+        self.stock.security_id = None
+        self._assert_stock_is_invalid(self.stock)
+
+    def test_security_id_can_be_20_characters(self):
+        self.stock.security_id = 'a' * 20
+        self._assert_stock_is_valid(self.stock)
+
+    def test_security_id_can_be_100_characters(self):
+        self.stock.security_id = 'a' * 100
+        self._assert_stock_is_valid(self.stock)
+
+    def test_security_id_cannot_be_101_characters(self):
+        self.stock.security_id = 'a' * 101
+        self._assert_stock_is_invalid(self.stock)
+
+    def test_security_id_can_contain_numbers(self):
+        self.stock.security_id = '123'
+        self._assert_stock_is_valid(self.stock)
+
+    def test_security_id_can_contain_special_characters(self):
+        self.stock.security_id = '_@*&'
+        self._assert_stock_is_valid(self.stock)
