@@ -16,6 +16,7 @@ import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
 
 export default function HomePage({ navigation }) {
+  const originalColours = ["pink", "turquoise", "lime", "#FA991C"]
   const {dark, colors, setScheme } = useTheme();
   const isFocused = useIsFocused();
   const [chartType, setChartType] = useState("pie"); // Default chart is pie chart
@@ -23,12 +24,16 @@ export default function HomePage({ navigation }) {
   const [baseData, setBaseData] = useState(fixture);
   const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed] = useState(null);
+<<<<<<< HEAD
   const [colorScheme, setColors] = useState(["pink", "turquoise", "lime", "#FA991C"]);
   const { removeWallet } = useCryptoWallet();
+=======
+  const [colorScheme, setColors] = useState(originalColours);
+  const { wallets, fetchWallets, removeWallet } = useCryptoWallet();
+>>>>>>> main
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
 
   // Uncomment to show bank data from backend
-
   useEffect(() => {
     const fetchData = async () => {
       const response = await auth_get("/graph_data/");
@@ -37,7 +42,7 @@ export default function HomePage({ navigation }) {
         setBaseData(response.body);
         setNewData(response.body.all);
         setPressed(null);
-        setColors(["pink", "turquoise", "lime", "#FA991C"]);
+        setColors(originalColours);
       }
     };
     if (isFocused) {
@@ -48,21 +53,20 @@ export default function HomePage({ navigation }) {
 
   const handlePressIn = async (event, datapoint) => {
     var index = datapoint.index;
-    console.log(datapoint.style["fill"])
     
     if (pressed) {
       if (pressed == "Banks"){
         var bankData = baseData["Banks"][index]
         if (bankData.id){
-          setColors(["pink", "turquoise", "lime", "#FA991C"])
+          setColors(originalColours)
           navigation.navigate('Bank Transactions', {accountID: bankData.id})
           return
         }
       } else if (pressed === "Cryptocurrency from wallets") {
         var cryptoData = baseData["Cryptocurrency from wallets"][index]
         if (cryptoData.id) {
-          setColors(["pink", "turquoise", "lime", "#FA991C"])
-          navigation.navigate("Wallet Detail", { id: cryptoData.id, value: cryptoData.y, removeWallet: removeWallet })
+          setColors(originalColours)
+          navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
           return
         }
       }
@@ -71,7 +75,7 @@ export default function HomePage({ navigation }) {
         if (stockData.id) {
           var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
           const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
-          setColors(["pink", "turquoise", "lime", "#FA991C"])
+          setColors(originalColours)
           navigation.navigate("Stock Account Transactions", {
             accountID: stockData.id, 
             accessToken: response.body.access_token, 
@@ -94,7 +98,11 @@ export default function HomePage({ navigation }) {
       setPressed(null)
     } else {
       const dataPoint = data[index];
-      setColors([datapoint.style["fill"], "red", "blue", "yellow", "#800000", "#a9a9a9", "#fffac8", "#E7E9B9", "#6B238F"])
+      let col = datapoint.style["fill"]
+      if(typeof col != 'string' || col === "black" || col === "white"){
+        col = originalColours[list.indexOf(datapoint.datum["x"])]
+      }
+      setColors([col, "red", "blue", "yellow", "#800000", "#a9a9a9", "#fffac8", "#E7E9B9", "#6B238F"])
       const name = dataPoint.x
       if (baseData[name]) {
         setNewData(baseData[name]);
@@ -251,7 +259,7 @@ export default function HomePage({ navigation }) {
             onPress={() => {
               setNewData(baseData.all);
               setPressed(false);
-              setColors(["pink", "turquoise", "lime", "#FA991C"]);
+              setColors(originalColours);
             }}
           >
             <Text style={[styles(dark, colors).button, { color: colors.text }]}>Back</Text>
