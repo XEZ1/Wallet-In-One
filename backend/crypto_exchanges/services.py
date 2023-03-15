@@ -501,12 +501,16 @@ class CurrentMarketPriceFetcher:
 
     def get_exchange_token_breakdown(self, exchange):
         tokens = Token.objects.filter(crypto_exchange_object=exchange)
-        result = []
+        dict_result = {}
+        token_data = []
+        balance = 0
         for token in tokens:
             price = self.get_crypto_price(token.asset)
-            value = round(price * (token.free_amount + token.locked_amount), 2)
-            result.append({'x': token.asset + ": " + str(value), 'y': value})
-        return result
+            value = price * (token.free_amount + token.locked_amount)
+            token_data.append({'x': token.asset + ": " + str(round(value, 2)), 'y': round(value, 2)})
+            balance += value
+        dict_result.update({"balance": round(balance, 2), "token_data": sorted(token_data, key=lambda val: val['y'])})
+        return dict_result
 
     def chart_breakdown_crypto_exchanges(self):
         exchanges = CryptoExchangeAccount.objects.filter(user=self.user)

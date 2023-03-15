@@ -37,14 +37,13 @@ def get_transactions(request, exchange):
 @api_view(['GET'])
 def get_token_breakdown(request, exchange):
     exchange_obj = CryptoExchangeAccount.objects.get(id=exchange)
-    crypto_data_from_exchanges = sorted(
-        CurrentMarketPriceFetcher(request.user).get_exchange_token_breakdown(exchange_obj), key=lambda d: d['y'])
+    crypto_data_from_exchanges = CurrentMarketPriceFetcher(request.user).get_exchange_token_breakdown(exchange_obj)
     return Response(crypto_data_from_exchanges)
 
 
 @api_view(['GET'])
 def get_exchange_balances(request):
-    return CurrentMarketPriceFetcher(request.user).chart_breakdown_crypto_exchanges()
+    return Response(CurrentMarketPriceFetcher(request.user).chart_breakdown_crypto_exchanges())
 
 
 # Generic class for crypto exchanges
@@ -126,9 +125,8 @@ class GenericCryptoExchanges(APIView):
         account_serializers = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
         serializer_array = account_serializers.data
         for serializer in serializer_array:
-            exchange = CryptoExchangeAccount.objects.get(api_key=serializer['api_key'])
+            exchange = CryptoExchangeAccount.objects.get(user=request.user, api_key=serializer['api_key'])
             serializer.update({'id': exchange.id})
-            serializer.update({'balance': CurrentMarketPriceFetcher(request.user).get_exchange_balance(exchange)})
         return Response(serializer_array)
 
     @abstractmethod

@@ -14,6 +14,7 @@ export default function ExchangeTransactions(props) {
   const {dark, colors } = useTheme();
   const [exchangeTransactions, setExchangeTransactions] = useState([]);
   const [exchangeTokens, setExchangeTokens] = useState([]);
+  const [balance, setBalance] = useState();
   const { item, removeExchange } = props.route.params;
   const exchange = item.id;
   const stylesInternal = StyleSheet.create({
@@ -98,7 +99,8 @@ export default function ExchangeTransactions(props) {
         },
       });
       let data = await response.json();
-      setExchangeTokens(data);
+      setExchangeTokens(data.token_data);
+      setBalance(data.balance);
     } catch (error) {
       console.error(error);
     }
@@ -178,7 +180,7 @@ export default function ExchangeTransactions(props) {
           source={getCryptoIcon(item.crypto_exchange_name)}/>
         <View style={{marginLeft: 10}}>
           <Text style={stylesInternal.largeBoldText}>{item.crypto_exchange_name} Exchange</Text>
-          <Text style={stylesInternal.mediumText}>Balance: £{item.balance}</Text>
+          <Text style={stylesInternal.mediumText}>Balance: £{balance ? balance : "Loading..."}</Text>
         </View>
       </View>
 
