@@ -22,6 +22,12 @@ export default function CryptoWalletInsights() {
       fontSize: 30,
       alignSelf: "center",
       color: colors.text
+    },
+    info: {
+      fontWeight: "900",
+      fontSize: 15,
+      alignSelf: "center",
+      color: colors.text
     }
   });
 
@@ -42,25 +48,20 @@ export default function CryptoWalletInsights() {
       .catch((err) => console.log(err));
   };
 
-  const getCryptoValue = async (symbol) => {
-    await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=GBP`)
-      .then((res) => res.json())
-      .then((res) => res.GBP)
-      .catch((err) => console.log(err))
-  }
+
 
   // console.log(insights)
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background, paddingHorizontal: 20 }}>
-      <Text style={styles.title}>Wallet Insights</Text>
       <Text />
 
       <Text style={styles.subtitle}>Predicted Balance</Text>
+      <Text style={styles.info}>Next four weeks</Text>
       <View style={{ borderRadius: 10, paddingVertical: 10}}>
       {
         Object.entries(insights.predicted_balance).map(([key, value]) =>
-            <InsightsView key={key} symbol={key} upper={`${value} ${key}`} lower='£0.00' />
+            <InsightsView key={key} symbol={key} upper={`${value} ${key}`} />
         )
       }
       </View>
@@ -80,7 +81,7 @@ export default function CryptoWalletInsights() {
       <View style={{ borderRadius: 10, paddingVertical: 10}}>
       {
         Object.entries(insights.average_spend).map(([key, value]) =>
-          <InsightsView key={key} symbol={key} upper={`${value * -1} ${key}`} lower="£0.00" />
+          <InsightsView key={key} symbol={key} upper={`${value * -1} ${key}`} />
         )
       }
       </View>
@@ -93,6 +94,19 @@ export default function CryptoWalletInsights() {
 function InsightsView(props) {
 
   const {dark, colors, setScheme} = useTheme();
+  const [value, setValue] = useState(0);
+
+  const getCryptoValue = async () => {
+    await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${props.symbol}&tsyms=GBP`)
+      .then((res) => res.json())
+      .then((res) => res.GBP)
+      .then((res) => setValue(res))
+      .catch((err) => console.log(err))
+  }
+
+  useEffect(() => {
+    getCryptoValue()
+  }, [])
 
   const styles = StyleSheet.create({
     walletAsset: {
@@ -108,7 +122,6 @@ function InsightsView(props) {
       height: 30,
     },
   });
-
 
   return (
     <View style={[styles.walletAsset, {paddingVertical: 5}]}>
@@ -141,9 +154,19 @@ function InsightsView(props) {
             {props.upper}
           </Text>
 
-          <Text style={[styles.walletAssetTitle, {color: colors.text}]}>
-            {props.lower}
-          </Text>
+          {
+            props.lower
+              ?
+              <Text style={[styles.walletAssetTitle, {color: colors.text}]}>
+                {props.lower}
+              </Text>
+              :
+              <Text style={[styles.walletAssetTitle, {color: colors.text}]}>
+                £{value}
+              </Text>
+          }
+
+
 
         </View>
 
