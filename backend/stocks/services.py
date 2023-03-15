@@ -139,3 +139,22 @@ def get_average_transaction_fee(stockAccounts):
         return total
     else:
         return total/get_total_number_of_transactions(stockAccounts)
+
+from django.db.models import Max, Min, StdDev, Avg, Variance, Sum
+
+def calculate_metrics(transactions):
+    metrics = {}
+
+    metrics['total_number_of_transactions'] = len(transactions)
+    metrics['highest_transaction'] = transactions.aggregate(Max('amount')).get('amount__max') or 0
+    metrics['lowest_transaction'] = transactions.aggregate(Min('amount')).get('amount__min') or 0
+    metrics['average_transaction'] = transactions.aggregate(Avg('amount')).get('amount__avg') or 0
+    metrics['variance'] = transactions.aggregate(Variance('amount')).get('amount__variance') or 0
+    metrics['standard_deviation'] = transactions.aggregate(StdDev('amount')).get('amount__stddev') or 0
+    metrics['highest_fee'] = transactions.aggregate(Max('fees')).get('fees__max') or 0
+    metrics['lowest_fee'] = transactions.aggregate(Min('fees')).get('fees__min') or 0
+    metrics['average_fee'] = transactions.aggregate(Avg('fees')).get('fees__avg') or 0
+    metrics['average_latitude'] = transactions.aggregate(Avg('latitude')).get('latitude__avg') or 0
+    metrics['average_longitude'] = transactions.aggregate(Avg('longitude')).get('longitude__avg') or 0
+    
+    return metrics
