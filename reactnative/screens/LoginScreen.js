@@ -15,6 +15,9 @@ import { userContext } from "../data";
 
 import { login } from "../authentication";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
+
 export default function SignUpScreen({ navigation }) {
   const [user, setUser] = useContext(userContext);
 
@@ -35,7 +38,7 @@ export default function SignUpScreen({ navigation }) {
       }
     } else {
       console.log("Login Successful")
-      sendLogInNotification();
+      await sendLogInNotification();
     }
   };
 Notifications.setNotificationHandler({
@@ -48,14 +51,21 @@ Notifications.setNotificationHandler({
     },
   });
 
-
-  const sendLogInNotification = async () => {
-    await Notifications.requestPermissionsAsync();
-    await Notifications.scheduleNotificationAsync({ content: {
+const sendLogInNotification = async () => {
+    const notificationEnabled = await SecureStore.getItemAsync(
+      "notificationSettings"
+    );
+    console.log("notificationSettings value:", notificationEnabled)
+    if (notificationEnabled === "true") {
+      await Notifications.requestPermissionsAsync();
+      await Notifications.scheduleNotificationAsync({
+        content: {
           title: "You have successfully logged in!",
           body: "You can now access all the features of the app.",
         },
-        trigger: null, });
+        trigger: null,
+      });
+    }
 
   };
 

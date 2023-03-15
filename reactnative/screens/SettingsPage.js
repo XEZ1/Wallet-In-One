@@ -6,9 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Appearance,
-  //AsyncStorage,
-  FlatList,
   TouchableHighlight
 } from 'react-native';
 
@@ -19,13 +16,13 @@ import { logout } from '../authentication';
 import { useContext } from 'react';
 import { userContext } from '../data';
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-import { sendNotification,sendThemeNotification } from "./SendNotification";
+
 import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 import Icon from 'react-native-vector-icons/Feather';
 
 export default function SettingsPage ({ navigation }) {
-  const [notifications, setNotifications] = useState(false);
+  const [notifications, setNotifications] = useState(true);
 
   const [user, setUser] = useContext(userContext)
 
@@ -118,36 +115,20 @@ export default function SettingsPage ({ navigation }) {
   }
 
   //Load notification setting
+
   useEffect(() => {
       async function loadNotificationSetting() {
+    const initialValue = await SecureStore.getItemAsync('notificationSettings');
+    if (initialValue === null) {
+      await SecureStore.setItemAsync('notificationSettings', 'false');
+      setNotifications(false);
+    } else {
+      setNotifications(initialValue === 'true');
+    }
+  }
+  loadNotificationSetting();
+}, []);
 
-        const initialValue = await SecureStore.getItemAsync('darkModeSettings');
-        setSelectedValue(initialValue);
-
-        try {
-          const savedNotificationSetting = await SecureStore.getItemAsync('notificationSetting');
-        
-          setNotifications(savedNotificationSetting === 'true');
-        } catch(e) {
-          console.warn("Couldn't load notification setting")
-        }
-      }
-      loadNotificationSetting();
-  }, []);
-
-  // useEffect(() => {
-  //   // Load user's saved dark mode setting on component mount
-  //   async function loadDarkModeSettings() {
-  //     const savedDarkModeSettings = await AsyncStorage.getItem('darkModeSettings');
-  //     setIsDarkModeEnabled(savedDarkModeSettings === 'true');
-  //     if (savedDarkModeSettings === 'true') {
-  //         setScheme('dark');
-  //     } else {
-  //         setScheme('light');
-  //     }
-  //   }
-  //   loadDarkModeSettings();
-  // }, []);
   Notifications.setNotificationHandler({
     handleNotification: async () => {
       return {
@@ -162,9 +143,10 @@ export default function SettingsPage ({ navigation }) {
 
   //Toggle and save notification setting
   const toggleNotifications = async () => {
+
      setNotifications((previousState) => !previousState);
       const notificationSettings = (!notifications).toString();
-      await AsyncStorage.setItem("notificationSettings", notificationSettings);
+      await SecureStore.setItemAsync("notificationSettings", notificationSettings);
       //sendNotification(notificationSettings);
     if (notificationSettings === "true") {
       Notifications.requestPermissionsAsync();
@@ -172,7 +154,13 @@ export default function SettingsPage ({ navigation }) {
           title: "Notifications enabled!",
         },
         trigger: null, });
+      //console.log('notif are enabled')
+
     }
+    // else {
+    //   await Notifications.cancelAllScheduledNotificationsAsync();
+    //   console.log('notif are canceled')
+    // }
 
   };
 
@@ -188,11 +176,14 @@ export default function SettingsPage ({ navigation }) {
       }
       const notificationSettings = notifications.toString();
       if (notificationSettings === "true") {
-      Notifications.requestPermissionsAsync();
-      Notifications.scheduleNotificationAsync({ content: {
-          title: "Theme changed successfully!",},
-        trigger: null, });
-    }
+        Notifications.requestPermissionsAsync();
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: "Theme changed successfully!",
+          },
+          trigger: null,
+        });
+      }
   };
 
   
