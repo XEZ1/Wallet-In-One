@@ -33,26 +33,37 @@ export default function StockInsight() {
         console.log(currentData)
     }
 
+    const styles = StyleSheet.create({
+        button: {
+            flexDirection: "row" , justifyContent: 'space-evenly'
+        },
+        text: {
+            fontWeight: "700",
+            fontSize: 25
+        }
+    })
+
     if(isLoading){
         return (<Loading/>)
     }
     return(
         <View>
+            <View style={styles.button}>
             <Button onPress={() => filter('all')} title="All"/>
             <Button onPress={() => filter('1 Month')} title="1 Month"/>
             <Button onPress={() => filter('3 Months')} title="3 Months"/>
             <Button onPress={() => filter('6 Months')} title="6 Months"/>
             <Button onPress={() => filter('12 Months')} title="12 Months"/>
-            <Text> <FontAwesomeIcon icon={faMoneyBillTransfer} />Number of Transactions: {currentData.total_number_of_transactions}</Text>
-            <Text><FontAwesomeIcon icon={faArrowTrendUp} />Highest Transaction: £{currentData.highest_transaction}</Text>
-            <Text><FontAwesomeIcon icon={faArrowTrendDown} />Lowest Transaction: £{currentData.lowest_transaction}</Text>
-            <Text>Average Transaction: £{currentData.average_transaction}</Text>
-            <Text>Variance: {currentData.variance}</Text>
-            <Text>Standard Deviation: {currentData.standard_deviation}</Text>
-            <Text>Highest Fee: £{currentData.highest_fee}</Text>
-            <Text>Lowest Fee: £{currentData.lowest_fee}</Text>
-            <Text>Highest Fee: £{currentData.highest_fee}</Text>
-            <Text>Average Fee: £{currentData.average_fee}</Text>
+            </View>
+            <Text style={styles.text}> <FontAwesomeIcon icon={faMoneyBillTransfer} size={25} /> Number of Transactions: {currentData.total_number_of_transactions}</Text>
+            <Text style={styles.text}><FontAwesomeIcon icon={faArrowTrendUp} size={25} /> Highest Transaction: £{currentData.highest_transaction}</Text>
+            <Text style={styles.text}><FontAwesomeIcon icon={faArrowTrendDown} size={25} /> Lowest Transaction: £{currentData.lowest_transaction}</Text>
+            <Text style={styles.text}>Average Transaction: £{currentData.average_transaction}</Text>
+            <Text style={styles.text}>Variance: {currentData.variance}</Text>
+            <Text style={styles.text}>Standard Deviation: {currentData.standard_deviation}</Text>
+            <Text style={styles.text}>Highest Fee: £{currentData.highest_fee}</Text>
+            <Text style={styles.text}>Lowest Fee: £{currentData.lowest_fee}</Text>
+            <Text style={styles.text}>Average Fee: £{currentData.average_fee}</Text>
         </View>
     )
 }
