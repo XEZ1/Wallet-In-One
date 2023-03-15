@@ -24,13 +24,8 @@ export default function HomePage({ navigation }) {
   const [baseData, setBaseData] = useState(fixture);
   const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed] = useState(null);
-<<<<<<< HEAD
-  const [colorScheme, setColors] = useState(["pink", "turquoise", "lime", "#FA991C"]);
   const { removeWallet } = useCryptoWallet();
-=======
   const [colorScheme, setColors] = useState(originalColours);
-  const { wallets, fetchWallets, removeWallet } = useCryptoWallet();
->>>>>>> main
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
 
   // Uncomment to show bank data from backend
@@ -66,7 +61,7 @@ export default function HomePage({ navigation }) {
         var cryptoData = baseData["Cryptocurrency from wallets"][index]
         if (cryptoData.id) {
           setColors(originalColours)
-          navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
+          navigation.navigate("Wallet Detail", { id: cryptoData.id, value: cryptoData.y, removeWallet: removeWallet })
           return
         }
       }
