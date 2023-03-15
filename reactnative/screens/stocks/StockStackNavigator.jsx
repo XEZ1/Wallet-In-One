@@ -24,7 +24,7 @@ export default function StockStackNavigator() {
             headerTitleStyle: {color: colors.text},
           }}
       >
-        <Stack.Screen name="Insights" component={StockInsight} />
+        {/* <Stack.Screen name="Insights" component={StockInsight} /> */}
         <Stack.Screen name="Stock Account List" component={SuccessComponent}
                 options={({ navigation }) => ({
                   headerRight: () => (

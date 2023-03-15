@@ -6,6 +6,7 @@ import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import { api_url } from '../../authentication';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
+import Map from './Map';
 
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
@@ -166,19 +167,9 @@ export default function TransactionData({ route, navigation }){
 
             <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Fees</Text>
             <Text style={styles(dark, colors).text}>£ {data.fees}{"\n"}</Text>
-                 <View style={stylesInternal.mapContainer}>
-      <MapView
-          style={stylesInternal.map}
-          initialRegion={{
-            latitude: data.latitude,
-            longitude: data.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        >
-      <Marker coordinate={{ latitude: data.latitude, longitude: data.longitude }} />
-        </MapView>
-    </View>
+            <View style={stylesInternal.mapContainer}>
+            <Map latitude={data.latitude} longitude={data.longitude}/>
+            </View>
           </View>
         ):(<Text style={styles(dark, colors).text}>Loading...</Text>)}
 

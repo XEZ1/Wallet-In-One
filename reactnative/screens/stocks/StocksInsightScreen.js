@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { auth_get } from "../../authentication";
 import Loading from "../banking/Loading";
+import Map from "./Map";
 
 export default function StockInsight() {
     const isFocused = useIsFocused()
@@ -46,7 +47,7 @@ export default function StockInsight() {
         return (<Loading/>)
     }
     return(
-        <View>
+        <View style={{flex: 1}}>
             <View style={styles.button}>
             <Button onPress={() => filter('all')} title="All"/>
             <Button onPress={() => filter('1 Month')} title="1 Month"/>
@@ -56,14 +57,20 @@ export default function StockInsight() {
             </View>
             <View style={styles.container}>
             <Text style={styles.text}>Number of Transactions: {currentData.total_number_of_transactions}</Text>
-            <Text style={styles.text}>Highest Transaction: £{currentData.highest_transaction}</Text>
-            <Text style={styles.text}>Lowest Transaction: £{currentData.lowest_transaction}</Text>
-            <Text style={styles.text}>Average Transaction: £{currentData.average_transaction}</Text>
+            <Text style={styles.text}>Highest Transaction(£): {currentData.highest_transaction}</Text>
+            <Text style={styles.text}>Lowest Transaction(£): {currentData.lowest_transaction}</Text>
+            <Text style={styles.text}>Average Transaction(£): {currentData.average_transaction}</Text>
             <Text style={styles.text}>Variance: {currentData.variance}</Text>
             <Text style={styles.text}>Standard Deviation: {currentData.standard_deviation}</Text>
-            <Text style={styles.text}>Highest Fee: £{currentData.highest_fee}</Text>
-            <Text style={styles.text}>Lowest Fee: £{currentData.lowest_fee}</Text>
-            <Text style={styles.text}>Average Fee: £{currentData.average_fee}</Text>
+            <Text style={styles.text}>Highest Fee(£): {currentData.highest_fee}</Text>
+            <Text style={styles.text}>Lowest Fee(£): {currentData.lowest_fee}</Text>
+            <Text style={styles.text}>Average Fee(£): {currentData.average_fee}</Text>
+            <Text style={styles.text}>Centroid of Transaction Locations:</Text>
+            </View>
+            <View style={{flex: 1}}>
+            <View style={{height: '100%'}}>
+            <Map latitude={currentData.average_latitude} longitude={currentData.average_longitude}/>
+            </View>
             </View>
         </View>
     )
