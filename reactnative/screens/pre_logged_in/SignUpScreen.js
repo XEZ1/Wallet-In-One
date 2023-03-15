@@ -66,7 +66,7 @@ export default function SignUpScreen({ navigation }) {
           Alert.alert("Success", "Account created successfully");
           await Notifications.scheduleNotificationAsync({ content: {
           title: "You have successfully signed up!",
-          body: "You can now access all the features of the app.",
+          body: "Go to settings to manage notifications.",
         },
         trigger: null, });
           await login(username, password, user, setUser);
