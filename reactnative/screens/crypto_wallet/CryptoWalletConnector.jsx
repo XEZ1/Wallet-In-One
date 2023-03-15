@@ -66,10 +66,6 @@ export default function CryptoWalletConnector(props) {
               onPress={() => {
                   setLoading(true);
                   connectWallet(cryptocurrency, symbol, address)
-                    .then(() => props.navigation.reset({
-                      index: 0,
-                      routes: [{name: 'Crypto Wallets & Exchanges'}],
-                    }))
                     .then(() => props.navigation.navigate("Crypto Wallets & Exchanges"))
                 }
               }

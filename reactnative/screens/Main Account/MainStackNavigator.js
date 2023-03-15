@@ -89,13 +89,7 @@ export default function MainStackNavigator() {
 
       <Stack.Screen name="Exchange Credentials" component={ExchangeCredentials} />
 
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-        name="ExchangeTransactions"
-        component={ExchangeTransactions}
-      />
+      <Stack.Screen name="ExchangeTransactions" component={ExchangeTransactions} />
 
       <Stack.Screen name="Stock Accounts" component={StockStackNavigator} options={{headerShown: false}} />
 

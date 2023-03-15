@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import {
   TouchableOpacity,
   SafeAreaView,
@@ -16,12 +16,14 @@ import { useTheme } from '../../src/theme/ThemeProvider'
 import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
 import { api_url } from '../../authentication';
+import {useIsFocused} from "@react-navigation/native";
 
 
 export default function CryptoList(props) {
   const { wallets, listWallets, connectWallet, removeWallet } = useCryptoWallet();
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
   const {dark, colors, setScheme} = useTheme();
+  const isFocused = useIsFocused();
 
   const styles = StyleSheet.create({
     cryptoWalletTitle: {
@@ -66,7 +68,7 @@ export default function CryptoList(props) {
   useEffect(() => {
     listWallets();
     fetchExchanges();
-  }, []);
+  }, [isFocused]);
 
   const handleSubmit = async () => {
     

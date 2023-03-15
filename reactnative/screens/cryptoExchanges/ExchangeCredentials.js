@@ -33,10 +33,6 @@ export default function ExchangeCredentials({ route, navigation }) {
           {
             text: 'OK',
             onPress: () => {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'Crypto Wallets & Exchanges' }],
-              });
               navigation.navigate('Crypto Wallets & Exchanges');
             }}
         ]);

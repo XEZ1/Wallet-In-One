@@ -158,10 +158,6 @@ export default function ExchangeTransactions(props) {
 
       {/* Back arrow and remove button */}
       <View style={[styles(dark, colors).container, {flexDirection: 'row', alignItems: "flex-end"}]}>
-        <TouchableWithoutFeedback onPress={() => props.navigation.goBack()} style={{flex: 1}}>
-          <Text style={styles(dark, colors).backArrow}>←</Text>
-        </TouchableWithoutFeedback>
-        <View style={{flex: 1}}></View>
         <Pressable
           onPress={() => removeExchange(item.id).then(() => props.navigation.goBack())}
           style={{alignItems: "center", justifyContent: "center", marginLeft: 'auto'}}>
