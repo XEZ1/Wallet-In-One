@@ -146,14 +146,14 @@ def calculate_metrics(transactions):
     metrics = {}
 
     metrics['total_number_of_transactions'] = len(transactions)
-    metrics['highest_transaction'] = round(transactions.aggregate(Max('amount')).get('amount__max'), 2) or 0
-    metrics['lowest_transaction'] = round(transactions.aggregate(Min('amount')).get('amount__min'), 2) or 0
-    metrics['average_transaction'] = round(transactions.aggregate(Avg('amount')).get('amount__avg'), 2) or 0
-    metrics['variance'] = round(transactions.aggregate(Variance('amount')).get('amount__variance'), 2) or 0
-    metrics['standard_deviation'] = round(transactions.aggregate(StdDev('amount')).get('amount__stddev'), 2) or 0
-    metrics['highest_fee'] = round(transactions.aggregate(Max('fees')).get('fees__max'), 2) or 0
-    metrics['lowest_fee'] = round(transactions.aggregate(Min('fees')).get('fees__min'), 2) or 0
-    metrics['average_fee'] = round(transactions.aggregate(Avg('fees')).get('fees__avg'), 2) or 0
+    metrics['highest_transaction'] = round(transactions.aggregate(Max('amount')).get('amount__max') or 0, 2)
+    metrics['lowest_transaction'] = round(transactions.aggregate(Min('amount')).get('amount__min') or 0, 2)
+    metrics['average_transaction'] = round(transactions.aggregate(Avg('amount')).get('amount__avg') or 0, 2)
+    metrics['variance'] = round(transactions.aggregate(Variance('amount')).get('amount__variance') or 0, 2)
+    metrics['standard_deviation'] = round(transactions.aggregate(StdDev('amount')).get('amount__stddev') or 0, 2)
+    metrics['highest_fee'] = round(transactions.aggregate(Max('fees')).get('fees__max') or 0, 2)
+    metrics['lowest_fee'] = round(transactions.aggregate(Min('fees')).get('fees__min') or 0, 2)
+    metrics['average_fee'] = round(transactions.aggregate(Avg('fees')).get('fees__avg') or 0, 2)
     metrics['average_latitude'] = transactions.aggregate(Avg('latitude')).get('latitude__avg') or 0
     metrics['average_longitude'] = transactions.aggregate(Avg('longitude')).get('longitude__avg') or 0
     

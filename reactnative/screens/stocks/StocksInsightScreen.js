@@ -4,12 +4,16 @@ import { useIsFocused } from "@react-navigation/native";
 import { auth_get } from "../../authentication";
 import Loading from "../banking/Loading";
 import Map from "./Map";
+import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 
 export default function StockInsight() {
+    const {dark, colors, setScheme} = useTheme();
     const isFocused = useIsFocused()
     const [data, setData] = useState()
     const [currentData, setCurrentData] = useState()
-    const [ isLoading, setIsLoading ] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
+    const [index, setIndex] = useState(true)
+    
 
     useEffect( () => {
         const getMetrics = async () => {
@@ -18,6 +22,7 @@ export default function StockInsight() {
             console.log(response.body)
             setData(response.body)
             setCurrentData(response.body.all)
+            setIndex("all")
             setIsLoading(false)
         }
         
@@ -27,6 +32,7 @@ export default function StockInsight() {
 
     const filter = (filter) => {
         setCurrentData(data[filter])
+        setIndex(filter)
         console.log(currentData)
     }
 
@@ -45,15 +51,28 @@ export default function StockInsight() {
 
     if(isLoading){
         return (<Loading/>)
+    }else if(currentData.average_latitude == 0 && currentData.average_longitude == 0){
+        return(
+        <View style={{flex: 1}}>
+        <View style={styles.button}>
+        <Button color={index === "all" ? colors.primary : 'grey'} onPress={() => filter('all')} title="All"/>
+        <Button color={index === "1 Month" ? colors.primary : 'grey'} onPress={() => filter('1 Month')} title="1 Month"/>
+        <Button color={index === "3 Months" ? colors.primary : 'grey'} onPress={() => filter('3 Months')} title="3 Months"/>
+        <Button color={index === "6 Months" ? colors.primary : 'grey'} onPress={() => filter('6 Months')} title="6 Months"/>
+        <Button color={index === "12 Months" ? colors.primary : 'grey'} onPress={() => filter('12 Months')} title="12 Months"/>
+        </View>
+        <Text style={{textAlign: 'center'}}>No Data for Selected Date</Text>
+        </View>
+        )
     }
     return(
         <View style={{flex: 1}}>
             <View style={styles.button}>
-            <Button onPress={() => filter('all')} title="All"/>
-            <Button onPress={() => filter('1 Month')} title="1 Month"/>
-            <Button onPress={() => filter('3 Months')} title="3 Months"/>
-            <Button onPress={() => filter('6 Months')} title="6 Months"/>
-            <Button onPress={() => filter('12 Months')} title="12 Months"/>
+            <Button color={index === "all" ? colors.primary : 'grey'} onPress={() => filter('all')} title="All"/>
+            <Button color={index === "1 Month" ? colors.primary : 'grey'} onPress={() => filter('1 Month')} title="1 Month"/>
+            <Button color={index === "3 Months" ? colors.primary : 'grey'} onPress={() => filter('3 Months')} title="3 Months"/>
+            <Button color={index === "6 Months" ? colors.primary : 'grey'} onPress={() => filter('6 Months')} title="6 Months"/>
+            <Button color={index === "12 Months" ? colors.primary : 'grey'} onPress={() => filter('12 Months')} title="12 Months"/>
             </View>
             <View style={styles.container}>
             <Text style={styles.text}>Number of Transactions: {currentData.total_number_of_transactions}</Text>
