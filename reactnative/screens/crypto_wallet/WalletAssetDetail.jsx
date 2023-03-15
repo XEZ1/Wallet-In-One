@@ -75,13 +75,13 @@ export default function WalletAssetDetail(props) {
   }
 
   return (
-    <ScrollView style={{flex: 1, backgroundColor: colors.background, paddingHorizontal: 30}}>
+    <ScrollView style={{flex: 1, backgroundColor: colors.background}}>
 
       <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
         <Text style={styles(dark, colors).backArrow}>←</Text>
       </TouchableWithoutFeedback>
 
-      <View style={[stylesInternal.walletAsset, styles(dark, colors).container]}>
+      <View style={[stylesInternal.walletAsset, styles(dark, colors).container, {paddingHorizontal: 45}]}>
         <Image
           style={stylesInternal.walletAssetImage}
           source={getCryptoIcon(item.symbol)}
@@ -128,9 +128,9 @@ export default function WalletAssetDetail(props) {
       </Pressable>
 
 
-      <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Graph</Text>
+      <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text, paddingHorizontal: 30}}>Graph</Text>
 
-      <View style={{padding: 15}}>
+      <View style={{padding: 15,paddingHorizontal: 45}}>
         <SwitchSelector
           initial={0}
           onPress={value => setGraphVersion(value)}
@@ -148,6 +148,7 @@ export default function WalletAssetDetail(props) {
         />
       </View>
 
+      
       {graphData.length <= 2 ? (
         <Text style={{color: colors.text}}>Not enough data to display graph.</Text>
       ) : (
@@ -175,7 +176,7 @@ export default function WalletAssetDetail(props) {
               current_balance={graphData[graphData.length-1].value}
               graph_version={graphVersion}
               height={SIZE / 2} 
-              width={SIZE * 0.85}
+              width={SIZE}
               data={graphData}
           />}
 
@@ -183,10 +184,11 @@ export default function WalletAssetDetail(props) {
       )
 
       }
+      
+      
 
-
-      <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
-      <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
+      <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text, paddingHorizontal: 30}}>Transactions</Text>
+      <View style={[styles.walletAsset, {backgroundColor: colors.background, paddingHorizontal: 30 }]}>
         {/* Text if no transactions */}
         {
           item.transactions.map((t)=> <CryptoWalletTransaction key={t.id} transaction={t} symbol={item.symbol}/>)

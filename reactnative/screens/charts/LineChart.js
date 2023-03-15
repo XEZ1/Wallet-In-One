@@ -33,11 +33,8 @@ export default function LineChartScreen({transactions, graph_version, height, wi
         } else{
             setGraphData(data);
         }
-        // console.log("graphData");
-        // console.log(graphData);
     }, [transactions]);
-    // console.log("graphData2");
-    //     console.log(graphData);
+
     let color1 = '';
     
     if (graphData && graphData.length > 0) {
@@ -90,8 +87,6 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                 low: parseFloat(transformedData[key].low),
             };
         });
-
-        // candlestickData = candlestickData.sort((a, b) => new Date(b[1]) - new Date(a[1]));
     }
 
     let percentageChange = null;
@@ -124,9 +119,6 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     else{
         calculateChange(candlestickData[candlestickData.length-1].close, candlestickData[0].open);
     }
-
-    console.log(graph_version);
-    // console.log(candlestickData.map(item => item.timestamp));
 
     return (
         <View >
