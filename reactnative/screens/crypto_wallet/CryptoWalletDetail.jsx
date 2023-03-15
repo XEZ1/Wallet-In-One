@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity, FlatList
 } from "react-native";
 import React, {useEffect, useState} from "react";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
@@ -171,15 +171,20 @@ export default function CryptoWalletDetail(props) {
 
           </ScrollView>
           :
-          <ScrollView>
+          <View>
             <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
             <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
               {/* Text if no transactions */}
-              {
-                walletData.transactions.map((t) => <CryptoWalletTransaction key={t.id} transaction={t} symbol={walletData.symbol}/>)
-              }
+              
+              <FlatList
+                data={walletData.transactions}
+                renderItem={(t) => <CryptoWalletTransaction key={t.id} transaction={t} symbol={walletData.symbol}/> }
+              />
+              
+              
+
             </View>
-          </ScrollView>
+          </View>
       }
 
     </View>
@@ -187,25 +192,26 @@ export default function CryptoWalletDetail(props) {
 
 }
 
+
 function CryptoWalletTransaction(props) {
 
   const {dark, colors, setScheme} = useTheme();
-
-  const date = new Date(Number(props.transaction.time * 1000))
-  const options = {
+  const date_options = {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
     hour: 'numeric',
     minute: 'numeric'
   };
-  const f_date = date.toLocaleString("en-JP", options);
+
+  const raw_date = new Date(Number(props.transaction.item.time * 1000))
+  const formatted_date = raw_date.toLocaleString("en-JP", date_options);
 
   return (
     <View style={styles.transaction}>
       <Text />
-      <Text style={{color: colors.text, fontWeight: "700"}}>{props.transaction.value} {props.symbol}</Text>
-      <Text style={{color: colors.text}}>{f_date}</Text>
+      <Text style={{color: colors.text, fontWeight: "700"}}>{props.transaction.item.value} {props.symbol}</Text>
+      <Text style={{color: colors.text}}>{formatted_date}</Text>
     </View>
   )
 }
