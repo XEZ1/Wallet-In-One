@@ -30,7 +30,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { setStatusBarHidden } from 'expo-status-bar';
-import WalletAssetDetail from "./screens/crypto_wallet/WalletAssetDetail";
+import CryptoWalletDetail from "./screens/crypto_wallet/CryptoWalletDetail";
 
 import StockAsset from './screens/stocks/StockAsset';
 import ExchangeTransactions from './screens/cryptoExchanges/ExchangeTransactions';
@@ -165,7 +165,7 @@ function HomePageNavigator() {
         component={BankTransactionsScreen} />
       <Stack.Screen
         name='Wallet Detail'
-        component={WalletAssetDetail} />
+        component={CryptoWalletDetail} />
       <Stack.Screen
         name='Stock Account Transactions'
         component={StockAsset} />

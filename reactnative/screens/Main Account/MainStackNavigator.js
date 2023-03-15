@@ -9,10 +9,10 @@ import BankTransactionsScreen from "../banking/BankTransactionsScreen";
 import MainAccountPage from "./MainAccountPage";
 
 //Crypto Wallet Screens
-import CryptoWallet from "../crypto_wallet/CryptoWallet";
-import WalletAssetDetail from "../crypto_wallet/WalletAssetDetail";
-import { WalletConnector, WalletSelector } from "../crypto_wallet/WalletModal";
-import AddCryptoScreen from "../crypto_wallet/AddCryptoScreen"
+import CryptoList from "../cryptocurrency/CryptoList";
+import CryptoWalletDetail from "../crypto_wallet/CryptoWalletDetail";
+import CryptoWalletConnector from "../crypto_wallet/CryptoWalletConnector";
+import CryptoConnector from "../cryptocurrency/CryptoConnector"
 
 //Crypto Exchanges Screens
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
@@ -66,7 +66,7 @@ export default function MainStackNavigator() {
       />
       <Stack.Screen 
         name="Crypto Wallets & Exchanges"
-        component={CryptoWallet}
+        component={CryptoList}
         options={({ navigation }) => ({
           headerRight: () => (
             <TouchableOpacity 
@@ -79,24 +79,17 @@ export default function MainStackNavigator() {
       })}/>
       <Stack.Screen
         name="Add Cryptocurrency Wallet or Account"
-        component={AddCryptoScreen} />
+        component={CryptoConnector} />
       <Stack.Screen
-        name="WalletAssetDetail"
-        component={WalletAssetDetail}
+        name="Crypto Wallet Detail"
+        component={CryptoWalletDetail}
       />
-      <Stack.Screen name="WalletSelector" component={WalletSelector} />
-      <Stack.Screen name="WalletConnector" component={WalletConnector} />
+      <Stack.Screen name="WalletConnector" component={CryptoWalletConnector} />
       <Stack.Screen name="Crypto Wallet Insights" component={CryptoWalletInsights} />
 
       <Stack.Screen name="Exchange Credentials" component={ExchangeCredentials} />
 
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-        name="ExchangeTransactions"
-        component={ExchangeTransactions}
-      />
+      <Stack.Screen name="ExchangeTransactions" component={ExchangeTransactions} />
 
       <Stack.Screen name="Stock Accounts" component={StockStackNavigator} options={{headerShown: false}} />
 
