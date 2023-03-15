@@ -1,11 +1,9 @@
 import {
-  Button,
   Dimensions,
   Image,
   Pressable,
   StyleSheet,
   Text,
-  TouchableWithoutFeedback,
   View,
   ScrollView,
   TouchableOpacity, FlatList
@@ -13,7 +11,7 @@ import {
 import React, {useEffect, useState} from "react";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
-import {styles} from 'reactnative/screens/All_Styles.style.js';
+import {styles} from '../All_Styles.style.js';
 import { LineChart } from 'react-native-wagmi-charts';
 import * as SecureStore from "expo-secure-store";
 import { BACKEND_URL } from "@env"
@@ -212,7 +210,7 @@ function CryptoWalletTransaction(props) {
   return (
     <View style={styles.transaction}>
       <Text />
-      <Text style={{color: colors.text, fontWeight: "700"}}>{props.transaction.item.value} {props.symbol}</Text>
+      <Text style={{color: colors.text, fontWeight: "700", fontSize: 16}}>{props.transaction.item.value} {props.symbol}</Text>
       <Text style={{color: colors.text}}>{formatted_date}</Text>
     </View>
   )

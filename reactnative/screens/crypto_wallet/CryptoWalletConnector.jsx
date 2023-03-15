@@ -7,11 +7,9 @@ import {
   TextInput,
   View,
 } from "react-native";
-import {createStackNavigator} from "@react-navigation/stack";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
-import {styles} from 'reactnative/screens/All_Styles.style.js';
-import coins from '../cryptocurrency/blockchains.json'
+import {styles} from '../All_Styles.style.js';
 
 
 export default function CryptoWalletConnector(props) {
@@ -34,7 +32,7 @@ export default function CryptoWalletConnector(props) {
   });
 
   return (
-    <View style={{flex:1, backgroundColor: colors.background}}>
+    <View style={{flex:1, backgroundColor: colors.background, paddingHorizontal: 20}}>
       <View style={{ paddingTop: 30 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View style={{ flex: 1, flexDirection: "column" }}>

@@ -64,7 +64,7 @@ export default function CryptoWalletInsights() {
             <View>
               {
                 Object.entries(insights.predicted_balance).map(([key, value]) =>
-                  <InsightsView key={key} symbol={key} upper={`${value} ${key}`} />
+                  <InsightItem key={key} symbol={key} upper={`${value} ${key}`} />
                 )
               }
             </View>
@@ -82,7 +82,7 @@ export default function CryptoWalletInsights() {
             <View>
               {
                 Object.entries(insights.received_spent).map(([key, value]) =>
-                  <InsightsView key={key} symbol={key} upper={`+${value.received} ${key}`} lower={`-${value.spent} ${key}`} />
+                  <InsightItem key={key} symbol={key} upper={`+${value.received} ${key}`} lower={`-${value.spent} ${key}`} />
                 )
               }
             </View>
@@ -100,7 +100,7 @@ export default function CryptoWalletInsights() {
             <View>
               {
                 Object.entries(insights.average_spend).map(([key, value]) =>
-                  <InsightsView key={key} symbol={key} upper={`${value * -1} ${key}`} />
+                  <InsightItem key={key} symbol={key} upper={`${value * -1} ${key}`} />
                 )
               }
             </View>
@@ -112,7 +112,7 @@ export default function CryptoWalletInsights() {
   )
 }
 
-function InsightsView(props) {
+function InsightItem(props) {
 
   const {dark, colors, setScheme} = useTheme();
   const [value, setValue] = useState(0);
@@ -186,8 +186,6 @@ function InsightsView(props) {
                 £{value}
               </Text>
           }
-
-
 
         </View>
 
