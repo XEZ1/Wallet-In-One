@@ -2,10 +2,6 @@ import {View, Text, StyleSheet, Image, ScrollView, Button} from "react-native";
 import React, {useEffect, useState} from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { auth_get } from "../../authentication";
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faMoneyBillTransfer } from '@fortawesome/free-solid-svg-icons/faMoneyBillTransfer'
-import { faArrowTrendUp } from '@fortawesome/free-solid-svg-icons/faArrowTrendUp'
-import { faArrowTrendDown } from '@fortawesome/free-solid-svg-icons/faArrowTrendDown'
 import Loading from "../banking/Loading";
 
 export default function StockInsight() {
@@ -34,6 +30,9 @@ export default function StockInsight() {
     }
 
     const styles = StyleSheet.create({
+        container: {
+            alignItems: 'center',
+        },
         button: {
             flexDirection: "row" , justifyContent: 'space-evenly'
         },
@@ -55,15 +54,17 @@ export default function StockInsight() {
             <Button onPress={() => filter('6 Months')} title="6 Months"/>
             <Button onPress={() => filter('12 Months')} title="12 Months"/>
             </View>
-            <Text style={styles.text}> <FontAwesomeIcon icon={faMoneyBillTransfer} size={25} /> Number of Transactions: {currentData.total_number_of_transactions}</Text>
-            <Text style={styles.text}><FontAwesomeIcon icon={faArrowTrendUp} size={25} /> Highest Transaction: £{currentData.highest_transaction}</Text>
-            <Text style={styles.text}><FontAwesomeIcon icon={faArrowTrendDown} size={25} /> Lowest Transaction: £{currentData.lowest_transaction}</Text>
+            <View style={styles.container}>
+            <Text style={styles.text}>Number of Transactions: {currentData.total_number_of_transactions}</Text>
+            <Text style={styles.text}>Highest Transaction: £{currentData.highest_transaction}</Text>
+            <Text style={styles.text}>Lowest Transaction: £{currentData.lowest_transaction}</Text>
             <Text style={styles.text}>Average Transaction: £{currentData.average_transaction}</Text>
             <Text style={styles.text}>Variance: {currentData.variance}</Text>
             <Text style={styles.text}>Standard Deviation: {currentData.standard_deviation}</Text>
             <Text style={styles.text}>Highest Fee: £{currentData.highest_fee}</Text>
             <Text style={styles.text}>Lowest Fee: £{currentData.lowest_fee}</Text>
             <Text style={styles.text}>Average Fee: £{currentData.average_fee}</Text>
+            </View>
         </View>
     )
 }
