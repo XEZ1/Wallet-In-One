@@ -1,13 +1,10 @@
 import {
   Image,
-  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
-//import { LineChart } from "react-native-chart-kit";
 import React, {useEffect, useState} from "react";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
@@ -77,15 +74,14 @@ export default function CryptoListWalletItem(props) {
           }}
         >
           <View style={{}}>
-            <Text style={{ fontSize: 25, fontWeight: "700", color: colors.background }}>
+            <Text style={{ fontSize: 25, fontWeight: "700", color: colors.text }}>
               {props.item.cryptocurrency}
             </Text>
-            <Text style={[styles.walletAssetTitle, {color: colors.background}]}>
+            <Text style={[styles.walletAssetTitle, {color: colors.text}]}>
               {props.item.balance} {props.item.symbol}
             </Text>
 
-            <Text style={[styles.walletAssetTitle, {color: colors.background}]}>£{(cryptoValue * props.item.balance).toFixed(2)}</Text>
-            {/* ▲ 0.00% */}
+            <Text style={[styles.walletAssetTitle, {color: colors.text}]}>£{(cryptoValue * props.item.balance).toFixed(2)}</Text>
           </View>
 
         </View>

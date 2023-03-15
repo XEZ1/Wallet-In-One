@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
-  Pressable,
   TouchableOpacity,
-  Dimensions,
-  Button,
-  FlatList,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -16,10 +12,11 @@ import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
 import CryptoListWalletItem from "../crypto_wallet/CryptoListWalletItem";
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
-import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import { useTheme } from '../../src/theme/ThemeProvider'
 import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
 import { api_url } from '../../authentication';
+
 
 export default function CryptoList(props) {
   const { wallets, listWallets, connectWallet, removeWallet } = useCryptoWallet();
@@ -38,41 +35,17 @@ export default function CryptoList(props) {
       fontSize: 30,
       alignSelf: "center",
     },
-    backArrow: {
-      fontWeight: "900",
-      fontSize: 30,
-      position: "absolute",
-      marginLeft: 10,
-    },
+
     walletList: {
       marginHorizontal: 10,
       marginBottom: 30,
     },
-    container: {
-      paddingHorizontal: 20,
-      paddingTop: 20,
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      backgroundColor: colors.background,
-    },
-    titleContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 20,
-    },
-    title: {
-      fontSize: 25,
-      alignItems: 'center',
-      textAlign: "center",
-      color: colors.text,
-    },
     button: {
-      padding: 20,
+      padding: 10,
       borderRadius: 10,
       marginVertical: 10,
       backgroundColor: colors.primary,
-      alignSelf: 'center', // center the button horizontally
+      alignSelf: 'center',
     },
     buttonText: {
       textAlign: 'center',
@@ -140,20 +113,26 @@ export default function CryptoList(props) {
         </View>
 
         <Text style={[styles.cryptoWalletSubtitle, {color: colors.text, marginTop: 10}]}>Wallets</Text>
-        <Button
-          title='Insights'
+
+        <TouchableOpacity
+          style={styles.button}
           onPress={() => props.navigation.navigate("Crypto Wallet Insights")}
-        />
+        >
+          <Text style={styles.buttonText}>Wallet Insights</Text>
+        </TouchableOpacity>
+
         <View style={[styles.walletList]}>
         {
-          wallets.map((item)=> <CryptoListWalletItem key={item.id} id={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
+          wallets.map((item) =>
+            <CryptoListWalletItem key={item.id} id={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
         }
         </View>
 
         <Text style={[styles.cryptoWalletSubtitle, {color: colors.text}]}>Exchanges</Text>
         <View style={[styles.walletList]}>
         {
-          exchanges.map((item)=> <ExchangeAsset key={item.id} item={item} removeExchange={removeExchange} navigation={props.navigation} />)
+          exchanges.map((item) =>
+            <ExchangeAsset key={item.id} item={item} removeExchange={removeExchange} navigation={props.navigation} />)
         }
         </View>
 

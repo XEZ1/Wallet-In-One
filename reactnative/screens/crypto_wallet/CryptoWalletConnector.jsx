@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import {
   ActivityIndicator,
   Button, Image,
-  Modal,
-  Pressable, ScrollView,
   StyleSheet,
   Text,
-  TextInput, TouchableOpacity, TouchableWithoutFeedback,
+  TextInput,
   View,
 } from "react-native";
 import {createStackNavigator} from "@react-navigation/stack";

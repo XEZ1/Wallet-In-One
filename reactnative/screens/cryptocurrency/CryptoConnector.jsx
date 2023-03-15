@@ -1,19 +1,16 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {
   TouchableOpacity,
-  Dimensions,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
-  Alert,
   Image,
 } from "react-native";
 import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
-import {useTheme} from 'reactnative/src/theme/ThemeProvider'
+import {useTheme} from '../../src/theme/ThemeProvider'
 import exchanges from './exchanges.json'
-import {styles} from 'reactnative/screens/All_Styles.style.js';
+import {styles} from '../All_Styles.style.js';
 import blockchains from "./blockchains.json";
 import getCryptoIcon from "./icons/icon";
 

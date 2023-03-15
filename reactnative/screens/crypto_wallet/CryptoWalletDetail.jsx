@@ -10,15 +10,11 @@ import {
   ScrollView,
   TouchableOpacity
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
-import React, {useCallback, useEffect, useState} from "react";
-//import {LineChart} from "react-native-chart-kit";
+import React, {useEffect, useState} from "react";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {styles} from 'reactnative/screens/All_Styles.style.js';
 import { LineChart } from 'react-native-wagmi-charts';
-import CryptoListWalletItem from "./CryptoListWalletItem";
-import useCryptoWallet from "./useCryptoWallet";
 import * as SecureStore from "expo-secure-store";
 import { BACKEND_URL } from "@env"
 
