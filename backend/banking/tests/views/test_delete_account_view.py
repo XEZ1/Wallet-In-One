@@ -6,7 +6,7 @@ from accounts.models import User
 from banking.models import Account, Transaction
 from rest_framework import status
 
-class UserAccountsViewTestCase(TestCase):
+class DeleteAccountViewTestCase(TestCase):
     
     fixtures = [
         'accounts/fixtures/user.json',

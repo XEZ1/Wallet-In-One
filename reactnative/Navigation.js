@@ -14,7 +14,6 @@ import HomePage from './screens/charts/HomePage';
 import SettingsPage from './screens/SettingsPage';
 import AboutUsScreen from './screens/pre_logged_in/AboutUsScreen';
 import DeveloperInfoScreen from './screens/pre_logged_in/DeveloperInfoScreen';
-import NotificationsPage from "./screens/NotificationsPage";
 import BankInsights from './screens/banking/BankInsights';
 
 import AddBankScreen from './screens/banking/AddBankScreen'
@@ -34,6 +33,7 @@ import { setStatusBarHidden } from 'expo-status-bar';
 import WalletAssetDetail from "./screens/crypto_wallet/WalletAssetDetail";
 
 import StockAsset from './screens/stocks/StockAsset';
+import ExchangeTransactions from './screens/cryptoExchanges/ExchangeTransactions';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -88,17 +88,6 @@ export default function Navigation() {
           <Tab.Screen
             name="Insights"
             component={BankInsights}
-            options={{
-              tabBarIcon: ({ focused }) => (
-                <Text style={{ color: focused ? colors.primary : colors.text }}>
-                  <AntDesign name="notification" size={30} />
-                </Text>
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Notifications"
-            component={NotificationsPage}
             options={{
               tabBarIcon: ({ focused }) => (
                 <Text style={{ color: focused ? colors.primary : colors.text }}>
@@ -180,6 +169,9 @@ function HomePageNavigator() {
       <Stack.Screen
         name='Stock Account Transactions'
         component={StockAsset} />
+        <Stack.Screen
+        name='ExchangeTransactions'
+        component={ExchangeTransactions} />
     </Stack.Navigator>)
 }
 

@@ -1,14 +1,46 @@
 from abc import ABC, ABCMeta, abstractmethod
+from datetime import datetime
 
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from crypto_exchanges.serializers import CryptoExchangeAccountSerializer
+from crypto_exchanges.serializers import *
 from crypto_exchanges.services import *
+from crypto_exchanges.models import Transaction, CryptoExchangeAccount, Token
+
+
+def millis_to_datetime(millis):
+    return datetime.fromtimestamp(millis / 1000.0)
+
+
+def iso8601_to_datetime(iso8601_string):
+    dt = datetime.strptime(iso8601_string, '%Y-%m-%dT%H:%M:%S.%fZ')
+    return dt.strftime('%Y-%m-%d %H:%M:%S.%f')
+
+
+def unix_timestamp_to_datetime(unix_timestamp):
+    dt = datetime.fromtimestamp(unix_timestamp)
+    return dt.strftime('%Y-%m-%d %H:%M:%S.%f')
 
 
 # Create your views here.
+@api_view(['GET'])
+def get_transactions(request, exchange):
+    exchange_obj = CryptoExchangeAccount.objects.get(id=exchange)
+    transactions = Transaction.objects.filter(crypto_exchange_object=exchange_obj).order_by('timestamp')
+    serializer = TransactionSerializer(transactions, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_token_breakdown(request, exchange):
+    exchange_obj = CryptoExchangeAccount.objects.get(id=exchange)
+    crypto_data_from_exchanges = sorted(
+        CurrentMarketPriceFetcher(request.user).get_exchange_token_breakdown(exchange_obj), key=lambda d: d['y'])
+    return Response(crypto_data_from_exchanges)
+
 
 # Generic class for crypto exchanges
 class GenericCryptoExchanges(APIView):
@@ -80,18 +112,23 @@ class GenericCryptoExchanges(APIView):
         pass
 
     @abstractmethod
+    def save_transactions(self, transactions, request, saved_exchange_account_object):
+        pass
+
+    @abstractmethod
     def get(self, request):
         crypto_exchange_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
-        serializers = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
-        serializer_array = serializers.data
+        account_serializers = CryptoExchangeAccountSerializer(crypto_exchange_accounts, many=True)
+        serializer_array = account_serializers.data
         for serializer in serializer_array:
             exchange = CryptoExchangeAccount.objects.get(api_key=serializer['api_key'])
+            serializer.update({'id': exchange.id})
             serializer.update({'balance': CurrentMarketPriceFetcher(request.user).get_exchange_balance(exchange)})
-        print(serializer_array)
         return Response(serializer_array)
 
     @abstractmethod
     def post(self, request):
+        # CryptoExchangeAccount.objects.get(crypto_exchange_name="CoinList").delete()
         # Pass the data to the serialiser so that the binance account can be created
         # Create a field 'crypto_exchange' in the request dict to prevent double adding the same account
         request.data['crypto_exchange_name'] = self.crypto_exchange_name
@@ -140,6 +177,9 @@ class GenericCryptoExchanges(APIView):
 
         self.save_coins(filtered_data, request, saved_exchange_account_object)
 
+        transactions = service.get_trading_history()
+        self.save_transactions(transactions, request, saved_exchange_account_object)
+
         return Response(filtered_data, status=200)
 
     def delete(self, request):
@@ -149,6 +189,7 @@ class GenericCryptoExchanges(APIView):
         serializer = CryptoExchangeAccountSerializer(crypto_exchange_account)
         crypto_exchange_account.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 # Binance
 class BinanceView(GenericCryptoExchanges, ABC):
@@ -176,6 +217,21 @@ class BinanceView(GenericCryptoExchanges, ABC):
             token.locked_amount = float(coin['locked'])
             token.save()
 
+    def save_transactions(self, transactions, request, saved_exchange_account_object):
+        super(BinanceView, self).save_transactions(transactions, request, saved_exchange_account_object)
+        for symbol in transactions.values():
+            for binance_transaction in symbol:
+                transaction = Transaction()
+                transaction.crypto_exchange_object = saved_exchange_account_object
+                transaction.asset = binance_transaction['symbol']
+                if binance_transaction['isBuyer']:
+                    transaction.transaction_type = 'buy'
+                else:
+                    transaction.transaction_type = 'sell'
+                transaction.amount = binance_transaction['qty']
+                transaction.timestamp = millis_to_datetime(binance_transaction['time'])
+                transaction.save()
+
     def get(self, request):
         return super(BinanceView, self).get(request)
 
@@ -184,6 +240,7 @@ class BinanceView(GenericCryptoExchanges, ABC):
 
     def delete(self, request):
         return super(BinanceView, self).delete(request)
+
 
 # Huobi
 class HuobiView(GenericCryptoExchanges, ABC):
@@ -211,6 +268,17 @@ class HuobiView(GenericCryptoExchanges, ABC):
             token.locked_amount = float(coin['debt'])
             token.save()
 
+    def save_transactions(self, transactions, request, saved_exchange_account_object):
+        super(HuobiView, self).save_transactions(transactions, request, saved_exchange_account_object)
+        for huobi_transaction in transactions:
+            transaction = Transaction()
+            transaction.crypto_exchange_object = saved_exchange_account_object
+            transaction.asset = huobi_transaction['currency']
+            transaction.transaction_type = huobi_transaction['type']
+            transaction.amount = huobi_transaction['amount']
+            transaction.timestamp = millis_to_datetime(huobi_transaction['created-at'])
+            transaction.save()
+
     def get(self, request):
         return super(HuobiView, self).get(request)
 
@@ -219,6 +287,7 @@ class HuobiView(GenericCryptoExchanges, ABC):
 
     def delete(self, request):
         return super(HuobiView, self).delete(request)
+
 
 # GateIo
 class GateioView(GenericCryptoExchanges, ABC):
@@ -245,6 +314,18 @@ class GateioView(GenericCryptoExchanges, ABC):
             token.free_amount = float(coin['available'])
             token.locked_amount = float(coin['locked'])
             token.save()
+
+    def save_transactions(self, transactions, request, saved_exchange_account_object):
+        super(GateioView, self).save_transactions(transactions, request, saved_exchange_account_object)
+        for symbol in transactions.values():
+            for gateio_transaction in symbol:
+                transaction = Transaction()
+                transaction.crypto_exchange_object = saved_exchange_account_object
+                transaction.asset = gateio_transaction['currency_pair']
+                transaction.transaction_type = gateio_transaction['side']
+                transaction.amount = gateio_transaction['amount']
+                transaction.timestamp = millis_to_datetime(float(gateio_transaction['create_time_ms']))
+                transaction.save()
 
     def get(self, request):
         return super(GateioView, self).get(request)
@@ -282,6 +363,26 @@ class CoinListView(GenericCryptoExchanges, ABC):
             token.locked_amount = float(0)
             token.save()
 
+    def save_transactions(self, transactions, request, saved_exchange_account_object):
+        super(CoinListView, self).save_transactions(transactions, request, saved_exchange_account_object)
+        for symbol in transactions.values():
+            for coinlist_transaction in symbol:
+                transaction = Transaction()
+                transaction.crypto_exchange_object = saved_exchange_account_object
+                if coinlist_transaction['symbol'] is None:
+                    transaction.asset = coinlist_transaction['asset']
+                else:
+                    transaction.asset = coinlist_transaction['symbol']
+                transaction.transaction_type = coinlist_transaction['transaction_type']
+                if coinlist_transaction['amount'] == '':
+                    transaction.amount = 0
+                elif float(coinlist_transaction['amount']) < 0:
+                    transaction.amount = float(coinlist_transaction['amount']) * -1
+                else:
+                    transaction.amount = float(coinlist_transaction['amount'])
+                transaction.timestamp = iso8601_to_datetime(coinlist_transaction['created_at'])
+                transaction.save()
+
     def get(self, request):
         return super(CoinListView, self).get(request)
 
@@ -317,6 +418,18 @@ class CoinBaseView(GenericCryptoExchanges, ABC):
             token.locked_amount = float(0)
             token.save()
 
+    def save_transactions(self, transactions, request, saved_exchange_account_object):
+        super(CoinBaseView, self).save_transactions(transactions, request, saved_exchange_account_object)
+        transactions_fills = transactions.get('fills')
+        for coinbase_transaction in transactions_fills:
+            transaction = Transaction()
+            transaction.crypto_exchange_object = saved_exchange_account_object
+            transaction.asset = coinbase_transaction['product_id']
+            transaction.transaction_type = coinbase_transaction['trade_type']
+            transaction.amount = coinbase_transaction['size']
+            transaction.timestamp = iso8601_to_datetime(coinbase_transaction['trade_time'])
+            transaction.save()
+
     def get(self, request):
         return super(CoinBaseView, self).get(request)
 
@@ -351,6 +464,18 @@ class KrakenView(GenericCryptoExchanges, ABC):
             token.free_amount = float(coin[1])
             token.locked_amount = float(0)
             token.save()
+
+    def save_transactions(self, transactions, request, saved_exchange_account_object):
+        super(KrakenView, self).save_transactions(transactions, request, saved_exchange_account_object)
+        transactions = transactions['result']['trades']
+        for kraken_transaction in transactions:
+            transaction = Transaction()
+            transaction.crypto_exchange_object = saved_exchange_account_object
+            transaction.asset = kraken_transaction['pair']
+            transaction.transaction_type = kraken_transaction['type']
+            transaction.amount = kraken_transaction['vol']
+            transaction.timestamp = unix_timestamp_to_datetime(kraken_transaction['time'])
+            transaction.save()
 
     def get(self, request):
         return super(KrakenView, self).get(request)
