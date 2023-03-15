@@ -3,7 +3,6 @@ from rest_framework.test import APIClient
 from django.urls import reverse
 from accounts.models import User
 from rest_framework import status
-from stocks.services import setUpClient
 
 class StocksPlaidViewTestCase(TestCase):
     fixtures = [
