@@ -42,6 +42,11 @@ def get_token_breakdown(request, exchange):
     return Response(crypto_data_from_exchanges)
 
 
+@api_view(['GET'])
+def get_exchange_balances(request):
+    return CurrentMarketPriceFetcher(request.user).chart_breakdown_crypto_exchanges()
+
+
 # Generic class for crypto exchanges
 class GenericCryptoExchanges(APIView):
     __metaclass__ = ABCMeta
