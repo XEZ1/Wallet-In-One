@@ -9,6 +9,8 @@ import {
   Alert,
 } from "react-native";
 import * as Notifications from "expo-notifications";
+import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import {styles} from 'reactnative/screens/All_Styles.style.js';
 
 import { useContext, useState } from "react";
 import { userContext } from "../data";
@@ -16,6 +18,9 @@ import { userContext } from "../data";
 import { login } from "../authentication";
 
 export default function SignUpScreen({ navigation }) {
+
+  const {dark, colors, setScheme} = useTheme();
+
   const [user, setUser] = useContext(userContext);
 
   const [username, setUsername] = useState();
@@ -50,9 +55,9 @@ export default function SignUpScreen({ navigation }) {
 
   const inputStyle = (name) => {
     if (name in errors || "non_field_errors" in errors) {
-      return [styles.input, styles.error];
+      return [stylesInternal.input, stylesInternal.error];
     }
-    return [styles.input];
+    return [stylesInternal.input];
   };
 
   function ErrorMessage(props) {
@@ -61,7 +66,7 @@ export default function SignUpScreen({ navigation }) {
         <>
           {errors[props.name].map((value, index) => {
             return (
-              <Text key={index} style={styles.errorText}>
+              <Text key={index} style={stylesInternal.errorText}>
                 {value}
               </Text>
             );
@@ -73,20 +78,20 @@ export default function SignUpScreen({ navigation }) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[stylesInternal.container, styles(dark, colors).container]}>
       <StatusBar style="auto" />
 
-      <Text style={styles.text}>Username:</Text>
+      <Text style={[stylesInternal.text, styles(dark, colors).text]}>Username:</Text>
       <TextInput
-        style={inputStyle("username")}
+        style={[inputStyle("username"), styles(dark, colors).input, {color: colors.text}]}
         onChangeText={setUsername}
         testID="username"
       />
       <ErrorMessage name="username"></ErrorMessage>
 
-      <Text style={styles.text}>Password:</Text>
+      <Text style={[stylesInternal.text, styles(dark, colors).text]}>Password:</Text>
       <TextInput
-        style={inputStyle("password")}
+        style={[inputStyle("password"), styles(dark, colors).input, {color: colors.text}]}
         onChangeText={setPassword}
         secureTextEntry={true}
         testID="password"
@@ -94,16 +99,15 @@ export default function SignUpScreen({ navigation }) {
       <ErrorMessage name="password"></ErrorMessage>
       <ErrorMessage name="non_field_errors"></ErrorMessage>
 
-      <View style={styles.parent}>
-        <Button style={styles.button} title="Log In" onPress={loginHandler} />
+      <View style={stylesInternal.parent}>
+        <Button style={stylesInternal.button} title="Log In" onPress={loginHandler} />
       </View>
     </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
+const stylesInternal = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     width: "100%",
     padding: 30,
   },

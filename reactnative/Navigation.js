@@ -109,7 +109,14 @@ export default function Navigation() {
           />
         </Tab.Navigator>
       ) : (
-        <Stack.Navigator>
+        <Stack.Navigator
+        screenOptions={
+          {
+            headerStyle: {backgroundColor: colors.background},
+            headerTitleStyle: {color: colors.text},
+          }
+        }
+        >
           <Stack.Screen
             name='Start'
             component={StartScreen}
