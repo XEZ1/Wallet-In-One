@@ -192,15 +192,6 @@ export default function StockAsset({ route, navigation, }){
   const ItemSeparator = () => <View style={stylesInternal.separator} />;
 
   const [graphVersion,setGraphVersion] = React.useState(1);
-  
-    const toggleGraphVersion = () => {
-      if (graphVersion == 1){
-        setGraphVersion(3);
-      }
-      else if (graphVersion == 3){
-        setGraphVersion(1);
-      }
-    };
 
 
     return(
@@ -236,22 +227,24 @@ export default function StockAsset({ route, navigation, }){
             </View>
 
           </View>
-
-          <SwitchSelector
-            initial={0}
-            onPress={() => toggleGraphVersion()}
-            // textColor="#7a44cf"
-            selectedColor="#fff"
-            buttonColor="#7a44cf"
-            borderColor="#7a44cf"
-            hasPadding
-            options={[    
-              { label: "Line Chart"},  
-              { label: "Candlestick Chart"} 
-            ]}
-            imageStyle={{ width: 20, height: 20 }} // specify the style for the image
-            textStyle={{ fontWeight: 'bold' }} // specify the style for the text
-          />
+          
+          <View style={{padding: 15}}>
+            <SwitchSelector
+              initial={0}
+              onPress={value => setGraphVersion(value)}
+              // textColor="#7a44cf"
+              selectedColor="#fff"
+              buttonColor="#7a44cf"
+              borderColor="#7a44cf"
+              hasPadding
+              options={[    
+                { label: "Line Chart", value: 1},  
+                { label: "Candlestick Chart", value: 3} 
+              ]}
+              imageStyle={{ width: 20, height: 20 }}
+              textStyle={{ fontWeight: 'bold' }}
+            />
+          </View>
 
 
           {transactions && 
@@ -294,7 +287,7 @@ export default function StockAsset({ route, navigation, }){
                           <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionData', { id: rowData[0] })}>
                             <TableWrapper style={[stylesInternal.row, {backgroundColor: rowData[1] < 0 ? "#f87171" : '#bbf7d0'}]} borderStyle={{borderWidth: 1, borderColor: '#000000'}}>
                               {rowData.map((cellData, cellIndex) => (
-                                <Cell key={cellIndex} data={cellData} />
+                                <Cell key={cellIndex} data={cellData} textStyle={{textAlign: 'center', fontSize: 12, fontWeight: 'bold'}} />
                               ))}
                             </TableWrapper>
                           </TouchableOpacity>

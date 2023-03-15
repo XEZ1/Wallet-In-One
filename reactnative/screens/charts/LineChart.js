@@ -47,7 +47,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
         else {
             color1 = 'green';
         }
-    } 
+    }
     // console.log(graphData);
 
     let candlestickData = null;
@@ -84,10 +84,10 @@ export default function LineChartScreen({transactions, graph_version, height, wi
             const [year, month] = key.split('-');
             return {
                 timestamp: (new Date(year, month - 1)).getTime(),
-                open: parseFloat(transformedData[key].open.toFixed(2)),
-                close: parseFloat(transformedData[key].close.toFixed(2)),
-                high: parseFloat(transformedData[key].high.toFixed(2)),
-                low: parseFloat(transformedData[key].low.toFixed(2)),
+                open: parseFloat(transformedData[key].open),
+                close: parseFloat(transformedData[key].close),
+                high: parseFloat(transformedData[key].high),
+                low: parseFloat(transformedData[key].low),
             };
         });
 
@@ -99,11 +99,12 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     
     function calculateChange(new_value, old_value) {
         if (old_value != 0){
-            percentageChange = (((new_value - old_value) / old_value) * 100).toFixed(2);
+            percentageChange = (((new_value - old_value) / Math.abs(old_value)) * 100).toFixed(2);
         }
         else{
             percentageChange = '0 ERR';
         }
+        
         if (percentageChange > 0) {
             percentageChange = '+' + percentageChange;
         }
@@ -113,9 +114,6 @@ export default function LineChartScreen({transactions, graph_version, height, wi
             priceChange = '+' + priceChange;
         }
     }
-    // calculateChange(current_balance, graphData[0].value);
-    console.log(graph_version);
-    console.log(graphData);
 
     if(graph_version != 3){
         calculateChange(current_balance, graphData[0].value);
@@ -127,8 +125,8 @@ export default function LineChartScreen({transactions, graph_version, height, wi
         calculateChange(candlestickData[candlestickData.length-1].close, candlestickData[0].open);
     }
 
-    console.log(candlestickData);
-    // console.log(graphData);
+    console.log(graph_version);
+    // console.log(candlestickData.map(item => item.timestamp));
 
     return (
         <View >
@@ -154,12 +152,12 @@ export default function LineChartScreen({transactions, graph_version, height, wi
 
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={{ marginHorizontal: 1, fontSize: 13}}>Balance: </Text>
-                                <LineChart.PriceText style={{ color: colors.text, fontSize: 13 }}/>
+                                <LineChart.PriceText precision={10} style={{ color: colors.text, fontSize: 13 }}/>
                             </View>
 
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={{ marginHorizontal: 1, fontSize: 13}}>Date: </Text>
-                                <LineChart.DatetimeText style={{ color: colors.text, fontSize: 13 }} />
+                                <LineChart.DatetimeText precision={10} style={{ color: colors.text, fontSize: 13 }} />
                             </View>
 
                         </LineChart.Provider></>
@@ -181,7 +179,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                         </LineChart.Provider></>
                     }
                     {/* Candelstick graph */}   
-                    { graph_version == 3 &&
+                    { graph_version == 3 && candlestickData &&
                         <>
                         <View style={{flexDirection: 'row'}}>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}>{priceChange}</Text>
@@ -197,24 +195,24 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Text style={{ marginHorizontal: 8, fontSize: 12 }}>Opening Price:</Text>
-                                    <CandlestickChart.PriceText type="open" style={{ color: colors.text, fontSize: 12 }} />
+                                    <CandlestickChart.PriceText precision={10} type="open" style={{ color: colors.text, fontSize: 12 }} />
                                 </View>
 
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Text style={{ marginHorizontal: 8, fontSize: 12  }}>Highest Price: </Text>
-                                    <CandlestickChart.PriceText type="high" style={{ color: colors.text, fontSize: 12 }} />
+                                    <CandlestickChart.PriceText precision={10} type="high" style={{ color: colors.text, fontSize: 12 }} />
                                 </View>
                             </View>
 
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Text style={{ marginHorizontal: 8, fontSize: 12  }}>Closing Price:</Text>
-                                    <CandlestickChart.PriceText type="close" style={{ color: colors.text, fontSize: 12 }} />
+                                    <CandlestickChart.PriceText precision={10} type="close" style={{ color: colors.text, fontSize: 12 }} />
                                 </View>
 
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Text style={{ marginHorizontal: 8, fontSize: 12 }}>Lowest Price:</Text>
-                                    <CandlestickChart.PriceText type="low" style={{ color: colors.text, fontSize: 12 }} />
+                                    <CandlestickChart.PriceText precision={10} type="low" style={{ color: colors.text, fontSize: 12 }} />
                                 </View>
                             </View>
 

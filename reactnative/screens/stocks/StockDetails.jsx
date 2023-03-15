@@ -144,13 +144,13 @@ export default function StockDetails({ route, navigation }){
           <View style={stylesInternal.table}>
               {data && data.tableData && data.tableData.length > 0 ? (
                 <View>
-                  <Table borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
+                  <Table style={{paddingBottom:20}} borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
                     <Row data={data.tableHead} style={stylesInternal.head} />
                     {data.tableData.map((rowData, index) => (
                       <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionData', { id: rowData[0] })}>
                         <TableWrapper style={[stylesInternal.row, {backgroundColor: rowData[1] < 0 ? "#f87171" : '#bbf7d0'}]} borderStyle={{borderWidth: 1, borderColor: '#000000'}}>
                           {rowData.map((cellData, cellIndex) => (
-                            <Cell key={cellIndex} data={cellData} />
+                            <Cell key={cellIndex} data={cellData} textStyle={{textAlign: 'center', fontSize: 12}} />
                           ))}
                         </TableWrapper>
                       </TouchableOpacity>

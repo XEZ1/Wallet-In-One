@@ -52,16 +52,6 @@ export default function WalletAssetDetail(props) {
 
   const [graphVersion,setGraphVersion] = React.useState(4);
 
-  const toggleGraphVersion = () => {
-    if (graphVersion == 4){
-      setGraphVersion(3);
-    }
-    else if (graphVersion == 3){
-      setGraphVersion(4);
-    }
-  };
-  // console.log(graphData[graphData.length-1].value);
-
   const data = graphData
 
   const formatPrice = value => {
@@ -137,24 +127,27 @@ export default function WalletAssetDetail(props) {
         </View>
       </Pressable>
 
-      <SwitchSelector
-        initial={0}
-        onPress={() => toggleGraphVersion()}
-        // textColor="#7a44cf"
-        selectedColor="#fff"
-        buttonColor="#7a44cf"
-        borderColor="#7a44cf"
-        hasPadding
-        options={[    
-          { label: "Line Chart"},  
-          { label: "Candlestick Chart"} 
-        ]}
-        imageStyle={{ width: 20, height: 20 }}
-        textStyle={{ fontWeight: 'bold' }}
-      />
-
 
       <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Graph</Text>
+
+      <View style={{padding: 15}}>
+        <SwitchSelector
+          initial={0}
+          onPress={value => setGraphVersion(value)}
+          // textColor="#7a44cf"
+          selectedColor="#fff"
+          buttonColor="#7a44cf"
+          borderColor="#7a44cf"
+          hasPadding
+          options={[    
+            { label: "Line Chart", value: 4},  
+            { label: "Candlestick Chart", value: 3} 
+          ]}
+          imageStyle={{ width: 20, height: 20 }}
+          textStyle={{ fontWeight: 'bold' }}
+        />
+      </View>
+
       {graphData.length <= 2 ? (
         <Text style={{color: colors.text}}>Not enough data to display graph.</Text>
       ) : (
@@ -178,7 +171,7 @@ export default function WalletAssetDetail(props) {
 
           {graphData && 
             <LineChartScreen 
-              transactions={undefined}
+              transactions={null}
               current_balance={graphData[graphData.length-1].value}
               graph_version={graphVersion}
               height={SIZE / 2} 
@@ -187,7 +180,6 @@ export default function WalletAssetDetail(props) {
           />}
 
         </View>
-
       )
 
       }
