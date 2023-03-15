@@ -153,7 +153,7 @@ def listTransactions(request,stock):
 
 @api_view(['GET'])
 def listStocks(request, stockAccount):
-    stocks = Stock.objects.filter(stockAccount=stockAccount)
+    stocks = Stock.objects.filter(stockAccount=stockAccount, stockAccount__user=request.user)
     serializer = AddStock(stocks, many=True)
     return Response(serializer.data)
 

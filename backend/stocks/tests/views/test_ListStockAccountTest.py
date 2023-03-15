@@ -5,7 +5,7 @@ from accounts.models import User
 from rest_framework.exceptions import ErrorDetail
 from stocks.models import StockAccount
 
-class AddStockViewTestCase(TestCase):
+class ListStockAccountViewTestCase(TestCase):
     fixtures = [
         'stocks/tests/fixtures/user.json',
         'stocks/tests/fixtures/stocks.json'
