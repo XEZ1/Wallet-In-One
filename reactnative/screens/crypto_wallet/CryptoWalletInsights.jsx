@@ -49,9 +49,6 @@ export default function CryptoWalletInsights() {
   };
 
 
-
-  // console.log(insights)
-
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background, paddingHorizontal: 20 }}>
       <Text />
@@ -59,31 +56,55 @@ export default function CryptoWalletInsights() {
       <Text style={styles.subtitle}>Predicted Balance</Text>
       <Text style={styles.info}>Next four weeks</Text>
       <View style={{ borderRadius: 10, paddingVertical: 10}}>
-      {
-        Object.entries(insights.predicted_balance).map(([key, value]) =>
-            <InsightsView key={key} symbol={key} upper={`${value} ${key}`} />
-        )
-      }
+        {
+          Object.keys(insights.predicted_balance).length === 0
+            ?
+            <Text style={{color: colors.text}}>There are no wallet insights to display. Try connect a crypto wallet.</Text>
+            :
+            <View>
+              {
+                Object.entries(insights.predicted_balance).map(([key, value]) =>
+                  <InsightsView key={key} symbol={key} upper={`${value} ${key}`} />
+                )
+              }
+            </View>
+        }
       </View>
       <Text />
 
       <Text style={styles.subtitle}>Total Spent & Received</Text>
       <View style={{ borderRadius: 10, paddingVertical: 10}}>
-      {
-        Object.entries(insights.received_spent).map(([key, value]) =>
-          <InsightsView key={key} symbol={key} upper={`+${value.received} ${key}`} lower={`-${value.spent} ${key}`} />
-        )
-      }
+        {
+          Object.keys(insights.received_spent).length === 0
+            ?
+            <Text style={{color: colors.text}}>There are no wallet insights to display. Try connect a crypto wallet.</Text>
+            :
+            <View>
+              {
+                Object.entries(insights.received_spent).map(([key, value]) =>
+                  <InsightsView key={key} symbol={key} upper={`+${value.received} ${key}`} lower={`-${value.spent} ${key}`} />
+                )
+              }
+            </View>
+        }
       </View>
       <Text />
 
       <Text style={styles.subtitle}>Average Spend</Text>
       <View style={{ borderRadius: 10, paddingVertical: 10}}>
-      {
-        Object.entries(insights.average_spend).map(([key, value]) =>
-          <InsightsView key={key} symbol={key} upper={`${value * -1} ${key}`} />
-        )
-      }
+        {
+          Object.keys(insights.average_spend).length === 0
+            ?
+            <Text style={{color: colors.text}}>There are no wallet insights to display. Try connect a crypto wallet.</Text>
+            :
+            <View>
+              {
+                Object.entries(insights.average_spend).map(([key, value]) =>
+                  <InsightsView key={key} symbol={key} upper={`${value * -1} ${key}`} />
+                )
+              }
+            </View>
+        }
       </View>
       <Text />
 

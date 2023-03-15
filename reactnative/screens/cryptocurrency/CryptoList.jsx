@@ -124,19 +124,36 @@ export default function CryptoList(props) {
         </TouchableOpacity>
 
         <View style={[styles.walletList]}>
-        {
-          wallets.map((item) =>
-            <CryptoListWalletItem key={item.id} id={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
-        }
+          {
+            wallets.length === 0
+              ?
+              <Text style={{color: colors.text}}>There are no wallets to display. Try connect a crypto wallet.</Text>
+              :
+              <View>
+                {
+                  wallets.map((item) =>
+                    <CryptoListWalletItem key={item.id} id={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
+                }
+              </View>
+          }
+
         </View>
 
         <Text style={[styles.cryptoWalletSubtitle, {color: colors.text}]}>Exchanges</Text>
         <View style={[styles.walletList]}>
-        {
-          exchanges.map((item) =>
-            <ExchangeAsset key={item.id} item={item} removeExchange={removeExchange} navigation={props.navigation} />)
-        }
-        </View>
+          {
+            exchanges.length === 0
+              ?
+              <Text style={{color: colors.text}}>There are no exchanges to display. Try connect a crypto exchange.</Text>
+              :
+              <View>
+                {
+                  exchanges.map((item) =>
+                    <ExchangeAsset key={item.id} item={item} removeExchange={removeExchange} navigation={props.navigation} />)
+                }
+              </View>
+          }
+          </View>
 
       </ScrollView>
     </SafeAreaView>

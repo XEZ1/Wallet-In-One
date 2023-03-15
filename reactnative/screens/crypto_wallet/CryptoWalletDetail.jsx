@@ -174,14 +174,16 @@ export default function CryptoWalletDetail(props) {
           <View>
             <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
             <View style={[styles.walletAsset, {backgroundColor: colors.background}]}>
-              {/* Text if no transactions */}
-              
-              <FlatList
-                data={walletData.transactions}
-                renderItem={(t) => <CryptoWalletTransaction key={t.id} transaction={t} symbol={walletData.symbol}/> }
-              />
-              
-              
+
+              {walletData.transactions.length === 0
+                ?
+                <Text style={{color: colors.text}}>There are no transactions to display.</Text>
+                :
+                <FlatList
+                  data={walletData.transactions}
+                  renderItem={(t) => <CryptoWalletTransaction key={t.id} transaction={t} symbol={walletData.symbol}/> }
+                />
+              }
 
             </View>
           </View>
