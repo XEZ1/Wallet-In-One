@@ -17,7 +17,7 @@ import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {styles} from 'reactnative/screens/All_Styles.style.js';
 import { LineChart } from 'react-native-wagmi-charts';
-import WalletAsset from "./WalletAsset";
+import CryptoListWalletItem from "./CryptoListWalletItem";
 import useCryptoWallet from "./useCryptoWallet";
 import * as SecureStore from "expo-secure-store";
 import { BACKEND_URL } from "@env"

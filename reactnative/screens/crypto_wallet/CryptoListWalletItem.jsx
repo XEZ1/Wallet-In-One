@@ -12,7 +12,7 @@ import React, {useEffect, useState} from "react";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 
-export default function WalletAsset(props) {
+export default function CryptoListWalletItem(props) {
 
   const [cryptoValue, setCryptoValue] = useState(0); {/* Display `-` if not retrievable */}
   const {dark, colors, setScheme} = useTheme();

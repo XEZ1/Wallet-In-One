@@ -20,81 +20,21 @@ import getCryptoIcon from "./icons/icon";
 
 export default function CryptoConnector(props) {
 
-  const {wallets, fetchWallets, connectWallet, removeWallet} = useCryptoWallet();
+  const {connectWallet} = useCryptoWallet();
   const {dark, colors, setScheme} = useTheme();
 
   const stylesInternal = StyleSheet.create({
-    cryptoWalletTitle: {
-      fontWeight: "900",
-      fontSize: 40,
-      alignSelf: "center",
-      paddingVertical: 10,
-    },
-    backArrow: {
-      fontWeight: "900",
-      fontSize: 30,
-      position: "absolute",
-      marginLeft: 10,
-    },
-    walletList: {
-      marginHorizontal: 10,
-      marginVertical: 30,
-    },
-    container: {
-      paddingHorizontal: 20,
-      paddingTop: 20,
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      backgroundColor: colors.background,
-    },
-    titleContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 20,
-    },
-    title: {
-      fontSize: 25,
-      alignItems: 'center',
-      textAlign: "center",
-      color: colors.text,
-    },
-    button: {
-      padding: 20,
-      borderRadius: 10,
-      marginVertical: 10,
-      backgroundColor: colors.primary,
-      alignSelf: 'center',
-    },
-    buttonText: {
-      textAlign: 'center',
-      fontWeight: 'bold',
-      color: colors.text,
-    },
-    cryptoItem: {
-      padding: 10,
-      margin: 10,
-      borderRadius: 10,
-      alignItems: "center",
-      justifyContent: 'center',
-      backgroundColor: colors.primary,
-    },
-    walletAsset: {
+    asset: {
       padding: 10,
       marginVertical: 5,
       borderRadius: 10,
       flexDirection: "row",
     },
-    walletAssetTitle: {
-      fontWeight: "700",
-      flex: 1,
-    },
-    walletAssetImage: {
+    assetImage: {
       width: 30,
       height: 30,
     },
   });
-
 
   return (
     <ScrollView style={[styles(dark, colors).container, {padding: 20}]}>
@@ -109,22 +49,18 @@ export default function CryptoConnector(props) {
         blockchains.map((blockchain) =>
 
           <TouchableOpacity
+            key={blockchain.symbol}
             onPress={() => props.navigation.navigate("WalletConnector",
               {connectWallet: connectWallet, cryptocurrency: blockchain.name, symbol: blockchain.symbol})}
           >
-
-            <View style={[stylesInternal.walletAsset, {backgroundColor: colors.primary}]}>
-
+            <View style={[stylesInternal.asset, {backgroundColor: colors.primary}]}>
               <View style={{alignItems: "center", justifyContent: "center", paddingRight: 10}}>
-                <Image style={stylesInternal.walletAssetImage} source={getCryptoIcon(blockchain.symbol)}/>
+                <Image style={stylesInternal.assetImage} source={getCryptoIcon(blockchain.symbol)}/>
               </View>
-
               <Text style={{fontSize: 25, fontWeight: "700", color: colors.text}}>
                 {blockchain.name}
               </Text>
-
             </View>
-
           </TouchableOpacity>
         )
       }
@@ -140,9 +76,15 @@ export default function CryptoConnector(props) {
           <TouchableOpacity
             key={exchange.name}
             onPress={() => props.navigation.navigate('Exchange Credentials', {exchange: exchange.name})}
-            style={[stylesInternal.button, {width: Dimensions.get('window').width - 40}]}
           >
-            <Text style={stylesInternal.buttonText}>{exchange.name}</Text>
+            <View style={[stylesInternal.asset, {backgroundColor: colors.primary}]}>
+              <View style={{alignItems: "center", justifyContent: "center", paddingRight: 10}}>
+                <Image style={stylesInternal.assetImage} source={getCryptoIcon(exchange.name)}/>
+              </View>
+              <Text style={{fontSize: 25, fontWeight: "700", color: colors.text}}>
+                {exchange.name}
+              </Text>
+            </View>
           </TouchableOpacity>)
       }
 

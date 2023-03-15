@@ -16,7 +16,7 @@ import {styles} from 'reactnative/screens/All_Styles.style.js';
 import coins from '../cryptocurrency/blockchains.json'
 
 
-export default function WalletConnector(props) {
+export default function CryptoWalletConnector(props) {
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const { connectWallet, cryptocurrency, symbol } = props.route.params;

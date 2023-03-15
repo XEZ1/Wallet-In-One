@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
-import WalletAsset from "../crypto_wallet/WalletAsset";
+import CryptoListWalletItem from "../crypto_wallet/CryptoListWalletItem";
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { Ionicons } from '@expo/vector-icons';
@@ -146,7 +146,7 @@ export default function CryptoList(props) {
         />
         <View style={[styles.walletList]}>
         {
-          wallets.map((item)=> <WalletAsset key={item.id} id={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
+          wallets.map((item)=> <CryptoListWalletItem key={item.id} id={item.id} item={item} removeWallet={removeWallet} navigation={props.navigation} />)
         }
         </View>
 
