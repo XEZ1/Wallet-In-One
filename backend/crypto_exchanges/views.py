@@ -30,14 +30,20 @@ def unix_timestamp_to_datetime(unix_timestamp):
 def get_transactions(request, exchange):
     exchange_obj = CryptoExchangeAccount.objects.get(id=exchange)
     transactions = Transaction.objects.filter(crypto_exchange_object=exchange_obj).order_by('timestamp')
-    serializer = TransactionSerializer(transactions, many=True)
-    return Response(serializer.data)
+    data = TransactionSerializer(transactions, many=True).data
+    if len(data) == 0:
+        data.append('empty')
+    print(data)
+
+    return Response(data)
 
 
 @api_view(['GET'])
 def get_token_breakdown(request, exchange):
     exchange_obj = CryptoExchangeAccount.objects.get(id=exchange)
     crypto_data_from_exchanges = CurrentMarketPriceFetcher(request.user).get_exchange_token_breakdown(exchange_obj)
+    if len(crypto_data_from_exchanges['token_data']) == 0:
+        crypto_data_from_exchanges['token_data'] = [{'x': 'empty'}]
     return Response(crypto_data_from_exchanges)
 
 

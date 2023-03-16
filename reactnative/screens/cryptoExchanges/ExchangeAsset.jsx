@@ -93,7 +93,7 @@ export default function ExchangeAsset(props) {
                 <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>Total Balance: £Loading...</Text>
               ) : (
                 <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>
-                  Total Balance: £{props.balances.find(balance => balance.id === props.item.id)?.y || '0'}
+                  Total Balance: £{props.balances.find(balance => balance.id === props.item.id)?.y.toFixed(2) || '0.00'}
                 </Text>
               )}
             </View>

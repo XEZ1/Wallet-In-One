@@ -113,7 +113,9 @@ export default function ExchangeTransactions(props) {
     }
   }, [exchange, getExchangeTransactions, getExchangeTokens]);
 
-  const data = {
+  const data = exchangeTransactions.length === 1 && exchangeTransactions[0] === "empty"
+  ? ["empty"]
+  : {
     tableHead: ['Pair', 'Amount', 'Type', 'Date'],
     tableData: exchangeTransactions.map(transaction => [
       transaction.asset,
@@ -180,7 +182,9 @@ export default function ExchangeTransactions(props) {
           source={getCryptoIcon(item.crypto_exchange_name)}/>
         <View style={{marginLeft: 10}}>
           <Text style={stylesInternal.largeBoldText}>{item.crypto_exchange_name} Exchange</Text>
-          <Text style={stylesInternal.mediumText}>Balance: £{balance ? balance : "Loading..."}</Text>
+          <Text style={stylesInternal.mediumText}>
+            Balance: {balance === null || balance === undefined ? "Loading..." : `£${balance.toFixed(2)}`}
+          </Text>
         </View>
       </View>
 
@@ -212,6 +216,8 @@ export default function ExchangeTransactions(props) {
           <Text style={stylesInternal.mediumBoldText}>Coin Breakdown</Text>
           {exchangeTokens.length == 0 ? (
             <Text style={styles(dark, colors).text}>Loading...</Text>
+          ) : exchangeTokens.length === 1 && exchangeTokens[0].x === "empty" ? (
+            <Text style={styles(dark, colors).text}>No coins in this account</Text>
           ) : (
           <>
           <VictoryContainer
@@ -248,34 +254,36 @@ export default function ExchangeTransactions(props) {
           </>
           )}
         </View>  
-       : 
-      <> 
+       : <>
       <View style={stylesInternal.container}>
         <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
-      </View>  
-      {data && (
+      </View>
+      {!data || data.length === 0 ? (
+        <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>Loading...</Text>
+      ) : (
+        data[0] === "empty" ? (
+          <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>
+            No transaction history in this account
+          </Text>
+        ) : (
           <View style={[stylesInternal.table, {paddingVertical: 20}]}>
-              {data && data.tableData && data.tableData.length > 0 ? (
-                <View>
-                  <Table borderStyle={{ borderWidth: 2, borderColor: colors.text}}>
-                    <Row 
-                      data={data.tableHead} 
-                      style={[stylesInternal.header, {backgroundColor: dark ? "#21201E" : "#D3D3D3"}]}
-                      textStyle={{ fontWeight: 'bold', color: colors.text, fontSize: 17 }}
-                    />
-                    {data.tableData.map((rowData, rowIndex) => (
-                      <Row key={rowIndex} data={rowData.map((cellData, cellIndex) => (<Cell key={cellIndex} data={cellData} textStyle={{color: colors.text}} />))} 
-                        style={[stylesInternal.row, {backgroundColor: rowData[2] == "sell" ? dark ? "#8b0000" : "#f87171" : rowData[2] == "buy" ? dark ? "#006400" : "#90ee90" : dark ? "#323232" : "#f3f3f3"}]}
-                      />
-                    ))}
-                  </Table>
-                </View>
-              ) : (
-                <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>Loading...</Text>
-              )}
+            <Table borderStyle={{ borderWidth: 2, borderColor: colors.text}}>
+              <Row 
+                data={data.tableHead} 
+                style={{ ...stylesInternal.header, backgroundColor: dark ? "#21201E" : "#D3D3D3"}}
+                textStyle={{ fontWeight: 'bold', color: colors.text, fontSize: 17 }}
+              />
+              {data.tableData.map((rowData, rowIndex) => (
+                <Row key={rowIndex} data={rowData.map((cellData, cellIndex) => (<Cell key={cellIndex} data={cellData} textStyle={{color: colors.text}} />))} 
+                  style={{ ...stylesInternal.row, backgroundColor: rowData[2] == "sell" ? dark ? "#8b0000" : "#f87171" : rowData[2] == "buy" ? dark ? "#006400" : "#90ee90" : dark ? "#323232" : "#f3f3f3"}}
+                />
+              ))}
+            </Table>
           </View>
-      )}</>
-      }
+        )
+      )}
+      </>
+    }
     </ScrollView>
   );
 
