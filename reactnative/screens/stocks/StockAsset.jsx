@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity,StyleSheet,SectionList } from 'react-native';
+import { View, Text, TouchableOpacity,StyleSheet,SectionList,Image } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect,useCallback } from 'react';
@@ -11,6 +11,7 @@ import { auth_delete } from '../../authentication';
 import { auth_get } from '../../authentication';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
+import SwitchSelector from "react-native-switch-selector";
 
 export default function StockAsset({ route, navigation, }){
   const [stocks, setStocks] = useState()
@@ -68,14 +69,15 @@ export default function StockAsset({ route, navigation, }){
     },
     balanceContainer: {
       flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginTop: 20,
+      alignSelf: 'center'
+      // alignItems: 'center',
+      // justifyContent: 'center',
+      // marginTop: 20,
     },
     balanceText: {
       fontSize: 20,
       fontWeight: 'bold',
-      marginHorizontal: 10,
+      // marginHorizontal: 10,
       color: colors.text,
     },
   });
@@ -189,25 +191,67 @@ export default function StockAsset({ route, navigation, }){
   
   const ItemSeparator = () => <View style={stylesInternal.separator} />;
 
+  const [graphVersion,setGraphVersion] = React.useState(1);
+
+
     return(
       <FlatList
         style={[styles(dark, colors).container, {padding: 10}]}
         data={transactions}
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={
-        <View
-          style={styles(dark, colors).container}
-        >
+        <View style={styles(dark, colors).container}>
+
           <View style={stylesInternal.balanceContainer}>
-            <Text style={stylesInternal.balanceText}>BALANCE:</Text>
-            <Text style={stylesInternal.balanceText}>£{route.params.balance}</Text>
+            <Text style={[{fontSize: 13, fontWeight: 'bold'}]}>{route.params.name} • {route.params.balance_currency} • {route.params.account_name}</Text>
           </View>
+          
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+
+            <View>
+              {/* <Text>{route.params.account_name}</Text> */}
+              {/* <Text style={[{fontSize: 11}]}>{route.params.name} • {route.params.balance_currency}</Text> */}
+              <View style={{flexDirection: 'row'}}>
+                <Text style={stylesInternal.balanceText}>BALANCE:</Text>
+                <Text style={stylesInternal.balanceText}>£{route.params.balance}</Text>
+              </View>
+            </View>
+
+            <View style={{ textAlign: 'right', marginLeft: 'auto'}}>
+              {route.params.logo !== null && 
+                <Image
+                  style={{ width: 60, height: 60 }}
+                  source={{ uri: `data:image/png;base64,${route.params.logo}` }}
+                />
+              }
+            </View>
+
+          </View>
+          
+          <View style={{padding: 15}}>
+            <SwitchSelector
+              initial={0}
+              onPress={value => setGraphVersion(value)}
+              // textColor="#7a44cf"
+              selectedColor="#fff"
+              buttonColor="#7a44cf"
+              borderColor="#7a44cf"
+              hasPadding
+              options={[    
+                { label: "Line Chart", value: 1},  
+                { label: "Candlestick Chart", value: 3} 
+              ]}
+              imageStyle={{ width: 20, height: 20 }}
+              textStyle={{ fontWeight: 'bold' }}
+            />
+          </View>
+
 
           {transactions && 
             <LineChartScreen 
               transactions={transactions}
-              stockAccountBalance={route.params.balance}
-              graph_version={1}
+              current_balance={route.params.balance}
+              graph_version={graphVersion}
               height={275}
               width={375}
           />}
@@ -218,6 +262,12 @@ export default function StockAsset({ route, navigation, }){
             <View style={stylesInternal.timeButton}><Button onPress={last_month} title="M"/></View>
             <View style={stylesInternal.timeButton}><Button onPress={last_week} title="D"/></View>
           </View>
+
+          {/* <Button
+              onPress={toggleGraph}
+              title={graphVersion == 1 ? "Line Chart" : "Candle Stick Chart"}
+              color="#fcd34d"
+          /> */}
 
           <Button
               onPress={toggleTable}
@@ -237,7 +287,7 @@ export default function StockAsset({ route, navigation, }){
                           <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionData', { id: rowData[0] })}>
                             <TableWrapper style={[stylesInternal.row, {backgroundColor: rowData[1] < 0 ? "#f87171" : '#bbf7d0'}]} borderStyle={{borderWidth: 1, borderColor: '#000000'}}>
                               {rowData.map((cellData, cellIndex) => (
-                                <Cell key={cellIndex} data={cellData} />
+                                <Cell key={cellIndex} data={cellData} textStyle={{textAlign: 'center', fontSize: 12, fontWeight: 'bold'}} />
                               ))}
                             </TableWrapper>
                           </TouchableOpacity>

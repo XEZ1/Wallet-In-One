@@ -95,7 +95,10 @@ const SuccessComponent = (props) => {
                     accessToken: item.access_token, 
                     transactions: transactions[item.account_id],
                     logo: item.institution_logo,
-                    balance: item.balance
+                    balance: item.balance,
+                    name: item.institution_name,
+                    account_name: item.name,
+                    balance_currency: item.balance_currency
                   }) }>
 
                   <View style={stylesInternal.row}>
@@ -128,7 +131,7 @@ const SuccessComponent = (props) => {
                   {transactions[item.account_id] && 
                     <LineChartScreen 
                       transactions={transactions[item.account_id]}
-                      stockAccountBalance={item.balance}
+                      current_balance={item.balance}
                       graph_version={2}
                       height={75}
                       width={350}
