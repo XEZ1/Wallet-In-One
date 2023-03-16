@@ -362,7 +362,12 @@ class CoinBaseView(GenericCryptoExchanges, ABC):
             transaction.asset = coinbase_transaction['product_id']
             transaction.transaction_type = coinbase_transaction['trade_type']
             transaction.amount = coinbase_transaction['size']
-            transaction.timestamp = iso8601_to_datetime(coinbase_transaction['trade_time'])
+
+            naive_datetime = iso8601_to_datetime(coinbase_transaction['trade_time'])
+            utc_timezone = pytz.timezone('UTC')
+            aware_datetime = utc_timezone.localize(naive_datetime)
+            transaction.timestamp = aware_datetime
+
             transaction.save()
 
     def get(self, request):
