@@ -133,7 +133,7 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Username:</Text>
       <TextInput
-        style={[inputStyle("username"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("username"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setUsername}
         testID="username"
       />
@@ -141,7 +141,7 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Email:</Text>
       <TextInput
-        style={[inputStyle("email"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("email"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setEmail}
         testID="email"
       />
@@ -149,7 +149,7 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>First Name:</Text>
       <TextInput
-        style={[inputStyle("first_name"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("first_name"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setFirstName}
         testID="first_name"
       />
@@ -157,7 +157,7 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Last Name:</Text>
       <TextInput
-        style={[inputStyle("last_name"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("last_name"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setLastName}
         testID="last_name"
       />
@@ -165,7 +165,7 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Password:</Text>
       <TextInput
-        style={[inputStyle("new_password"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("new_password"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setPassword}
         secureTextEntry={true}
         testID="new_password"
@@ -174,7 +174,7 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Password Confirmation:</Text>
       <TextInput
-        style={[inputStyle("password_confirmation"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("password_confirmation"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setPasswordConfirmation}
         secureTextEntry={true}
         testID="password_confirmation"
