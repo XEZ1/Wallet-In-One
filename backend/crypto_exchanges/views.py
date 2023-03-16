@@ -1,5 +1,6 @@
 from abc import ABC, ABCMeta, abstractmethod
 from datetime import datetime
+import pytz
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -17,12 +18,12 @@ def millis_to_datetime(millis):
 
 def iso8601_to_datetime(iso8601_string):
     dt = datetime.strptime(iso8601_string, '%Y-%m-%dT%H:%M:%S.%fZ')
-    return dt.strftime('%Y-%m-%d %H:%M:%S.%f')
+    return dt
 
 
 def unix_timestamp_to_datetime(unix_timestamp):
     dt = datetime.fromtimestamp(unix_timestamp)
-    return dt.strftime('%Y-%m-%d %H:%M:%S.%f')
+    return dt
 
 
 # Create your views here.
@@ -195,7 +196,12 @@ class BinanceView(GenericCryptoExchanges, ABC):
                 else:
                     transaction.transaction_type = 'sell'
                 transaction.amount = binance_transaction['qty']
-                transaction.timestamp = millis_to_datetime(binance_transaction['time'])
+
+                naive_datetime = millis_to_datetime(binance_transaction['time'])
+                utc_timezone = pytz.timezone('UTC')
+                aware_datetime = utc_timezone.localize(naive_datetime)
+                transaction.timestamp = aware_datetime
+
                 transaction.save()
 
     def get(self, request):
