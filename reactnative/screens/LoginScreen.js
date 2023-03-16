@@ -102,17 +102,17 @@ const sendLogInNotification = async () => {
     <ScrollView style={[stylesInternal.container, styles(dark, colors).container]}>
       <StatusBar style="auto" />
 
-      <Text style={[stylesInternal.text, styles(dark, colors).text]}>Username:</Text>
+      <Text style={[stylesInternal.text, styles(dark, colors)?.text]}>Username:</Text>
       <TextInput
-        style={[inputStyle("username"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("username"), styles(dark, colors)?.input, {color: colors?.text}]}
         onChangeText={setUsername}
         testID="username"
       />
       <ErrorMessage name="username"></ErrorMessage>
 
-      <Text style={[stylesInternal.text, styles(dark, colors).text]}>Password:</Text>
+      <Text style={[stylesInternal.text, styles(dark, colors)?.text]}>Password:</Text>
       <TextInput
-        style={[inputStyle("password"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("password"), styles(dark, colors)?.input, {color: colors?.text}]}
         onChangeText={setPassword}
         secureTextEntry={true}
         testID="password"
