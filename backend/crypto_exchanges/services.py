@@ -70,52 +70,41 @@ class BinanceFetcher(ExchangeFetcher):
 
 
 # Class was implemented according to: "https://www.gate.io/docs/developers/apiv4/en/"
-class GateioFetcher:
-
+class GateioFetcher(ExchangeFetcher):
     def __init__(self, api_key, secret_key):
-        self.api_key = api_key
-        self.secret_key = secret_key
+        super().__init__(api_key, secret_key)
         self.symbols = ['BTC_USDT', 'ETH_USDT', 'ADA_USDT', 'XRP_USDT', 'SOL_USDT', 'ARV_USDT']
         self.host = "https://api.gateio.ws"
         self.prefix = "/api/v4"
         self.headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
 
-    # This method of getting the right signature was specified in the API docs and modified by me.
-    # https://www.gate.io/docs/developers/apiv4/en/#authentication
-    def gen_sign(self, method, url, query_string=None, payload_string=None):
-        timestamp = time.time()
+    def signature(self, method, url, query_string=None, payload_string=None):
+        timestamp = str(time.time())
         message = sha512()
         message.update((payload_string or "").encode('utf-8'))
         hashed_payload = message.hexdigest()
         path = '%s\n%s\n%s\n%s\n%s' % (method, url, query_string or "", hashed_payload, timestamp)
         signature = hmac.new(self.secret_key.encode('utf-8'), path.encode('utf-8'), sha512).hexdigest()
-        return {'KEY': self.api_key, 'Timestamp': str(timestamp), 'SIGN': signature}
+        return {'KEY': self.api_key, 'Timestamp': timestamp, 'SIGN': signature}
 
     def get_account_data(self):
-        endpoint = "https://api.gateio.ws/api/v4/spot/accounts"
-        path = '/api/v4/spot/accounts'
-
-        headers = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-
+        endpoint = f"{self.host}{self.prefix}/spot/accounts"
         query_param = ''
-        sign_headers = self.gen_sign('GET', path, query_param)
+        sign_headers = self.signature('GET', self.prefix + '/spot/accounts', query_param)
+        headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
         headers.update(sign_headers)
-        response = requests.request('GET', endpoint, headers=headers)
-
+        response = requests.get(endpoint, headers=headers)
         return response.json()
 
     def get_trading_history(self, limit=10):
         to_return = {}
         for currency_pair in self.symbols:
             url = f"/spot/trades?currency_pair={currency_pair}&limit={limit}"
-            sign_headers = self.gen_sign('GET', self.prefix + url)
-            self.headers.update(sign_headers)
-            r = requests.request('GET', self.host + self.prefix + url, headers=self.headers)
-            to_return[currency_pair] = r.json()
-
+            sign_headers = self.signature('GET', self.prefix + url)
+            headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+            headers.update(sign_headers)
+            response = requests.get(self.host + self.prefix + url, headers=headers)
+            to_return[currency_pair] = response.json()
         return to_return
 
 
