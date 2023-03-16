@@ -106,14 +106,19 @@ class GateioFetcher(ExchangeFetcher):
             response = requests.get(self.host + self.prefix + url, headers=headers)
             to_return[currency_pair] = response.json()
         return to_return
-
+    
 
 # Class was implemented according to: "https://coinlist.co/help/api"
-class CoinListFetcher:
+class CoinListFetcher(ExchangeFetcher):
 
     def __init__(self, api_key, secret_key):
+        super().__init__(api_key, secret_key)
         self.api_key = api_key
         self.secret_key = secret_key
+
+    def signature(self, data, key):
+        hmc = hmac.new(key, data.encode('utf-8'), digestmod=sha256)
+        return b64encode(hmc.digest()).decode('utf-8')
 
     def get_account_data(self):
         endpoint = 'https://trade-api.coinlist.co'
@@ -125,7 +130,7 @@ class CoinListFetcher:
 
         prehashed = self.prehash(timestamp, method, path, body)
         secret = b64decode(self.secret_key)
-        signature = self.sha265hmac(prehashed, secret)
+        signature = self.signature(prehashed, secret)
 
         headers = {
             'Content-Type': 'application/json',
@@ -151,7 +156,7 @@ class CoinListFetcher:
 
             prehashed = self.prehash(timestamp, method, path, body)
             secret = b64decode(self.secret_key)
-            signature = self.sha265hmac(prehashed, secret)
+            signature = self.signature(prehashed, secret)
 
             headers = {
                 'Content-Type': 'application/json',
@@ -165,13 +170,6 @@ class CoinListFetcher:
 
         return to_return
 
-    def sha265hmac(self, data, key):
-        h = hmac.new(key, data.encode('utf-8'), digestmod=sha256)
-        return b64encode(h.digest()).decode('utf-8')
-
-    def prehash(self, timestamp, method, path, body):
-        return timestamp + method.upper() + path + (body or '')
-
     def get_trading_history(self):
         endpoint = 'https://trade-api.coinlist.co'
         path = '/v1/accounts/'
@@ -182,7 +180,7 @@ class CoinListFetcher:
 
         prehashed = self.prehash(timestamp, method, path, body)
         secret = b64decode(self.secret_key)
-        signature = self.sha265hmac(prehashed, secret)
+        signature = self.signature(prehashed, secret)
 
         headers = {
             'Content-Type': 'application/json',
@@ -209,7 +207,7 @@ class CoinListFetcher:
 
             prehashed = self.prehash(timestamp, method, path, body)
             secret = b64decode(self.secret_key)
-            signature = self.sha265hmac(prehashed, secret)
+            signature = self.signature(prehashed, secret)
 
             headers = {
                 'Content-Type': 'application/json',
