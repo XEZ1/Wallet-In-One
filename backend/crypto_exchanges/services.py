@@ -106,7 +106,7 @@ class GateioFetcher(ExchangeFetcher):
             response = requests.get(self.host + self.prefix + url, headers=headers)
             to_return[currency_pair] = response.json()
         return to_return
-    
+
 
 # Class was implemented according to: "https://coinlist.co/help/api"
 class CoinListFetcher(ExchangeFetcher):
@@ -224,19 +224,16 @@ class CoinListFetcher(ExchangeFetcher):
 
 # Class was implemented according to: "https://docs.cloud.coinbase.com/exchange/docs/requests"
 # Create custom authentication for Coinbase API
-class CoinBaseAuthorisation(requests.auth.AuthBase):
+class CoinBaseFetcher(ExchangeFetcher):
     def __init__(self, api_key, secret_key):
+        super().__init__(api_key, secret_key)
         self.api_key = api_key
-        self.secret_key = secret_key.encode('utf-8')  # Convert string to bytes
+        self.secret_key = secret_key.encode('utf-8')
         self.timestamp = str(int(time.time()))
 
-    # A template for this callable hook was taken from the coinbase API documentation
     def __call__(self, request):
-        # The hook should be callable
         message = self.timestamp + request.method + request.path_url + (request.body or '')
-        signature = self.signature(message)  # Convert message to bytes
-
-        # Add headers
+        signature = self.signature(message)
         request.headers.update({
             'CB-ACCESS-SIGN': signature,
             'CB-ACCESS-TIMESTAMP': self.timestamp,
@@ -245,19 +242,12 @@ class CoinBaseAuthorisation(requests.auth.AuthBase):
         return request
 
     def signature(self, message):
-        return hmac.new(self.secret_key, message.encode(), sha256).hexdigest()  # Convert string to bytes
-
-
-class CoinBaseFetcher:
-    def __init__(self, api_key, secret_key):
-        self.api_key = api_key
-        self.secret_key = secret_key
+        return hmac.new(self.secret_key, message.encode(), sha256).hexdigest()
 
     def get_account_data(self):
         api_url = 'https://api.coinbase.com/v2/'
-        auth = CoinBaseAuthorisation(self.api_key, self.secret_key)
+        auth = self
 
-        # Get current user
         response = requests.get(api_url + 'accounts', auth=auth)
 
         if response.status_code == 400 or response.status_code == 401 or response.status_code == 402 \
@@ -273,8 +263,7 @@ class CoinBaseFetcher:
         return data_to_return
 
     def get_trading_history(self):
-        auth = CoinBaseAuthorisation(self.api_key, self.secret_key)
-        # api_url = "https://api.coinbase.com/api/v3/brokerage/transaction_summary"
+        auth = self
         api_url = "https://api.coinbase.com/api/v3/brokerage/orders/historical/fills"
 
         response = requests.get(api_url, auth=auth)
