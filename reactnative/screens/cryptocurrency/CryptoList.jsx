@@ -12,7 +12,6 @@ import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
 import CryptoListWalletItem from "../crypto_wallet/CryptoListWalletItem";
 import useCryptoExchangeBalances from "../cryptoExchanges/useCryptoExchangeBalances";
-import WalletAsset from "./WalletAsset";
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 import { useTheme } from '../../src/theme/ThemeProvider'
 import { Ionicons } from '@expo/vector-icons';
