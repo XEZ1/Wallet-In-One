@@ -76,7 +76,10 @@ export default function HomePage({ navigation }) {
             accessToken: response.body.access_token, 
             transactions: res.body,
             logo: response.body.logo,
-            balance: response.body.balance
+            balance: response.body.balance,
+            name: response.body.institution_name,
+            account_name: response.body.name,
+            balance_currency: 'GBP'
           })
         }
         console.log(stockData.id)
@@ -163,7 +166,10 @@ export default function HomePage({ navigation }) {
             accessToken: response.body.access_token, 
             transactions: res.body,
             logo: response.body.logo,
-            balance: response.body.balance
+            balance: response.body.balance,
+            name: response.body.institution_name,
+            account_name: response.body.name,
+            balance_currency: response.body.balance_currency
           })
         }
         console.log(stockData.id)
