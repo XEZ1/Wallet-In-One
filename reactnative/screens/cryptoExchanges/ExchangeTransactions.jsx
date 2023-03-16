@@ -8,9 +8,10 @@ import { api_url } from '../../authentication';
 import {Table, Row, Cell} from 'react-native-table-component';
 import { VictoryPie, VictoryLabel, VictoryContainer } from "victory-native";
 import BarChart from "../charts/chartComponents/barChart";
+import ConditionalModal from "../Modal";
 
 export default function ExchangeTransactions(props) {
-
+  const [modalVisible, setModalVisible] = useState(false);
   const {dark, colors } = useTheme();
   const [exchangeTransactions, setExchangeTransactions] = useState([]);
   const [exchangeTokens, setExchangeTokens] = useState([]);
@@ -163,13 +164,22 @@ export default function ExchangeTransactions(props) {
       {/* Back arrow and remove button */}
       <View style={[styles(dark, colors).container, {flexDirection: 'row', alignItems: "flex-end"}]}>
         <Pressable
-          onPress={() => removeExchange(item.id).then(() => props.navigation.goBack())}
+          onPress={() => setModalVisible(true)}
+          // onPress={() => removeExchange(item.id).then(() => props.navigation.goBack())}
           style={{alignItems: "center", justifyContent: "center", marginLeft: 'auto'}}>
           <View style={styles(dark, colors).smallButton}>
             <Text style={{color: colors.text, fontWeight: "800"}}>Remove</Text>
           </View>
         </Pressable>
       </View>
+
+      <ConditionalModal
+        headerText={"Remove Your Exchange"}
+        bodyText={"Are you sure you want to remove your crypto exchange?"}
+        visible={modalVisible}
+        onEvent={() => removeExchange(item.id).then(() => props.navigation.goBack())}
+        onClose={() => setModalVisible(false)}
+      />
 
       {/* Exchange logo, title and balance */}
       <View style={[stylesInternal.exchangeAsset, styles(dark, colors).container, {flexDirection: 'row'}]}>
