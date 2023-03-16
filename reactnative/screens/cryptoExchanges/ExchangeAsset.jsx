@@ -17,7 +17,7 @@ export default function ExchangeAsset(props) {
   
   //const [cryptoValue, setCryptoValue] = useState(0); {/* Display `-` if not retrievable */}
   const {dark, colors, setScheme} = useTheme();
-  const [balances, setBalances] = useState([]);
+  // const [balances, setBalances] = useState([]);
   
   const styles = StyleSheet.create({
     exchangeAsset: {
@@ -36,25 +36,25 @@ export default function ExchangeAsset(props) {
     },
   });
     
-  let getBalances = useCallback(async () => {
-    try {
-      const response = await fetch(api_url + `/crypto-exchanges/get_exchange_balances/`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-        },
-      });
-      let data = await response.json();
-      setBalances(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+  // let getBalances = useCallback(async () => {
+  //   try {
+  //     const response = await fetch(api_url + `/crypto-exchanges/get_exchange_balances/`, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+  //       },
+  //     });
+  //     let data = await response.json();
+  //     setBalances(data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    getBalances();
-  });
+  // useEffect(() => {
+  //   getBalances();
+  // }, [getBalances]);
   
     return (
       <TouchableWithoutFeedback
@@ -89,13 +89,13 @@ export default function ExchangeAsset(props) {
                 {props.item.crypto_exchange_name}
               </Text>
   
-              {balances.length == 0 ? (
+              {props.balances.length == 0 ? (
                 <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>Total Balance: £Loading...</Text>
               ) : (
                 <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>
-                  Total Balance: £{balances.find(balance => balance.id === props.item.id)?.y || '0'}
+                  Total Balance: £{props.balances.find(balance => balance.id === props.item.id)?.y || '0'}
                 </Text>
-              )}  
+              )}
             </View>
   
           </View>

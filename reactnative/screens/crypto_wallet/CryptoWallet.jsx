@@ -14,17 +14,21 @@ import {
 } from "react-native";
 import useCryptoWallet from "./useCryptoWallet";
 import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
+import useCryptoExchangeBalances from "../cryptoExchanges/useCryptoExchangeBalances";
 import WalletAsset from "./WalletAsset";
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
 import { api_url } from '../../authentication';
+import { useIsFocused } from "@react-navigation/native";
 
 export default function CryptoWallet(props) {
   const { wallets, fetchWallets, connectWallet, removeWallet } = useCryptoWallet();
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
+  const { balances, fetchBalances } = useCryptoExchangeBalances();
   const {dark, colors, setScheme} = useTheme();
+  const isFocused = useIsFocused();
 
   const styles = StyleSheet.create({
     cryptoWalletTitle: {
@@ -93,7 +97,8 @@ export default function CryptoWallet(props) {
   useEffect(() => {
     fetchWallets();
     fetchExchanges();
-  }, []);
+    fetchBalances();
+  }, [isFocused]);
 
   const handleSubmit = async () => {
     
@@ -153,7 +158,7 @@ export default function CryptoWallet(props) {
         <Text style={[styles.cryptoWalletSubtitle, {color: colors.text}]}>Exchanges</Text>
         <View style={[styles.walletList]}>
         {
-          exchanges.map((item)=> <ExchangeAsset key={item.id} item={item} removeExchange={removeExchange} navigation={props.navigation} />)
+          exchanges.map((item)=> <ExchangeAsset key={item.id} item={item} balances={balances} removeExchange={removeExchange} navigation={props.navigation} />)
         }
         </View>
 
