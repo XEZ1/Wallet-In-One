@@ -3,12 +3,11 @@ import time
 import hmac
 from hashlib import sha256, sha512
 from base64 import b64encode, b64decode
-from datetime import datetime, timezone
-from urllib.parse import quote_plus, urlencode
+from urllib.parse import urlencode
 
 from crypto_exchanges.models import Token, CryptoExchangeAccount
 
-from abc import ABC, ABCMeta, abstractmethod
+from abc import abstractmethod
 
 
 # Generic fetcher class
