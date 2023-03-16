@@ -249,7 +249,12 @@ class GateioView(GenericCryptoExchanges, ABC):
                 transaction.asset = gateio_transaction['currency_pair']
                 transaction.transaction_type = gateio_transaction['side']
                 transaction.amount = gateio_transaction['amount']
-                transaction.timestamp = millis_to_datetime(float(gateio_transaction['create_time_ms']))
+
+                naive_datetime = millis_to_datetime(float(gateio_transaction['create_time_ms']))
+                utc_timezone = pytz.timezone('UTC')
+                aware_datetime = utc_timezone.localize(naive_datetime)
+                transaction.timestamp = aware_datetime
+
                 transaction.save()
 
     def get(self, request):
