@@ -426,7 +426,14 @@ class KrakenView(GenericCryptoExchanges, ABC):
             transaction = Transaction()
             transaction.crypto_exchange_object = saved_exchange_account_object
             transaction.asset = kraken_transaction['pair']
-            transaction.transaction_type = kraken_transaction['type']
+
+            if kraken_transaction['type'] == 'all':
+                transaction.transaction_type = 'buy'
+            elif kraken_transaction['type'] == 'closed position':
+                transaction.transaction_type = 'sell'
+            else:
+                transaction.transaction_type = kraken_transaction['type']
+
             transaction.amount = kraken_transaction['vol']
 
             naive_datetime = unix_timestamp_to_datetime(kraken_transaction['time'])
