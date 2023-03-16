@@ -17,7 +17,7 @@ from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchan
 from flask import jsonify
 from plaid.model.accounts_get_request import AccountsGetRequest
 from plaid.model.transactions_sync_request import TransactionsSyncRequest
-from .services import setUpClient, get_total_number_of_transactions, get_highest_transaction, get_lowest_transaction, get_average_transaction, get_variance_transaction, get_standard_deviation_transaction, get_range, get_highest_transaction_fee, get_lowest_transaction_fee, get_average_transaction_fee
+from .services import setUpClient, calculate_metrics
 from plaid.model.institutions_search_request import InstitutionsSearchRequest
 from plaid.model.institutions_search_request_options import InstitutionsSearchRequestOptions
 from plaid.model.investments_holdings_get_request import InvestmentsHoldingsGetRequest
@@ -29,6 +29,8 @@ from datetime import timedelta
 import datetime
 import json
 import time
+from django.utils import timezone
+from dateutil.relativedelta import relativedelta
 
 @api_view(['POST'])
 @csrf_exempt
@@ -145,13 +147,13 @@ def listAccounts(request):
 
 @api_view(['GET'])
 def listTransactions(request,stock):
-    transactions = Transaction.objects.filter(stock=stock)
+    transactions = Transaction.objects.filter(stock=stock, stock__user=request.user)
     serializer = AddTransaction(transactions, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def listStocks(request, stockAccount):
-    stocks = Stock.objects.filter(stockAccount=stockAccount)
+    stocks = Stock.objects.filter(stockAccount=stockAccount, stockAccount__user=request.user)
     serializer = AddStock(stocks, many=True)
     return Response(serializer.data)
 
@@ -179,32 +181,23 @@ def deleteAccount(request, stockAccount):
     
 @api_view(['GET'])
 def getMetrics(request):
-    stockAccounts = StockAccount.objects.filter(user=request.user)
-    total_number_of_transactions = get_total_number_of_transactions(stockAccounts)
-    highest_transaction = get_highest_transaction(stockAccounts)
-    lowest_transaction = get_lowest_transaction(stockAccounts)
-    average_transaction = get_average_transaction(stockAccounts)
-    variance = get_variance_transaction(stockAccounts)
-    standard_deviation = get_standard_deviation_transaction(stockAccounts)
-    range = get_range(stockAccounts)
-    highest_transaction_fee = get_highest_transaction_fee(stockAccounts)
-    lowest_transaction_fee = get_lowest_transaction_fee(stockAccounts)
-    average_transaction_fee = get_average_transaction_fee(stockAccounts)
-    
-    return Response({
-        'total_number_of_transactions': total_number_of_transactions,
-        'highest_transaction': highest_transaction,
-        'lowest_transaction': lowest_transaction,
-        'average_transaction': average_transaction,
-        'variance': variance,
-        'standard_deviation': standard_deviation,
-        'range': range,
-        'highest_transaction_fee': highest_transaction_fee,
-        'lowest_transaction_fee': lowest_transaction_fee,
-        'average_transaction_fee': average_transaction_fee
-        })
+    metrics = {}
+    # Start of current month
+    start1month = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    start3month = start1month - relativedelta(months=3-1)
+    start6month = start1month - relativedelta(months=6-1)
+    start12month = start1month - relativedelta(months=12-1)
+
+    transactions = Transaction.objects.filter(stock__user = request.user)
+    metrics['all'] = calculate_metrics(transactions)
+    metrics['1 Month'] = calculate_metrics(transactions.filter(date__gte=start1month))
+    metrics['3 Months'] = calculate_metrics(transactions.filter(date__gte=start3month))
+    metrics['6 Months'] = calculate_metrics(transactions.filter(date__gte=start6month))
+    metrics['12 Months'] = calculate_metrics(transactions.filter(date__gte=start12month))
+
+    return Response(metrics)
 
 @api_view(['GET'])
 def getAccount(request, account_id):
     account = StockAccount.objects.get(account_id=account_id)
-    return Response({'access_token': account.access_token, 'logo': account.institution_logo, 'balance': account.balance.amount})
+    return Response({'access_token': account.access_token, 'logo': account.institution_logo, 'balance': account.balance.amount, 'institution_name': account.institution_name, 'name': account.name})

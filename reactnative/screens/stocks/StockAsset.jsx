@@ -71,7 +71,7 @@ export default function StockAsset({ route, navigation, }){
     },
     balanceContainer: {
       flexDirection: 'row',
-      alignSelf: 'center'
+      alignSelf: 'center',
       // alignItems: 'center',
       // justifyContent: 'center',
       // marginTop: 20,
@@ -215,7 +215,7 @@ export default function StockAsset({ route, navigation, }){
         ListHeaderComponent={
           <View style={styles(dark, colors).container}>
             <View style={stylesInternal.balanceContainer}>
-              <Text style={[{fontSize: 13, fontWeight: 'bold'}]}>{route.params.name} • {route.params.balance_currency} • {route.params.account_name}</Text>
+              <Text style={[{fontSize: 13, fontWeight: 'bold',color: colors.text}]}>{route.params.name} • {route.params.balance_currency} • {route.params.account_name}</Text>
             </View>
             
             <View style={{flexDirection: 'row', alignItems: 'center',paddingHorizontal: 30,paddingBottom:13}}>
@@ -301,7 +301,7 @@ export default function StockAsset({ route, navigation, }){
                             <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionData', { id: rowData[0] })}>
                               <TableWrapper style={[stylesInternal.row, {backgroundColor: rowData[1] < 0 ? "#f87171" : '#bbf7d0'}]} borderStyle={{borderWidth: 1, borderColor: '#000000'}}>
                                 {rowData.map((cellData, cellIndex) => (
-                                  <Cell key={cellIndex} data={cellData} textStyle={{textAlign: 'center', fontSize: 12, fontWeight: 'bold'}} />
+                                  <Cell key={cellIndex} data={cellData} textStyle={{textAlign: 'center', fontSize: 12}} />
                                 ))}
                               </TableWrapper>
                             </TouchableOpacity>

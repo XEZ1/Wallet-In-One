@@ -3,38 +3,38 @@ import { StyleSheet } from 'react-native';
 export const styles = (dark, colors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors?.background,
   },
   title: {
     fontWeight: '900',
     fontSize: 50,
     alignSelf: 'center',
     paddingVertical: 10,
-    color: colors.text,
+    color: colors?.text,
   },
   buttonWide: {
     padding: 20,
     borderRadius: 10,
     marginVertical: 10,
-    backgroundColor: colors.primary,
+    backgroundColor: colors?.primary,
   },
   text: {
-    color: colors.text,
+    color: colors?.text,
   },
   textBold: {
     fontWeight: "700",
-    color: colors.text,
+    color: colors?.text,
   },
   largeTextBold: {
     fontWeight: "800",
     fontSize: 40,
-    color: colors.text,
+    color: colors?.text,
   },
   backArrow: {
     fontWeight: "900",
     fontSize: 30,
     paddingVertical: 10,
-    color: colors.primary,
+    color: colors?.primary,
   },
   button: {
     width: "75%",
@@ -45,15 +45,15 @@ export const styles = (dark, colors) => StyleSheet.create({
     paddingHorizontal: "12%",
     paddingVertical: "2%",
     fontSize:  20,
-    backgroundColor: colors.primary,
-    color: colors.text,
+    backgroundColor: colors?.primary,
+    color: colors?.text,
   },
   smallButton: {
     marginTop: 10,
     padding: 10,
     paddingHorizontal: 30,
     borderRadius: 5,
-    backgroundColor: colors.primary,
+    backgroundColor: colors?.primary,
   },
   input: {
     height: 40,

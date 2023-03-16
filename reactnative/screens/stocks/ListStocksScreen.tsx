@@ -34,20 +34,21 @@ const SuccessComponent = (props) => {
       item:{
         padding: 20,
         borderRadius: 10,
-        backgroundColor: colors.primary,
+        backgroundColor: colors.stock_account,
+        text: colors.text,
       },
       row:{
         flexDirection: 'row',
         alignItems: 'flex-start',
       },
       name:{
-        color: "black",
+        color: colors.text,
         fontWeight: 'bold',
         fontSize: 16,
         fontFamily: 'sans-serif',
       },
       ins_name:{
-        color: "black",
+        color: colors.text,
         fontSize: 15,
         fontFamily: 'sans-serif',
       },
@@ -88,7 +89,7 @@ const SuccessComponent = (props) => {
 
       const ItemSeparator = () => <View style={stylesInternal.separator} />;
     return (
-        <View style={{ ...styles(dark, colors).container, backgroundColor: '#94a3b8' }}>
+        <View style={{ ...styles(dark, colors),paddingTop:8 }}>
           <View>
             <FlatList 
               data={list} 
@@ -97,7 +98,7 @@ const SuccessComponent = (props) => {
               renderItem={({item, index}) =>{
               return (
                 
-                <TouchableOpacity style={{ ...stylesInternal.item, backgroundColor: 'white' }}
+                <TouchableOpacity style={{ ...stylesInternal.item }}
                   onPress={()=> props.navigation.navigate('StockAsset', {
                     accountID: item.account_id, 
                     accessToken: item.access_token, 
