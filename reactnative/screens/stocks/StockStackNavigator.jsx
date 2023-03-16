@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Text, TouchableOpacity } from 'react-native'
+import { Text, TouchableOpacity, View } from 'react-native'
 import StockAsset from "./StockAsset";
 import SuccessComponent from "./ListStocksScreen";
 import TransactionData from "./StockTransactionData";
@@ -8,6 +8,7 @@ import LineChartScreen from "reactnative/screens/charts/LineChart.js";
 import PlaidComponent from "./AddStocksScreen";
 import StockDetails from "./StockDetails";
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
+import StockInsight from "./StocksInsightScreen";
 
 const Stack = createStackNavigator();
 
@@ -26,15 +27,24 @@ export default function StockStackNavigator() {
         <Stack.Screen name="Stock Account List" component={SuccessComponent}
                 options={({ navigation }) => ({
                   headerRight: () => (
+                    <View style={{flexDirection: "row"}}>
+                    <TouchableOpacity 
+                      style={{ marginRight: 35 }} 
+                      onPress={() => navigation.navigate('Insights')}
+                    >
+                      <Text style={{ color: '#007AFF' }}>Insights</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity 
                       style={{ marginRight: 15 }} 
                       onPress={() => navigation.navigate('Stocks')}
                     >
                       <Text style={{ color: '#007AFF' }}>Add</Text>
                     </TouchableOpacity>
-                  )
+                    </View>
+                  ),
                 })}
         />
+        <Stack.Screen name="Insights" component={StockInsight} />
         <Stack.Screen name="StockAsset" component={StockAsset} />
         <Stack.Screen name="TransactionData" component={TransactionData} />
         <Stack.Screen name="LineGraph" component={LineChartScreen} />
