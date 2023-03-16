@@ -32,13 +32,13 @@ export default function StockStackNavigator() {
                       style={{ marginRight: 15 }} 
                       onPress={() => navigation.navigate('Insights')}
                     >
-                      <Text style={{ color: '#007AFF' }}>Insights</Text>
+                      <Text style={{ color: colors.text }}>Insights</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                       style={{ marginRight: 15 }} 
                       onPress={() => navigation.navigate('Stocks')}
                     >
-                      <Text style={{ color: '#007AFF' }}>Add</Text>
+                      <Text style={{ color: colors.text }}>Add</Text>
                     </TouchableOpacity>
                     </View>
                   ),
