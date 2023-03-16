@@ -38,37 +38,29 @@ class ExchangeFetcher:
 
 
 # Class was implemented according to: "https://binance-docs.github.io/apidocs/spot/en/#change-log"
-class BinanceFetcher:
-
+class BinanceFetcher(ExchangeFetcher):
     def __init__(self, api_key, secret_key):
-        self.api_key = api_key
-        self.secret_key = secret_key
+        super().__init__(api_key, secret_key)
         self.symbols = ['BTCUSDT', 'ETHUSDT', 'ADAUSDT', 'XRPUSDT', 'SOLUSDT']
+
+    def signature(self, params):
+        query_string = '&'.join([f"{k}={v}" for k, v in params.items()])
+        return hmac.new(self.secret_key.encode('utf-8'), query_string.encode('utf-8'), sha256).hexdigest()
 
     def get_account_data(self):
         endpoint = "https://api.binance.com/api"
-        timestamp = f"timestamp={self.current_time()}"
+        timestamp = f"timestamp={self.get_current_time()}"
         request_url = f"{endpoint}/v3/account?{timestamp}&signature={self.hash(timestamp)}"
         headers = {'X-MBX-APIKEY': self.api_key}
         response = requests.get(url=request_url, headers=headers)
         return response.json()
 
-    def hash(self, timestamp):
-        return hmac.new(self.secret_key.encode('utf-8'), timestamp.encode('utf-8'), sha256).hexdigest()
-
-    def current_time(self):
-        return round(time.time() * 1000)
-
-    def hash_for_transactions(self, params):
-        query_string = '&'.join([f"{k}={v}" for k, v in params.items()])
-        return hmac.new(self.secret_key.encode('utf-8'), query_string.encode('utf-8'), sha256).hexdigest()
-
     def get_trading_history(self):
         to_return = {}
         for symbol in self.symbols:
-            timestamp = str(self.current_time())
+            timestamp = str(self.get_current_time())
             params = {'symbol': symbol, 'timestamp': timestamp}
-            signature = self.hash_for_transactions(params)
+            signature = self.signature(params)
             request_url = "https://api.binance.com/api/v3/myTrades"
             headers = {'X-MBX-APIKEY': self.api_key}
             response = requests.get(request_url, headers=headers, params={**params, **{'signature': signature}})
