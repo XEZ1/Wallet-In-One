@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import * as Notifications from "expo-notifications";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import * as SecureStore from 'expo-secure-store';
 import { logout } from '../authentication';
 import { useContext } from 'react';

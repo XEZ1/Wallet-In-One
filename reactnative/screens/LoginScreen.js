@@ -15,7 +15,7 @@ import { userContext } from "../data";
 
 import { login } from "../authentication";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import * as SecureStore from "expo-secure-store";
 
 export default function SignUpScreen({ navigation }) {
