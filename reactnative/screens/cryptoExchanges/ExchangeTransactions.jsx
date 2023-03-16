@@ -18,6 +18,7 @@ export default function ExchangeTransactions(props) {
   const [balance, setBalance] = useState();
   const { item, removeExchange } = props.route.params;
   const exchange = item.id;
+  const { width } = Dimensions.get("window");
   const stylesInternal = StyleSheet.create({
     container: {
       flex: 1,
@@ -216,8 +217,10 @@ export default function ExchangeTransactions(props) {
           ) : exchangeTokens.length === 1 && exchangeTokens[0].x === "empty" ? (
             <Text style={styles(dark, colors).text}>No coins in this account</Text>
           ) : (
-          <>
+          <>  
+          <View style={{ width, justifyContent: "center", alignItems: "center" }}>
           <PieChart colours={colours} data={exchangeTokens} handlePressIn={handlePressIn} labelCount={2} assetSize={27} numSize={37}/>
+          </View>
           {BarChart(colours, tokenList, exchangeTokens, colors, (tokenList.length*60), handlePressIn)}
           </>
           )}
