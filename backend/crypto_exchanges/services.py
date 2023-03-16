@@ -8,6 +8,34 @@ from urllib.parse import quote_plus, urlencode
 
 from crypto_exchanges.models import Token, CryptoExchangeAccount
 
+from abc import ABC, ABCMeta, abstractmethod
+
+
+# Generic fetcher class
+class ExchangeFetcher:
+    def __init__(self, api_key, secret_key):
+        self.api_key = api_key
+        self.secret_key = secret_key
+
+    @abstractmethod
+    def signature(self, *args, **kwargs):
+        pass
+
+    def get_current_time(self):
+        return round(time.time() * 1000)
+
+    def prehash(self, timestamp, method, path, body):
+        return timestamp + method.upper() + path + (body or '')
+
+    def hash(self, timestamp):
+        return hmac.new(self.secret_key.encode('utf-8'), timestamp.encode('utf-8'), sha256).hexdigest()
+
+    def get_account_data(self):
+        raise NotImplementedError("Subclasses must implement this method")
+
+    def get_trading_history(self):
+        raise NotImplementedError("Subclasses must implement this method")
+
 
 # Class was implemented according to: "https://binance-docs.github.io/apidocs/spot/en/#change-log"
 class BinanceFetcher:
