@@ -122,3 +122,9 @@ class StockAccountSerializerTestCase(TestCase):
         account.refresh_from_db()
         self.assertEqual(account.balance, Money(10, 'GBP'))
         self.assertTrue(serializer.errors == {})
+
+    def test_account_already_exists(self):
+        self.serializer_input['name'] = 'Test Stock Account'
+        self.serializer_input['institution_id'] = '1'
+        serializer = self.initiate_serializer()
+        self.assertFalse(serializer.is_valid())
