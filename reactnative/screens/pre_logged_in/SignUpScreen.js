@@ -16,6 +16,7 @@ import { useContext, useState } from "react";
 import { userContext } from "../../data";
 
 import { api_url, login } from "../../authentication";
+import * as SecureStore from "expo-secure-store";
 
 export default function SignUpScreen({ navigation }) {
 
@@ -32,14 +33,15 @@ export default function SignUpScreen({ navigation }) {
 
   const [errors, setErrors] = useState({});
 
-  const sendNotification = async () => {
-    await Notifications.requestPermissionsAsync();
-    await Notifications.presentNotificationAsync({
-      title: "Sign Up Successful",
-      body: "You have successfully created an account.",
-      ios: { _displayInForeground: true },
-    });
-  };
+  Notifications.setNotificationHandler({
+    handleNotification: async () => {
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      };
+    },
+  });
 
   //192.168.1.81,10.0.2.2
   const signUpHandler = () => {
@@ -61,15 +63,39 @@ export default function SignUpScreen({ navigation }) {
       .then((res) =>
         res.json().then((data) => ({ status: res.status, body: data }))
       )
-      .then((data) => {
+      .then(async (data) => {
         // console.log('Response:', data);
         if (data["status"] == 400) {
           setErrors(data["body"]);
           Alert.alert("Error", "There were some errors");
         } else if (data["status"] == 201) {
           Alert.alert("Success", "Account created successfully");
-          sendNotification();
-          login(username, password, user, setUser);
+          const notificationEnabled = await SecureStore.getItemAsync(
+            "notificationSettings"
+          );
+          if (notificationEnabled == "true") {
+            await Notifications.requestPermissionsAsync();
+            await Notifications.scheduleNotificationAsync({
+              content: {
+                title: "You have successfully signed up!",
+                body: "Manage the notifications from the settings",
+              },
+              trigger: null,
+            });
+          }
+          else if (notificationEnabled == "false") {
+            //set it to true
+            await SecureStore.setItemAsync("notificationSettings", "true");
+            await Notifications.requestPermissionsAsync();
+            await Notifications.scheduleNotificationAsync({
+              content: {
+                title: "You have successfully signed up!",
+                body: "Manage the notifications from the settings",
+              },
+              trigger: null,
+            });
+          }
+          await login(username, password, user, setUser);
         }
       })
       .catch((error) => {

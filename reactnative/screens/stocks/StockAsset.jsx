@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity,StyleSheet,SectionList,Image } from 'react-native';
+import { View, Text, TouchableOpacity,StyleSheet,SectionList,Image,Pressable } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect,useCallback } from 'react';
@@ -12,6 +12,7 @@ import { auth_get } from '../../authentication';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
 import SwitchSelector from "react-native-switch-selector";
+import ConditionalModal from '../Modal';
 
 export default function StockAsset({ route, navigation, }){
   const [stocks, setStocks] = useState()
@@ -80,7 +81,15 @@ export default function StockAsset({ route, navigation, }){
       // marginHorizontal: 10,
       color: colors.text,
     },
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 22,
+    },
   });
+
+  
 
   const getStocks = useCallback(async (accountID) => {
       try {
@@ -192,7 +201,7 @@ export default function StockAsset({ route, navigation, }){
   const ItemSeparator = () => <View style={stylesInternal.separator} />;
 
   const [graphVersion,setGraphVersion] = React.useState(1);
-
+  const [modalVisible, setModalVisible] = useState(false);
 
     return(
       <FlatList
@@ -326,9 +335,18 @@ export default function StockAsset({ route, navigation, }){
               />)
             }
 
-          <View style={{marginTop: 40, marginBottom: 30}}>
-            <Button title="REMOVE" color="red" onPress={async () => {await deleteAccount(), navigation.navigate('Stock Account List')}} />
-          </View>
+      <View style={{marginTop: 40, marginBottom: 30}}>
+        <Button title="REMOVE" color="red" onPress={() => setModalVisible(true)}/>
+      </View>
+
+      <ConditionalModal
+        headerText={"Remove Your Account"}
+        bodyText={"Are you sure you want to remove your account?"}
+        visible={modalVisible}
+        onEvent={async () => {await deleteAccount(), navigation.navigate('Stock Account List')}}
+        onClose={() => setModalVisible(false)}
+      />
+
         </View>
         }
       />

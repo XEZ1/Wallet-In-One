@@ -8,15 +8,18 @@ import { api_url } from '../../authentication';
 import {Table, Row, Cell} from 'react-native-table-component';
 import { VictoryPie, VictoryLabel, VictoryContainer } from "victory-native";
 import BarChart from "../charts/chartComponents/barChart";
+import ConditionalModal from "../Modal";
+import PieChart from "../charts/chartComponents/pieChart";
 
 export default function ExchangeTransactions(props) {
-
+  const [modalVisible, setModalVisible] = useState(false);
   const {dark, colors } = useTheme();
   const [exchangeTransactions, setExchangeTransactions] = useState([]);
   const [exchangeTokens, setExchangeTokens] = useState([]);
   const [balance, setBalance] = useState();
   const { item, removeExchange } = props.route.params;
   const exchange = item.id;
+  const { width } = Dimensions.get("window");
   const stylesInternal = StyleSheet.create({
     container: {
       flex: 1,
@@ -163,13 +166,22 @@ export default function ExchangeTransactions(props) {
       {/* Back arrow and remove button */}
       <View style={[styles(dark, colors).container, {flexDirection: 'row', alignItems: "flex-end"}]}>
         <Pressable
-          onPress={() => removeExchange(item.id).then(() => props.navigation.goBack())}
+          onPress={() => setModalVisible(true)}
+          // onPress={() => removeExchange(item.id).then(() => props.navigation.goBack())}
           style={{alignItems: "center", justifyContent: "center", marginLeft: 'auto'}}>
           <View style={styles(dark, colors).smallButton}>
             <Text style={{color: colors.text, fontWeight: "800"}}>Remove</Text>
           </View>
         </Pressable>
       </View>
+
+      <ConditionalModal
+        headerText={"Remove Your Exchange"}
+        bodyText={"Are you sure you want to remove your crypto exchange?"}
+        visible={modalVisible}
+        onEvent={() => removeExchange(item.id).then(() => props.navigation.goBack())}
+        onClose={() => setModalVisible(false)}
+      />
 
       {/* Exchange logo, title and balance */}
       <View style={[stylesInternal.exchangeAsset, styles(dark, colors).container, {flexDirection: 'row'}]}>
@@ -215,37 +227,10 @@ export default function ExchangeTransactions(props) {
           ) : exchangeTokens.length === 1 && exchangeTokens[0].x === "empty" ? (
             <Text style={styles(dark, colors).text}>No coins in this account</Text>
           ) : (
-          <>
-          <VictoryContainer
-            width={Dimensions.get('window').width}
-            height={330}
-            style= {{ paddingTop: 0}}
-            > 
-            <VictoryPie
-              data={exchangeTokens}
-              innerRadius={90}
-              padAngle={1}
-              cornerRadius= {10}
-              radius= {Dimensions.get('window').width/3}
-              colorScale={colours}
-              height={330}
-              labels={() => null}
-            />
-            <VictoryLabel
-              textAnchor="middle"
-              style={{ fontSize: 27, fill: colors.text }}
-              x={Dimensions.get("window").width / 2}
-              y={145}
-              text={"Assets"}
-            />
-            <VictoryLabel
-              textAnchor="middle"
-              style={{ fontSize: 37, fontWeight: "700", fill: colors.text }}
-              x={Dimensions.get("window").width / 2}
-              y={180}
-              text={exchangeTokens.length}
-            />
-          </VictoryContainer>
+          <>  
+          <View style={{ width, justifyContent: "center", alignItems: "center" }}>
+          <PieChart colours={colours} data={exchangeTokens} handlePressIn={handlePressIn} labelCount={2} assetSize={27} numSize={37}/>
+          </View>
           {BarChart(colours, tokenList, exchangeTokens, colors, (tokenList.length*60), handlePressIn)}
           </>
           )}

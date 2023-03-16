@@ -236,20 +236,13 @@ export default function HomePage({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30}]}>{pressed}</Text>
 
         {chartType == "pie" ? 
           <>
-            <PieChart colours={colorScheme} data={data} handlePressIn={handlePressIn}/>
+            <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30}]}>{pressed}</Text>
+            <PieChart colours={colorScheme} data={data} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27}/>
             {BarChart(colorScheme, list, data, colors, spacing, handlePressIn)}
-          </>
-          : 
-            <StackedChart data={baseData} handlePressIn={handlePressInStacked}/>
-        }
-
-        
-        
-        {pressed ? (
+            {pressed ? (
           <TouchableOpacity
             onPress={() => {
               setNewData(baseData.all);
@@ -262,6 +255,12 @@ export default function HomePage({ navigation }) {
         ) : (
           ""
         )}
+          </>
+          : 
+            <StackedChart data={baseData} handlePressIn={handlePressInStacked}/>
+        }
+
+
       </ScrollView>
     );
   }
