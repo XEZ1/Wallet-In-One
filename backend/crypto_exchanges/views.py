@@ -59,28 +59,6 @@ class GenericCryptoExchanges(APIView):
             if 'msg' in data:
                 # encountering an error while retrieving data
                 return Response({'error': data['msg']}, status=400)
-        elif self.fetcher == HuobiFetcher:
-            # For some reason only every 4th/5th request is successful, thus it was decided to add this awful construct.
-            # It is hard to explain why 4 requests fall while having the same input data, it seems like huobi API is
-            # Encountering some internal server issues.
-            success = False
-            counter = 0
-            while not success:
-                try:
-                    self.account_ids = service.get_account_IDs()
-                    if self.account_ids['status'] == 'ok':
-                        success = True
-                    # Internal huobi_api error
-                    elif self.account_ids['status'] == 'error' and self.account_ids['err-msg'] \
-                            == 'Signature not valid: Verification failure [校验失败]':
-                        raise TypeError
-                    else:
-                        return Response({'error': self.account_ids['err-msg']}, status=400)
-                except TypeError:
-                    counter += 1
-                    if counter == 20:
-                        return Response({'error': 'Huobi API is currently experiencing some issues. Please try later.'},
-                                        status=503)
         elif self.fetcher == GateioFetcher:
             if 'label' and 'message' in data:
                 # encountering an error while retrieving data
@@ -151,24 +129,12 @@ class GenericCryptoExchanges(APIView):
         service = self.fetcher(request.data['api_key'], request.data['secret_key'])
 
         # Get the user's account information
-        if self.fetcher == HuobiFetcher:
-            # Making sure the api and secret keys are valid before saving the account
-            self.check_for_errors_from_the_response_to_the_api_call(data={}, service=service)
+        data = service.get_account_data()
 
-            success = False
-            while not success:
-                try:
-                    data = service.get_account_data(self.account_ids)
-                    success = True
-                except TypeError:
-                    pass
-        else:
-            data = service.get_account_data()
-
-            # Making sure the api and secret keys are valid before saving the account
-            checker: Response = self.check_for_errors_from_the_response_to_the_api_call(data, service)
-            if checker:
-                return checker
+        # Making sure the api and secret keys are valid before saving the account
+        checker: Response = self.check_for_errors_from_the_response_to_the_api_call(data, service)
+        if checker:
+            return checker
 
         # Save the binance account to the database
         saved_exchange_account_object = account.save()
@@ -240,53 +206,6 @@ class BinanceView(GenericCryptoExchanges, ABC):
 
     def delete(self, request):
         return super(BinanceView, self).delete(request)
-
-
-# Huobi
-class HuobiView(GenericCryptoExchanges, ABC):
-    def __init__(self):
-        super().__init__('Huobi', HuobiFetcher)
-
-    # Inner function for filtering data
-    def filter_not_empty_balance(self, coin_to_check):
-        super(HuobiView, self).filter_not_empty_balance(coin_to_check)
-        return float(coin_to_check['balance']) > 0
-
-    def get_data_unified(self, data):
-        super(HuobiView, self).get_data_unified(data)
-        return data
-
-    def save_coins(self, filtered_data, request, saved_exchange_account_object):
-        super(HuobiView, self).save_coins(filtered_data, request, saved_exchange_account_object)
-        for coin in filtered_data:
-            # check if the coin already exists
-            token = Token()
-            token.user = request.user
-            token.crypto_exchange_object = saved_exchange_account_object
-            token.asset = coin['currency'].upper()
-            token.free_amount = float(coin['balance'])
-            token.locked_amount = float(coin['debt'])
-            token.save()
-
-    def save_transactions(self, transactions, request, saved_exchange_account_object):
-        super(HuobiView, self).save_transactions(transactions, request, saved_exchange_account_object)
-        for huobi_transaction in transactions:
-            transaction = Transaction()
-            transaction.crypto_exchange_object = saved_exchange_account_object
-            transaction.asset = huobi_transaction['currency']
-            transaction.transaction_type = huobi_transaction['type']
-            transaction.amount = huobi_transaction['amount']
-            transaction.timestamp = millis_to_datetime(huobi_transaction['created-at'])
-            transaction.save()
-
-    def get(self, request):
-        return super(HuobiView, self).get(request)
-
-    def post(self, request):
-        return super(HuobiView, self).post(request)
-
-    def delete(self, request):
-        return super(HuobiView, self).delete(request)
 
 
 # GateIo
@@ -504,8 +423,6 @@ class UpdateAllTokens(APIView):
             response = 0
             if platform == 'Binance':
                 response = BinanceView()
-            elif platform == 'Huobi':
-                response = HuobiView()
             elif platform == 'GateIo':
                 response = GateioView()
             elif platform == 'CoinList':
