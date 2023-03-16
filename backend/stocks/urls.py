@@ -14,7 +14,7 @@ urlpatterns = [
     path('add_transaction_account/', AddTransactions.as_view(), name='add_transaction_account'),
     path('get_stocks/', get_stocks, name='get_stocks'),
     path('delete_account/<str:stockAccount>/', deleteAccount, name='delete_account_stocks'),
-    path('get_transaction/<str:id>/', getTransaction),
+    path('get_transaction/<str:id>/', getTransaction, name='getTransaction'),
     path('add_stock/', addStock.as_view(), name='add_stock'),
     path('list_stocks/<str:stockAccount>/', listStocks, name='list_stocks'),
     path('get_logo/', get_logo, name='get_logo'),
