@@ -35,14 +35,11 @@ export default function TransactionData({ route, navigation }){
         fontSize: 18,
       },
         mapContainer: {
-    height: '38%',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
+    height: '100%',
   },
     screen: {
     flex: 1,
-    padding: 20,
+    padding: 10,
   },
     transaction: {
     flex: 1,
@@ -71,11 +68,10 @@ export default function TransactionData({ route, navigation }){
 
     return (
       <View style={stylesInternal.screen}>
-        <View style={stylesInternal.transaction}>
         {/* <Text style={stylesInternal.text}>Transaction Data{"\n"}</Text> */}
 
         {data ? (
-          <View>
+          <View style={stylesInternal.screen}>
             <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Name</Text>
             <Text style={styles(dark, colors).text}>{data.name}{"\n"}</Text>
 
@@ -99,14 +95,15 @@ export default function TransactionData({ route, navigation }){
 
             <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Fees</Text>
             <Text style={styles(dark, colors).text}>£ {data.fees}{"\n"}</Text>
+            <View style={{flex: 1}}>
             <View style={stylesInternal.mapContainer}>
             <Map latitude={data.latitude} longitude={data.longitude}/>
+            </View>
             </View>
           </View>
         ):(<Text style={styles(dark, colors).text}>Loading...</Text>)}
 
         {/* <Text>{JSON.stringify(data)}</Text> */}
-        </View>
       </View>
   );
     
