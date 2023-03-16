@@ -1,5 +1,5 @@
 from django.test import TestCase
-from crypto_wallets.seralizers import WalletSerializer
+from crypto_wallets.serializers import CryptoWalletSerializer
 from accounts.models import User
 from crypto_wallets.models import CryptoWallet
 from django.urls import reverse
@@ -33,11 +33,11 @@ class WalletSerializerTestCase(TestCase):
     def test_valid_data_wallet_serializer(self):
         request = APIRequestFactory().post('/')
         request.user = self.user
-        serializer = WalletSerializer(data=self.serializer_input, context={'request': request})
+        serializer = CryptoWalletSerializer(data=self.serializer_input, context={'request': request})
         self.assertTrue(serializer.is_valid())
 
     def test_necessary_fields_in_wallet_serializer(self):
-        serializer = WalletSerializer()
+        serializer = CryptoWalletSerializer()
         self.assertIn('user', serializer.fields)
         self.assertIn('id', serializer.fields)
         self.assertIn('cryptocurrency', serializer.fields)
@@ -50,5 +50,5 @@ class WalletSerializerTestCase(TestCase):
         self.serializer_input['balance'] = 'badbalance'
         request = APIRequestFactory().post('/')
         request.user = self.user
-        serializer = WalletSerializer(data=self.serializer_input, context={'request': request})
+        serializer = CryptoWalletSerializer(data=self.serializer_input, context={'request': request})
         self.assertFalse(serializer.is_valid())

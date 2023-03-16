@@ -4,6 +4,7 @@ import { BACKEND_URL } from '@env';
 export const api_url = BACKEND_URL
 
 export const fetchAPI = async (url, body=null, headers={}, method = "POST") => {
+    console.log( await SecureStore.getItemAsync('token'));
     try{
         var payload =  {
             method: method,

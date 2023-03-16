@@ -1,7 +1,7 @@
 import {Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View, ScrollView} from "react-native";
 import * as SecureStore from 'expo-secure-store';
 import React, {useEffect, useState, useCallback} from "react";
-import getCryptoIcon from "../crypto_wallet/icons/icon";
+import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { styles } from 'reactnative/screens/All_Styles.style.js';
 import { api_url } from '../../authentication';
@@ -162,10 +162,6 @@ export default function ExchangeTransactions(props) {
 
       {/* Back arrow and remove button */}
       <View style={[styles(dark, colors).container, {flexDirection: 'row', alignItems: "flex-end"}]}>
-        <TouchableWithoutFeedback onPress={() => props.navigation.goBack()} style={{flex: 1}}>
-          <Text style={styles(dark, colors).backArrow}>←</Text>
-        </TouchableWithoutFeedback>
-        <View style={{flex: 1}}></View>
         <Pressable
           onPress={() => removeExchange(item.id).then(() => props.navigation.goBack())}
           style={{alignItems: "center", justifyContent: "center", marginLeft: 'auto'}}>

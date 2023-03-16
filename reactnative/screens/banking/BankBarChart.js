@@ -1,10 +1,13 @@
 import { VictoryChart, VictoryBar, VictoryAxis, VictoryScatter } from "victory-native";	
 import { Text, Dimensions } from "react-native";
+import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 import { BarChart } from "react-native-chart-kit";
 export function BankBarChart({rawData, tab}) {
-  
 
+  const {dark, colors, setScheme} = useTheme();
+  
   const data = {
     labels: rawData.labels,
     datasets: [
@@ -15,9 +18,10 @@ export function BankBarChart({rawData, tab}) {
   };
 
   const chartConfig = {
-    backgroundGradientFrom: "#ffffff",
+    backgroundColor: colors.background,
+    backgroundGradientFrom: colors.background,
     backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#ffffff",
+    backgroundGradientTo: colors.background,
     backgroundGradientToOpacity: 0.5,
     color: (opacity) => {
       if (tab == 1){
@@ -30,7 +34,7 @@ export function BankBarChart({rawData, tab}) {
         return `rgba(6, 146, 207, ${opacity})`
       }
     },
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    labelColor: (opacity = 1) => colors.text,
     strokeWidth: 1, // optional, default 3
     barPercentage: 0.5, 
     useShadowColorFromDataset: false // optional
@@ -81,7 +85,9 @@ export function BankBarChart2() {
           grid: {	
             stroke: "grey",	
             strokeDsharray: "2, 5"	
-          }	
+          },
+          axis: {stroke: 'grey'},
+          tickLabels: {fill: colors.text},	
         }}	
       />
       <VictoryAxis	
@@ -91,7 +97,9 @@ export function BankBarChart2() {
           grid: {	
             stroke: "grey",	
             strokeDasharray: "2, 5"	
-          }	
+          },
+          axis: {stroke: 'grey'},
+          tickLabels: {fill: colors.text},		
         }}	
       />	
     </VictoryChart>

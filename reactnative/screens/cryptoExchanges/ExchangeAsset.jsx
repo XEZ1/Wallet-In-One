@@ -8,16 +8,15 @@ import {
     View,
   } from "react-native";
 import React, {useEffect, useState, useCallback} from "react";
-import getCryptoIcon from "../crypto_wallet/icons/icon";
+import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import { api_url } from "../../authentication";
 import * as SecureStore from 'expo-secure-store';
-  
+
 export default function ExchangeAsset(props) {
   
   //const [cryptoValue, setCryptoValue] = useState(0); {/* Display `-` if not retrievable */}
   const {dark, colors, setScheme} = useTheme();
-  // const [balances, setBalances] = useState([]);
   
   const styles = StyleSheet.create({
     exchangeAsset: {
@@ -36,25 +35,7 @@ export default function ExchangeAsset(props) {
     },
   });
     
-  // let getBalances = useCallback(async () => {
-  //   try {
-  //     const response = await fetch(api_url + `/crypto-exchanges/get_exchange_balances/`, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-  //       },
-  //     });
-  //     let data = await response.json();
-  //     setBalances(data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   getBalances();
-  // }, [getBalances]);
+  
   
     return (
       <TouchableWithoutFeedback
@@ -85,14 +66,14 @@ export default function ExchangeAsset(props) {
             }}
           >
             <View style={{}}>
-              <Text style={{ fontSize: 25, fontWeight: "700", color: colors.background }}>
+              <Text style={{ fontSize: 25, fontWeight: "700", color: colors.text }}>
                 {props.item.crypto_exchange_name}
               </Text>
   
               {props.balances.length == 0 ? (
-                <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>Total Balance: £Loading...</Text>
+                <Text style={[styles.exchangeAssetTitle, {color: colors.text}]}>Total Balance: £Loading...</Text>
               ) : (
-                <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>
+                <Text style={[styles.exchangeAssetTitle, {color: colors.text}]}>
                   Total Balance: £{props.balances.find(balance => balance.id === props.item.id)?.y.toFixed(2) || '0.00'}
                 </Text>
               )}
