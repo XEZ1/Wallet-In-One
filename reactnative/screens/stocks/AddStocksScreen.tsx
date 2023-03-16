@@ -8,7 +8,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { auth_post } from '../../authentication';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
-
+import ConditionalModal from '../Modal';
 
 import {Alert, Modal, StyleSheet, Pressable, View, Animated} from 'react-native';
 
@@ -226,7 +226,35 @@ const PlaidComponent = ({ navigation }) => {
       }}
     />
   <View>
-    <Modal
+
+  <ConditionalModal
+    headerText={modalText}
+    bodyText={
+      <View style={stylesInternal.modalView}>
+        {modalText == "Stock account has been successfully added." && 
+          <Image
+            style={{ width: 100, height: 100 }}
+            source={{ uri: `https://cdn-icons-png.flaticon.com/512/4436/4436481.png` }}
+          />
+        }
+        {modalText == "Stock account has already been added!" && 
+          <View>
+            <Image
+              style={{ width: 100, height: 100 }}
+              source={{ uri: 'http://www.setra.com/hubfs/Sajni/crc_error.jpg' }}
+            />
+          </View>
+        }
+      </View>
+    }
+    visible={modalVisible}
+    onEvent={() => navigation.navigate("Stock Account List")}
+    onClose={() => setModalVisible(false)}
+    cancelButtonName={"Continue"}
+    continueButtonName={"View"}
+  />
+
+    {/* <Modal
       animationType="none"
       transparent={true}
       visible={modalVisible}
@@ -265,7 +293,7 @@ const PlaidComponent = ({ navigation }) => {
         </Pressable>
       </View>
     </Animated.View>
-    </Modal>
+    </Modal> */}
   </View>
     </>
   );

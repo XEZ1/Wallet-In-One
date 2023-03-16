@@ -1,21 +1,25 @@
 import {Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View, ScrollView} from "react-native";
 import * as SecureStore from 'expo-secure-store';
 import React, {useEffect, useState, useCallback} from "react";
-import getCryptoIcon from "../crypto_wallet/icons/icon";
+import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { styles } from 'reactnative/screens/All_Styles.style.js';
 import { api_url } from '../../authentication';
 import {Table, Row, Cell} from 'react-native-table-component';
 import { VictoryPie, VictoryLabel, VictoryContainer } from "victory-native";
 import BarChart from "../charts/chartComponents/barChart";
+import ConditionalModal from "../Modal";
+import PieChart from "../charts/chartComponents/pieChart";
 
 export default function ExchangeTransactions(props) {
-
+  const [modalVisible, setModalVisible] = useState(false);
   const {dark, colors } = useTheme();
   const [exchangeTransactions, setExchangeTransactions] = useState([]);
   const [exchangeTokens, setExchangeTokens] = useState([]);
+  const [balance, setBalance] = useState();
   const { item, removeExchange } = props.route.params;
   const exchange = item.id;
+  const { width } = Dimensions.get("window");
   const stylesInternal = StyleSheet.create({
     container: {
       flex: 1,
@@ -98,7 +102,8 @@ export default function ExchangeTransactions(props) {
         },
       });
       let data = await response.json();
-      setExchangeTokens(data);
+      setExchangeTokens(data.token_data);
+      setBalance(data.balance);
     } catch (error) {
       console.error(error);
     }
@@ -111,7 +116,9 @@ export default function ExchangeTransactions(props) {
     }
   }, [exchange, getExchangeTransactions, getExchangeTokens]);
 
-  const data = {
+  const data = exchangeTransactions.length === 1 && exchangeTransactions[0] === "empty"
+  ? ["empty"]
+  : {
     tableHead: ['Pair', 'Amount', 'Type', 'Date'],
     tableData: exchangeTransactions.map(transaction => [
       transaction.asset,
@@ -158,18 +165,23 @@ export default function ExchangeTransactions(props) {
 
       {/* Back arrow and remove button */}
       <View style={[styles(dark, colors).container, {flexDirection: 'row', alignItems: "flex-end"}]}>
-        <TouchableWithoutFeedback onPress={() => props.navigation.goBack()} style={{flex: 1}}>
-          <Text style={styles(dark, colors).backArrow}>←</Text>
-        </TouchableWithoutFeedback>
-        <View style={{flex: 1}}></View>
         <Pressable
-          onPress={() => removeExchange(item.id).then(() => props.navigation.goBack())}
+          onPress={() => setModalVisible(true)}
+          // onPress={() => removeExchange(item.id).then(() => props.navigation.goBack())}
           style={{alignItems: "center", justifyContent: "center", marginLeft: 'auto'}}>
           <View style={styles(dark, colors).smallButton}>
             <Text style={{color: colors.text, fontWeight: "800"}}>Remove</Text>
           </View>
         </Pressable>
       </View>
+
+      <ConditionalModal
+        headerText={"Remove Your Exchange"}
+        bodyText={"Are you sure you want to remove your crypto exchange?"}
+        visible={modalVisible}
+        onEvent={() => removeExchange(item.id).then(() => props.navigation.goBack())}
+        onClose={() => setModalVisible(false)}
+      />
 
       {/* Exchange logo, title and balance */}
       <View style={[stylesInternal.exchangeAsset, styles(dark, colors).container, {flexDirection: 'row'}]}>
@@ -178,7 +190,9 @@ export default function ExchangeTransactions(props) {
           source={getCryptoIcon(item.crypto_exchange_name)}/>
         <View style={{marginLeft: 10}}>
           <Text style={stylesInternal.largeBoldText}>{item.crypto_exchange_name} Exchange</Text>
-          <Text style={stylesInternal.mediumText}>Balance: £{item.balance}</Text>
+          <Text style={stylesInternal.mediumText}>
+            Balance: {balance === null || balance === undefined ? "Loading..." : `£${balance.toFixed(2)}`}
+          </Text>
         </View>
       </View>
 
@@ -210,70 +224,47 @@ export default function ExchangeTransactions(props) {
           <Text style={stylesInternal.mediumBoldText}>Coin Breakdown</Text>
           {exchangeTokens.length == 0 ? (
             <Text style={styles(dark, colors).text}>Loading...</Text>
+          ) : exchangeTokens.length === 1 && exchangeTokens[0].x === "empty" ? (
+            <Text style={styles(dark, colors).text}>No coins in this account</Text>
           ) : (
-          <>
-          <VictoryContainer
-            width={Dimensions.get('window').width}
-            height={330}
-            style= {{ paddingTop: 0}}
-            > 
-            <VictoryPie
-              data={exchangeTokens}
-              innerRadius={90}
-              padAngle={1}
-              cornerRadius= {10}
-              radius= {Dimensions.get('window').width/3}
-              colorScale={colours}
-              height={330}
-              labels={() => null}
-            />
-            <VictoryLabel
-              textAnchor="middle"
-              style={{ fontSize: 27, fill: colors.text }}
-              x={Dimensions.get("window").width / 2}
-              y={145}
-              text={"Assets"}
-            />
-            <VictoryLabel
-              textAnchor="middle"
-              style={{ fontSize: 37, fontWeight: "700", fill: colors.text }}
-              x={Dimensions.get("window").width / 2}
-              y={180}
-              text={exchangeTokens.length}
-            />
-          </VictoryContainer>
+          <>  
+          <View style={{ width, justifyContent: "center", alignItems: "center" }}>
+          <PieChart colours={colours} data={exchangeTokens} handlePressIn={handlePressIn} labelCount={2} assetSize={27} numSize={37}/>
+          </View>
           {BarChart(colours, tokenList, exchangeTokens, colors, (tokenList.length*60), handlePressIn)}
           </>
           )}
         </View>  
-       : 
-      <> 
+       : <>
       <View style={stylesInternal.container}>
         <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
-      </View>  
-      {data && (
+      </View>
+      {!data || data.length === 0 ? (
+        <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>Loading...</Text>
+      ) : (
+        data[0] === "empty" ? (
+          <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>
+            No transaction history in this account
+          </Text>
+        ) : (
           <View style={[stylesInternal.table, {paddingVertical: 20}]}>
-              {data && data.tableData && data.tableData.length > 0 ? (
-                <View>
-                  <Table borderStyle={{ borderWidth: 2, borderColor: colors.text}}>
-                    <Row 
-                      data={data.tableHead} 
-                      style={[stylesInternal.header, {backgroundColor: dark ? "#21201E" : "#D3D3D3"}]}
-                      textStyle={{ fontWeight: 'bold', color: colors.text, fontSize: 17 }}
-                    />
-                    {data.tableData.map((rowData, rowIndex) => (
-                      <Row key={rowIndex} data={rowData.map((cellData, cellIndex) => (<Cell key={cellIndex} data={cellData} textStyle={{color: colors.text}} />))} 
-                        style={[stylesInternal.row, {backgroundColor: rowData[2] == "sell" ? dark ? "#8b0000" : "#f87171" : rowData[2] == "buy" ? dark ? "#006400" : "#90ee90" : dark ? "#323232" : "#f3f3f3"}]}
-                      />
-                    ))}
-                  </Table>
-                </View>
-              ) : (
-                <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>Loading...</Text>
-              )}
+            <Table borderStyle={{ borderWidth: 2, borderColor: colors.text}}>
+              <Row 
+                data={data.tableHead} 
+                style={{ ...stylesInternal.header, backgroundColor: dark ? "#21201E" : "#D3D3D3"}}
+                textStyle={{ fontWeight: 'bold', color: colors.text, fontSize: 17 }}
+              />
+              {data.tableData.map((rowData, rowIndex) => (
+                <Row key={rowIndex} data={rowData.map((cellData, cellIndex) => (<Cell key={cellIndex} data={cellData} textStyle={{color: colors.text}} />))} 
+                  style={{ ...stylesInternal.row, backgroundColor: rowData[2] == "sell" ? dark ? "#8b0000" : "#f87171" : rowData[2] == "buy" ? dark ? "#006400" : "#90ee90" : dark ? "#323232" : "#f3f3f3"}}
+                />
+              ))}
+            </Table>
           </View>
-      )}</>
-      }
+        )
+      )}
+      </>
+    }
     </ScrollView>
   );
 

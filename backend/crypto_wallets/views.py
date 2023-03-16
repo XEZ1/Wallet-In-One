@@ -1,36 +1,38 @@
-from django.shortcuts import render
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 
 from crypto_wallets.models import CryptoWallet
-from crypto_wallets.seralizers import WalletSerializer
+from crypto_wallets.serializers import CryptoWalletSerializer
 from crypto_wallets.services import calculate_received_spent, calculate_predicted_balance, calculate_average_spend
 
 
 # Create your views here.
 
+class CryptoWalletViewSet(GenericViewSet):
+    serializer_class = CryptoWalletSerializer
 
-class ListCryptoWallets(APIView):
+    def get_queryset(self):
+        return CryptoWallet.objects.filter(user=self.request.user)
 
-    def get(self, request):
-        crypto_wallets = CryptoWallet.objects.filter(user=self.request.user)
-        serializer = WalletSerializer(crypto_wallets, many=True)
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def list(self, request):
+        serializer = self.get_serializer(self.get_queryset(), many=True, context={'exclude_transactions': True})
         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = WalletSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def retrieve(self, request, pk=None):
+        crypto_wallet = self.get_object()
+        serializer = self.get_serializer(crypto_wallet)
+        return Response(serializer.data)
 
-    def delete(self, request):
-        crypto_wallet = CryptoWallet.objects.get(id=request.data['id'])
-        if crypto_wallet.user != self.request.user:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-        serializer = WalletSerializer(crypto_wallet)
+    def destroy(self, request, pk=None):
+        crypto_wallet = self.get_object()
         crypto_wallet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

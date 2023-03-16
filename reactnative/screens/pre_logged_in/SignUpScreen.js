@@ -9,13 +9,19 @@ import {
   Alert,
 } from "react-native";
 import * as Notifications from "expo-notifications";
+import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import {styles} from 'reactnative/screens/All_Styles.style.js';
 
 import { useContext, useState } from "react";
 import { userContext } from "../../data";
 
 import { api_url, login } from "../../authentication";
+import * as SecureStore from "expo-secure-store";
 
 export default function SignUpScreen({ navigation }) {
+
+  const {dark, colors, setScheme} = useTheme();
+
   const [user, setUser] = useContext(userContext);
 
   const [username, setUsername] = useState();
@@ -27,14 +33,15 @@ export default function SignUpScreen({ navigation }) {
 
   const [errors, setErrors] = useState({});
 
-  const sendNotification = async () => {
-    await Notifications.requestPermissionsAsync();
-    await Notifications.presentNotificationAsync({
-      title: "Sign Up Successful",
-      body: "You have successfully created an account.",
-      ios: { _displayInForeground: true },
-    });
-  };
+  Notifications.setNotificationHandler({
+    handleNotification: async () => {
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      };
+    },
+  });
 
   //192.168.1.81,10.0.2.2
   const signUpHandler = () => {
@@ -56,15 +63,39 @@ export default function SignUpScreen({ navigation }) {
       .then((res) =>
         res.json().then((data) => ({ status: res.status, body: data }))
       )
-      .then((data) => {
+      .then(async (data) => {
         // console.log('Response:', data);
         if (data["status"] == 400) {
           setErrors(data["body"]);
           Alert.alert("Error", "There were some errors");
         } else if (data["status"] == 201) {
           Alert.alert("Success", "Account created successfully");
-          sendNotification();
-          login(username, password, user, setUser);
+          const notificationEnabled = await SecureStore.getItemAsync(
+            "notificationSettings"
+          );
+          if (notificationEnabled == "true") {
+            await Notifications.requestPermissionsAsync();
+            await Notifications.scheduleNotificationAsync({
+              content: {
+                title: "You have successfully signed up!",
+                body: "Manage the notifications from the settings",
+              },
+              trigger: null,
+            });
+          }
+          else if (notificationEnabled == "false") {
+            //set it to true
+            await SecureStore.setItemAsync("notificationSettings", "true");
+            await Notifications.requestPermissionsAsync();
+            await Notifications.scheduleNotificationAsync({
+              content: {
+                title: "You have successfully signed up!",
+                body: "Manage the notifications from the settings",
+              },
+              trigger: null,
+            });
+          }
+          await login(username, password, user, setUser);
         }
       })
       .catch((error) => {
@@ -74,9 +105,9 @@ export default function SignUpScreen({ navigation }) {
 
   const inputStyle = (name) => {
     if (name in errors) {
-      return [styles.input, styles.error];
+      return [stylesInternal.input, stylesInternal.error];
     }
-    return [styles.input];
+    return [stylesInternal.input];
   };
 
   function ErrorMessage(props) {
@@ -85,7 +116,7 @@ export default function SignUpScreen({ navigation }) {
         <>
           {errors[props.name].map((value, index) => {
             return (
-              <Text key={index} style={styles.errorText}>
+              <Text key={index} style={stylesInternal.errorText}>
                 {value}
               </Text>
             );
@@ -97,75 +128,75 @@ export default function SignUpScreen({ navigation }) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[stylesInternal.container, styles(dark, colors).container]}>
       <StatusBar style="auto" />
 
-      <Text style={styles.text}>Username:</Text>
+      <Text style={[stylesInternal.text, styles(dark, colors).text]}>Username:</Text>
       <TextInput
-        style={inputStyle("username")}
+        style={[inputStyle("username"), styles(dark, colors).input, {color: colors.text}]}
         onChangeText={setUsername}
         testID="username"
       />
       <ErrorMessage name="username"></ErrorMessage>
 
-      <Text style={styles.text}>Email:</Text>
+      <Text style={[stylesInternal.text, styles(dark, colors).text]}>Email:</Text>
       <TextInput
-        style={inputStyle("email")}
+        style={[inputStyle("email"), styles(dark, colors).input, {color: colors.text}]}
         onChangeText={setEmail}
         testID="email"
       />
       <ErrorMessage name="email"></ErrorMessage>
 
-      <Text style={styles.text}>First Name:</Text>
+      <Text style={[stylesInternal.text, styles(dark, colors).text]}>First Name:</Text>
       <TextInput
-        style={inputStyle("first_name")}
+        style={[inputStyle("first_name"), styles(dark, colors).input, {color: colors.text}]}
         onChangeText={setFirstName}
         testID="first_name"
       />
       <ErrorMessage name="first_name"></ErrorMessage>
 
-      <Text style={styles.text}>Last Name:</Text>
+      <Text style={[stylesInternal.text, styles(dark, colors).text]}>Last Name:</Text>
       <TextInput
-        style={inputStyle("last_name")}
+        style={[inputStyle("last_name"), styles(dark, colors).input, {color: colors.text}]}
         onChangeText={setLastName}
         testID="last_name"
       />
       <ErrorMessage name="last_name"></ErrorMessage>
 
-      <Text style={styles.text}>Password:</Text>
+      <Text style={[stylesInternal.text, styles(dark, colors).text]}>Password:</Text>
       <TextInput
-        style={inputStyle("new_password")}
+        style={[inputStyle("new_password"), styles(dark, colors).input, {color: colors.text}]}
         onChangeText={setPassword}
         secureTextEntry={true}
         testID="new_password"
       />
       <ErrorMessage name="new_password"></ErrorMessage>
 
-      <Text style={styles.text}>Password Confirmation:</Text>
+      <Text style={[stylesInternal.text, styles(dark, colors).text]}>Password Confirmation:</Text>
       <TextInput
-        style={inputStyle("password_confirmation")}
+        style={[inputStyle("password_confirmation"), styles(dark, colors).input, {color: colors.text}]}
         onChangeText={setPasswordConfirmation}
         secureTextEntry={true}
         testID="password_confirmation"
       />
       <ErrorMessage name="password_confirmation"></ErrorMessage>
 
-      <View style={styles.parent}>
-        <Button style={styles.button} title="Sign Up" onPress={signUpHandler} />
-        {/* <Button style={styles.button} title="Login" onPress={() => setUser({...user, 'signedIn': true})} /> */}
+      <View style={stylesInternal.parent}>
+        <Button style={stylesInternal.button} title="Sign Up" onPress={signUpHandler} />
+        {/* <Button style={stylesInternal.button} title="Login" onPress={() => setUser({...user, 'signedIn': true})} /> */}
       </View>
     </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
+const stylesInternal = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     width: "100%",
-    padding: 30,
+    padding: 20,
   },
   parent: {
     marginTop: 20,
+    marginBottom: 40,
     flex: 1,
     width: "100%",
     alignSelf: "flex-start",

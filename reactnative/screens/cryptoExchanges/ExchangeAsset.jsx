@@ -7,10 +7,12 @@ import {
     TouchableWithoutFeedback,
     View,
   } from "react-native";
-import React, {useEffect, useState} from "react";
-import getCryptoIcon from "../crypto_wallet/icons/icon";
+import React, {useEffect, useState, useCallback} from "react";
+import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
-  
+import { api_url } from "../../authentication";
+import * as SecureStore from 'expo-secure-store';
+
 export default function ExchangeAsset(props) {
   
   //const [cryptoValue, setCryptoValue] = useState(0); {/* Display `-` if not retrievable */}
@@ -64,15 +66,17 @@ export default function ExchangeAsset(props) {
             }}
           >
             <View style={{}}>
-              <Text style={{ fontSize: 25, fontWeight: "700", color: colors.background }}>
+              <Text style={{ fontSize: 25, fontWeight: "700", color: colors.text }}>
                 {props.item.crypto_exchange_name}
               </Text>
-              {/* <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>
-                {props.item.secret_key} {props.item.crypto_exchange_name}
-              </Text> */}
   
-              <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>Total Balance: £{props.item.balance}</Text>
-              {/* ▲ 0.00% */}
+              {props.balances.length == 0 ? (
+                <Text style={[styles.exchangeAssetTitle, {color: colors.text}]}>Total Balance: £Loading...</Text>
+              ) : (
+                <Text style={[styles.exchangeAssetTitle, {color: colors.text}]}>
+                  Total Balance: £{props.balances.find(balance => balance.id === props.item.id)?.y.toFixed(2) || '0.00'}
+                </Text>
+              )}
             </View>
   
           </View>

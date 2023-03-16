@@ -8,12 +8,14 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import {styles} from 'reactnative/screens/All_Styles.style.js'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ConditionalModal from '../Modal';
 
 export default function BankAccountsScreen({ navigation }) {
   const [ isLoading, setIsLoading ] = useState(true)
   const [ bankData, setBankData ] = useState([])
   const isFocused = useIsFocused();
   const {dark, colors, setScheme} = useTheme();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const deleteAccount = async (id) => {
     console.log(`delete_account /banking/delete_account/${id}/`)
@@ -161,9 +163,18 @@ export default function BankAccountsScreen({ navigation }) {
           </View>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={stylesInternal.closeButton} onPress={() => deleteAccount(item.id)}>
+      <TouchableOpacity style={stylesInternal.closeButton} onPress={() => setModalVisible(true)}>
         <FontAwesome style={stylesInternal.closeButtonText} name="close" size= {20}/>
       </TouchableOpacity>
+
+      <ConditionalModal
+        headerText={"Remove Your Bank Account"}
+        bodyText={"Are you sure you want to remove your bank account?"}
+        visible={modalVisible}
+        onEvent={() => deleteAccount(item.id)}
+        onClose={() => setModalVisible(false)}
+      />
+
       {item.disabled?(
       <TouchableOpacity style={stylesInternal.closeButton2} onPress={() => Alert.alert('Warning','This account is not connected anymore. Please delete and readd this account.') }>
         <FontAwesome style={stylesInternal.closeButtonText} name="exclamation" size= {20}/>
