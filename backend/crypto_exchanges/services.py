@@ -274,6 +274,7 @@ class CoinBaseFetcher(ExchangeFetcher):
 # Class was implemented according to: "https://docs.kraken.com/rest/"
 class KrakenFetcher:
     def __init__(self, api_key, secret_key):
+        super().__init__(api_key, secret_key)
         self.api_key = api_key
         self.secret_key = secret_key
 
