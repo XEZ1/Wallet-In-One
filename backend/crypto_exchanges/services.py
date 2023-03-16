@@ -113,8 +113,6 @@ class CoinListFetcher(ExchangeFetcher):
 
     def __init__(self, api_key, secret_key):
         super().__init__(api_key, secret_key)
-        self.api_key = api_key
-        self.secret_key = secret_key
 
     def signature(self, data, key):
         hmc = hmac.new(key, data.encode('utf-8'), digestmod=sha256)
@@ -227,7 +225,6 @@ class CoinListFetcher(ExchangeFetcher):
 class CoinBaseFetcher(ExchangeFetcher):
     def __init__(self, api_key, secret_key):
         super().__init__(api_key, secret_key)
-        self.api_key = api_key
         self.secret_key = secret_key.encode('utf-8')
         self.timestamp = str(int(time.time()))
 
@@ -272,11 +269,9 @@ class CoinBaseFetcher(ExchangeFetcher):
 
 
 # Class was implemented according to: "https://docs.kraken.com/rest/"
-class KrakenFetcher:
+class KrakenFetcher(ExchangeFetcher):
     def __init__(self, api_key, secret_key):
         super().__init__(api_key, secret_key)
-        self.api_key = api_key
-        self.secret_key = secret_key
 
     # This method of getting the signature was taken from the API documentation and slightly modified
     def signature(self, urlpath, data, secret):
