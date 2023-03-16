@@ -111,13 +111,13 @@ export default function LineChartScreen({transactions, graph_version, height, wi
     }
 
     if(graph_version != 3){
-        calculateChange(current_balance, graphData[0].value);
+        calculateChange(current_balance, graphData[0]?.value);
     }
     else if (current_balance != null){
-        calculateChange(current_balance, candlestickData[0].open);
+        calculateChange(current_balance, candlestickData[0]?.open);
     }
     else{
-        calculateChange(candlestickData[candlestickData.length-1].close, candlestickData[0].open);
+        calculateChange(candlestickData[candlestickData.length-1].close, candlestickData[0]?.open);
     }
 
     return (
