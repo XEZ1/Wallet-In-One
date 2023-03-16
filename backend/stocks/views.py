@@ -147,7 +147,7 @@ def listAccounts(request):
 
 @api_view(['GET'])
 def listTransactions(request,stock):
-    transactions = Transaction.objects.filter(stock=stock)
+    transactions = Transaction.objects.filter(stock=stock, stock__user=request.user)
     serializer = AddTransaction(transactions, many=True)
     return Response(serializer.data)
 
