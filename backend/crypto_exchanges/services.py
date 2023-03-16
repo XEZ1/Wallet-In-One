@@ -16,10 +16,6 @@ class ExchangeFetcher:
         self.api_key = api_key
         self.secret_key = secret_key
 
-    @abstractmethod
-    def signature(self, *args, **kwargs):
-        pass
-
     def get_current_time(self):
         return round(time.time() * 1000)
 
@@ -29,9 +25,15 @@ class ExchangeFetcher:
     def hash(self, timestamp):
         return hmac.new(self.secret_key.encode('utf-8'), timestamp.encode('utf-8'), sha256).hexdigest()
 
+    @abstractmethod
+    def signature(self, *args, **kwargs):
+        raise NotImplementedError("Subclasses must implement this method")
+
+    @abstractmethod
     def get_account_data(self):
         raise NotImplementedError("Subclasses must implement this method")
 
+    @abstractmethod
     def get_trading_history(self):
         raise NotImplementedError("Subclasses must implement this method")
 
