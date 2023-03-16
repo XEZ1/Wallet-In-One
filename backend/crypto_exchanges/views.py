@@ -367,7 +367,14 @@ class CoinBaseView(GenericCryptoExchanges, ABC):
             transaction = Transaction()
             transaction.crypto_exchange_object = saved_exchange_account_object
             transaction.asset = coinbase_transaction['product_id']
-            transaction.transaction_type = coinbase_transaction['trade_type']
+
+            if coinbase_transaction['trade_type'] == 'FILL':
+                transaction.transaction_type = 'buy'
+            elif coinbase_transaction['trade_type'] == 'REVERSAL':
+                transaction.transaction_type = 'sell'
+            else:
+                transaction.transaction_type = coinbase_transaction['trade_type']
+
             transaction.amount = coinbase_transaction['size']
 
             naive_datetime = iso8601_to_datetime(coinbase_transaction['trade_time'])
