@@ -310,7 +310,12 @@ class CoinListView(GenericCryptoExchanges, ABC):
                     transaction.amount = float(coinlist_transaction['amount']) * -1
                 else:
                     transaction.amount = float(coinlist_transaction['amount'])
-                transaction.timestamp = iso8601_to_datetime(coinlist_transaction['created_at'])
+
+                naive_datetime = iso8601_to_datetime(coinlist_transaction['created_at'])
+                utc_timezone = pytz.timezone('UTC')
+                aware_datetime = utc_timezone.localize(naive_datetime)
+                transaction.timestamp = aware_datetime
+
                 transaction.save()
 
     def get(self, request):
