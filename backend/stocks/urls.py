@@ -19,5 +19,5 @@ urlpatterns = [
     path('list_stocks/<str:stockAccount>/', listStocks, name='list_stocks'),
     path('get_logo/', get_logo, name='get_logo'),
     path('get_metrics/', getMetrics),
-    path('get_account/<str:account_id>/', getAccount)
+    path('get_account/<str:account_id>/', getAccount, name='get_stock_account')
 ]
