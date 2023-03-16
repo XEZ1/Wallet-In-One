@@ -73,7 +73,7 @@ export default function SignUpScreen({ navigation }) {
             await Notifications.scheduleNotificationAsync({
               content: {
                 title: "You have successfully signed up!",
-                body: "You can now access all the features of the app.",
+                body: "Manage the notifications from the settings",
               },
               trigger: null,
             });
@@ -85,7 +85,7 @@ export default function SignUpScreen({ navigation }) {
             await Notifications.scheduleNotificationAsync({
               content: {
                 title: "You have successfully signed up!",
-                body: "You can now access all the features of the app.",
+                body: "Manage the notifications from the settings",
               },
               trigger: null,
             });
