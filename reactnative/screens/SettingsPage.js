@@ -216,7 +216,7 @@ export default function SettingsPage ({ navigation }) {
       <TouchableOpacity
         onPress={()=>{logout(user, setUser)}}
       >
-        <Text style={[{backgroundColor: colors.primary}, {color: colors.text}, stylesInternal.button]}>Logout</Text>
+        <Text style={[{backgroundColor: colors.primary}, {color: "white"}, stylesInternal.button]}>Logout</Text>
       </TouchableOpacity>
 
       {/* <TouchableOpacity

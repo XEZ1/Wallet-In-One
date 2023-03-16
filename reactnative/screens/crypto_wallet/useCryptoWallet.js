@@ -3,14 +3,11 @@ import * as SecureStore from "expo-secure-store";
 import { BACKEND_URL } from "@env"
 import {Alert} from "react-native";
 
-/*
-  Test BTC Address:
-  1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71
- */
+
 export default function useCryptoWallet() {
   const [wallets, setWallets] = useState([]);
 
-  const fetchWallets = async () => {
+  const listWallets = async () => {
     await fetch(`${BACKEND_URL}/crypto_wallets/`, {
       method: "GET",
       headers: {
@@ -46,20 +43,17 @@ export default function useCryptoWallet() {
   };
 
   const removeWallet = async (id) => {
-    await fetch(`${BACKEND_URL}/crypto_wallets/`, {
+    await fetch(`${BACKEND_URL}/crypto_wallets/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-      },
-      body: JSON.stringify({
-        id: id
-      }),
+      }
     })
       .then(() => setWallets(wallets.filter(wallet => wallet.id !== id)))
       .catch((err) => console.log(err));
 
     }
 
-  return { wallets, fetchWallets, connectWallet, removeWallet };
+  return { wallets, listWallets, connectWallet, removeWallet };
 }

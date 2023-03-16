@@ -3,22 +3,31 @@ from crypto_wallets.models import CryptoWallet, CryptoWalletTransaction
 from crypto_wallets.services import CryptoWalletService, get_timestamp, normalise_value
 
 
-class WalletTransactionSerializer(serializers.ModelSerializer):
+class CryptoWalletTransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CryptoWalletTransaction
         fields = ('id', 'value', 'time')
 
 
-class WalletSerializer(serializers.ModelSerializer):
+class CryptoWalletSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    transactions = WalletTransactionSerializer(source='cryptowallettransaction_set', many=True, required=False)
+    transactions = CryptoWalletTransactionSerializer(source='cryptowallettransaction_set', many=True, required=False)
 
     class Meta:
         model = CryptoWallet
-        fields = ('user', 'id', 'cryptocurrency', 'symbol', 'address', 'balance', 'transactions', 'received', 'spent', 'output_count', 'unspent_output_count')
-        extra_kwargs = {'balance': {'required': False}, 'received': {'required': False}, 'spent': {'required': False}, 'output_count': {'required': False}, 'unspent_output_count': {'required': False}}
+        fields = "__all__"
+        extra_kwargs = dict(balance={'required': False},
+                            received={'required': False},
+                            spent={'required': False},
+                            output_count={'required': False},
+                            unspent_output_count={'required': False})
 
+    def get_fields(self):
+        fields = super().get_fields()
+        if self.context.get('exclude_transactions', False):
+            fields.pop('transactions')
+        return fields
 
     def create(self, validated_data):
         cryptocurrency = validated_data['cryptocurrency']

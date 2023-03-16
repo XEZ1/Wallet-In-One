@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { BACKEND_URL } from "@env"
 import * as SecureStore from "expo-secure-store";
-import getCryptoIcon from "./icons/icon";
+import getCryptoIcon from "../cryptocurrency/icons/icon";
 
 export default function CryptoWalletInsights() {
   const [insights, setInsights] = useState({predicted_balance: {}, received_spent: {}, average_spend: {}});
@@ -20,6 +20,12 @@ export default function CryptoWalletInsights() {
     subtitle: {
       fontWeight: "900",
       fontSize: 30,
+      alignSelf: "center",
+      color: colors.text
+    },
+    info: {
+      fontWeight: "900",
+      fontSize: 15,
       alignSelf: "center",
       color: colors.text
     }
@@ -42,47 +48,63 @@ export default function CryptoWalletInsights() {
       .catch((err) => console.log(err));
   };
 
-  const getCryptoValue = async (symbol) => {
-    await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=GBP`)
-      .then((res) => res.json())
-      .then((res) => res.GBP)
-      .catch((err) => console.log(err))
-  }
-
-  // console.log(insights)
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background, paddingHorizontal: 20 }}>
-      <Text style={styles.title}>Wallet Insights</Text>
       <Text />
 
       <Text style={styles.subtitle}>Predicted Balance</Text>
+      <Text style={styles.info}>Next four weeks</Text>
       <View style={{ borderRadius: 10, paddingVertical: 10}}>
-      {
-        Object.entries(insights.predicted_balance).map(([key, value]) =>
-            <InsightsView key={key} symbol={key} upper={`${value} ${key}`} lower='£0.00' />
-        )
-      }
+        {
+          Object.keys(insights.predicted_balance).length === 0
+            ?
+            <Text style={{color: colors.text}}>There are no wallet insights to display. Try connect a crypto wallet.</Text>
+            :
+            <View>
+              {
+                Object.entries(insights.predicted_balance).map(([key, value]) =>
+                  <InsightItem key={key} symbol={key} upper={`${value} ${key}`} />
+                )
+              }
+            </View>
+        }
       </View>
       <Text />
 
       <Text style={styles.subtitle}>Total Spent & Received</Text>
       <View style={{ borderRadius: 10, paddingVertical: 10}}>
-      {
-        Object.entries(insights.received_spent).map(([key, value]) =>
-          <InsightsView key={key} symbol={key} upper={`+${value.received} ${key}`} lower={`-${value.spent} ${key}`} />
-        )
-      }
+        {
+          Object.keys(insights.received_spent).length === 0
+            ?
+            <Text style={{color: colors.text}}>There are no wallet insights to display. Try connect a crypto wallet.</Text>
+            :
+            <View>
+              {
+                Object.entries(insights.received_spent).map(([key, value]) =>
+                  <InsightItem key={key} symbol={key} upper={`+${value.received} ${key}`} lower={`-${value.spent} ${key}`} />
+                )
+              }
+            </View>
+        }
       </View>
       <Text />
 
       <Text style={styles.subtitle}>Average Spend</Text>
       <View style={{ borderRadius: 10, paddingVertical: 10}}>
-      {
-        Object.entries(insights.average_spend).map(([key, value]) =>
-          <InsightsView key={key} symbol={key} upper={`${value * -1} ${key}`} lower="£0.00" />
-        )
-      }
+        {
+          Object.keys(insights.average_spend).length === 0
+            ?
+            <Text style={{color: colors.text}}>There are no wallet insights to display. Try connect a crypto wallet.</Text>
+            :
+            <View>
+              {
+                Object.entries(insights.average_spend).map(([key, value]) =>
+                  <InsightItem key={key} symbol={key} upper={`${value * -1} ${key}`} />
+                )
+              }
+            </View>
+        }
       </View>
       <Text />
 
@@ -90,9 +112,22 @@ export default function CryptoWalletInsights() {
   )
 }
 
-function InsightsView(props) {
+function InsightItem(props) {
 
   const {dark, colors, setScheme} = useTheme();
+  const [value, setValue] = useState(0);
+
+  const getCryptoValue = async () => {
+    await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${props.symbol}&tsyms=GBP`)
+      .then((res) => res.json())
+      .then((res) => res.GBP)
+      .then((res) => setValue(res))
+      .catch((err) => console.log(err))
+  }
+
+  useEffect(() => {
+    getCryptoValue()
+  }, [])
 
   const styles = StyleSheet.create({
     walletAsset: {
@@ -108,7 +143,6 @@ function InsightsView(props) {
       height: 30,
     },
   });
-
 
   return (
     <View style={[styles.walletAsset, {paddingVertical: 5}]}>
@@ -141,9 +175,17 @@ function InsightsView(props) {
             {props.upper}
           </Text>
 
-          <Text style={[styles.walletAssetTitle, {color: colors.text}]}>
-            {props.lower}
-          </Text>
+          {
+            props.lower
+              ?
+              <Text style={[styles.walletAssetTitle, {color: colors.text}]}>
+                {props.lower}
+              </Text>
+              :
+              <Text style={[styles.walletAssetTitle, {color: colors.text}]}>
+                £{value}
+              </Text>
+          }
 
         </View>
 

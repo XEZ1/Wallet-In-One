@@ -24,8 +24,8 @@ export default function HomePage({ navigation }) {
   const [baseData, setBaseData] = useState(fixture);
   const [data, setNewData] = useState(baseData.all);
   const [pressed, setPressed] = useState(null);
+  const { removeWallet } = useCryptoWallet();
   const [colorScheme, setColors] = useState(originalColours);
-  const { wallets, fetchWallets, removeWallet } = useCryptoWallet();
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
 
   // Uncomment to show bank data from backend
@@ -43,7 +43,6 @@ export default function HomePage({ navigation }) {
     if (isFocused) {
       fetchData();
     }
-    fetchWallets();
     fetchExchanges();
   }, [isFocused]);
 
@@ -60,10 +59,9 @@ export default function HomePage({ navigation }) {
         }
       } else if (pressed === "Cryptocurrency from wallets") {
         var cryptoData = baseData["Cryptocurrency from wallets"][index]
-        var wallet = wallets.find(x => x.id === cryptoData.id)
         if (cryptoData.id) {
           setColors(originalColours)
-          navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
+          navigation.navigate("Wallet Detail", { id: cryptoData.id, value: cryptoData.y, removeWallet: removeWallet })
           return
         }
       }

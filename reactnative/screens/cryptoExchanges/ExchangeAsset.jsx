@@ -8,7 +8,7 @@ import {
     View,
   } from "react-native";
 import React, {useEffect, useState} from "react";
-import getCryptoIcon from "../crypto_wallet/icons/icon";
+import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
   
 export default function ExchangeAsset(props) {
@@ -64,14 +64,14 @@ export default function ExchangeAsset(props) {
             }}
           >
             <View style={{}}>
-              <Text style={{ fontSize: 25, fontWeight: "700", color: colors.background }}>
+              <Text style={{ fontSize: 25, fontWeight: "700", color: colors.text }}>
                 {props.item.crypto_exchange_name}
               </Text>
               {/* <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>
                 {props.item.secret_key} {props.item.crypto_exchange_name}
               </Text> */}
   
-              <Text style={[styles.exchangeAssetTitle, {color: colors.background}]}>Total Balance: £{props.item.balance}</Text>
+              <Text style={[styles.exchangeAssetTitle, {color: colors.text}]}>Total Balance: £{props.item.balance}</Text>
               {/* ▲ 0.00% */}
             </View>
   
