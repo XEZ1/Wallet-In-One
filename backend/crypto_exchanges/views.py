@@ -414,7 +414,12 @@ class KrakenView(GenericCryptoExchanges, ABC):
             transaction.asset = kraken_transaction['pair']
             transaction.transaction_type = kraken_transaction['type']
             transaction.amount = kraken_transaction['vol']
-            transaction.timestamp = unix_timestamp_to_datetime(kraken_transaction['time'])
+
+            naive_datetime = unix_timestamp_to_datetime(kraken_transaction['time'])
+            utc_timezone = pytz.timezone('UTC')
+            aware_datetime = utc_timezone.localize(naive_datetime)
+            transaction.timestamp = aware_datetime
+
             transaction.save()
 
     def get(self, request):
