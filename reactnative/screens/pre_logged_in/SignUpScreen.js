@@ -14,6 +14,7 @@ import { useContext, useState } from "react";
 import { userContext } from "../../data";
 
 import { api_url, login } from "../../authentication";
+import * as SecureStore from "expo-secure-store";
 
 export default function SignUpScreen({ navigation }) {
   const [user, setUser] = useContext(userContext);
@@ -64,11 +65,31 @@ export default function SignUpScreen({ navigation }) {
           Alert.alert("Error", "There were some errors");
         } else if (data["status"] == 201) {
           Alert.alert("Success", "Account created successfully");
-          await Notifications.scheduleNotificationAsync({ content: {
-          title: "You have successfully signed up!",
-          body: "Go to settings to manage notifications.",
-        },
-        trigger: null, });
+          const notificationEnabled = await SecureStore.getItemAsync(
+            "notificationSettings"
+          );
+          if (notificationEnabled == "true") {
+            await Notifications.requestPermissionsAsync();
+            await Notifications.scheduleNotificationAsync({
+              content: {
+                title: "You have successfully signed up!",
+                body: "You can now access all the features of the app.",
+              },
+              trigger: null,
+            });
+          }
+          else if (notificationEnabled == "false") {
+            //set it to true
+            await SecureStore.setItemAsync("notificationSettings", "true");
+            await Notifications.requestPermissionsAsync();
+            await Notifications.scheduleNotificationAsync({
+              content: {
+                title: "You have successfully signed up!",
+                body: "You can now access all the features of the app.",
+              },
+              trigger: null,
+            });
+          }
           await login(username, password, user, setUser);
         }
       })
