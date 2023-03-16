@@ -34,7 +34,7 @@ export default function CryptoConnector(props) {
   });
 
   return (
-    <ScrollView style={[styles(dark, colors).container, {padding: 20}]}>
+    <ScrollView style={[styles(dark, colors).container, {paddingHorizontal: 20, paddingTop: 20}]}>
 
       <View style={{flexDirection: "row", alignItems: "center"}}>
         <View style={{flex: 1, flexDirection: "column"}}>
