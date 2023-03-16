@@ -127,7 +127,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                     {/* Interactive graph */}
                     { graph_version == 1 && 
                         <>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row', paddingBottom: 14, paddingHorizontal: 10}}>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}>{priceChange}</Text>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}> ({percentageChange}%)</Text>
                         </View>
@@ -142,16 +142,17 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                                 <LineChart.CursorCrosshair />
                             </LineChart>
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{ marginHorizontal: 1, fontSize: 13}}>Balance: </Text>
-                                <LineChart.PriceText precision={10} style={{ color: colors.text, fontSize: 13 }}/>
-                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ marginHorizontal: 5, fontSize: 12}}>Date: </Text>
+                                    <LineChart.DatetimeText precision={10} style={{ color: colors.text, fontSize: 13 }} />
+                                </View>
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{ marginHorizontal: 1, fontSize: 13}}>Date: </Text>
-                                <LineChart.DatetimeText precision={10} style={{ color: colors.text, fontSize: 13 }} />
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ marginHorizontal: 5, fontSize: 12}}>Balance: </Text>
+                                    <LineChart.PriceText precision={10} style={{ color: colors.text, fontSize: 13 }}/>
+                                </View>
                             </View>
-
                         </LineChart.Provider></>
                     }
 
@@ -164,16 +165,13 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                                 <LineChart.Path color={color1}>
                                     <LineChart.Gradient />
                                 </LineChart.Path>
-                                {/* <LineChart.CursorCrosshair>
-                                    <LineChart.Tooltip />
-                                </LineChart.CursorCrosshair> */}
                             </LineChart>
                         </LineChart.Provider></>
                     }
                     {/* Candelstick graph */}   
                     { graph_version == 3 && candlestickData &&
                         <>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row', paddingBottom: 14, paddingHorizontal: 10}}>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}>{priceChange}</Text>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}> ({percentageChange}%)</Text>
                         </View>
@@ -219,7 +217,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                     {/* Interactive graph WalletAssetVersion */}
                     { graph_version == 4 && 
                         <>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row', paddingBottom: 14, paddingHorizontal: 10}}>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}>{priceChange}</Text>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}> ({percentageChange}%)</Text>
                         </View>

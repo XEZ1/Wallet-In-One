@@ -7,7 +7,8 @@ import {
   Alert,
   StyleSheet,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
@@ -26,6 +27,8 @@ const SuccessComponent = (props) => {
     const isFocused = useIsFocused()
     const [transactions, setTransactions] = useState({});
     const {dark, colors, setScheme } = useTheme();
+
+    const {width: SIZE} = Dimensions.get('window');
 
     const stylesInternal = StyleSheet.create({
       item:{
@@ -85,12 +88,17 @@ const SuccessComponent = (props) => {
 
       const ItemSeparator = () => <View style={stylesInternal.separator} />;
     return (
-        <View style={ styles(dark, colors).container }>
+        <View style={{ ...styles(dark, colors).container, backgroundColor: '#94a3b8' }}>
           <View>
-            <FlatList data={list} ItemSeparatorComponent={() => <View style={{height: 8}} />} renderItem={({item, index}) =>{
+            <FlatList 
+              data={list} 
+              ItemSeparatorComponent={() => <View style={{height: 8}} />} 
+              style={{paddingHorizontal:8}}
+              renderItem={({item, index}) =>{
               return (
                 
-                <TouchableOpacity style={stylesInternal.item} onPress={()=> props.navigation.navigate('StockAsset', {
+                <TouchableOpacity style={{ ...stylesInternal.item, backgroundColor: 'white' }}
+                  onPress={()=> props.navigation.navigate('StockAsset', {
                     accountID: item.account_id, 
                     accessToken: item.access_token, 
                     transactions: transactions[item.account_id],
@@ -134,7 +142,7 @@ const SuccessComponent = (props) => {
                       current_balance={item.balance}
                       graph_version={2}
                       height={75}
-                      width={350}
+                      width={SIZE*0.85}
                   />}
 
                 </TouchableOpacity>

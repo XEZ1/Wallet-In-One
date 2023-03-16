@@ -117,15 +117,6 @@ export default function StockDetails({ route, navigation }){
           </View>
         ):(<Text style={styles(dark, colors).text}>Loading...</Text>)}
 
-          {/* {data.tableHead && 
-            <LineChartScreen 
-              transactions={}
-              // current_balance={graphData[0].value}
-              graph_version={1}
-              height={SIZE / 2} 
-              width={SIZE * 0.85}
-              // data={graphData}
-          />} */}
           <Text style={[styles(dark, colors).textBold, {color: colors.primary, fontSize: 21}]}>Line Graph</Text>
           {stockTransactions && (
             <LineChartScreen
