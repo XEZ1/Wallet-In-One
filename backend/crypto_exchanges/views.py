@@ -303,7 +303,14 @@ class CoinListView(GenericCryptoExchanges, ABC):
                     transaction.asset = coinlist_transaction['asset']
                 else:
                     transaction.asset = coinlist_transaction['symbol']
-                transaction.transaction_type = coinlist_transaction['transaction_type']
+
+                if coinlist_transaction['transaction_type'] == "XFER":
+                    transaction.transaction_type = "sell"
+                elif coinlist_transaction['transaction_type'] == "SWAP":
+                    transaction.transaction_type = "buy"
+                else:
+                    transaction.transaction_type = coinlist_transaction['transaction_type']
+
                 if coinlist_transaction['amount'] == '':
                     transaction.amount = 0
                 elif float(coinlist_transaction['amount']) < 0:
