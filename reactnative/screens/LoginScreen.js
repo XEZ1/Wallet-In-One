@@ -17,6 +17,9 @@ import { userContext } from "../data";
 
 import { login } from "../authentication";
 
+
+import * as SecureStore from "expo-secure-store";
+
 export default function SignUpScreen({ navigation }) {
 
   const {dark, colors, setScheme} = useTheme();
@@ -40,17 +43,35 @@ export default function SignUpScreen({ navigation }) {
       }
     } else {
       console.log("Login Successful")
-      sendLogInNotification();
+      await sendLogInNotification();
     }
   };
+Notifications.setNotificationHandler({
+    handleNotification: async () => {
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      };
+    },
+  });
 
-  const sendLogInNotification = async () => {
-    await Notifications.requestPermissionsAsync();
-    await Notifications.presentNotificationAsync({
-      title: "Login Successful",
-      body: "You have successfully logged in.",
-      ios: { _displayInForeground: true },
-    });
+const sendLogInNotification = async () => {
+    const notificationEnabled = await SecureStore.getItemAsync(
+      "notificationSettings"
+    );
+    console.log("notificationSettings value:", notificationEnabled)
+    if (notificationEnabled === "true") {
+      await Notifications.requestPermissionsAsync();
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "You have successfully logged in!",
+          body: "You can now access all the features of the app.",
+        },
+        trigger: null,
+      });
+    }
+
   };
 
   const inputStyle = (name) => {
