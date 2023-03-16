@@ -240,7 +240,7 @@ export default function HomePage({ navigation }) {
 
         {chartType == "pie" ? 
           <>
-            <PieChart colours={colorScheme} data={data} handlePressIn={handlePressIn}/>
+            <PieChart colours={colorScheme} data={data} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27}/>
             {BarChart(colorScheme, list, data, colors, spacing, handlePressIn)}
           </>
           : 

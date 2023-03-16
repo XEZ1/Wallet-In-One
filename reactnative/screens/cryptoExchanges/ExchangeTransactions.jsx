@@ -8,6 +8,7 @@ import { api_url } from '../../authentication';
 import {Table, Row, Cell} from 'react-native-table-component';
 import { VictoryPie, VictoryLabel, VictoryContainer } from "victory-native";
 import BarChart from "../charts/chartComponents/barChart";
+import PieChart from "../charts/chartComponents/pieChart";
 
 export default function ExchangeTransactions(props) {
 
@@ -216,36 +217,7 @@ export default function ExchangeTransactions(props) {
             <Text style={styles(dark, colors).text}>No coins in this account</Text>
           ) : (
           <>
-          <VictoryContainer
-            width={Dimensions.get('window').width}
-            height={330}
-            style= {{ paddingTop: 0}}
-            > 
-            <VictoryPie
-              data={exchangeTokens}
-              innerRadius={90}
-              padAngle={1}
-              cornerRadius= {10}
-              radius= {Dimensions.get('window').width/3}
-              colorScale={colours}
-              height={330}
-              labels={() => null}
-            />
-            <VictoryLabel
-              textAnchor="middle"
-              style={{ fontSize: 27, fill: colors.text }}
-              x={Dimensions.get("window").width / 2}
-              y={145}
-              text={"Assets"}
-            />
-            <VictoryLabel
-              textAnchor="middle"
-              style={{ fontSize: 37, fontWeight: "700", fill: colors.text }}
-              x={Dimensions.get("window").width / 2}
-              y={180}
-              text={exchangeTokens.length}
-            />
-          </VictoryContainer>
+          <PieChart colours={colours} data={exchangeTokens} handlePressIn={handlePressIn} labelCount={2} assetSize={27} numSize={37}/>
           {BarChart(colours, tokenList, exchangeTokens, colors, (tokenList.length*60), handlePressIn)}
           </>
           )}
