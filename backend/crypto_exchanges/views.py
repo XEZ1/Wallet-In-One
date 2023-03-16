@@ -33,8 +33,6 @@ def get_transactions(request, exchange):
     data = TransactionSerializer(transactions, many=True).data
     if len(data) == 0:
         data.append('empty')
-    print(data)
-
     return Response(data)
 
 
