@@ -18,6 +18,7 @@ import { Button, Image } from 'react-native';
 import { auth_get } from '../../authentication';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
+import Loading from '../banking/Loading';
 
 
 import LineChartScreen from '../charts/LineChart';
@@ -28,6 +29,7 @@ const SuccessComponent = ({ route, ...props }) => {
     const isFocused = useIsFocused()
     const [transactions, setTransactions] = useState({});
     const {dark, colors, setScheme } = useTheme();
+    const [loading, setLoading] = useState(true)
 
     const {width: SIZE} = Dimensions.get('window');
 
@@ -107,11 +109,16 @@ const SuccessComponent = ({ route, ...props }) => {
           list.forEach((account) => {
             getTransactions(account.account_id);
           });
+          setLoading(false)
         }
       }, [isFocused, list, getTransactions]);
 
 
       const ItemSeparator = () => <View style={stylesInternal.separator} />;
+    if(loading){
+      return(<Loading/>)
+    }
+    else{
     return (
         <View style={{ ...styles(dark, colors),paddingTop:8, paddingBottom: 8 }}>
           <View>
@@ -179,6 +186,7 @@ const SuccessComponent = ({ route, ...props }) => {
           </View>
         </View>
       );
+    }
     };
 
 export default SuccessComponent;
