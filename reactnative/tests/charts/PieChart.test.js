@@ -1,7 +1,7 @@
 import React from 'react';
-import PieChart from '../screens/charts/chartComponents/pieChart';
+import PieChart from '../../screens/charts/chartComponents/pieChart';
 import renderer from 'react-test-renderer';
-import { render } from '@testing-library/react-native';
+
 
 var data = {
     "all": [
@@ -29,12 +29,12 @@ const handlePressIn = (event, datapoint)=>{console.log(datapoint)};
 
 describe('<PieChart />', () => {
     it('test 4 label pie chart', () => {
-        const snapshot = renderer.create(<PieChart colours={colours} data={data} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27} />);
-        expect(snapshot).toMatchSnapshot();         
+        const pieChart = renderer.create(<PieChart colours={colours} data={data} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27} />);
+        expect(pieChart).toMatchSnapshot();         
       });
 
     it('test 2 label pie chart', () => {
-        const snapshot = renderer.create(<PieChart colours={colours} data={data} handlePressIn={handlePressIn} labelCount={2} assetSize={27} numSize={37} />);
-        expect(snapshot).toMatchSnapshot();         
+        const pieChart = renderer.create(<PieChart colours={colours} data={data} handlePressIn={handlePressIn} labelCount={2} assetSize={27} numSize={37} />);
+        expect(pieChart).toMatchSnapshot();         
       });
   });
