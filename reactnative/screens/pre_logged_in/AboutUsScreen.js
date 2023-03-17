@@ -86,7 +86,7 @@ export default function AboutUsScreen ({ navigation }) {
 
     return (
       <ImageBackground
-        source={require('reactnative/assets/background.png')}
+        source={require('reactnative/assets/background.jpg')}
         style={stylesInternal.background}
       >
       <ScrollView

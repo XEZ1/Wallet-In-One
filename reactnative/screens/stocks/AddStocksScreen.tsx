@@ -1,6 +1,5 @@
 import React, { useState, useEffect,useRef  } from 'react';
 import { Button, Text, Image ,Dimensions } from 'react-native';
-import { LinkSuccess, LinkExit} from 'react-native-plaid-link-sdk';
 import PlaidLink from '@burstware/expo-plaid-link'
 import * as SecureStore from 'expo-secure-store';
 import { api_url } from '../../authentication';

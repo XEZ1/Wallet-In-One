@@ -1,18 +1,25 @@
 {
   "expo": {
-    "name": "reactnative",
+    "name": "Wallet-In-One",
     "slug": "reactnative",
+    "icon": "./assets/icon.png",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
     ],
     "userInterfaceStyle": "automatic",
     "ios": {
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "bundleIdentifier": "com.matyog.walletinone"
     },
     "android": {
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "package": "com.matyog.walletinone"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "aa6c2748-0590-43b4-8033-5a55f5cecb29"
+      }
     }
-  },
-  "name": "reactnative"
+  }
 }
