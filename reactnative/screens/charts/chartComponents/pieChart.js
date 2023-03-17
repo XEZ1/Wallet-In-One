@@ -23,6 +23,8 @@ export default function PieChart({colours, data, handlePressIn, labelCount, asse
   const [pressed, setPressed ] = useState(false)
   const isFocused = useIsFocused()
 
+  if(!colours || !data || !handlePressIn || !labelCount || !assetSize || !numSize){ return null; }
+
   let value = 0;
   for (let i = 0; i < data.length; i++) {
     value += data[i].y;

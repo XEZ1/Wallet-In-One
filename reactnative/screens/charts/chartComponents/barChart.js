@@ -3,6 +3,9 @@ import { useTheme } from "reactnative/src/theme/ThemeProvider";
 
 export default function BarChart(colours, list, data, spacing, handlePressIn) {
   const {dark, colors, setScheme} = useTheme();
+
+  if(!colours || !list || !data || !handlePressIn || !spacing){ return null; }
+  
     return <VictoryBar
       horizontal={true}
       style={{

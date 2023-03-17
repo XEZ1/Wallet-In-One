@@ -39,3 +39,25 @@ exports[`<PieChart /> test 4 label pie chart 1`] = `
   <View />
 </RCTScrollView>
 `;
+
+exports[`<PieChart /> test float values pie chart 1`] = `
+<RCTScrollView
+  contentContainerStyle={
+    {
+      "alignItems": "center",
+      "backgroundColor": "white",
+      "flexGrow": 1,
+      "justifyContent": "center",
+    }
+  }
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <View />
+</RCTScrollView>
+`;
+
+exports[`<PieChart /> test pie chart no props 1`] = `null`;
