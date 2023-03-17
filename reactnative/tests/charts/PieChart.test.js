@@ -45,22 +45,29 @@ var floatData = {
     ]
   }
 
+var emptyData = {"all":[]}
+
 var colours = ["pink", "turquoise", "lime", "#FA991C"]
 const handlePressIn = (event, datapoint)=>{console.log(datapoint)};
 
 describe('<PieChart />', () => {
     it('test 4 label pie chart', () => {
-        const pieChart = renderer.create(<PieChart colours={colours} data={data} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27} />);
+        const pieChart = renderer.create(<PieChart colours={colours} data={data.all} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27} />);
         expect(pieChart).toMatchSnapshot();         
       });
 
     it('test 2 label pie chart', () => {
-        const pieChart = renderer.create(<PieChart colours={colours} data={data} handlePressIn={handlePressIn} labelCount={2} assetSize={27} numSize={37} />);
+        const pieChart = renderer.create(<PieChart colours={colours} data={data.all} handlePressIn={handlePressIn} labelCount={2} assetSize={27} numSize={37} />);
         expect(pieChart).toMatchSnapshot();         
       });
 
     it('test float values pie chart', () => {
-        const pieChart = renderer.create(<PieChart colours={colours} data={floatData} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27} />);
+        const pieChart = renderer.create(<PieChart colours={colours} data={floatData.all} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27} />);
+        expect(pieChart).toMatchSnapshot();         
+      });
+
+    it('test empty data pie chart', () => {
+        const pieChart = renderer.create(<PieChart colours={colours} data={emptyData.all} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27} />);
         expect(pieChart).toMatchSnapshot();         
       });
 

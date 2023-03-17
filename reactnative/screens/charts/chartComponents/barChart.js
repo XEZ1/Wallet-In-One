@@ -1,10 +1,8 @@
 import {VictoryBar,VictoryLabel} from "victory-native";
-import { useTheme } from "reactnative/src/theme/ThemeProvider";
 
-export default function BarChart(colours, list, data, spacing, handlePressIn) {
-  const {dark, colors, setScheme} = useTheme();
+export default function BarChart(colours, list, data, spacing, handlePressIn, colors) {
 
-  if(!colours || !list || !data || !handlePressIn || !spacing){ return null; }
+  if(!colours || !list || !data || !handlePressIn || !spacing || !colors){ return null; }
   
     return <VictoryBar
       horizontal={true}

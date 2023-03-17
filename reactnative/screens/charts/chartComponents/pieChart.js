@@ -71,10 +71,10 @@ export default function PieChart({colours, data, handlePressIn, labelCount, asse
               },
             },
           ]}
-          animate={{
-            duration: 1000,
-            easing: "bounce"
-          }}
+          // animate={{
+          //   duration: 1000,
+          //   easing: "bounce"
+          // }}
           colorScale={colours}
           standalone={false}
           height={300}

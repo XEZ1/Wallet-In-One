@@ -251,7 +251,7 @@ export default function ExchangeTransactions(props) {
           <View style={{ width, justifyContent: "center", alignItems: "center" }}>
           <PieChart colours={colours} data={exchangeTokens} handlePressIn={handlePressIn} labelCount={2} assetSize={27} numSize={37}/>
           </View>
-          {BarChart(colours, tokenList, exchangeTokens, (tokenList.length*60), handlePressIn)}
+          {BarChart(colours, tokenList, exchangeTokens, (tokenList.length*60), handlePressIn, colors)}
           </>
           )}
         </View>  

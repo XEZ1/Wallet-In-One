@@ -4,4 +4,6 @@ exports[`<BarChart /> test bar chart 1`] = `null`;
 
 exports[`<BarChart /> test bar chart no props 1`] = `null`;
 
+exports[`<BarChart /> test bar chart with empty data 1`] = `null`;
+
 exports[`<BarChart /> test bar chart with float values 1`] = `null`;

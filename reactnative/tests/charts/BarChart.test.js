@@ -2,7 +2,6 @@ import React from 'react';
 import BarChart from '../../screens/charts/chartComponents/barChart';
 import renderer from 'react-test-renderer';
 
-
 var data = {
     "all": [
         {
@@ -44,22 +43,31 @@ var data = {
         }
     ]
   }
+
+var emptyData = {"all": []}
+const emptyArray = Object.values(emptyData)[0]
 const array = Object.values(data)[0]
 const floatArray = Object.values(floatData)[0]
 var colours = ["pink", "turquoise", "lime", "#FA991C"]
 const handlePressIn = (event, datapoint)=>{console.log(datapoint)};
 const list = array.map((val) => val.x);
 const floatList = floatArray.map((val) => val.x);
+const colors = {"text": "black"}
 
 describe('<BarChart />', () => {
     it('test bar chart', () => {
-        const snapshot = renderer.create(<BarChart colours={colours} list={list} data={data} handlePressIn={handlePressIn} spacing={list.length*60} />);
-        expect(snapshot).toMatchSnapshot();         
+        const barChart = renderer.create(<BarChart colours={colours} list={list} data={data} handlePressIn={handlePressIn} spacing={list.length*60} colors={colors} />);
+        expect(barChart).toMatchSnapshot();         
       });
 
     it('test bar chart with float values', () => {
-        const snapshot = renderer.create(<BarChart colours={colours} list={floatList} data={floatData} handlePressIn={handlePressIn} spacing={list.length*60} />);
-        expect(snapshot).toMatchSnapshot();         
+        const barChart = renderer.create(<BarChart colours={colours} list={floatList} data={floatData} handlePressIn={handlePressIn} spacing={list.length*60} colors={colors} />);
+        expect(barChart).toMatchSnapshot();         
+      });
+
+    it('test bar chart with empty data', () => {
+      const barChart = renderer.create(<BarChart colours={colours} list={emptyArray} data={emptyData} handlePressIn={handlePressIn} spacing={list.length*60} colors={colors} />);
+      expect(barChart).toMatchSnapshot();     
       });
 
     it('test bar chart no props', () => {
