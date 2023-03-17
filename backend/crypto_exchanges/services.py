@@ -372,7 +372,7 @@ class CurrentMarketPriceFetcher:
         for token in tokens:
             price = self.get_crypto_price(token.asset)
             value = price * (token.free_amount + token.locked_amount)
-            token_data.append({'x': token.asset + ": " + str(round(value, 2)), 'y': round(value, 2)})
+            token_data.append({'x': token.asset + ": £" + str(round(value, 2)), 'y': round(value, 2)})
             balance += value
         dict_result.update({"balance": round(balance, 2), "token_data": sorted(token_data, key=lambda val: val['y'])})
         return dict_result

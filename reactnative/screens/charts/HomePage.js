@@ -14,7 +14,8 @@ import StackedChart from "./chartComponents/stackedBarChart";
 import fixture from "../charts/chartData.json";
 import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
-
+import SwitchSelector from "react-native-switch-selector";
+import { FlatList } from "react-native-gesture-handler";
 export default function HomePage({ navigation }) {
   const originalColours = ["pink", "turquoise", "lime", "#FA991C"]
   const {dark, colors, setScheme } = useTheme();
@@ -76,7 +77,10 @@ export default function HomePage({ navigation }) {
             accessToken: response.body.access_token, 
             transactions: res.body,
             logo: response.body.logo,
-            balance: response.body.balance
+            balance: response.body.balance,
+            name: response.body.institution_name,
+            account_name: response.body.name,
+            balance_currency: 'GBP'
           })
         }
         console.log(stockData.id)
@@ -163,7 +167,10 @@ export default function HomePage({ navigation }) {
             accessToken: response.body.access_token, 
             transactions: res.body,
             logo: response.body.logo,
-            balance: response.body.balance
+            balance: response.body.balance,
+            name: response.body.institution_name,
+            account_name: response.body.name,
+            balance_currency: response.body.balance_currency
           })
         }
         console.log(stockData.id)
@@ -203,7 +210,7 @@ export default function HomePage({ navigation }) {
     return (<NoWallets/>);
   } else {
     return (
-      <ScrollView
+      <FlatList
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: "center",
@@ -212,10 +219,11 @@ export default function HomePage({ navigation }) {
           backgroundColor: colors.background,
         }}
         style={styles.container}
-      >
-
+        ListHeaderComponent={
+      
+        <>
         {/* Switch Graph Buttons */}
-        <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
+        {/* <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
           <TouchableOpacity
             style={[
               styles(dark, colors).btn,
@@ -234,23 +242,37 @@ export default function HomePage({ navigation }) {
           >
           <Text>Stacked Bar Chart</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
-        <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30}]}>{pressed}</Text>
+        <View style={{paddingHorizontal: 40,paddingTop: 30}}>
+            <SwitchSelector
+              initial={0}
+              onPress={value => handleChartTypeChange(value)}
+              // textColor="#7a44cf"
+              selectedColor="#fff"
+              buttonColor="#7a44cf"
+              borderColor="#7a44cf"
+              hasPadding
+              options={[    
+                { label: "Pie Chart", value: "pie"},  
+                { label: "Stacked Bar Chart", value: "stacked"} 
+              ]}
+              imageStyle={{ width: 20, height: 20 }}
+              textStyle={{ fontWeight: 'bold', fontSize: 18 }}
+              buttonMargin={1}
+              height={60}
+            />
+          </View>
+
 
         {chartType == "pie" ? 
           <>
-            <PieChart colours={colorScheme} data={data} handlePressIn={handlePressIn}/>
+            <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30}]}>{pressed}</Text>
+            <PieChart colours={colorScheme} data={data} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27}/>
             {BarChart(colorScheme, list, data, colors, spacing, handlePressIn)}
-          </>
-          : 
-            <StackedChart data={baseData} handlePressIn={handlePressInStacked}/>
-        }
-
-        
-        
-        {pressed ? (
+            {pressed ? (
           <TouchableOpacity
+            style={{ justifyContent: 'center', alignItems: 'center' }}
             onPress={() => {
               setNewData(baseData.all);
               setPressed(false);
@@ -262,7 +284,13 @@ export default function HomePage({ navigation }) {
         ) : (
           ""
         )}
-      </ScrollView>
+          </>
+          : 
+            <StackedChart data={baseData} handlePressIn={handlePressInStacked}/>
+        }
+      </>
+      }
+      />
     );
   }
 }

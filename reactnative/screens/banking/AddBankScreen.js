@@ -139,15 +139,16 @@ export default function AddBankScreen({ navigation }) {
                 style={styles(dark, colors).container}
             >
                 {!savedBanks ? (
-                    <TouchableOpacity onPress={()=>setAuthComplete(false)}>
+                    <TouchableOpacity style={{flex: 1,justifyContent:'center', alignItems:'center'}} onPress={()=>setAuthComplete(false)}>
                         <Text style={styles(dark, colors).text}>Bank Authentication Finished</Text>
                         <Text style={styles(dark, colors).text}>Waiting For server</Text>
                         <ActivityIndicator/>
                     </TouchableOpacity>
                 ):(
                     <>
-                        <Text style={styles(dark, colors).text}> Bank account(s) have been added</Text>
-                        <Text style={styles(dark, colors).text}> Data for debugging </Text>
+                        <View style={{flex: 1,justifyContent:'center', alignItems:'center'}}>
+                            <Text style={styles(dark, colors).text}> Bank account(s) have been added</Text>
+                        </View>
                         <FlatList data={savedBanks} renderItem={({item, index}) =>{
                             return (
                                     <Text style={styles(dark, colors).text} key={index}>{JSON.stringify(savedBanks)}</Text>
@@ -163,7 +164,7 @@ export default function AddBankScreen({ navigation }) {
     
     return (
         <View
-            style={[styles(dark, colors).container, {margin: 4, marginBottom: 54}]}
+            style={[{flex:1, margin: 4, marginBottom: 54}]}
         >
                 <TextInput
                     style={stylesInternal.bankingInput}

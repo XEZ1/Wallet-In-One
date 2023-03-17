@@ -7,6 +7,7 @@ import AddBankScreen from "../banking/AddBankScreen";
 import BankAccountsScreen from "../banking/BankAccountsScreen";
 import BankTransactionsScreen from "../banking/BankTransactionsScreen";
 import MainAccountPage from "./MainAccountPage";
+import BankInsights from "../banking/BankInsights";
 
 //Crypto Wallet Screens
 import CryptoList from "../cryptocurrency/CryptoList";
@@ -60,10 +61,11 @@ export default function MainStackNavigator() {
         })}
       />
       <Stack.Screen name="Add Bank Account" component={AddBankScreen} />
-      <Stack.Screen
-        name="Bank Transactions"
-        component={BankTransactionsScreen}
-      />
+      <Stack.Screen name="Bank Transactions" component={BankTransactionsScreen}/>
+      <Stack.Screen name="All Bank Transactions" component={BankTransactionsScreen}/>
+
+      <Stack.Screen name="Bank Insights" component={BankInsights} />
+
       <Stack.Screen 
         name="Crypto Wallets & Exchanges"
         component={CryptoList}

@@ -14,6 +14,7 @@ export default function StockDetails({ route, navigation }){
   const [stockTransactions, setStockTransactions] = useState();
   const stock = route.params.stock;
   const {dark, colors, setScheme } = useTheme();
+  
 
   const {width: SIZE} = Dimensions.get('window');
 
@@ -95,38 +96,29 @@ export default function StockDetails({ route, navigation }){
 
         {stock ? (
           <View>
-            <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Name</Text>
+            <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Name</Text>
             <Text style={styles(dark, colors).text}>{stock.name}{"\n"}</Text>
 
-            <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Institution Price Currency</Text>
+            <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Institution Price Currency</Text>
             <Text style={styles(dark, colors).text}>{stock.institution_price_currency}{"\n"}</Text>
 
-            <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Institution Price</Text>
+            <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Institution Price</Text>
             <Text style={styles(dark, colors).text}>{stock.institution_price}{"\n"}</Text>
 
             {stock.ticker_symbol != null && (
               <View>
-                <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Ticker Symbol</Text>
+                <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Ticker Symbol</Text>
                 <Text style={styles(dark, colors).text}>{stock.ticker_symbol}{"\n"}</Text>
               </View>
             )}
 
-            <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Quantity</Text>
+            <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Quantity</Text>
             <Text style={styles(dark, colors).text}>{stock.quantity}{"\n"}</Text>
 
           </View>
         ):(<Text style={styles(dark, colors).text}>Loading...</Text>)}
 
-          {/* {data.tableHead && 
-            <LineChartScreen 
-              transactions={}
-              // current_balance={graphData[0].value}
-              graph_version={1}
-              height={SIZE / 2} 
-              width={SIZE * 0.85}
-              // data={graphData}
-          />} */}
-          <Text style={[styles(dark, colors).textBold, {color: colors.primary, fontSize: 21}]}>Line Graph</Text>
+          <Text style={[styles(dark, colors).textBold, {color: colors.text, fontSize: 21}]}>Line Graph</Text>
           {stockTransactions && (
             <LineChartScreen
             transactions={stockTransactions} 
@@ -139,7 +131,7 @@ export default function StockDetails({ route, navigation }){
           )}
 
 
-        <Text style={[styles(dark, colors).textBold, {color: colors.primary, fontSize: 21}]}>Stock Transactions</Text>
+        <Text style={[styles(dark, colors).textBold, {color: colors.text, fontSize: 21}]}>Stock Transactions</Text>
         {data && (
           <View style={stylesInternal.table}>
               {data && data.tableData && data.tableData.length > 0 ? (

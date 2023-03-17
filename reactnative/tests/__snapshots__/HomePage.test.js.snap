@@ -3,7 +3,7 @@
 exports[`<HomePage /> snapshot test 1`] = `
 <RCTScrollView
   contentContainerStyle={
-    Object {
+    {
       "alignItems": "center",
       "backgroundColor": "white",
       "flexGrow": 1,
@@ -15,11 +15,11 @@ exports[`<HomePage /> snapshot test 1`] = `
   <View>
     <Text
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "black",
           },
-          Object {
+          {
             "textAlign": "center",
           },
         ]

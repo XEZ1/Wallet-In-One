@@ -16,6 +16,7 @@ import { useContext, useState } from "react";
 import { userContext } from "../../data";
 
 import { api_url, login } from "../../authentication";
+import * as SecureStore from "expo-secure-store";
 
 export default function SignUpScreen({ navigation }) {
 
@@ -32,14 +33,15 @@ export default function SignUpScreen({ navigation }) {
 
   const [errors, setErrors] = useState({});
 
-  const sendNotification = async () => {
-    await Notifications.requestPermissionsAsync();
-    await Notifications.presentNotificationAsync({
-      title: "Sign Up Successful",
-      body: "You have successfully created an account.",
-      ios: { _displayInForeground: true },
-    });
-  };
+  Notifications.setNotificationHandler({
+    handleNotification: async () => {
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      };
+    },
+  });
 
   //192.168.1.81,10.0.2.2
   const signUpHandler = () => {
@@ -61,15 +63,39 @@ export default function SignUpScreen({ navigation }) {
       .then((res) =>
         res.json().then((data) => ({ status: res.status, body: data }))
       )
-      .then((data) => {
+      .then(async (data) => {
         // console.log('Response:', data);
         if (data["status"] == 400) {
           setErrors(data["body"]);
           Alert.alert("Error", "There were some errors");
         } else if (data["status"] == 201) {
           Alert.alert("Success", "Account created successfully");
-          sendNotification();
-          login(username, password, user, setUser);
+          const notificationEnabled = await SecureStore.getItemAsync(
+            "notificationSettings"
+          );
+          if (notificationEnabled == "true") {
+            await Notifications.requestPermissionsAsync();
+            await Notifications.scheduleNotificationAsync({
+              content: {
+                title: "You have successfully signed up!",
+                body: "Manage the notifications from the settings",
+              },
+              trigger: null,
+            });
+          }
+          else if (notificationEnabled == "false") {
+            //set it to true
+            await SecureStore.setItemAsync("notificationSettings", "true");
+            await Notifications.requestPermissionsAsync();
+            await Notifications.scheduleNotificationAsync({
+              content: {
+                title: "You have successfully signed up!",
+                body: "Manage the notifications from the settings",
+              },
+              trigger: null,
+            });
+          }
+          await login(username, password, user, setUser);
         }
       })
       .catch((error) => {
@@ -107,7 +133,7 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Username:</Text>
       <TextInput
-        style={[inputStyle("username"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("username"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setUsername}
         testID="username"
       />
@@ -115,7 +141,7 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Email:</Text>
       <TextInput
-        style={[inputStyle("email"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("email"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setEmail}
         testID="email"
       />
@@ -123,7 +149,7 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>First Name:</Text>
       <TextInput
-        style={[inputStyle("first_name"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("first_name"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setFirstName}
         testID="first_name"
       />
@@ -131,7 +157,7 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Last Name:</Text>
       <TextInput
-        style={[inputStyle("last_name"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("last_name"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setLastName}
         testID="last_name"
       />
@@ -139,7 +165,7 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Password:</Text>
       <TextInput
-        style={[inputStyle("new_password"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("new_password"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setPassword}
         secureTextEntry={true}
         testID="new_password"
@@ -148,7 +174,7 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Password Confirmation:</Text>
       <TextInput
-        style={[inputStyle("password_confirmation"), styles(dark, colors).input, {color: colors.text}]}
+        style={[inputStyle("password_confirmation"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setPasswordConfirmation}
         secureTextEntry={true}
         testID="password_confirmation"

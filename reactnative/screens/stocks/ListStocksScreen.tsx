@@ -7,7 +7,8 @@ import {
   Alert,
   StyleSheet,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
@@ -17,34 +18,40 @@ import { Button, Image } from 'react-native';
 import { auth_get } from '../../authentication';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
+import Loading from '../banking/Loading';
 
 
 import LineChartScreen from '../charts/LineChart';
 
-const SuccessComponent = (props) => {
+const SuccessComponent = ({ route, ...props }) => {
+  const { scrollToLastItem } = route.params || {}; // default to empty object if params is undefined
     const [list, setList] = useState()
     const isFocused = useIsFocused()
     const [transactions, setTransactions] = useState({});
     const {dark, colors, setScheme } = useTheme();
+    const [loading, setLoading] = useState(true)
+
+    const {width: SIZE} = Dimensions.get('window');
 
     const stylesInternal = StyleSheet.create({
       item:{
         padding: 20,
         borderRadius: 10,
-        backgroundColor: colors.primary,
+        backgroundColor: colors.stock_account,
+        text: colors.text,
       },
       row:{
         flexDirection: 'row',
         alignItems: 'flex-start',
       },
       name:{
-        color: "black",
+        color: colors.text,
         fontWeight: 'bold',
         fontSize: 16,
         fontFamily: 'sans-serif',
       },
       ins_name:{
-        color: "black",
+        color: colors.text,
         fontSize: 15,
         fontFamily: 'sans-serif',
       },
@@ -57,9 +64,31 @@ const SuccessComponent = (props) => {
       useEffect(() => {
         const listAccounts = async () => {
           const response = await auth_get('/stocks/list_accounts/')
-          setList(response.body)
+          const accountList = response.body;
+          setList(accountList);
+
+          // if (scrollToLastItem && list.length > 0) {
+          //   const last = list[list.length - 1];
+          //   // const transactions = await getTransactions(last.account_id);
+          //   // console.log(transactions[last.account_id])
+
+            
+          //   props.navigation.navigate('StockAsset', {
+          //     accountID: last.account_id, 
+          //     accessToken: last.access_token, 
+          //     transactions: transactions[last.account_id],
+          //     logo: last.institution_logo,
+          //     balance: last.balance,
+          //     name: last.institution_name,
+          //     account_name: last.name,
+          //     balance_currency: last.balance_currency
+          //   });
+          // }
         }
-        if(isFocused){listAccounts()}
+        
+        if (isFocused) {
+          listAccounts();
+        }        
       }, [isFocused])
 
       const getTransactions = useCallback(async (accountID) => {
@@ -80,26 +109,38 @@ const SuccessComponent = (props) => {
           list.forEach((account) => {
             getTransactions(account.account_id);
           });
+          setLoading(false)
         }
       }, [isFocused, list, getTransactions]);
 
+
       const ItemSeparator = () => <View style={stylesInternal.separator} />;
+    if(loading){
+      return(<Loading/>)
+    }
+    else{
     return (
-        <View style={ styles(dark, colors).container }>
+        <View style={{ ...styles(dark, colors),paddingTop:8, paddingBottom: 8 }}>
           <View>
-            <FlatList data={list} ItemSeparatorComponent={() => <View style={{height: 8}} />} renderItem={({item, index}) =>{
+            <FlatList 
+              data={list} 
+              ItemSeparatorComponent={() => <View style={{height: 8}} />} 
+              style={{paddingHorizontal:8}}
+              renderItem={({item, index}) =>{
               return (
-                
-                <TouchableOpacity style={stylesInternal.item} onPress={()=> props.navigation.navigate('StockAsset', {
-                    accountID: item.account_id, 
-                    accessToken: item.access_token, 
-                    transactions: transactions[item.account_id],
-                    logo: item.institution_logo,
-                    balance: item.balance,
-                    name: item.institution_name,
-                    account_name: item.name,
-                    balance_currency: item.balance_currency
-                  }) }>
+                <TouchableOpacity style={{ ...stylesInternal.item }}
+                  onPress={()=> {
+                      props.navigation.navigate('StockAsset', {
+                      accountID: item.account_id, 
+                      accessToken: item.access_token, 
+                      transactions: transactions[item.account_id],
+                      logo: item.institution_logo,
+                      balance: item.balance,
+                      name: item.institution_name,
+                      account_name: item.name,
+                      balance_currency: item.balance_currency
+                    
+                  })} }>
 
                   <View style={stylesInternal.row}>
                     {item.institution_logo !== null && 
@@ -134,7 +175,7 @@ const SuccessComponent = (props) => {
                       current_balance={item.balance}
                       graph_version={2}
                       height={75}
-                      width={350}
+                      width={SIZE*0.85}
                   />}
 
                 </TouchableOpacity>
@@ -145,6 +186,7 @@ const SuccessComponent = (props) => {
           </View>
         </View>
       );
+    }
     };
 
 export default SuccessComponent;

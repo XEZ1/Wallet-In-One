@@ -34,7 +34,7 @@ def new_refresh_token():
     Token.objects.all().delete()
 
     r = generate_tokens()
-    if r.get('status_code') == 401 and r.get('summary')== "Authentication failed":
+    if (r.get('status_code') in [400,401] and r.get('summary')== "Authentication failed") or r.get('secret_id') == ['This field may not be blank.']:
         return None
     else:
         token = Token(refresh_token = r['refresh'], access_token = r['access'])
@@ -115,7 +115,8 @@ def delete_requisition(id):
 def delete_all_requisitions():
     r = get_requisitions()
     for i in r['results']:
-        delete_requisition(i['id'])
+        if i['status'] == 'UA' or i['status'] == 'GC':
+            delete_requisition(i['id'])
 
 # Account
 def get_account_data(id):

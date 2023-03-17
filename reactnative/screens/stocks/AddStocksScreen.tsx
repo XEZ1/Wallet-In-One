@@ -8,7 +8,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { auth_post } from '../../authentication';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
-
+import ConditionalModal from '../Modal';
 
 import {Alert, Modal, StyleSheet, Pressable, View, Animated} from 'react-native';
 
@@ -62,9 +62,10 @@ const PlaidComponent = ({ navigation }) => {
     },
   });
 
+  const account_data = null;
 
   const addAccount = async (account, success) => {
-    const body = {
+    const account_data = {
       account_id: account._id,
       name: account.meta.name,
       institution_name: success.metadata.institution.name,
@@ -73,7 +74,9 @@ const PlaidComponent = ({ navigation }) => {
       balance: balance,
       institution_logo: image,
     }
-    const response = await auth_post('/stocks/add_stock_account/', body)
+    const response = await auth_post('/stocks/add_stock_account/', account_data)
+    console.log(response)
+    console.log(response.body)
     data_response = response.status
   };
     
@@ -121,7 +124,10 @@ const PlaidComponent = ({ navigation }) => {
       stockAccount: stock.account_id,
       security_id: stockInfo.security_id
     }
-    await auth_post('/stocks/add_stock/', body)
+    const res = await auth_post('/stocks/add_stock/', body)
+    if(res.status == 201){
+      setModalVisible(true);
+    }
   }
 
   const getTransaction = async (accessToken) => {
@@ -221,12 +227,55 @@ const PlaidComponent = ({ navigation }) => {
           }else{
             setModalText("Stock account has already been added!")
           }
-          setModalVisible(true)
+          // setModalVisible(true)
         });
       }}
     />
   <View>
-    <Modal
+
+  
+  <ConditionalModal
+    headerText={modalText}
+    bodyText={
+      <View style={stylesInternal.modalView}>
+        {modalText == "Stock account has been successfully added." && 
+          <Image
+            style={{ width: 100, height: 100 }}
+            source={{ uri: `https://cdn-icons-png.flaticon.com/512/4436/4436481.png` }}
+          />
+        }
+        {modalText == "Stock account has already been added!" && 
+          <View>
+            <Image
+              style={{ width: 100, height: 100 }}
+              source={{ uri: 'http://www.setra.com/hubfs/Sajni/crc_error.jpg' }}
+            />
+          </View>
+        }
+      </View>
+    }
+
+    // account_id: account._id,
+    //   name: account.meta.name,
+    //   institution_name: success.metadata.institution.name,
+    //   institution_id: success.metadata.institution.id,
+    //   access_token: access_token,
+    //   balance: balance,
+    //   institution_logo: image,
+
+
+    visible={modalVisible}
+    onEvent={() => {
+      navigation.navigate("Stock Account List", {scrollToLastItem: true})
+      // navigation.navigate('StockAsset', {scrollToLastItem: true}) 
+    }
+    }
+    onClose={() => navigation.navigate("Stocks")}
+    cancelButtonName={"Exit"}
+    continueButtonName={"View"}
+  />
+
+    {/* <Modal
       animationType="none"
       transparent={true}
       visible={modalVisible}
@@ -265,7 +314,7 @@ const PlaidComponent = ({ navigation }) => {
         </Pressable>
       </View>
     </Animated.View>
-    </Modal>
+    </Modal> */}
   </View>
     </>
   );
