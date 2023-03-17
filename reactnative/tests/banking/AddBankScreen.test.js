@@ -20,7 +20,6 @@ describe('<AddBankScreen />', () => {
         await act( async () => {
             
             await waitFor( () => {
-                // I'd look for a real text here that is renderer when the data loads
                 const activityIndicator = screen.UNSAFE_queryByType('ActivityIndicator');
                 expect(activityIndicator).toBeNull();
             })
