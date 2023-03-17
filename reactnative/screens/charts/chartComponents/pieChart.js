@@ -24,9 +24,9 @@ export default function PieChart({colours, data, handlePressIn, labelCount, asse
   const isFocused = useIsFocused()
 
   let value = 0;
-  data.forEach((jsonObj) => {
-    value += jsonObj.y;
-  });
+  for (let i = 0; i < data.length; i++) {
+    value += data[i].y;
+  }
   value = value.toFixed(2);
 
   let assetLabel = 165;

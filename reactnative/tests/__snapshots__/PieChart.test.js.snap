@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<PieChart /> test 2 label pie chart 1`] = `
+<RCTScrollView
+  contentContainerStyle={
+    {
+      "alignItems": "center",
+      "backgroundColor": "white",
+      "flexGrow": 1,
+      "justifyContent": "center",
+    }
+  }
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <View />
+</RCTScrollView>
+`;
+
+exports[`<PieChart /> test 4 label pie chart 1`] = `
+<RCTScrollView
+  contentContainerStyle={
+    {
+      "alignItems": "center",
+      "backgroundColor": "white",
+      "flexGrow": 1,
+      "justifyContent": "center",
+    }
+  }
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <View />
+</RCTScrollView>
+`;
