@@ -1,10 +1,7 @@
 from django.test import TestCase
 from unittest.mock import patch, MagicMock, ANY, call
-import unittest
-
-from requests.cookies import MockResponse
-
 from crypto_exchanges.services import *
+from accounts.models import *
 
 
 class TestGenericExchangeFetcher(TestCase):
@@ -34,7 +31,8 @@ class TestGenericExchangeFetcher(TestCase):
         timestamp = str(int(time.time()))
         hashed = self.fetcher.hash(timestamp=timestamp)
         self.assertIsInstance(hashed, str)
-        self.assertEquals(hashed, hmac.new(self.secret_key.encode('utf-8'), timestamp.encode('utf-8'), sha256).hexdigest())
+        self.assertEquals(hashed,
+                          hmac.new(self.secret_key.encode('utf-8'), timestamp.encode('utf-8'), sha256).hexdigest())
 
     def test_signature(self):
         # Test that the method raises an error
@@ -65,6 +63,12 @@ class TestBinanceFetcher(TestCase):
         self.assertEquals(self.fetcher.api_key, self.api_key)
         self.assertEquals(self.fetcher.secret_key, self.secret_key)
         self.assertEqual(self.fetcher.symbols, ['BTCUSDT', 'ETHUSDT', 'ADAUSDT', 'XRPUSDT', 'SOLUSDT'])
+
+    def test_signature(self):
+        params = {}
+        query_string = '&'.join([f"{k}={v}" for k, v in params.items()])
+        expexted_value = hmac.new(self.secret_key.encode('utf-8'), query_string.encode('utf-8'), sha256).hexdigest()
+        self.assertEquals(self.fetcher.signature({}), expexted_value)
 
     @patch('requests.get')
     def test_get_account_data(self, mock_get):
@@ -105,7 +109,6 @@ class TestBinanceFetcher(TestCase):
 
             def json(self):
                 return self.json_data
-
 
         expected_headers = {'X-MBX-APIKEY': self.fetcher.api_key}
         expected_timestamp = self.fetcher.get_current_time()
@@ -157,7 +160,7 @@ class TestBinanceFetcher(TestCase):
                  params={**expected_params_xrpusdt, **{'signature': expected_signature_xrpusdt}}),
             call('https://api.binance.com/api/v3/myTrades', headers=expected_headers,
                  params={**expected_params_solusdt, **{'signature': expected_signature_solusdt}}),
-                 ])
+        ])
 
 
 class TestGateioFetcher(TestCase):
@@ -178,6 +181,25 @@ class TestGateioFetcher(TestCase):
         self.assertEquals(self.fetcher.host, 'https://api.gateio.ws')
         self.assertEquals(self.fetcher.prefix, '/api/v4')
         self.assertEquals(self.fetcher.headers, {'Accept': 'application/json', 'Content-Type': 'application/json'})
+
+    def test_signature(self):
+        self.tearDown()
+
+        method = 'GET'
+        url = 'v1'
+        query_string = None
+        payload_string = None
+        timestamp = str(time.time())
+        message = sha512()
+        message.update((payload_string or "").encode('utf-8'))
+        hashed_payload = message.hexdigest()
+        path = '%s\n%s\n%s\n%s\n%s' % (method, url, query_string or "", hashed_payload, timestamp)
+        signature = hmac.new(self.secret_key.encode('utf-8'), path.encode('utf-8'), sha512).hexdigest()
+
+        expected_result = {'KEY': self.api_key, 'Timestamp': timestamp, 'SIGN': signature}
+        actual_result = self.fetcher.signature(method, url, None, None, timestamp=timestamp)
+
+        self.assertEquals(actual_result, expected_result)
 
     @patch('requests.get')
     def test_get_account_data(self, mock_get):
@@ -270,6 +292,20 @@ class TestCoinListFetcher(TestCase):
         self.assertEquals(self.fetcher.api_key, self.api_key)
         self.assertEquals(self.fetcher.secret_key, self.secret_key)
 
+    def test_signature(self):
+        timestamp = str(int(time.time()))
+        path = '/v1/accounts/'
+        method = 'GET'
+        body = None
+
+        data = self.fetcher.prehash(timestamp, method, path, body)
+        key = b64decode(self.secret_key)
+
+        hmc = hmac.new(key, data.encode('utf-8'), digestmod=sha256)
+        expected_result = b64encode(hmc.digest()).decode('utf-8')
+
+        self.assertEquals(self.fetcher.signature(data, key), expected_result)
+
     @patch('requests.get')
     def test_get_account_data(self, mock_get):
         # Mock the response
@@ -293,7 +329,7 @@ class TestCoinListFetcher(TestCase):
         )
 
         # Check the result
-        self.assertEqual(result,  {'accounts': [{'trader_id': '1234'}, {'trader_id': '5678'}]})
+        self.assertEqual(result, {'accounts': [{'trader_id': '1234'}, {'trader_id': '5678'}]})
 
     def test_get_trading_history_types(self):
         # Call the get_trading_history method
@@ -379,3 +415,324 @@ class TestCoinListFetcher(TestCase):
             call(url='https://trade-api.coinlist.co/v1/accounts/123/ledger', headers=ANY),
             call(url='https://trade-api.coinlist.co/v1/accounts/456/ledger', headers=ANY)
         ])
+
+
+class TestCoinBaseFetcher(TestCase):
+    def setUp(self):
+        self.api_key = "Lt4fELfkTX1Oif0y"
+        self.secret_key = "Jt2nHesybO3Wx8pgWUXlxr3hHZiqgDKu"
+        self.fetcher = CoinBaseFetcher(api_key=self.api_key, secret_key=self.secret_key)
+
+    def tearDown(self):
+        patch.stopall()
+
+    def test_init(self):
+        self.assertEquals(self.fetcher.api_key, self.api_key)
+        self.assertEquals(self.fetcher.secret_key, self.secret_key.encode('utf-8'))
+
+    def test_call_method(self):
+        # Create a mock request object
+        request = MagicMock()
+        request.method = 'GET'
+        request.path_url = '/v1/accounts/'
+        request.body = None
+        request.headers = {}
+
+        # Create an instance of the class being tested
+        instance = CoinBaseFetcher(self.api_key, self.secret_key)
+
+        # Call the __call__ method
+        response = instance(request)
+
+        # Assert that the headers were updated correctly
+        expected_signature = instance.signature(str(int(time.time())) + request.method + request.path_url)
+        self.assertEqual(request.headers['CB-ACCESS-SIGN'], expected_signature)
+        self.assertEqual(request.headers['CB-ACCESS-TIMESTAMP'], str(int(time.time())))
+        self.assertEqual(request.headers['CB-ACCESS-KEY'], self.api_key)
+
+    def test_signature(self):
+        message = str(int(time.time())) + 'GET' + 'v1/accounts' + ''
+        expected_result = hmac.new(self.secret_key.encode('utf-8'), message.encode(), sha256).hexdigest()
+
+        self.assertEquals(self.fetcher.signature(message), expected_result)
+
+    @patch('requests.get')
+    def test_get_account_data(self, mock_get):
+        # Set up mock response from Coinbase API
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            'data': [
+                {
+                    'balance': '100.0',
+                    'currency': 'BTC',
+                },
+                {
+                    'balance': '200.0',
+                    'currency': 'ETH',
+                },
+            ]
+        }
+        mock_get.return_value = mock_response
+
+        # Call the method being tested
+        account_data = self.fetcher.get_account_data()
+
+        # Verify that requests.get() was called with the correct parameters
+        mock_get.assert_called_once_with(
+            'https://api.coinbase.com/v2/accounts',
+            auth=self.fetcher
+        )
+
+        # Verify that the expected data was returned
+        self.assertEqual(account_data, ['100.0', '200.0'])
+
+    @patch('requests.get')
+    def test_get_trading_history(self, mock_get):
+        # Set up mock response from Coinbase API
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            'data': [
+                {
+                    'id': '123',
+                    'product_id': 'BTC-USD',
+                    'size': '1.0',
+                    'price': '50000.0',
+                    'side': 'buy',
+                },
+                {
+                    'id': '456',
+                    'product_id': 'ETH-USD',
+                    'size': '2.0',
+                    'price': '2000.0',
+                    'side': 'sell',
+                },
+            ]
+        }
+        mock_get.return_value = mock_response
+
+        # Call the method being tested
+        trading_history = self.fetcher.get_trading_history()
+
+        # Verify that requests.get() was called with the correct parameters
+        mock_get.assert_called_once_with(
+            'https://api.coinbase.com/api/v3/brokerage/orders/historical/fills',
+            auth=self.fetcher,
+        )
+
+        # Verify that the expected data was returned
+        self.assertEqual(trading_history['data'][0]['id'], '123')
+        self.assertEqual(trading_history['data'][0]['product_id'], 'BTC-USD')
+        self.assertEqual(trading_history['data'][0]['size'], '1.0')
+        self.assertEqual(trading_history['data'][0]['price'], '50000.0')
+        self.assertEqual(trading_history['data'][0]['side'], 'buy')
+
+        self.assertEqual(trading_history['data'][1]['id'], '456')
+        self.assertEqual(trading_history['data'][1]['product_id'], 'ETH-USD')
+        self.assertEqual(trading_history['data'][1]['size'], '2.0')
+        self.assertEqual(trading_history['data'][1]['price'], '2000.0')
+        self.assertEqual(trading_history['data'][1]['side'], 'sell')
+
+
+class TestKrakenFetcher(TestCase):
+    def setUp(self):
+        self.api_key = "n0A6PzkvLERMZIigVv3dCSRLP53+MI+Fbj38hpfgI9zpt0v1WH6P7vww"
+        self.secret_key = "STpUie82GH24tsvnYYTB+cWN9MTTlhTO0GR3uSfCKwQVpmfcp9A67YN9Asx0m3sOBMRq6HXtW/ktM042CVItyQ=="
+        self.fetcher = KrakenFetcher(api_key=self.api_key, secret_key=self.secret_key)
+
+    def tearDown(self):
+        patch.stopall()
+
+    def test_init(self):
+        self.assertEquals(self.fetcher.api_key, self.api_key)
+        self.assertEquals(self.fetcher.secret_key, self.secret_key)
+
+    def test_signature(self):
+        urlpath = '/0/private/Balance'
+        data = {"nonce": str(int(1000 * time.time()))}
+
+        post_data = urlencode(data)
+        encoded = (str(data['nonce']) + post_data).encode()
+        message = urlpath.encode() + sha256(encoded).digest()
+        mac = hmac.new(b64decode(self.secret_key), message, sha512)
+        sig_digest = b64encode(mac.digest())
+        expected_result = sig_digest.decode()
+
+        self.assertEquals(self.fetcher.signature(urlpath, data, self.secret_key), expected_result)
+
+    @patch('requests.post')
+    def test_get_account_data(self, mock_post):
+        url = 'https://api.kraken.com'
+        path = '/0/private/Balance'
+        timestamp = {"nonce": str(int(1000 * time.time()))}
+
+        # Mock the requests library to return a response with a known JSON payload
+        mock_response = MagicMock()
+        mock_response.json.return_value = {'result': {'XXBT': '10.12345678', 'ZUSD': '1000.00'}}
+        mock_post.return_value = mock_response
+
+        # Call the method being tested
+        account_data = self.fetcher.get_account_data()
+
+        # Check that the mocked request was made with the expected arguments
+        mock_post.assert_called_once_with(
+            'https://api.kraken.com/0/private/Balance',
+            headers={'API-Key': self.api_key, 'API-Sign': ANY,
+                     'Content-Type': 'application/x-www-form-urlencoded'},
+            data={'nonce': ANY}
+        )
+
+        # Check that the method returns the expected account data
+        expected_data = {'result': {'XXBT': '10.12345678', 'ZUSD': '1000.00'}}
+        self.assertEqual(account_data, expected_data)
+
+    @patch('requests.post')
+    def test_get_trading_history(self, mock_post):
+        # Mock the requests library to return a response with a known JSON payload
+        mock_response = MagicMock()
+        mock_response.json.return_value = {
+            'result': {'trades': [{'id': '123', 'price': '100.00'}, {'id': '456', 'price': '99.50'}]}}
+        mock_post.return_value = mock_response
+
+        # Call the method being tested
+        trading_history = self.fetcher.get_trading_history()
+
+        # Check that the mocked request was made with the expected arguments
+        mock_post.assert_called_once_with(
+            'https://api.kraken.com/0/private/TradesHistory',
+            headers=ANY,
+            data={'nonce': ANY}
+        )
+
+        # Check that the method returns the expected trading history data
+        expected_data = {'result': {'trades': [{'id': '123', 'price': '100.00'}, {'id': '456', 'price': '99.50'}]}}
+        self.assertEqual(trading_history, expected_data)
+
+
+class TestCurrentMarketPriceFetcher(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('testuser', 'test@example.com', 'password')
+
+    def setUp(self):
+        self.fetcher = CurrentMarketPriceFetcher(self.user)
+        self.market_fetcher = CurrentMarketPriceFetcher(self.user)
+
+        # Create a crypto exchange account for the user
+        self.exchange = CryptoExchangeAccount.objects.create(
+            user=self.user,
+            crypto_exchange_name='Test Exchange',
+            api_key='api_key',
+            secret_key='secret_key'
+        )
+
+        # Create some tokens for the exchange
+        self.token1 = Token.objects.create(
+            user=self.user,
+            crypto_exchange_object=self.exchange,
+            asset='BTC',
+            free_amount=1.0,
+            locked_amount=0.0
+        )
+        self.token2 = Token.objects.create(
+            user=self.user,
+            crypto_exchange_object=self.exchange,
+            asset='ETH',
+            free_amount=2.0,
+            locked_amount=0.5
+        )
+
+    @patch('requests.get')
+    def test_get_crypto_price(self, mock_get):
+        # Test case for when response contains GBP key
+        mock_get.return_value.json.return_value = {'GBP': 123.45}
+        price = self.fetcher.get_crypto_price('BTC')
+        self.assertEqual(price, float('123.45'))
+
+        # Test case for when response does not contain GBP key
+        mock_get.return_value.json.return_value = {}
+        price = self.fetcher.get_crypto_price('BTC')
+        self.assertEqual(price, float('0.0'))
+
+    @patch('crypto_exchanges.services.CurrentMarketPriceFetcher.get_crypto_price')
+    def test_total_user_balance_crypto(self, mock_get_crypto_price):
+        # Mock the get_crypto_price method to return fixed prices
+        mock_get_crypto_price.side_effect = lambda asset: 10000.0 if asset == 'BTC' else 200.0
+
+        # Calculate the expected total balance
+        expected_balance = (10000.0 * (1.0 + 0.0)) + (200.0 * (2.0 + 0.5))
+
+        # Call the method being tested
+        actual_balance = self.market_fetcher.total_user_balance_crypto()
+
+        # Assert that the result matches the expected balance
+        self.assertAlmostEqual(actual_balance, expected_balance, places=2)
+
+    @patch('crypto_exchanges.services.CurrentMarketPriceFetcher.get_crypto_price')
+    def test_chart_breakdown_crypto_free(self, mock_get_crypto_price):
+        # Mock the get_crypto_price method to return fixed prices
+        mock_get_crypto_price.side_effect = lambda asset: 10000.0 if asset == 'BTC' else 200.0
+
+        # Call the method being tested
+        breakdown = self.market_fetcher.chart_breakdown_crypto_free()
+
+        # Assert that the breakdown has the expected format and values
+        expected_breakdown = [{'x': 'BTC', 'y': 10000.0}, {'x': 'ETH', 'y': 400.0}]
+        self.assertEqual(breakdown, expected_breakdown)
+
+    @patch('crypto_exchanges.services.CurrentMarketPriceFetcher.get_crypto_price')
+    def test_chart_breakdown_crypto_locked(self, mock_get_crypto_price):
+        # Mock the get_crypto_price method to return fixed prices
+        mock_get_crypto_price.side_effect = lambda asset: 10000.0 if asset == 'BTC' else 200.0
+
+        # Call the method being tested
+        breakdown = self.market_fetcher.chart_breakdown_crypto_locked()
+
+        # Assert that the breakdown has the expected format and values
+        expected_breakdown = [{'x': 'BTC', 'y': 0.0}, {'x': 'ETH', 'y': 100.0}]
+        self.assertEqual(breakdown, expected_breakdown)
+
+    @patch('crypto_exchanges.services.CurrentMarketPriceFetcher.get_crypto_price')
+    def test_get_exchange_balance(self, mock_get_crypto_price):
+        # Mock the get_crypto_price method to return fixed prices
+        mock_get_crypto_price.side_effect = lambda asset: 10000.0 if asset == 'BTC' else 200.0
+
+        # Call the method being tested
+        actual_balance = self.market_fetcher.get_exchange_balance(self.exchange)
+
+        # Assert that the result matches the expected balance
+        expected_balance = (10000.0 * (1.0 + 0.0)) + (200.0 * (2.0 + 0.5))
+        self.assertAlmostEqual(actual_balance, expected_balance, places=2)
+
+    @patch('crypto_exchanges.services.CurrentMarketPriceFetcher.get_crypto_price')
+    def test_get_exchange_token_breakdown(self, mock_get_crypto_price):
+        # Mock the get_crypto_price method to return fixed prices
+        mock_get_crypto_price.side_effect = lambda asset: 10000.0 if asset == 'BTC' else 200.0
+
+        # Call the method being tested
+        breakdown = self.market_fetcher.get_exchange_token_breakdown(self.exchange)
+
+        # Assert that the breakdown has the expected format and values
+        expected_breakdown = {
+            "balance": 10500.0,
+            "token_data": [
+                {"x": "ETH: £500.0", "y": 500.0},
+                {"x": "BTC: £10000.0", "y": 10000.0}
+            ]
+        }
+        self.assertEqual(breakdown, expected_breakdown)
+
+    @patch('crypto_exchanges.services.CurrentMarketPriceFetcher.get_crypto_price')
+    def test_chart_breakdown_crypto_exchanges(self, mock_get_crypto_price):
+        # Mock the get_crypto_price method to return fixed prices
+        mock_get_crypto_price.side_effect = lambda asset: 10000.0 if asset == 'BTC' else 200.0
+
+        # Call the method being tested
+        breakdown = self.market_fetcher.chart_breakdown_crypto_exchanges()
+
+        # Assert that the breakdown has the expected format and values
+        expected_breakdown = [
+            {'x': 'Test Exchange', 'y': 10500.0, 'id': self.exchange.id},
+        ]
+        self.assertEqual(breakdown, expected_breakdown)

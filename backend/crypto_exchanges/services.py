@@ -81,8 +81,9 @@ class GateioFetcher(ExchangeFetcher):
         self.prefix = '/api/v4'
         self.headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
 
-    def signature(self, method, url, query_string=None, payload_string=None):
-        timestamp = str(time.time())
+    def signature(self, method, url, query_string=None, payload_string=None, timestamp=None):
+        if not timestamp:
+            timestamp = str(time.time())
         message = sha512()
         message.update((payload_string or "").encode('utf-8'))
         hashed_payload = message.hexdigest()
