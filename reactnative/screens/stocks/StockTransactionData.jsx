@@ -78,8 +78,8 @@ export default function TransactionData({ route, navigation }){
             <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Transaction ID</Text>
             <Text style={styles(dark, colors).text}>{data.investment_transaction_id}{"\n"}</Text>
 
-            <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Stock ID</Text>
-            <Text style={styles(dark, colors).text}>{data.stock}{"\n"}</Text>
+            {/* <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Stock ID</Text>
+            <Text style={styles(dark, colors).text}>{data.stock}{"\n"}</Text> */}
 
             <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Amount</Text>
             <Text style={styles(dark, colors).text}>£ {data.amount}{"\n"}</Text>

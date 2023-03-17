@@ -272,6 +272,7 @@ export default function HomePage({ navigation }) {
             {BarChart(colorScheme, list, data, colors, spacing, handlePressIn)}
             {pressed ? (
           <TouchableOpacity
+            style={{ justifyContent: 'center', alignItems: 'center' }}
             onPress={() => {
               setNewData(baseData.all);
               setPressed(false);
