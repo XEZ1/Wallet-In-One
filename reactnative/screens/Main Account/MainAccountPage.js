@@ -1,15 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import {StyleSheet, Text, View, TouchableOpacity, LogBox} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import { styles } from 'reactnative/screens/All_Styles.style.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 
 import React from 'react';
-
-LogBox.ignoreLogs([
-  'Non-serializable values were found in the navigation state',
-]);
 
 
 export default function MainAccountPage({ navigation }) {
