@@ -1,5 +1,8 @@
 from django.test import TestCase
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, ANY, call
+import unittest
+
+from requests.cookies import MockResponse
 
 from crypto_exchanges.services import *
 
@@ -55,6 +58,14 @@ class TestBinanceFetcher(TestCase):
         self.secret_key = "Gbjxj44liYPiC5NHHmJwqaCy8b8LAQTi9jlS9SG2H1YktXM5lCjQ3JVTt7Br1DfC"
         self.fetcher = BinanceFetcher(api_key=self.api_key, secret_key=self.secret_key)
 
+    def tearDown(self):
+        patch.stopall()
+
+    def test_init(self):
+        self.assertEquals(self.fetcher.api_key, self.api_key)
+        self.assertEquals(self.fetcher.secret_key, self.secret_key)
+        self.assertEqual(self.fetcher.symbols, ['BTCUSDT', 'ETHUSDT', 'ADAUSDT', 'XRPUSDT', 'SOLUSDT'])
+
     @patch('requests.get')
     def test_get_account_data(self, mock_get):
         # Test that the method sends a GET request with the correct parameters
@@ -68,47 +79,181 @@ class TestBinanceFetcher(TestCase):
         expected_url = f"https://api.binance.com/api/v3/account?timestamp={expected_timestamp}" \
                        f"&signature={expected_signature}"
 
-        self.fetcher.get_account_data()
+        self.fetcher.get_account_data(f"timestamp={expected_timestamp}")
 
         mock_get.assert_called_with(url=expected_url, headers=expected_headers)
 
+    def test_get_trading_history_types(self):
+        # Call the get_trading_history method
+        result = self.fetcher.get_trading_history()
+
+        # Assert that the result is a dictionary with keys matching the symbols in the symbols list
+        self.assertIsInstance(result, dict)
+        self.assertCountEqual(result.keys(), self.fetcher.symbols)
+
+        # Assert that the values in the dictionary are non-empty lists
+        for symbol, trades in result.items():
+            self.assertIsInstance(trades, list)
+            self.assertTrue(trades)
+
     @patch('requests.get')
     def test_get_trading_history(self, mock_get):
-        # Test that the method sends a GET request with the correct parameters for each symbol
-        mock_response = MagicMock()
-        mock_response.json.return_value = {'test': 'data'}
-        mock_get.return_value = mock_response
+        class MockResponse:
+            def __init__(self, status_code, json_data):
+                self.status_code = status_code
+                self.json_data = json_data
 
-        expected_url = "https://api.binance.com/api/v3/myTrades"
-        expected_headers = {'X-MBX-APIKEY': self.api_key}
+            def json(self):
+                return self.json_data
 
-        expected_params_btcusdt = {'symbol': 'BTCUSDT', 'timestamp': str(self.fetcher.get_current_time())}
+
+        expected_headers = {'X-MBX-APIKEY': self.fetcher.api_key}
+        expected_timestamp = self.fetcher.get_current_time()
+        expected_params_btcusdt = {'symbol': 'BTCUSDT', 'timestamp': expected_timestamp}
+        expected_params_ethusdt = {'symbol': 'ETHUSDT', 'timestamp': expected_timestamp}
+        expected_params_adausdt = {'symbol': 'ADAUSDT', 'timestamp': expected_timestamp}
+        expected_params_xrpusdt = {'symbol': 'XRPUSDT', 'timestamp': expected_timestamp}
+        expected_params_solusdt = {'symbol': 'SOLUSDT', 'timestamp': expected_timestamp}
         expected_signature_btcusdt = self.fetcher.signature(expected_params_btcusdt)
-        expected_params_btcusdt.update({'signature': expected_signature_btcusdt})
-
-        expected_params_ethusdt = {'symbol': 'ETHUSDT', 'timestamp': str(self.fetcher.get_current_time())}
         expected_signature_ethusdt = self.fetcher.signature(expected_params_ethusdt)
-        expected_params_ethusdt.update({'signature': expected_signature_ethusdt})
-
-        expected_params_adausdt = {'symbol': 'ADAUSDT', 'timestamp': str(self.fetcher.get_current_time())}
         expected_signature_adausdt = self.fetcher.signature(expected_params_adausdt)
-        expected_params_adausdt.update({'signature': expected_signature_adausdt})
-
-        expected_params_xrpusdt = {'symbol': 'XRPUSDT', 'timestamp': str(self.fetcher.get_current_time())}
         expected_signature_xrpusdt = self.fetcher.signature(expected_params_xrpusdt)
-        expected_params_xrpusdt.update({'signature': expected_signature_xrpusdt})
-
-        expected_params_solusdt = {'symbol': 'SOLUSDT', 'timestamp': str(self.fetcher.get_current_time())}
         expected_signature_solusdt = self.fetcher.signature(expected_params_solusdt)
-        expected_params_solusdt.update({'signature': expected_signature_solusdt})
 
-        expected_params = (expected_params_btcusdt,
-                           expected_params_ethusdt,
-                           expected_params_adausdt,
-                           expected_params_xrpusdt,
-                           expected_params_solusdt)
+        btcusdt_response = [{'symbol': 'BTCUSDT', 'price': '10000', 'qty': '0.5', 'commission': '0.0005'}]
+        ethusdt_response = [{'symbol': 'ETHUSDT', 'price': '3000', 'qty': '1', 'commission': '0.001'}]
+        adausdt_response = [{'symbol': 'ADAUSDT', 'price': '2', 'qty': '100', 'commission': '0.01'}]
+        xrpusdt_response = [{'symbol': 'XRPUSDT', 'price': '1', 'qty': '200', 'commission': '0.02'}]
+        solusdt_response = [{'symbol': 'SOLUSDT', 'price': '150', 'qty': '2', 'commission': '0.003'}]
 
-        self.fetcher.get_trading_history()
+        mock_get.side_effect = [
+            MockResponse(status_code=200, json_data=btcusdt_response),
+            MockResponse(status_code=200, json_data=ethusdt_response),
+            MockResponse(status_code=200, json_data=adausdt_response),
+            MockResponse(status_code=200, json_data=xrpusdt_response),
+            MockResponse(status_code=200, json_data=solusdt_response)
+        ]
 
-        mock_get.assert_called_with(expected_url, headers=expected_headers, params=any(dict))  # params=expected_params)
-    
+        actual_response = self.fetcher.get_trading_history(expected_timestamp)
+
+        expected_response = {
+            'BTCUSDT': btcusdt_response,
+            'ETHUSDT': ethusdt_response,
+            'ADAUSDT': adausdt_response,
+            'XRPUSDT': xrpusdt_response,
+            'SOLUSDT': solusdt_response
+        }
+
+        assert actual_response == expected_response
+
+        mock_get.assert_has_calls([
+            call('https://api.binance.com/api/v3/myTrades', headers=expected_headers,
+                 params={**expected_params_btcusdt, **{'signature': expected_signature_btcusdt}}),
+            call('https://api.binance.com/api/v3/myTrades', headers=expected_headers,
+                 params={**expected_params_ethusdt, **{'signature': expected_signature_ethusdt}}),
+            call('https://api.binance.com/api/v3/myTrades', headers=expected_headers,
+                 params={**expected_params_adausdt, **{'signature': expected_signature_adausdt}}),
+            call('https://api.binance.com/api/v3/myTrades', headers=expected_headers,
+                 params={**expected_params_xrpusdt, **{'signature': expected_signature_xrpusdt}}),
+            call('https://api.binance.com/api/v3/myTrades', headers=expected_headers,
+                 params={**expected_params_solusdt, **{'signature': expected_signature_solusdt}}),
+                 ])
+
+
+class TestGateioFetcher(TestCase):
+    def setUp(self):
+        self.api_key = "4772671c2cdbd350015a07a27a80f466"
+        self.secret_key = "8fa1cc672fc070ead7d1ed4428d1caf454b37248ada8d93e13ccf3f52e7e01fa"
+        self.fetcher = GateioFetcher(api_key=self.api_key, secret_key=self.secret_key)
+        self.mock_signature = patch('crypto_exchanges.services.GateioFetcher.signature').start()
+        self.mock_signature.return_value = {'KEY': self.api_key, 'Timestamp': '123', 'SIGN': 'abc'}
+
+    def tearDown(self):
+        patch.stopall()
+
+    def test_init(self):
+        self.assertEquals(self.fetcher.api_key, self.api_key)
+        self.assertEquals(self.fetcher.secret_key, self.secret_key)
+        self.assertEqual(self.fetcher.symbols, ['BTC_USDT', 'ETH_USDT', 'ADA_USDT', 'XRP_USDT', 'SOL_USDT', 'ARV_USDT'])
+        self.assertEquals(self.fetcher.host, 'https://api.gateio.ws')
+        self.assertEquals(self.fetcher.prefix, '/api/v4')
+        self.assertEquals(self.fetcher.headers, {'Accept': 'application/json', 'Content-Type': 'application/json'})
+
+    @patch('requests.get')
+    def test_get_account_data(self, mock_get):
+        mock_signature = self.mock_signature
+        expected_result = {'result': 'success'}
+        mock_signature.return_value = {'KEY': self.api_key, 'Timestamp': '123', 'SIGN': 'abc'}
+        mock_get.return_value = MagicMock(status_code=200, json=MagicMock(return_value=expected_result))
+
+        result = self.fetcher.get_account_data()
+
+        mock_signature.assert_called_once_with('GET', self.fetcher.prefix + '/spot/accounts', '')
+        mock_get.assert_called_once_with(self.fetcher.host + self.fetcher.prefix + '/spot/accounts',
+                                         headers={'Accept': 'application/json', 'Content-Type': 'application/json',
+                                                  'KEY': self.api_key, 'Timestamp': '123', 'SIGN': 'abc'})
+        self.assertEqual(result, expected_result)
+
+    def test_get_trading_history_types(self):
+        # Call the get_trading_history method
+        result = self.fetcher.get_trading_history()
+
+        # Assert that the result is a dictionary with keys matching the symbols in the symbols list
+        self.assertIsInstance(result, dict)
+        self.assertCountEqual(result.keys(), self.fetcher.symbols)
+
+        # Assert that the values in the dictionary are non-empty lists
+        for symbol, trades in result.items():
+            self.assertIsInstance(trades, list)
+            self.assertTrue(trades)
+
+    @patch('requests.get')
+    def test_get_trading_history(self, mock_get):
+        expected_result = {
+            'BTC_USDT': {'result': 'success'},
+            'ETH_USDT': {'result': 'success'},
+            'ADA_USDT': {'result': 'success'},
+            'XRP_USDT': {'result': 'success'},
+            'SOL_USDT': {'result': 'success'},
+            'ARV_USDT': {'result': 'success'},
+        }
+        mock_signature = self.mock_signature
+        mock_signature.return_value = {'KEY': self.api_key, 'Timestamp': '123', 'SIGN': 'abc'}
+        mock_get.return_value = MagicMock(status_code=200, json=MagicMock(return_value={'result': 'success'}))
+
+        result = self.fetcher.get_trading_history()
+
+        mock_signature.assert_any_call('GET', self.fetcher.prefix + '/spot/trades?currency_pair=BTC_USDT&limit=10')
+        mock_signature.assert_any_call('GET', self.fetcher.prefix + '/spot/trades?currency_pair=ETH_USDT&limit=10')
+        mock_signature.assert_any_call('GET', self.fetcher.prefix + '/spot/trades?currency_pair=ADA_USDT&limit=10')
+        mock_signature.assert_any_call('GET', self.fetcher.prefix + '/spot/trades?currency_pair=XRP_USDT&limit=10')
+        mock_signature.assert_any_call('GET', self.fetcher.prefix + '/spot/trades?currency_pair=SOL_USDT&limit=10')
+        mock_signature.assert_any_call('GET', self.fetcher.prefix + '/spot/trades?currency_pair=ARV_USDT&limit=10')
+        assert mock_signature.call_count == 6
+
+        mock_get.assert_any_call(
+            self.fetcher.host + self.fetcher.prefix + '/spot/trades?currency_pair=BTC_USDT&limit=10',
+            headers={'Accept': 'application/json', 'Content-Type': 'application/json', 'KEY': self.api_key,
+                     'Timestamp': '123', 'SIGN': 'abc'})
+        mock_get.assert_any_call(
+            self.fetcher.host + self.fetcher.prefix + '/spot/trades?currency_pair=ETH_USDT&limit=10',
+            headers={'Accept': 'application/json', 'Content-Type': 'application/json', 'KEY': self.api_key,
+                     'Timestamp': '123', 'SIGN': 'abc'})
+        mock_get.assert_any_call(
+            self.fetcher.host + self.fetcher.prefix + '/spot/trades?currency_pair=ADA_USDT&limit=10',
+            headers={'Accept': 'application/json', 'Content-Type': 'application/json', 'KEY': self.api_key,
+                     'Timestamp': '123', 'SIGN': 'abc'})
+        mock_get.assert_any_call(
+            self.fetcher.host + self.fetcher.prefix + '/spot/trades?currency_pair=XRP_USDT&limit=10',
+            headers={'Accept': 'application/json', 'Content-Type': 'application/json', 'KEY': self.api_key,
+                     'Timestamp': '123', 'SIGN': 'abc'})
+        mock_get.assert_any_call(
+            self.fetcher.host + self.fetcher.prefix + '/spot/trades?currency_pair=SOL_USDT&limit=10',
+            headers={'Accept': 'application/json', 'Content-Type': 'application/json', 'KEY': self.api_key,
+                     'Timestamp': '123', 'SIGN': 'abc'})
+        mock_get.assert_any_call(
+            self.fetcher.host + self.fetcher.prefix + '/spot/trades?currency_pair=ARV_USDT&limit=10',
+            headers={'Accept': 'application/json', 'Content-Type': 'application/json', 'KEY': self.api_key,
+                     'Timestamp': '123', 'SIGN': 'abc'})
+
+

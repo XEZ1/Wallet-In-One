@@ -48,18 +48,20 @@ class BinanceFetcher(ExchangeFetcher):
         query_string = '&'.join([f"{k}={v}" for k, v in params.items()])
         return hmac.new(self.secret_key.encode('utf-8'), query_string.encode('utf-8'), sha256).hexdigest()
 
-    def get_account_data(self):
+    def get_account_data(self, timestamp=None):
         endpoint = "https://api.binance.com/api"
-        timestamp = f"timestamp={self.get_current_time()}"
+        if not timestamp:
+            timestamp = f"timestamp={self.get_current_time()}"
         request_url = f"{endpoint}/v3/account?{timestamp}&signature={self.hash(timestamp)}"
         headers = {'X-MBX-APIKEY': self.api_key}
         response = requests.get(url=request_url, headers=headers)
         return response.json()
 
-    def get_trading_history(self):
+    def get_trading_history(self, timestamp=None):
         to_return = {}
         for symbol in self.symbols:
-            timestamp = str(self.get_current_time())
+            if not timestamp:
+                timestamp = str(self.get_current_time())
             params = {'symbol': symbol, 'timestamp': timestamp}
             signature = self.signature(params)
             request_url = "https://api.binance.com/api/v3/myTrades"
@@ -75,8 +77,8 @@ class GateioFetcher(ExchangeFetcher):
     def __init__(self, api_key, secret_key):
         super().__init__(api_key, secret_key)
         self.symbols = ['BTC_USDT', 'ETH_USDT', 'ADA_USDT', 'XRP_USDT', 'SOL_USDT', 'ARV_USDT']
-        self.host = "https://api.gateio.ws"
-        self.prefix = "/api/v4"
+        self.host = 'https://api.gateio.ws'
+        self.prefix = '/api/v4'
         self.headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
 
     def signature(self, method, url, query_string=None, payload_string=None):
@@ -97,7 +99,8 @@ class GateioFetcher(ExchangeFetcher):
         response = requests.get(endpoint, headers=headers)
         return response.json()
 
-    def get_trading_history(self, limit=10):
+    def get_trading_history(self):
+        limit = 10
         to_return = {}
         for currency_pair in self.symbols:
             url = f"/spot/trades?currency_pair={currency_pair}&limit={limit}"
