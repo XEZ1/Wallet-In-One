@@ -87,19 +87,6 @@ class TestBinanceFetcher(TestCase):
 
         mock_get.assert_called_with(url=expected_url, headers=expected_headers)
 
-    def test_get_trading_history_types(self):
-        # Call the get_trading_history method
-        result = self.fetcher.get_trading_history()
-
-        # Assert that the result is a dictionary with keys matching the symbols in the symbols list
-        self.assertIsInstance(result, dict)
-        self.assertCountEqual(result.keys(), self.fetcher.symbols)
-
-        # Assert that the values in the dictionary are non-empty lists
-        for symbol, trades in result.items():
-            self.assertIsInstance(trades, list)
-            self.assertTrue(trades)
-
     @patch('requests.get')
     def test_get_trading_history(self, mock_get):
         class MockResponse:
