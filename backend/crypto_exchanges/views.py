@@ -28,6 +28,15 @@ def unix_timestamp_to_datetime(unix_timestamp):
 
 # Create your views here.
 @api_view(['GET'])
+def get_insights(request):
+    all_transactions = get_all_transactions(request)
+    most_expensive_transaction = get_most_expensive_transaction(request)
+    insights = {'all_transactions': all_transactions, 'most_expensive_transaction': most_expensive_transaction}
+    print(insights)
+    return Response(insights)
+
+
+@api_view(['GET'])
 def get_transactions(request, exchange):
     exchange_obj = CryptoExchangeAccount.objects.get(id=exchange)
     transactions = Transaction.objects.filter(crypto_exchange_object=exchange_obj).order_by('timestamp')
@@ -48,7 +57,8 @@ def get_token_breakdown(request, exchange):
 
 @api_view(['GET'])
 def get_exchange_balances(request):
-    return Response(CurrentMarketPriceFetcher(request.user).chart_breakdown_crypto_exchanges())
+    fetcher = CurrentMarketPriceFetcher(request.user)
+    return Response(fetcher.chart_breakdown_crypto_exchanges())
 
 
 # Generic class for crypto exchanges

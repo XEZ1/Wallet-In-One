@@ -4,10 +4,13 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { BACKEND_URL } from "@env"
 import * as SecureStore from "expo-secure-store";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
+import { OldChart } from "./CryptoWalletDetail";
 
 export default function CryptoWalletInsights() {
   const [insights, setInsights] = useState({predicted_balance: {}, received_spent: {}, average_spend: {}});
+  const [exchangeInsights, setExchangeInsights] = useState({all_transactions: {}, most_expensive_transaction: {}});
   const {dark, colors, setScheme} = useTheme();
+  const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
 
   const styles = StyleSheet.create({
     title: {
@@ -23,6 +26,13 @@ export default function CryptoWalletInsights() {
       alignSelf: "center",
       color: colors.text
     },
+    smallSubtitle: {
+      fontWeight: "900",
+      fontSize: 24,
+      alignSelf: "center",
+      color: colors.text,
+      textAlign: 'center',
+    },
     info: {
       fontWeight: "900",
       fontSize: 15,
@@ -33,6 +43,7 @@ export default function CryptoWalletInsights() {
 
   useEffect(() => {
     fetchInsights();
+    fetchExchangeInsights();
   }, [])
 
   const fetchInsights = async () => {
@@ -48,6 +59,34 @@ export default function CryptoWalletInsights() {
       .catch((err) => console.log(err));
   };
 
+  const fetchExchangeInsights = async () => {
+    await fetch(`${BACKEND_URL}/crypto-exchanges/get_insights/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => setExchangeInsights(res))
+      .catch((err) => console.log(err));
+  };
+
+  const convertData = () => {
+    let points = [];
+    let count = 1;
+
+    for (let i = 0; i < exchangeInsights.all_transactions.length; i++) {
+      let point = {timestamp: exchangeInsights.all_transactions[i].timestamp, value: count}
+      count += 1;
+      points = [point, ...points]
+    }
+    setGraphData(points)
+  }
+
+  useEffect(() => {
+    convertData();
+  }, [exchangeInsights])
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background, paddingHorizontal: 20 }}>
@@ -105,6 +144,18 @@ export default function CryptoWalletInsights() {
               }
             </View>
         }
+      </View>
+      <Text />
+
+      <Text style={styles.smallSubtitle}>Most Expensive Transaction In All Exchanges</Text>
+      <View style={{ borderRadius: 10, paddingVertical: 10}}>
+        <InsightItem symbol={exchangeInsights.most_expensive_transaction[5]} upper={`${exchangeInsights.most_expensive_transaction[1]} ${exchangeInsights.most_expensive_transaction[0]} (£${exchangeInsights.most_expensive_transaction[2]}), type: ${exchangeInsights.most_expensive_transaction[3]}`} lower={`${exchangeInsights.most_expensive_transaction[4]}`}/>
+      </View>
+      <Text />
+
+      <Text style={styles.smallSubtitle}>Most Expensive Transaction In All Exchanges</Text>
+      <View style={{ borderRadius: 10, paddingVertical: 10}}>
+        <OldChart graphData={graphData} />
       </View>
       <Text />
 
