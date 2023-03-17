@@ -163,7 +163,7 @@ export default function AddBankScreen({ navigation }) {
     
     return (
         <View
-            style={[styles(dark, colors).container, {margin: 4, marginBottom: 54}]}
+            style={[{flex:1, margin: 4, marginBottom: 54}]}
         >
                 <TextInput
                     style={stylesInternal.bankingInput}
