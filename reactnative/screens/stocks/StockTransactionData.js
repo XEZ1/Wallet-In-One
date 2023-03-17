@@ -2,10 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import { api_url } from '../../authentication';
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
 import Map from './Map';
 
 import { useTheme } from "reactnative/src/theme/ThemeProvider";

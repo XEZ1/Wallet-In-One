@@ -68,7 +68,7 @@ export default function StockInsight() {
     })
 
     const buttons = [
-        <View style={styles.button}>
+        <View key="all" style={styles.button}>
             <Button color={index === "all" ? colors.primary : 'grey'} onPress={() => filter('all')} title="All"/>
             <Button color={index === "1 Month" ? colors.primary : 'grey'} onPress={() => filter('1 Month')} title="1 Month"/>
             <Button color={index === "3 Months" ? colors.primary : 'grey'} onPress={() => filter('3 Months')} title="3 Months"/>
