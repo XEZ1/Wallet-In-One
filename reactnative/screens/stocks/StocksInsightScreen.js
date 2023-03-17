@@ -67,48 +67,45 @@ export default function StockInsight() {
         },
     })
 
-    if(isLoading){
-        return (<Loading/>)
-    }else if(currentData.average_latitude == 0 && currentData.average_longitude == 0){
-        return(
-        <View style={{flex: 1}}>
+    const buttons = [
         <View style={styles.button}>
-        <Button color={index === "all" ? colors.primary : 'grey'} onPress={() => filter('all')} title="All"/>
-        <Button color={index === "1 Month" ? colors.primary : 'grey'} onPress={() => filter('1 Month')} title="1 Month"/>
-        <Button color={index === "3 Months" ? colors.primary : 'grey'} onPress={() => filter('3 Months')} title="3 Months"/>
-        <Button color={index === "6 Months" ? colors.primary : 'grey'} onPress={() => filter('6 Months')} title="6 Months"/>
-        <Button color={index === "12 Months" ? colors.primary : 'grey'} onPress={() => filter('12 Months')} title="12 Months"/>
-        </View>
-        <Text style={{textAlign: 'center'}}>No Data for Selected Date</Text>
-        </View>
-        )
-    }
-    return(
-        <View style={{flex: 1}}>
-            <View style={styles.button}>
             <Button color={index === "all" ? colors.primary : 'grey'} onPress={() => filter('all')} title="All"/>
             <Button color={index === "1 Month" ? colors.primary : 'grey'} onPress={() => filter('1 Month')} title="1 Month"/>
             <Button color={index === "3 Months" ? colors.primary : 'grey'} onPress={() => filter('3 Months')} title="3 Months"/>
             <Button color={index === "6 Months" ? colors.primary : 'grey'} onPress={() => filter('6 Months')} title="6 Months"/>
             <Button color={index === "12 Months" ? colors.primary : 'grey'} onPress={() => filter('12 Months')} title="12 Months"/>
-            </View>
+        </View>
+    ]
+    if(isLoading){
+        return (<Loading/>)
+    }else if(currentData.average_latitude == 0 && currentData.average_longitude == 0){
+        return(
+        <View style={{flex: 1}}>
+            {buttons}
+            <Text style={{textAlign: 'center'}}>No Data for Selected Date</Text>
+        </View>
+        )
+    }
+    return(
+        <View style={{flex: 1}}>
+            {buttons}
             <View style={styles.container}>
-            <Text style={[styles.text, {fontWeight: 'bold'}]}>Transaction Statistics</Text>
-            <Text style={styles.text}>Number of Transactions: {currentData.total_number_of_transactions}</Text>
-            <Text style={styles.text}>Highest Transaction(£): {currentData.highest_transaction}</Text>
-            <Text style={styles.text}>Lowest Transaction(£): {currentData.lowest_transaction}</Text>
-            <Text style={styles.text}>Average Transaction(£): {currentData.average_transaction}</Text>
-            <Text style={styles.text}>Variance: {currentData.variance}</Text>
-            <Text style={styles.text}>Standard Deviation: {currentData.standard_deviation}</Text>
-            <Text style={styles.text}>Highest Fee(£): {currentData.highest_fee}</Text>
-            <Text style={styles.text}>Lowest Fee(£): {currentData.lowest_fee}</Text>
-            <Text style={styles.text}>Average Fee(£): {currentData.average_fee}</Text>
-            <Text style={styles.text}>Centroid of Transaction Locations:</Text>
+                <Text style={[styles.text, {fontWeight: 'bold'}]}>Transaction Statistics</Text>
+                <Text style={styles.text}>Number of Transactions: {currentData.total_number_of_transactions}</Text>
+                <Text style={styles.text}>Highest Transaction(£): {currentData.highest_transaction}</Text>
+                <Text style={styles.text}>Lowest Transaction(£): {currentData.lowest_transaction}</Text>
+                <Text style={styles.text}>Average Transaction(£): {currentData.average_transaction}</Text>
+                <Text style={styles.text}>Variance: {currentData.variance}</Text>
+                <Text style={styles.text}>Standard Deviation: {currentData.standard_deviation}</Text>
+                <Text style={styles.text}>Highest Fee(£): {currentData.highest_fee}</Text>
+                <Text style={styles.text}>Lowest Fee(£): {currentData.lowest_fee}</Text>
+                <Text style={styles.text}>Average Fee(£): {currentData.average_fee}</Text>
+                <Text style={styles.text}>Centroid of Transaction Locations:</Text>
             </View>
             <View style={{flex: 1}}>
-            <View style={{height: '100%'}}>
-            <Map latitude={currentData.average_latitude} longitude={currentData.average_longitude}/>
-            </View>
+                <View style={{height: '100%'}}>
+                    <Map latitude={currentData.average_latitude} longitude={currentData.average_longitude}/>
+                </View>
             </View>
         </View>
     )
