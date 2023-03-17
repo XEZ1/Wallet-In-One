@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import {LogBox, Text, TouchableOpacity} from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 //Bank Screens
@@ -99,3 +99,9 @@ export default function MainStackNavigator() {
     </Stack.Navigator>
   );
 }
+
+// This warning can be safely ignored.
+// https://reactnavigation.org/docs/troubleshooting/#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state
+LogBox.ignoreLogs([
+  "Non-serializable values were found in the navigation state",
+])
