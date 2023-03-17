@@ -19,6 +19,7 @@
     "@react-navigation/stack": "^6.3.11",
     "@types/react": "~18.0.27",
     "@types/react-native": "~0.70.6",
+    "assert": "^2.0.0",
     "deprecated-react-native-prop-types": "^4.0.0",
     "expo": "^48.0.0",
     "expo-notifications": "~0.18.1",

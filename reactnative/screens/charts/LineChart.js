@@ -5,6 +5,7 @@ import data from "./chartData.json"
 import { LineChart, CandlestickChart } from 'react-native-wagmi-charts';
 import {useEffect, useState} from "react";
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
+import { styles } from "reactnative/screens/All_Styles.style.js";
 
 import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 
@@ -127,7 +128,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                     {/* Interactive graph */}
                     { graph_version == 1 && 
                         <>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row', paddingBottom: 14, paddingHorizontal: 10}} >
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}>{priceChange}</Text>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}> ({percentageChange}%)</Text>
                         </View>
@@ -142,16 +143,17 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                                 <LineChart.CursorCrosshair />
                             </LineChart>
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{ marginHorizontal: 1, fontSize: 13}}>Balance: </Text>
-                                <LineChart.PriceText precision={10} style={{ color: colors.text, fontSize: 13 }}/>
-                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ marginHorizontal: 5, fontSize: 12, color: colors.text}}>Date: </Text>
+                                    <LineChart.DatetimeText precision={10} style={{ color: colors.text, fontSize: 13, fontWeight: 'bold' }} />
+                                </View>
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{ marginHorizontal: 1, fontSize: 13}}>Date: </Text>
-                                <LineChart.DatetimeText precision={10} style={{ color: colors.text, fontSize: 13 }} />
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ marginHorizontal: 5, fontSize: 12,color: colors.text}}>Balance: </Text>
+                                    <LineChart.PriceText precision={10} style={{ color: colors.text, fontSize: 13, fontWeight: 'bold' }}/>
+                                </View>
                             </View>
-
                         </LineChart.Provider></>
                     }
 
@@ -164,16 +166,13 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                                 <LineChart.Path color={color1}>
                                     <LineChart.Gradient />
                                 </LineChart.Path>
-                                {/* <LineChart.CursorCrosshair>
-                                    <LineChart.Tooltip />
-                                </LineChart.CursorCrosshair> */}
                             </LineChart>
                         </LineChart.Provider></>
                     }
                     {/* Candelstick graph */}   
                     { graph_version == 3 && candlestickData &&
                         <>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row', paddingBottom: 14, paddingHorizontal: 10}}>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}>{priceChange}</Text>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}> ({percentageChange}%)</Text>
                         </View>
@@ -186,31 +185,31 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                             
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ marginHorizontal: 8, fontSize: 12 }}>Opening Price:</Text>
-                                    <CandlestickChart.PriceText precision={10} type="open" style={{ color: colors.text, fontSize: 12 }} />
+                                    <Text style={{ marginHorizontal: 8, fontSize: 12,color: colors.text }}>Opening Price:</Text>
+                                    <CandlestickChart.PriceText precision={10} type="open" style={{ color: colors.text, fontSize: 12, fontWeight: 'bold' }} />
                                 </View>
 
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ marginHorizontal: 8, fontSize: 12  }}>Highest Price: </Text>
-                                    <CandlestickChart.PriceText precision={10} type="high" style={{ color: colors.text, fontSize: 12 }} />
+                                    <Text style={{ marginHorizontal: 8, fontSize: 12,color: colors.text  }}>Highest Price: </Text>
+                                    <CandlestickChart.PriceText precision={10} type="high" style={{ color: colors.text, fontSize: 12, fontWeight: 'bold' }} />
                                 </View>
                             </View>
 
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ marginHorizontal: 8, fontSize: 12  }}>Closing Price:</Text>
-                                    <CandlestickChart.PriceText precision={10} type="close" style={{ color: colors.text, fontSize: 12 }} />
+                                    <Text style={{ marginHorizontal: 8, fontSize: 12,color: colors.text  }}>Closing Price:</Text>
+                                    <CandlestickChart.PriceText precision={10} type="close" style={{ color: colors.text, fontSize: 12, fontWeight: 'bold' }} />
                                 </View>
 
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ marginHorizontal: 8, fontSize: 12 }}>Lowest Price:</Text>
-                                    <CandlestickChart.PriceText precision={10} type="low" style={{ color: colors.text, fontSize: 12 }} />
+                                    <Text style={{ marginHorizontal: 8, fontSize: 12,color: colors.text }}>Lowest Price:</Text>
+                                    <CandlestickChart.PriceText precision={10} type="low" style={{ color: colors.text, fontSize: 12, fontWeight: 'bold' }} />
                                 </View>
                             </View>
 
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                <Text style={{ marginHorizontal: 1, fontSize: 12}}>Date:</Text>
-                                <CandlestickChart.DatetimeText style={{ fontSize: 12 }} />
+                                <Text style={{ marginHorizontal: 1, fontSize: 12,color: colors.text}}>Date: </Text>
+                                <CandlestickChart.DatetimeText style={{ fontSize: 12,color: colors.text, fontWeight: 'bold' }} />
                             </View>
 
                         </CandlestickChart.Provider></>
@@ -219,7 +218,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                     {/* Interactive graph WalletAssetVersion */}
                     { graph_version == 4 && 
                         <>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row', paddingBottom: 14, paddingHorizontal: 10}}>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}>{priceChange}</Text>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}> ({percentageChange}%)</Text>
                         </View>
@@ -242,14 +241,14 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                         </LineChart.Provider></>
                     }
                 </>
-            ) : (<Text style={[styles.emptyText, {textAlign: 'center', alignSelf: 'center', color: colors.text}]}>No data available</Text>)}
+            ) : (<Text style={[chartStyles.emptyText, {textAlign: 'center', alignSelf: 'center', color: colors.text}]}>No data available</Text>)}
 
         </View>
     );
 }
 
 
-const styles = StyleSheet.create({
+const chartStyles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -270,5 +269,10 @@ const styles = StyleSheet.create({
   },
   row: { 
     flexDirection: 'row',
+  },
+  ins_name:{
+    // color: colors.text,
+    fontSize: 15,
+    fontFamily: 'sans-serif',
   },
 });

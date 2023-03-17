@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity,StyleSheet,SectionList,Image } from 'react-native';
+import { View, Text, TouchableOpacity,StyleSheet,SectionList,Image,Pressable } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect,useCallback } from 'react';
@@ -12,10 +12,13 @@ import { auth_get } from '../../authentication';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
 import SwitchSelector from "react-native-switch-selector";
+import ConditionalModal from '../Modal';
+import Loading from '../banking/Loading';
 
 export default function StockAsset({ route, navigation, }){
   const [stocks, setStocks] = useState()
   const {dark, colors, setScheme } = useTheme();
+  const [loading, setLoading] = useState(true);
 
   const stylesInternal = StyleSheet.create({
     buttonContainer: {
@@ -43,8 +46,9 @@ export default function StockAsset({ route, navigation, }){
     },
     timeButton: {
       flex: 1,
-      paddingVertical: 12,
-      paddingHorizontal: 12,
+      paddingTop: 10,
+      paddingBottom: 15,
+      paddingHorizontal: 13,
       borderRadius: 4,
     },
     table: {
@@ -69,18 +73,26 @@ export default function StockAsset({ route, navigation, }){
     },
     balanceContainer: {
       flexDirection: 'row',
-      alignSelf: 'center'
+      alignSelf: 'center',
       // alignItems: 'center',
       // justifyContent: 'center',
       // marginTop: 20,
     },
     balanceText: {
-      fontSize: 20,
+      fontSize: 21,
       fontWeight: 'bold',
-      // marginHorizontal: 10,
+      // marginHorizontal: 20,
       color: colors.text,
     },
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 22,
+    },
   });
+
+  
 
   const getStocks = useCallback(async (accountID) => {
       try {
@@ -91,8 +103,11 @@ export default function StockAsset({ route, navigation, }){
             Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
           },
         });
-        const data = await res.json();
-        setStocks(data);
+        if(res.status == 200){
+          const data = await res.json();
+          setStocks(data);
+          setLoading(false)
+        }
 
       } catch (error) {
         console.error(error);
@@ -132,6 +147,9 @@ export default function StockAsset({ route, navigation, }){
   const [data, setTableData] = React.useState(tableData);
   const [showTable,setShowTable] = React.useState(false);
   const [showStocks,setShowStocks] = React.useState(false);
+  
+  const {width: SIZE} = Dimensions.get('window');
+
   
   const toggleTable = () => {
       setShowTable(!showTable);
@@ -192,43 +210,52 @@ export default function StockAsset({ route, navigation, }){
   const ItemSeparator = () => <View style={stylesInternal.separator} />;
 
   const [graphVersion,setGraphVersion] = React.useState(1);
+  const [modalVisible, setModalVisible] = useState(false);
 
-
+  if(loading){
+    return(<Loading/>)
+  }
+  else{
     return(
       <FlatList
-        style={[styles(dark, colors).container, {padding: 10}]}
+        style={[styles(dark, colors).container]}
         data={transactions}
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={
-        <View style={styles(dark, colors).container}>
+          <View style={styles(dark, colors).container}>
+            <View style={stylesInternal.balanceContainer}>
+              <Text style={[{fontSize: 13, fontWeight: 'bold',color: colors.text}]}>{route.params.name} • {route.params.balance_currency} • {route.params.account_name}</Text>
+            </View>
+            
+            <View style={{flexDirection: 'row', alignItems: 'center',paddingHorizontal: 30,paddingBottom:13}}>
 
-          <View style={stylesInternal.balanceContainer}>
-            <Text style={[{fontSize: 13, fontWeight: 'bold'}]}>{route.params.name} • {route.params.balance_currency} • {route.params.account_name}</Text>
-          </View>
-          
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-
-            <View>
-              {/* <Text>{route.params.account_name}</Text> */}
-              {/* <Text style={[{fontSize: 11}]}>{route.params.name} • {route.params.balance_currency}</Text> */}
-              <View style={{flexDirection: 'row'}}>
-                <Text style={stylesInternal.balanceText}>BALANCE:</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={stylesInternal.balanceText}>BALANCE:  </Text>
                 <Text style={stylesInternal.balanceText}>£{route.params.balance}</Text>
+              </View>
+              
+              <View style={{flex: 1, alignItems: 'flex-end'}}>
+                {route.params.logo !== null && 
+                  <Image
+                    style={{ width: 60, height: 60 }}
+                    source={{ uri: `data:image/png;base64,${route.params.logo}` }}
+                  />
+                }
+                {route.params.logo === null && 
+                  <Image
+                    style={{ width: 60, height: 60 }}
+                    source={{ uri: 'https://kriptomat.io/wp-content/uploads/t_hub/usdc-x2.png' }}
+                  />
+                }
               </View>
             </View>
 
-            <View style={{ textAlign: 'right', marginLeft: 'auto'}}>
-              {route.params.logo !== null && 
-                <Image
-                  style={{ width: 60, height: 60 }}
-                  source={{ uri: `data:image/png;base64,${route.params.logo}` }}
-                />
-              }
-            </View>
+
 
           </View>
           
-          <View style={{padding: 15}}>
+          <View style={{paddingHorizontal: 40,paddingBottom: 20}}>
             <SwitchSelector
               initial={0}
               onPress={value => setGraphVersion(value)}
@@ -241,7 +268,7 @@ export default function StockAsset({ route, navigation, }){
                 { label: "Line Chart", value: 1},  
                 { label: "Candlestick Chart", value: 3} 
               ]}
-              imageStyle={{ width: 20, height: 20 }}
+              // imageStyle={{ width: 20, height: 20 }}
               textStyle={{ fontWeight: 'bold' }}
             />
           </View>
@@ -253,84 +280,91 @@ export default function StockAsset({ route, navigation, }){
               current_balance={route.params.balance}
               graph_version={graphVersion}
               height={275}
-              width={375}
+              width={SIZE}
           />}
           
-          <View style={stylesInternal.buttonContainer, {flexDirection: "row"}}>
+          <View style={stylesInternal.buttonContainer, {flexDirection: "row", paddingHorizontal: 10}}>
             <View style={stylesInternal.timeButton}><Button onPress={all_time} title="ALL"/></View>
             <View style={stylesInternal.timeButton}><Button onPress={last_year} title="Y"/></View>
             <View style={stylesInternal.timeButton}><Button onPress={last_month} title="M"/></View>
             <View style={stylesInternal.timeButton}><Button onPress={last_week} title="D"/></View>
           </View>
 
-          {/* <Button
-              onPress={toggleGraph}
-              title={graphVersion == 1 ? "Line Chart" : "Candle Stick Chart"}
+          <View style={{padding: 20}}>
+
+            <Button
+                onPress={toggleTable}
+                title={showTable ? "Hide Transactions" : "View Transactions"}
+                color="#fcd34d"
+            />
+
+            {showTable && (
+                <View style={stylesInternal.table}>
+                    {data.tableData.length > 0 ? (
+                      <View>
+                        <Text style={[{textAlign: 'center', alignSelf: 'center', color: colors.text}]}>Press on any transaction to view in depth details.{"\n"}</Text>
+                        
+                        <Table borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
+                          <Row data={data.tableHead} style={stylesInternal.head} />
+                          {data.tableData.map((rowData, index) => (
+                            <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionData', { id: rowData[0] })}>
+                              <TableWrapper style={[stylesInternal.row, {backgroundColor: rowData[1] < 0 ? "#f87171" : '#bbf7d0'}]} borderStyle={{borderWidth: 1, borderColor: '#000000'}}>
+                                {rowData.map((cellData, cellIndex) => (
+                                  <Cell key={cellIndex} data={cellData} textStyle={{textAlign: 'center', fontSize: 12}} />
+                                ))}
+                              </TableWrapper>
+                            </TouchableOpacity>
+                          ))}
+                        </Table>
+
+                      </View>
+                    ) : (
+                      <Text style={[{textAlign: 'center', alignSelf: 'center', color: colors.text}]}>No data available</Text>
+                    )}
+                </View>
+            )}
+            
+            <Button
+              onPress={toggleStocksView}
+              title={showStocks ? "Hide Stocks" : "View Stocks"}
               color="#fcd34d"
-          /> */}
-
-          <Button
-              onPress={toggleTable}
-              title={showTable ? "Hide Transactions" : "View Transactions"}
-              color="#fcd34d"
-          />
-
-          {showTable && (
-              <View style={stylesInternal.table}>
-                  {data.tableData.length > 0 ? (
-                    <View>
-                      <Text style={[{textAlign: 'center', alignSelf: 'center', color: colors.text}]}>Press on any transaction to view in depth details.{"\n"}</Text>
-                      
-                      <Table borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
-                        <Row data={data.tableHead} style={stylesInternal.head} />
-                        {data.tableData.map((rowData, index) => (
-                          <TouchableOpacity key={index} onPress={() => navigation.navigate('TransactionData', { id: rowData[0] })}>
-                            <TableWrapper style={[stylesInternal.row, {backgroundColor: rowData[1] < 0 ? "#f87171" : '#bbf7d0'}]} borderStyle={{borderWidth: 1, borderColor: '#000000'}}>
-                              {rowData.map((cellData, cellIndex) => (
-                                <Cell key={cellIndex} data={cellData} textStyle={{textAlign: 'center', fontSize: 12, fontWeight: 'bold'}} />
-                              ))}
-                            </TableWrapper>
-                          </TouchableOpacity>
-                        ))}
-                      </Table>
-
+            />
+            
+            {showStocks && stocks &&  (
+              <FlatList 
+                data={stocks} 
+                style={{paddingVertical: 5, paddingHorizontal: 10}}
+                ItemSeparatorComponent={() => <View style={{height: 5}} />}
+                contentContainerStyle={{paddingBottom: 20}}
+                renderItem={({item, index}) =>{
+                  return (
+                    <TouchableOpacity style={[stylesInternal.item, {backgroundColor: colors.primary}]} onPress={()=> navigation.navigate('StockDetails', {stock: stocks[index], security_id: stocks[index].security_id}) }>
+                    <View style={stylesInternal.row}>
+                      <Text style={[stylesInternal.name, {fontSize: 14}]}> {item.name} </Text>
                     </View>
-                  ) : (
-                    <Text style={[{textAlign: 'center', alignSelf: 'center', color: colors.text}]}>No data available</Text>
-                  )}
-              </View>
-          )}
-          
-          <Button
-            onPress={toggleStocksView}
-            title={showStocks ? "Hide Stocks" : "View Stocks"}
-            color="#fcd34d"
-          />
-          
-          {showStocks && stocks &&  (
-            <FlatList 
-              data={stocks} 
-              style={{paddingVertical: 5, paddingHorizontal: 10}}
-              ItemSeparatorComponent={() => <View style={{height: 5}} />}
-              contentContainerStyle={{paddingBottom: 20}}
-              renderItem={({item, index}) =>{
-                return (
-                  <TouchableOpacity style={[stylesInternal.item, {backgroundColor: colors.primary}]} onPress={()=> navigation.navigate('StockDetails', {stock: stocks[index], security_id: stocks[index].security_id}) }>
-                  <View style={stylesInternal.row}>
-                    <Text style={[stylesInternal.name, {fontSize: 14}]}> {item.name} </Text>
-                  </View>
-                </TouchableOpacity>
-                )
-              }}
-              ListEmptyComponent={<Text>{'\nYou have no stocks listed.\n'}</Text>}
-              />)
-            }
+                  </TouchableOpacity>
+                  )
+                }}
+                ListEmptyComponent={<Text>{'\nYou have no stocks listed.\n'}</Text>}
+                />)
+              }
 
-          <View style={{marginTop: 40, marginBottom: 30}}>
-            <Button title="REMOVE" color="red" onPress={async () => {await deleteAccount(), navigation.navigate('Stock Account List')}} />
+              <View style={{marginTop: 40}}>
+                <Button title="REMOVE" color="red" onPress={() => setModalVisible(true)}/>
+              </View>
+
+              <ConditionalModal
+                headerText={"Remove Your Account"}
+                bodyText={"Are you sure you want to remove your account?"}
+                visible={modalVisible}
+                onEvent={async () => {await deleteAccount(), navigation.navigate('Stock Account List')}}
+                onClose={() => setModalVisible(false)}
+              />
+
           </View>
         </View>
         }
       />
     );
+      }
 }

@@ -8,12 +8,14 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import {styles} from 'reactnative/screens/All_Styles.style.js'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ConditionalModal from '../Modal';
 
 export default function BankAccountsScreen({ navigation }) {
   const [ isLoading, setIsLoading ] = useState(true)
   const [ bankData, setBankData ] = useState([])
   const isFocused = useIsFocused();
   const {dark, colors, setScheme} = useTheme();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const deleteAccount = async (id) => {
     console.log(`delete_account /banking/delete_account/${id}/`)
@@ -106,6 +108,19 @@ export default function BankAccountsScreen({ navigation }) {
       fontSize: 20,
       fontWeight: 'bold',
     },
+    button: {
+      padding: 10,
+      borderRadius: 10,
+      marginVertical: 4,
+      marginHorizontal: 8,
+      backgroundColor: colors.primary,
+      alignSelf: 'center',
+    },
+    buttonText: {
+      textAlign: 'center',
+      fontWeight: 'bold',
+      color: colors.text,
+    },
   });
   
   
@@ -116,22 +131,25 @@ export default function BankAccountsScreen({ navigation }) {
 
   return (
     <View style={{flex:1, backgroundColor: colors.background}} >
+
+        <View style={{flexDirection:'row', justifyContent: 'center'}}>
+          <TouchableOpacity
+            style={stylesInternal.button}
+            onPress={() => navigation.navigate('Bank Insights')}
+          >
+            <Text style={stylesInternal.buttonText}>Bank Insights</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={stylesInternal.button}
+            onPress={() => navigation.navigate("All Bank Transactions")}
+          >
+            <Text style={stylesInternal.buttonText}>All Transactions</Text>
+          </TouchableOpacity>
+        </View>
+
               <View style={[stylesInternal.container]}>
                   <FlatList data={bankData} renderItem={({item, index}) =>{
-                      // return (
-                      //   <TouchableOpacity style={[stylesInternal.item, {backgroundColor: item.color}]} key={index} onPress={()=> navigation.navigate('Bank Transactions', {accountID: item.id}) }>
-                      //       <View style={stylesInternal.row}>
-                      //           <Image
-                      //               source={{ uri: item.institution_logo }}
-                      //               style={{ width: 70, height: 70, marginRight: 10, resizeMode: 'contain', borderRadius: 10}}
-                      //           />
-                      //           <View style={{ borderRadius: 10}}>
-                      //             <Text style={stylesInternal.name}>{item.institution_name}</Text>
-                      //             <Text style={stylesInternal.iban}>{item.iban}</Text>
-                      //             <Text style={stylesInternal.amount}>{item.balance.string}</Text>
-                      //           </View>
-                      //         </View>
-                      //     </TouchableOpacity>)
                       return ( 
                         BankAccount(item, index)) 
                       }}
@@ -153,7 +171,7 @@ export default function BankAccountsScreen({ navigation }) {
         <View style={stylesInternal.row}>
           <Image
             source={{ uri: item.institution_logo }}
-            style={{ width: 70, height: 70, marginRight: 10, resizeMode: 'contain', borderRadius: 10 }} />
+            style={{ width: 70, height: 70, marginRight: 10, resizeMode: 'contain', borderRadius: 10, backgroundColor: 'white' }} />
           <View style={{ borderRadius: 10 }}>
             <Text style={stylesInternal.name}>{item.institution_name}</Text>
             <Text style={stylesInternal.iban}>{item.iban}</Text>
@@ -161,9 +179,18 @@ export default function BankAccountsScreen({ navigation }) {
           </View>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={stylesInternal.closeButton} onPress={() => deleteAccount(item.id)}>
+      <TouchableOpacity style={stylesInternal.closeButton} onPress={() => setModalVisible(true)}>
         <FontAwesome style={stylesInternal.closeButtonText} name="close" size= {20}/>
       </TouchableOpacity>
+
+      <ConditionalModal
+        headerText={"Remove Your Bank Account"}
+        bodyText={"Are you sure you want to remove your bank account?"}
+        visible={modalVisible}
+        onEvent={() => deleteAccount(item.id)}
+        onClose={() => setModalVisible(false)}
+      />
+
       {item.disabled?(
       <TouchableOpacity style={stylesInternal.closeButton2} onPress={() => Alert.alert('Warning','This account is not connected anymore. Please delete and readd this account.') }>
         <FontAwesome style={stylesInternal.closeButtonText} name="exclamation" size= {20}/>

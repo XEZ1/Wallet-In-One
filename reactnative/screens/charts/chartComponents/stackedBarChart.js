@@ -45,7 +45,8 @@ export default function StackedChart({ data = fixture.all, handlePressIn  }) {
             tickLabels: {fill: colors.text},
           }}
         />
-        <VictoryStack colorScale={["tomato", "orange", "gold", "purple"]}>
+        <VictoryStack colorScale={["tomato", "orange", "gold", "purple"]} >
+          {/* style={{data: {stoke: 'black', strokeWidth: 3}}}> */}
           {(data['Banks']?data['Banks']:[]).map(i => (
             <VictoryBar
               key={i}

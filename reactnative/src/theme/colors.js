@@ -4,6 +4,7 @@ export const lightColors = {
     //primary: '#ef4444',
     primary: 'purple',
     secondary: 'blue',
+    stock_account: 'white',
 };
 
 export const darkColors = {
@@ -12,4 +13,5 @@ export const darkColors = {
     //primary: '#ef4444',
     primary: 'purple',
     secondary: 'blue',
+    stock_account: '#181818',
 };

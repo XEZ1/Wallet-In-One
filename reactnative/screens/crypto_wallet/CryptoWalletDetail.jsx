@@ -17,6 +17,7 @@ import * as SecureStore from "expo-secure-store";
 import { BACKEND_URL } from "@env"
 import LineChartScreen from "../charts/LineChart";
 import SwitchSelector from "react-native-switch-selector";
+import ConditionalModal from "../Modal";
 
 export default function CryptoWalletDetail(props) {
 
@@ -26,7 +27,7 @@ export default function CryptoWalletDetail(props) {
   const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
   const [ loading, setLoading ] = useState(true);
   const [ chartType, setChartType ] = useState("breakdown");
-
+  const [modalVisible, setModalVisible] = useState(false);
 
   const retrieveWallet = async (id) => {
     await fetch(`${BACKEND_URL}/crypto_wallets/${id}/`, {
@@ -97,7 +98,7 @@ export default function CryptoWalletDetail(props) {
       </View>
 
 
-      <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30, paddingHorizontal: 30 }}>
+      {/* <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30, paddingHorizontal: 30 }}>
         <TouchableOpacity
           style={[
             styles(dark, colors).btn,
@@ -116,6 +117,26 @@ export default function CryptoWalletDetail(props) {
         >
           <Text>Transactions</Text>
         </TouchableOpacity>
+      </View> */}
+
+      <View style={{paddingHorizontal: 40,paddingVertical:20}}>
+        <SwitchSelector
+          initial={0}
+          onPress={value => handleChartTypeChange(value)}
+          // textColor="#7a44cf"
+          selectedColor="#fff"
+          buttonColor="#7a44cf"
+          borderColor="#7a44cf"
+          hasPadding
+          options={[    
+            { label: "Breakdown", value: "breakdown"},  
+            { label: "Transactions", value: "transactions"} 
+          ]}
+          // imageStyle={{ width: 20, height: 20 }}
+          textStyle={{ fontWeight: 'bold', fontSize: 15 }}
+          buttonMargin={1}
+          height={45}
+        />
       </View>
 
       {
@@ -157,12 +178,21 @@ export default function CryptoWalletDetail(props) {
             </View>
 
             <Pressable
-              onPress={() => removeWallet(walletData.id).then(() => props.navigation.goBack())}
+              onPress={() => setModalVisible(true)}
+              // onPress={() => removeWallet(walletData.id).then(() => props.navigation.goBack())}
               style={{alignItems: "center", justifyContent: "center"}}>
               <View style={styles(dark, colors).smallButton}>
                 <Text style={{color: colors.text, fontWeight: "800"}}>Remove</Text>
               </View>
             </Pressable>
+
+            <ConditionalModal
+              headerText={"Remove Your Wallet"}
+              bodyText={"Are you sure you want to remove your wallet account?"}
+              visible={modalVisible}
+              onEvent={() => removeWallet(walletData.id).then(() => props.navigation.goBack())}
+              onClose={() => setModalVisible(false)}
+            />
 
             <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10,paddingHorizontal:30, color: colors.text}}>Balance History Graph</Text>
             <OldChart graphData={graphData} />

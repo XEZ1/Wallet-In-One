@@ -17,7 +17,7 @@ import {
 
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 
-export default function PieChart({colours, data, handlePressIn}) {
+export default function PieChart({colours, data, handlePressIn, labelCount, assetSize, numSize}) {
 
   const {dark, colors, setScheme} = useTheme();
   const [pressed, setPressed ] = useState(false)
@@ -28,6 +28,13 @@ export default function PieChart({colours, data, handlePressIn}) {
     value += jsonObj.y;
   });
   value = value.toFixed(2);
+
+  let assetLabel = 165;
+  let numLabel = 185;
+  if(labelCount == 2){
+    assetLabel = 130;
+    numLabel = 180;
+  }
 
   return (
     <ScrollView
@@ -72,6 +79,24 @@ export default function PieChart({colours, data, handlePressIn}) {
         />
         <VictoryLabel
           textAnchor="middle"
+          style={{ fontSize: assetSize, fill: colors.text }}
+          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.7}
+          x={Dimensions.get("window").width / 2}
+          y={assetLabel}
+          text={"Assets"}
+        />
+        <VictoryLabel
+          textAnchor="middle"
+          style={{ fontSize: numSize, fontWeight: "700", fill: colors.text }}
+          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.25}
+          x={Dimensions.get("window").width / 2}
+          y={numLabel}
+          text={data.length}
+        />
+          {labelCount === 4 && (
+          <>
+        <VictoryLabel
+          textAnchor="middle"
           style={{ fontSize: 17, fill: colors.text }}
           // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/5.5}
           x={Dimensions.get("window").width / 2}
@@ -86,22 +111,8 @@ export default function PieChart({colours, data, handlePressIn}) {
           y={125}
           text={"£" + value}
         />
-        <VictoryLabel
-          textAnchor="middle"
-          style={{ fontSize: 17, fill: colors.text }}
-          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.7}
-          x={Dimensions.get("window").width / 2}
-          y={165}
-          text={"Assets"}
-        />
-        <VictoryLabel
-          textAnchor="middle"
-          style={{ fontSize: 27, fontWeight: "700", fill: colors.text }}
-          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.25}
-          x={Dimensions.get("window").width / 2}
-          y={185}
-          text={data.length}
-        />
+                  </>
+        )}
       </VictoryContainer>
     </ScrollView>
   );
