@@ -22,7 +22,8 @@ import { styles } from "reactnative/screens/All_Styles.style.js";
 
 import LineChartScreen from '../charts/LineChart';
 
-const SuccessComponent = (props) => {
+const SuccessComponent = ({ route, ...props }) => {
+  const { scrollToLastItem } = route.params || {}; // default to empty object if params is undefined
     const [list, setList] = useState()
     const isFocused = useIsFocused()
     const [transactions, setTransactions] = useState({});
@@ -61,9 +62,31 @@ const SuccessComponent = (props) => {
       useEffect(() => {
         const listAccounts = async () => {
           const response = await auth_get('/stocks/list_accounts/')
-          setList(response.body)
+          const accountList = response.body;
+          setList(accountList);
+
+          // if (scrollToLastItem && list.length > 0) {
+          //   const last = list[list.length - 1];
+          //   // const transactions = await getTransactions(last.account_id);
+          //   // console.log(transactions[last.account_id])
+
+            
+          //   props.navigation.navigate('StockAsset', {
+          //     accountID: last.account_id, 
+          //     accessToken: last.access_token, 
+          //     transactions: transactions[last.account_id],
+          //     logo: last.institution_logo,
+          //     balance: last.balance,
+          //     name: last.institution_name,
+          //     account_name: last.name,
+          //     balance_currency: last.balance_currency
+          //   });
+          // }
         }
-        if(isFocused){listAccounts()}
+        
+        if (isFocused) {
+          listAccounts();
+        }        
       }, [isFocused])
 
       const getTransactions = useCallback(async (accountID) => {
@@ -87,9 +110,10 @@ const SuccessComponent = (props) => {
         }
       }, [isFocused, list, getTransactions]);
 
+
       const ItemSeparator = () => <View style={stylesInternal.separator} />;
     return (
-        <View style={{ ...styles(dark, colors),paddingTop:8 }}>
+        <View style={{ ...styles(dark, colors),paddingTop:8, paddingBottom: 8 }}>
           <View>
             <FlatList 
               data={list} 
@@ -97,18 +121,19 @@ const SuccessComponent = (props) => {
               style={{paddingHorizontal:8}}
               renderItem={({item, index}) =>{
               return (
-                
                 <TouchableOpacity style={{ ...stylesInternal.item }}
-                  onPress={()=> props.navigation.navigate('StockAsset', {
-                    accountID: item.account_id, 
-                    accessToken: item.access_token, 
-                    transactions: transactions[item.account_id],
-                    logo: item.institution_logo,
-                    balance: item.balance,
-                    name: item.institution_name,
-                    account_name: item.name,
-                    balance_currency: item.balance_currency
-                  }) }>
+                  onPress={()=> {
+                      props.navigation.navigate('StockAsset', {
+                      accountID: item.account_id, 
+                      accessToken: item.access_token, 
+                      transactions: transactions[item.account_id],
+                      logo: item.institution_logo,
+                      balance: item.balance,
+                      name: item.institution_name,
+                      account_name: item.name,
+                      balance_currency: item.balance_currency
+                    
+                  })} }>
 
                   <View style={stylesInternal.row}>
                     {item.institution_logo !== null && 

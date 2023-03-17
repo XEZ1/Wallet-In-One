@@ -85,7 +85,7 @@ export default function Navigation() {
               ),
             }}
           />
-          <Tab.Screen
+          {/* <Tab.Screen
             name="Insights"
             component={BankInsights}
             options={{
@@ -95,7 +95,7 @@ export default function Navigation() {
                 </Text>
               ),
             }}
-          />
+          /> */}
           <Tab.Screen
             name="Settings"
             component={SettingsPage}

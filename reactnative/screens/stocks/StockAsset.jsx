@@ -13,10 +13,12 @@ import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
 import SwitchSelector from "react-native-switch-selector";
 import ConditionalModal from '../Modal';
+import Loading from '../banking/Loading';
 
 export default function StockAsset({ route, navigation, }){
   const [stocks, setStocks] = useState()
   const {dark, colors, setScheme } = useTheme();
+  const [loading, setLoading] = useState(true);
 
   const stylesInternal = StyleSheet.create({
     buttonContainer: {
@@ -101,8 +103,11 @@ export default function StockAsset({ route, navigation, }){
             Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
           },
         });
-        const data = await res.json();
-        setStocks(data);
+        if(res.status == 200){
+          const data = await res.json();
+          setStocks(data);
+          setLoading(false)
+        }
 
       } catch (error) {
         console.error(error);
@@ -207,6 +212,10 @@ export default function StockAsset({ route, navigation, }){
   const [graphVersion,setGraphVersion] = React.useState(1);
   const [modalVisible, setModalVisible] = useState(false);
 
+  if(loading){
+    return(<Loading/>)
+  }
+  else{
     return(
       <FlatList
         style={[styles(dark, colors).container]}
@@ -357,4 +366,5 @@ export default function StockAsset({ route, navigation, }){
         }
       />
     );
+      }
 }
