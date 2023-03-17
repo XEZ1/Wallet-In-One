@@ -5,6 +5,8 @@ import { auth_get } from "../../authentication";
 import Loading from "../banking/Loading";
 import Map from "./Map";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import { styles } from "reactnative/screens/All_Styles.style.js";
+
 
 export default function StockInsight() {
     const {dark, colors, setScheme} = useTheme();
@@ -36,20 +38,12 @@ export default function StockInsight() {
         console.log(currentData)
     }
 
-    const styles = StyleSheet.create({
-        // container: {
-        //     alignItems: 'center',
-        // },
+    const stylesInternal = StyleSheet.create({
         button: {
             flexDirection: "row" , justifyContent: 'space-evenly'
         },
-        // text: {
-        //     fontWeight: "700",
-        //     fontSize: 25
-        // },
         container: {
             padding: 10,
-            backgroundColor: '#fff',
             borderRadius: 5,
             marginVertical: 10,
             shadowColor: '#000',
@@ -82,25 +76,24 @@ export default function StockInsight() {
         return(
         <View style={{flex: 1}}>
             {buttons}
-            <Text style={{textAlign: 'center'}}>No Data for Selected Date</Text>
+            <Text style={[styles(dark, colors).text, {textAlign: 'center'}]}>No Data for Selected Date</Text>
         </View>
         )
     }
     return(
-        <View style={{flex: 1}}>
+        <View style={styles(dark, colors).container}>
             {buttons}
-            <View style={styles.container}>
-                <Text style={[styles.text, {fontWeight: 'bold'}]}>Transaction Statistics</Text>
-                <Text style={styles.text}>Number of Transactions: {currentData.total_number_of_transactions}</Text>
-                <Text style={styles.text}>Highest Transaction(£): {currentData.highest_transaction}</Text>
-                <Text style={styles.text}>Lowest Transaction(£): {currentData.lowest_transaction}</Text>
-                <Text style={styles.text}>Average Transaction(£): {currentData.average_transaction}</Text>
-                <Text style={styles.text}>Variance: {currentData.variance}</Text>
-                <Text style={styles.text}>Standard Deviation: {currentData.standard_deviation}</Text>
-                <Text style={styles.text}>Highest Fee(£): {currentData.highest_fee}</Text>
-                <Text style={styles.text}>Lowest Fee(£): {currentData.lowest_fee}</Text>
-                <Text style={styles.text}>Average Fee(£): {currentData.average_fee}</Text>
-                <Text style={styles.text}>Centroid of Transaction Locations:</Text>
+            <View style={stylesInternal.container}>
+                <Text style={[stylesInternal.text, styles(dark, colors).textBold, {color: colors.primary}]}>Transaction Statistics</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Number of Transactions: {currentData.total_number_of_transactions}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Highest Transaction(£): {currentData.highest_transaction}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Average Transaction(£): {currentData.average_transaction}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Variance: {currentData.variance}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Standard Deviation: {currentData.standard_deviation}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Highest Fee(£): {currentData.highest_fee}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Lowest Fee(£): {currentData.lowest_fee}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Average Fee(£): {currentData.average_fee}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Centroid of Transaction Locations:</Text>
             </View>
             <View style={{flex: 1}}>
                 <View style={{height: '100%'}}>
