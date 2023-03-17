@@ -19,7 +19,6 @@ import BankInsights from './screens/banking/BankInsights';
 import AddBankScreen from './screens/banking/AddBankScreen'
 import BankAccountsScreen from './screens/banking/BankAccountsScreen'
 import BankTransactionsScreen from './screens/banking/BankTransactionsScreen'
-import BankStackNavigator from "./screens/banking/BankStackNavigator";
 
 import { initAuthState } from './authentication';
 import { userContext } from './data';

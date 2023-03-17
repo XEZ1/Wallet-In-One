@@ -108,6 +108,19 @@ export default function BankAccountsScreen({ navigation }) {
       fontSize: 20,
       fontWeight: 'bold',
     },
+    button: {
+      padding: 10,
+      borderRadius: 10,
+      marginVertical: 4,
+      marginHorizontal: 8,
+      backgroundColor: colors.primary,
+      alignSelf: 'center',
+    },
+    buttonText: {
+      textAlign: 'center',
+      fontWeight: 'bold',
+      color: colors.text,
+    },
   });
   
   
@@ -118,22 +131,25 @@ export default function BankAccountsScreen({ navigation }) {
 
   return (
     <View style={{flex:1, backgroundColor: colors.background}} >
+
+        <View style={{flexDirection:'row', justifyContent: 'center'}}>
+          <TouchableOpacity
+            style={stylesInternal.button}
+            onPress={() => navigation.navigate('Bank Insights')}
+          >
+            <Text style={stylesInternal.buttonText}>Bank Insights</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={stylesInternal.button}
+            onPress={() => navigation.navigate("All Bank Transactions")}
+          >
+            <Text style={stylesInternal.buttonText}>All Transactions</Text>
+          </TouchableOpacity>
+        </View>
+
               <View style={[stylesInternal.container]}>
                   <FlatList data={bankData} renderItem={({item, index}) =>{
-                      // return (
-                      //   <TouchableOpacity style={[stylesInternal.item, {backgroundColor: item.color}]} key={index} onPress={()=> navigation.navigate('Bank Transactions', {accountID: item.id}) }>
-                      //       <View style={stylesInternal.row}>
-                      //           <Image
-                      //               source={{ uri: item.institution_logo }}
-                      //               style={{ width: 70, height: 70, marginRight: 10, resizeMode: 'contain', borderRadius: 10}}
-                      //           />
-                      //           <View style={{ borderRadius: 10}}>
-                      //             <Text style={stylesInternal.name}>{item.institution_name}</Text>
-                      //             <Text style={stylesInternal.iban}>{item.iban}</Text>
-                      //             <Text style={stylesInternal.amount}>{item.balance.string}</Text>
-                      //           </View>
-                      //         </View>
-                      //     </TouchableOpacity>)
                       return ( 
                         BankAccount(item, index)) 
                       }}
@@ -155,7 +171,7 @@ export default function BankAccountsScreen({ navigation }) {
         <View style={stylesInternal.row}>
           <Image
             source={{ uri: item.institution_logo }}
-            style={{ width: 70, height: 70, marginRight: 10, resizeMode: 'contain', borderRadius: 10 }} />
+            style={{ width: 70, height: 70, marginRight: 10, resizeMode: 'contain', borderRadius: 10, backgroundColor: 'white' }} />
           <View style={{ borderRadius: 10 }}>
             <Text style={stylesInternal.name}>{item.institution_name}</Text>
             <Text style={stylesInternal.iban}>{item.iban}</Text>
