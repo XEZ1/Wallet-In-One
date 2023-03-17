@@ -77,7 +77,7 @@ export default function StockAsset({ route, navigation, }){
       // marginTop: 20,
     },
     balanceText: {
-      fontSize: 25,
+      fontSize: 21,
       fontWeight: 'bold',
       // marginHorizontal: 20,
       color: colors.text,
@@ -259,7 +259,7 @@ export default function StockAsset({ route, navigation, }){
                 { label: "Line Chart", value: 1},  
                 { label: "Candlestick Chart", value: 3} 
               ]}
-              imageStyle={{ width: 20, height: 20 }}
+              // imageStyle={{ width: 20, height: 20 }}
               textStyle={{ fontWeight: 'bold' }}
             />
           </View>

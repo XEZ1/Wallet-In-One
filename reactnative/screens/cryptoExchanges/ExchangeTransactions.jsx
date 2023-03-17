@@ -10,7 +10,7 @@ import { VictoryPie, VictoryLabel, VictoryContainer } from "victory-native";
 import BarChart from "../charts/chartComponents/barChart";
 import ConditionalModal from "../Modal";
 import PieChart from "../charts/chartComponents/pieChart";
-
+import SwitchSelector from "react-native-switch-selector";
 export default function ExchangeTransactions(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const {dark, colors } = useTheme();
@@ -197,7 +197,7 @@ export default function ExchangeTransactions(props) {
       </View>
 
       {/* Switch Menus Buttons */}
-      <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
+      {/* <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
         <TouchableOpacity
           style={[
             styles(dark, colors).btn,
@@ -216,6 +216,26 @@ export default function ExchangeTransactions(props) {
         >
         <Text>Transactions</Text>
         </TouchableOpacity>
+      </View> */}
+
+      <View style={{paddingHorizontal: 40}}>
+        <SwitchSelector
+          initial={0}
+          onPress={value => handleChartTypeChange(value)}
+          // textColor="#7a44cf"
+          selectedColor="#fff"
+          buttonColor="#7a44cf"
+          borderColor="#7a44cf"
+          hasPadding
+          options={[    
+            { label: "Coin Breakdown", value: "pie"},  
+            { label: "Transactions", value: "transactions"} 
+          ]}
+          // imageStyle={{ width: 20, height: 20 }}
+          textStyle={{ fontWeight: 'bold', fontSize: 15 }}
+          buttonMargin={1}
+          height={45}
+        />
       </View>
 
       {/* Pie chart and transactions table */}    

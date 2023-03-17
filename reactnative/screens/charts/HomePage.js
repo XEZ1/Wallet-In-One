@@ -14,7 +14,8 @@ import StackedChart from "./chartComponents/stackedBarChart";
 import fixture from "../charts/chartData.json";
 import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
-
+import SwitchSelector from "react-native-switch-selector";
+import { FlatList } from "react-native-gesture-handler";
 export default function HomePage({ navigation }) {
   const originalColours = ["pink", "turquoise", "lime", "#FA991C"]
   const {dark, colors, setScheme } = useTheme();
@@ -209,7 +210,7 @@ export default function HomePage({ navigation }) {
     return (<NoWallets/>);
   } else {
     return (
-      <ScrollView
+      <FlatList
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: "center",
@@ -218,10 +219,11 @@ export default function HomePage({ navigation }) {
           backgroundColor: colors.background,
         }}
         style={styles.container}
-      >
-
+        ListHeaderComponent={
+      
+        <>
         {/* Switch Graph Buttons */}
-        <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
+        {/* <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
           <TouchableOpacity
             style={[
               styles(dark, colors).btn,
@@ -240,7 +242,27 @@ export default function HomePage({ navigation }) {
           >
           <Text>Stacked Bar Chart</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
+
+        <View style={{paddingHorizontal: 40,paddingTop: 30}}>
+            <SwitchSelector
+              initial={0}
+              onPress={value => handleChartTypeChange(value)}
+              // textColor="#7a44cf"
+              selectedColor="#fff"
+              buttonColor="#7a44cf"
+              borderColor="#7a44cf"
+              hasPadding
+              options={[    
+                { label: "Pie Chart", value: "pie"},  
+                { label: "Stacked Bar Chart", value: "stacked"} 
+              ]}
+              imageStyle={{ width: 20, height: 20 }}
+              textStyle={{ fontWeight: 'bold', fontSize: 18 }}
+              buttonMargin={1}
+              height={60}
+            />
+          </View>
 
 
         {chartType == "pie" ? 
@@ -265,9 +287,9 @@ export default function HomePage({ navigation }) {
           : 
             <StackedChart data={baseData} handlePressIn={handlePressInStacked}/>
         }
-
-
-      </ScrollView>
+      </>
+      }
+      />
     );
   }
 }

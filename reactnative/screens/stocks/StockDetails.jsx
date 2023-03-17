@@ -14,6 +14,7 @@ export default function StockDetails({ route, navigation }){
   const [stockTransactions, setStockTransactions] = useState();
   const stock = route.params.stock;
   const {dark, colors, setScheme } = useTheme();
+  
 
   const {width: SIZE} = Dimensions.get('window');
 

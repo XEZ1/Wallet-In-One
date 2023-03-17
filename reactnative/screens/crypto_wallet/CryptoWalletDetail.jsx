@@ -98,7 +98,7 @@ export default function CryptoWalletDetail(props) {
       </View>
 
 
-      <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30, paddingHorizontal: 30 }}>
+      {/* <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30, paddingHorizontal: 30 }}>
         <TouchableOpacity
           style={[
             styles(dark, colors).btn,
@@ -117,6 +117,26 @@ export default function CryptoWalletDetail(props) {
         >
           <Text>Transactions</Text>
         </TouchableOpacity>
+      </View> */}
+
+      <View style={{paddingHorizontal: 40,paddingVertical:20}}>
+        <SwitchSelector
+          initial={0}
+          onPress={value => handleChartTypeChange(value)}
+          // textColor="#7a44cf"
+          selectedColor="#fff"
+          buttonColor="#7a44cf"
+          borderColor="#7a44cf"
+          hasPadding
+          options={[    
+            { label: "Breakdown", value: "breakdown"},  
+            { label: "Transactions", value: "transactions"} 
+          ]}
+          // imageStyle={{ width: 20, height: 20 }}
+          textStyle={{ fontWeight: 'bold', fontSize: 15 }}
+          buttonMargin={1}
+          height={45}
+        />
       </View>
 
       {
