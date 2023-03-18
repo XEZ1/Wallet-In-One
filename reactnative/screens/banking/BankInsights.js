@@ -70,7 +70,6 @@ export default function BankInsights() {
             setActiveIndex(0)
             setActiveTab(0)
             setIsLoading(false)
-            console.log('check this',response.body.all.balance_history)
         }
     }
     if (isFocused != false){fetchData()}

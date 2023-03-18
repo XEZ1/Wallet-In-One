@@ -494,12 +494,12 @@ exports[`<BankInsights /> snapshot test 1`] = `
               y="0"
             />
             <RNSVGGroup
-              clipPath="victory-clip-2"
+              clipPath="victory-clip-17"
             >
               <RNSVGGroup>
                 <RNSVGDefs>
                   <RNSVGClipPath
-                    name="victory-clip-2"
+                    name="victory-clip-17"
                   >
                     <RNSVGRect
                       height="120"

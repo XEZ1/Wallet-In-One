@@ -23,6 +23,16 @@ describe('<BankInsights />', () => {
                 expect(activityIndicator).toBeNull();
             })
 
+            // Test buttons can be pressed
+            fireEvent.press(await screen.getByText('1 Month'));
+            fireEvent.press(await screen.getByText('3 Month'));
+            fireEvent.press(await screen.getByText('6 Month'));
+            fireEvent.press(await screen.getByText('All'));
+
+            fireEvent.press(await screen.getByText('Income'));
+            fireEvent.press(await screen.getByText('Spending'));
+            fireEvent.press(await screen.getByText('Both'));
+
         });
 
         expect(snapshot).toMatchSnapshot();
