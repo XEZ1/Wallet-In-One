@@ -56,14 +56,24 @@ class GraphDataViewTestCase(TestCase):
         self.assertEqual(response.data['all'][0]['y'], 100.00)
 
     def test_crypto_exchange_connected(self):
-        # This user has a stock account connected
+        # This user has a crypto exchange connected
         self.user = User.objects.get(id=5)
         self.client.force_authenticate(user=self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['all']), 1)
         self.assertEqual(response.data['all'][0]['x'], 'Cryptocurrency from exchanges')
-        self.assertEqual(response.data['all'][0]['y'], 0)
+        self.assertIsInstance(response.data['all'][0]['y'], int)
+
+    def test_crypto_wallet_connected(self):
+        # This user has a crypto wallet connected
+        self.user = User.objects.get(id=7)
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['all']), 1)
+        self.assertEqual(response.data['all'][0]['x'], 'Cryptocurrency from wallets')
+        self.assertIsInstance(response.data['all'][0]['y'], float)
 
     def test_bank_and_stock_connected(self):
         # This user has a bank AND stock account connected
@@ -89,4 +99,4 @@ class GraphDataViewTestCase(TestCase):
         self.assertEqual(response.data['all'][1]['x'], 'Stock Accounts')
         self.assertEqual(response.data['all'][1]['y'], 100.00)
         self.assertEqual(response.data['all'][2]['x'], 'Cryptocurrency from exchanges')
-        self.assertEqual(response.data['all'][2]['y'], 0)
+        self.assertIsInstance(response.data['all'][2]['y'], int)

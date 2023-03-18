@@ -247,5 +247,32 @@
         "secret_key": "testing",
         "created_at": "2013-03-16T17:41:28+00:00"
       }
+    },
+
+    {
+      "model": "accounts.user",
+      "pk": 7,
+      "fields": {
+        "username": "@micheal",
+        "password": "pbkdf2_sha256$390000$PvUz5BSpCoZBwC6ZzMQZSp$i7xaJh3P4OK9yLcokXmm8vJGmgpKBi3s7E1PO52jxps=",
+        "first_name": "Micheal",
+        "last_name": "Ezat",
+        "email": "MichealEzat@example.org"
+      }
+    },  
+    {
+      "model": "crypto_wallets.cryptowallet",
+      "pk": 1,
+      "fields": {
+        "user":7,
+        "cryptocurrency": "Bitcoin",
+        "symbol": "BTC",
+        "address": "0x0",
+        "balance": 100.00,
+        "received": 300.00,
+        "spent": 200.00,
+        "output_count": 50,
+        "unspent_output_count": 20
+      }
     }
   ]
