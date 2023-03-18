@@ -41,6 +41,7 @@ class GraphDataViewTestCase(TestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['all']), 1)
         self.assertEqual(response.data['all'][0]['x'], 'Banks')
         self.assertEqual(response.data['all'][0]['y'], 100.00)
 
@@ -50,8 +51,19 @@ class GraphDataViewTestCase(TestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['all']), 1)
         self.assertEqual(response.data['all'][0]['x'], 'Stock Accounts')
         self.assertEqual(response.data['all'][0]['y'], 100.00)
+
+    def test_crypto_exchange_connected(self):
+        # This user has a stock account connected
+        self.user = User.objects.get(id=5)
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['all']), 1)
+        self.assertEqual(response.data['all'][0]['x'], 'Cryptocurrency from exchanges')
+        self.assertEqual(response.data['all'][0]['y'], 0)
 
     def test_bank_and_stock_connected(self):
         # This user has a bank AND stock account connected
@@ -64,3 +76,17 @@ class GraphDataViewTestCase(TestCase):
         self.assertEqual(response.data['all'][0]['y'], 100.00)
         self.assertEqual(response.data['all'][1]['x'], 'Stock Accounts')
         self.assertEqual(response.data['all'][1]['y'], 100.00)
+
+    def test_bank_and_stock_and_crypto_exchange_connected(self):
+        # This user has a bank account AND stock account AND crypto exchange connected
+        self.user = User.objects.get(id=6)
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['all']), 3)
+        self.assertEqual(response.data['all'][0]['x'], 'Banks')
+        self.assertEqual(response.data['all'][0]['y'], 100.00)
+        self.assertEqual(response.data['all'][1]['x'], 'Stock Accounts')
+        self.assertEqual(response.data['all'][1]['y'], 100.00)
+        self.assertEqual(response.data['all'][2]['x'], 'Cryptocurrency from exchanges')
+        self.assertEqual(response.data['all'][2]['y'], 0)
