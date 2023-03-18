@@ -6,6 +6,7 @@ import Loading from "../banking/Loading";
 import Map from "./Map";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import { styles } from "reactnative/screens/All_Styles.style.js";
+import SwitchSelector from "react-native-switch-selector";
 
 
 export default function StockInsight() {
@@ -15,13 +16,11 @@ export default function StockInsight() {
     const [currentData, setCurrentData] = useState()
     const [isLoading, setIsLoading] = useState(true)
     const [index, setIndex] = useState(true)
-    
 
     useEffect( () => {
         const getMetrics = async () => {
         const response = await auth_get('/stocks/get_metrics/')
         if(response.status == 200){
-            console.log(response.body)
             setData(response.body)
             setCurrentData(response.body.all)
             setIndex("all")
@@ -35,7 +34,6 @@ export default function StockInsight() {
     const filter = (filter) => {
         setCurrentData(data[filter])
         setIndex(filter)
-        console.log(currentData)
     }
 
     const stylesInternal = StyleSheet.create({
@@ -62,13 +60,27 @@ export default function StockInsight() {
     })
 
     const buttons = [
-        <View key="all" style={styles.button}>
-            <Button color={index === "all" ? colors.primary : 'grey'} onPress={() => filter('all')} title="All"/>
-            <Button color={index === "1 Month" ? colors.primary : 'grey'} onPress={() => filter('1 Month')} title="1 Month"/>
-            <Button color={index === "3 Months" ? colors.primary : 'grey'} onPress={() => filter('3 Months')} title="3 Months"/>
-            <Button color={index === "6 Months" ? colors.primary : 'grey'} onPress={() => filter('6 Months')} title="6 Months"/>
-            <Button color={index === "12 Months" ? colors.primary : 'grey'} onPress={() => filter('12 Months')} title="12 Months"/>
-        </View>
+        <SwitchSelector
+        key={"all"}
+        initial={0}
+        onPress={value => filter(value)}
+        // textColor="#7a44cf"
+        selectedColor="#fff"
+        buttonColor="#7a44cf"
+        borderColor="#7a44cf"
+        hasPadding
+        options={[    
+          { label: "All", value: "all"},  
+          { label: "1 Month", value: "1 Month"},
+          { label: "3 Months", value: "3 Months"},
+          { label: "6 Months", value: "6 Months"},
+          { label: "1 Year", value: "12 Months"}  
+        ]}
+        imageStyle={{ width: 20, height: 20 }}
+        textStyle={{ fontWeight: 'bold', fontSize: 15 }}
+        buttonMargin={1}
+        height={60}
+      />
     ]
     if(isLoading){
         return (<Loading/>)
