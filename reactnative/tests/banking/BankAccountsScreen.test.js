@@ -47,19 +47,7 @@ global.fetch =  jest.fn( async (api, data ) => {
 })
 
 describe('<BankAccountsScreen />', () => {
-    it('snapshot test', async () => {
-        const navigate = jest.fn();
-        snapshot = render(<BankAccountsScreen />);
-
-        await waitFor( () => {
-            const activityIndicator = screen.UNSAFE_queryByType('ActivityIndicator');
-            expect(activityIndicator).toBeNull();
-        })
-
-        expect(snapshot).toMatchSnapshot();
-    })
-
-    it('test navigation buttons', async () => {
+    it('snapshot and button test', async () => {
         const navigate = jest.fn();
         snapshot = render(<BankAccountsScreen navigation={{ navigate }} />);
 
@@ -79,6 +67,4 @@ describe('<BankAccountsScreen />', () => {
         fireEvent.press(await screen.getAllByTestId('close1')[0]);
         fireEvent.press(await screen.getByTestId('close2'));
     })
-    
-    
 });
