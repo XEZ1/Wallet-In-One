@@ -23,10 +23,12 @@ export default function PieChart({colours, data, handlePressIn, labelCount, asse
   const [pressed, setPressed ] = useState(false)
   const isFocused = useIsFocused()
 
+  if(!colours || !data || !handlePressIn || !labelCount || !assetSize || !numSize){ return null; }
+
   let value = 0;
-  data.forEach((jsonObj) => {
-    value += jsonObj.y;
-  });
+  for (let i = 0; i < data.length; i++) {
+    value += data[i].y;
+  }
   value = value.toFixed(2);
 
   let assetLabel = 165;
@@ -69,10 +71,10 @@ export default function PieChart({colours, data, handlePressIn, labelCount, asse
               },
             },
           ]}
-          animate={{
-            duration: 1000,
-            easing: "bounce"
-          }}
+          // animate={{
+          //   duration: 1000,
+          //   easing: "bounce"
+          // }}
           colorScale={colours}
           standalone={false}
           height={300}

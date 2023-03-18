@@ -75,7 +75,7 @@ export default function StartScreen ({ navigation }) {
 
     return (
       <ImageBackground
-          source={require('reactnative/assets/background.png')}
+          source={require('reactnative/assets/background.jpg')}
           style={styles.background}
       >
         <View>
