@@ -7,8 +7,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from crypto_exchanges.serializers import *
-from crypto_exchanges.services import *
+from crypto_exchanges.serializers import TransactionSerializer, CryptoExchangeAccountSerializer
+from crypto_exchanges.services import CurrentMarketPriceFetcher, get_all_transactions, get_most_expensive_transaction, BinanceFetcher, CoinBaseFetcher, CoinListFetcher, KrakenFetcher, GateioFetcher
 from crypto_exchanges.models import Transaction, CryptoExchangeAccount, Token
 
 
@@ -57,8 +57,7 @@ def get_token_breakdown(request, exchange):
 
 @api_view(['GET'])
 def get_exchange_balances(request):
-    fetcher = CurrentMarketPriceFetcher(request.user)
-    return Response(fetcher.chart_breakdown_crypto_exchanges())
+    return Response(CurrentMarketPriceFetcher(request.user).chart_breakdown_crypto_exchanges())
 
 
 # Generic class for crypto exchanges

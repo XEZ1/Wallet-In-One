@@ -7,21 +7,13 @@ from datetime import datetime, timezone
 from urllib.parse import quote_plus, urlencode
 from crypto_exchanges.serializers import TransactionSerializer
 from crypto_exchanges.models import Token, CryptoExchangeAccount, Transaction
-from crypto_exchanges.views import iso8601_to_datetime
 from abc import ABC, ABCMeta, abstractmethod
 from collections import defaultdict
 
 
-def get_crypto_price1(symbol):
-    url = f'https://min-api.cryptocompare.com/data/price?fsym={symbol}&tsyms=GBP'
-    r = requests.get(url=url)
-    response = r.json()
-    try:
-        price = float(response['GBP'])
-    except KeyError:
-        price = 0.0
-    return price
-
+def iso8601_to_datetime(iso8601_string):
+    dt = datetime.strptime(iso8601_string, '%Y-%m-%d %H:%M:%S.%f%z')
+    return dt
 
 # Generic fetcher class
 class ExchangeFetcher:
@@ -369,7 +361,7 @@ class CurrentMarketPriceFetcher:
         tokens = Token.objects.filter(crypto_exchange_object=exchange)
         balance = 0
         for token in tokens:
-            balance += get_crypto_price1(token.asset) * (token.free_amount + token.locked_amount)
+            balance += self.get_crypto_price(token.asset) * (token.free_amount + token.locked_amount)
         return round(balance, 2)
 
     def get_exchange_token_breakdown(self, exchange):
@@ -425,7 +417,7 @@ def get_most_expensive_transaction(request):
         crypto_price_amount = crypto_price * amount
         if crypto_price_amount > max_crypto_price_amount:
             most_expensive_transaction = (
-                asset, amount, round(crypto_price_amount, 2), data['type'], iso8601_to_datetime(data['timestamp']).strftime('%Y-%m-%d %H:%M:%S'), data['exchange_name'])
+                asset, amount, round(crypto_price_amount, 2), data['type'], iso8601_to_datetime(str(data['timestamp'])).strftime('%Y-%m-%d %H:%M:%S'), data['exchange_name'])
             max_crypto_price_amount = crypto_price_amount
 
     if most_expensive_transaction is None:
