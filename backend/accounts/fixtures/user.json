@@ -10,6 +10,7 @@
         "email": "super@super.com"
       }
     },
+
     {
       "model": "accounts.user",
       "pk": 2,
@@ -22,6 +23,32 @@
       }
     },
     {
+      "model": "banking.account",
+      "pk": "abc",
+      "fields": {
+          "user": 2,
+          "requisition_id": "None",
+          "last_update": "2023-01-01T16:31:11.709Z",
+          "iban": "1234",
+          "institution_id": "REVOLUT_REVOGB21",
+          "institution_name": "Revolut",
+          "institution_logo": "https://cdn.nordigen.com/ais/REVOLUT_REVOGB21.png",
+          "color": "#18A7F7",
+          "disabled": false
+      }
+    },
+    {
+      "model": "banking.balance",
+      "pk": 1,
+      "fields": {
+          "account": "abc",
+          "amount_currency": "GBP",
+          "amount": "100.00",
+          "date": "2022-11-01"
+      }
+    },
+
+    {
       "model": "accounts.user",
       "pk": 3,
       "fields": {
@@ -33,6 +60,34 @@
       }
     },
     {
+      "model": "stocks.stockaccount",
+      "fields": {
+          "account_id": "1",
+          "access_token": "test_access_token",
+          "user": 3,
+          "name": "Test Stock Account",
+          "institution_name": "Test Institution",
+          "institution_id": "1",
+          "balance": "100",
+          "balance_currency": "GBP",
+          "institution_logo": "Base24 Image Encoding"
+      }
+  },
+  {
+      "model": "stocks.stock",
+      "pk": 1,
+      "fields": {
+          "stockAccount": "1",
+          "institution_price": "100",
+          "institution_price_currency": "GBP",
+          "name": "Test Stock",
+          "ticker_symbol": "WIO",
+          "quantity": 10,
+          "security_id": "123"
+      }
+  },
+    
+    {
       "model": "accounts.user",
       "pk": 4,
       "fields": {
@@ -41,6 +96,59 @@
         "first_name": "Petra",
         "last_name": "Pickles",
         "email": "petrapickles@example.org"
+      }
+    },
+    
+    {
+      "model": "stocks.stockaccount",
+      "fields": {
+          "account_id": "2",
+          "access_token": "test_access_token",
+          "user": 4,
+          "name": "Test Stock Account",
+          "institution_name": "Test Institution",
+          "institution_id": "1",
+          "balance": "100",
+          "balance_currency": "GBP",
+          "institution_logo": "Base24 Image Encoding"
+      }
+    },
+    {
+        "model": "stocks.stock",
+        "pk": 1,
+        "fields": {
+            "stockAccount": "1",
+            "institution_price": "100",
+            "institution_price_currency": "GBP",
+            "name": "Test Stock",
+            "ticker_symbol": "WIO",
+            "quantity": 10,
+            "security_id": "123"
+        }
+    },
+    {
+      "model": "banking.account",
+      "pk": "xyz",
+      "fields": {
+          "user": 4,
+          "requisition_id": "None",
+          "last_update": "2023-01-01T16:31:11.709Z",
+          "iban": "1234",
+          "institution_id": "REVOLUT_REVOGB21",
+          "institution_name": "Revolut",
+          "institution_logo": "https://cdn.nordigen.com/ais/REVOLUT_REVOGB21.png",
+          "color": "#18A7F7",
+          "disabled": false
+      }
+    },
+    {
+      "model": "banking.balance",
+      "pk": 2,
+      "fields": {
+          "account": "xyz",
+          "amount_currency": "GBP",
+          "amount": "100.00",
+          "date": "2022-11-01"
       }
     }
   ]

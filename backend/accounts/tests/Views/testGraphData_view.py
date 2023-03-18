@@ -16,8 +16,6 @@ class GraphDataViewTestCase(TestCase):
 
     fixtures = [
         'accounts/fixtures/user.json',
-        'banking/tests/fixtures/bank_data.json',
-        'stocks/tests/fixtures/stocks.json',
     ]
 
     def setUp(self):
@@ -31,7 +29,7 @@ class GraphDataViewTestCase(TestCase):
 
     def test_no_graph_data(self):
         # This user has no accounts connected
-        self.user = User.objects.get(id=2)
+        self.user = User.objects.get(id=1)
         self.client.force_authenticate(user=self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -39,7 +37,7 @@ class GraphDataViewTestCase(TestCase):
 
     def test_bank_connected(self):
         # This user has a bank account connected
-        self.user = User.objects.get(id=1)
+        self.user = User.objects.get(id=2)
         self.client.force_authenticate(user=self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -54,3 +52,15 @@ class GraphDataViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['all'][0]['x'], 'Stock Accounts')
         self.assertEqual(response.data['all'][0]['y'], 100.00)
+
+    def test_bank_and_stock_connected(self):
+        # This user has a bank AND stock account connected
+        self.user = User.objects.get(id=4)
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['all']), 2)
+        self.assertEqual(response.data['all'][0]['x'], 'Banks')
+        self.assertEqual(response.data['all'][0]['y'], 100.00)
+        self.assertEqual(response.data['all'][1]['x'], 'Stock Accounts')
+        self.assertEqual(response.data['all'][1]['y'], 100.00)
