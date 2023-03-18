@@ -9,6 +9,7 @@ from banking.models import Account, Transaction
 from rest_framework import status
 from django.utils import timezone
 from banking.tests.helpers import disable_updates
+from crypto_wallets.models import CryptoWallet
 
 class GraphDataViewTestCase(TestCase):
     """Tests for the graph data view."""
@@ -16,6 +17,7 @@ class GraphDataViewTestCase(TestCase):
     fixtures = [
         'accounts/fixtures/user.json',
         'banking/tests/fixtures/bank_data.json',
+        'stocks/tests/fixtures/stocks.json',
     ]
 
     def setUp(self):
@@ -31,8 +33,6 @@ class GraphDataViewTestCase(TestCase):
         # This user has no accounts connected
         self.user = User.objects.get(id=2)
         self.client.force_authenticate(user=self.user)
-        request = self.factory.get(self.url)
-        request.user = self.user
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['all']), 0)
@@ -41,9 +41,16 @@ class GraphDataViewTestCase(TestCase):
         # This user has a bank account connected
         self.user = User.objects.get(id=1)
         self.client.force_authenticate(user=self.user)
-        request = self.factory.get(self.url)
-        request.user = self.user
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['all'][0]['x'], 'Banks')
+        self.assertEqual(response.data['all'][0]['y'], 100.00)
+
+    def test_stocks_connected(self):
+        # This user has a stock account connected
+        self.user = User.objects.get(id=3)
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['all'][0]['x'], 'Stock Accounts')
         self.assertEqual(response.data['all'][0]['y'], 100.00)
