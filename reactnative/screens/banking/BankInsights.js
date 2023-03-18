@@ -73,7 +73,7 @@ export default function BankInsights() {
             console.log('check this',response.body.all.balance_history)
         }
     }
-    if (isFocused){fetchData()}
+    if (isFocused != false){fetchData()}
   }, [isFocused])
 
 
