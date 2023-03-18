@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, act, within} from '@testing-library/react-native';
-import LoginScreen from '../screens/LoginScreen';
+import LoginScreen from '../../screens/LoginScreen';
 
 
 jest.mock('react', () => {
@@ -30,7 +30,7 @@ var success = {
   "token": "123"
 }
 
-jest.mock('../authentication', () => {
+jest.mock('../../authentication', () => {
   return {
     login: jest.fn((username, password) => {
       if (!username && !password){

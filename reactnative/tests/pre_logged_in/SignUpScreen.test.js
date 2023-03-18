@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, act, within} from '@testing-library/react-native';
-import SignUpScreen from '../screens/pre_logged_in/SignUpScreen';
+import SignUpScreen from '../../screens/pre_logged_in/SignUpScreen';
 
 
 jest.mock('react', () => {

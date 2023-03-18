@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import AboutUsScreen from '../screens/pre_logged_in/AboutUsScreen';
+import AboutUsScreen from '../../screens/pre_logged_in/AboutUsScreen';
 import renderer from 'react-test-renderer';
 
 describe('<AboutUsScreen/>', () => {
