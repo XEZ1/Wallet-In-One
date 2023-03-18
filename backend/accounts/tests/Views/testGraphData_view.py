@@ -8,6 +8,7 @@ from accounts.models import User
 from banking.models import Account, Transaction
 from rest_framework import status
 from django.utils import timezone
+from banking.tests.helpers import disable_updates
 
 class GraphDataViewTestCase(TestCase):
     """Tests for the graph data view."""
@@ -19,6 +20,7 @@ class GraphDataViewTestCase(TestCase):
 
     def setUp(self):
         self.user = User.objects.get(id=1)
+        disable_updates()
         self.factory = RequestFactory()
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
