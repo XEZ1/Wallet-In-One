@@ -2,6 +2,7 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import DeveloperInfoScreen from '../screens/pre_logged_in/DeveloperInfoScreen';
 import { Linking } from 'react-native';
+import renderer from 'react-test-renderer';
 
 describe('<DeveloperInfoScreen />', () => {
     it('back to about us button test', () => {
@@ -66,4 +67,9 @@ describe('<DeveloperInfoScreen />', () => {
         fireEvent.press(getByTestId('GithubButtonTestMatushan'));
         expect(github).toHaveBeenCalledWith('https://github.com/mrmatyog');
     })
+
+    it('snapshot developerInfoScreen test', () => {
+        const developerInfoScreen = renderer.create(<DeveloperInfoScreen />);
+        expect(developerInfoScreen).toMatchSnapshot();         
+      });
 })
