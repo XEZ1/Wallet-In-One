@@ -1,13 +1,19 @@
-import {View, Text, StyleSheet, Image, ScrollView} from "react-native";
+import {View, Text, StyleSheet, Image, ScrollView, Dimensions} from "react-native";
 import React, {useEffect, useState} from "react";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { BACKEND_URL } from "@env"
 import * as SecureStore from "expo-secure-store";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
+import LineChartScreen from "../charts/LineChart";
+import { LineChart } from 'react-native-chart-kit';
+import { unescapeLeadingUnderscores } from "typescript";
 
 export default function CryptoWalletInsights() {
   const [insights, setInsights] = useState({predicted_balance: {}, received_spent: {}, average_spend: {}});
+  const [exchangeInsights, setExchangeInsights] = useState({all_transactions: {}, most_expensive_transaction: {}});
   const {dark, colors, setScheme} = useTheme();
+  const [ graphData, setGraphData ] = useState(null);
+  const {width: SIZE} = Dimensions.get('window');
 
   const styles = StyleSheet.create({
     title: {
@@ -23,6 +29,13 @@ export default function CryptoWalletInsights() {
       alignSelf: "center",
       color: colors.text
     },
+    smallSubtitle: {
+      fontWeight: "900",
+      fontSize: 24,
+      alignSelf: "center",
+      color: colors.text,
+      textAlign: 'center',
+    },
     info: {
       fontWeight: "900",
       fontSize: 15,
@@ -33,6 +46,7 @@ export default function CryptoWalletInsights() {
 
   useEffect(() => {
     fetchInsights();
+    fetchExchangeInsights();
   }, [])
 
   const fetchInsights = async () => {
@@ -48,12 +62,65 @@ export default function CryptoWalletInsights() {
       .catch((err) => console.log(err));
   };
 
+  const fetchExchangeInsights = async () => {
+    await fetch(`${BACKEND_URL}/crypto-exchanges/get_insights/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setExchangeInsights(res);
+  
+        const transactions = res.all_transactions;
+  
+        if (transactions.length === 1 && transactions[0] === "empty") {
+          setGraphData("empty");
+        } else {
+          // Group transactions by month
+          const transactionsByMonth = transactions.reduce((acc, transaction) => {
+            const month = transaction.timestamp.slice(0, 7);
+            acc[month] = acc[month] || [];
+            acc[month].push(transaction);
+            return acc;
+          }, {});
+  
+          // Calculate the number of transactions for each month
+          const labels = Object.keys(transactionsByMonth);
+          const values = labels.map((month) => transactionsByMonth[month].length);
+          const numDataPoints = labels.length;
+          const step = Math.ceil(numDataPoints / 4);
+          const filteredLabels = labels.filter((_, index) => index % step === 0);
+          const chartData = {
+            labels: filteredLabels,
+            datasets: [
+              {
+                data: values,
+              },
+            ],
+          };
+          setGraphData(chartData);
+        }
+      })
+      .catch((err) => console.log(err));
+  };  
+
+  const chartConfig = {
+    backgroundGradientFrom: colors.background,
+    backgroundGradientTo: colors.background,
+    color: dark ? (opacity = 3) => `rgba(255, 255, 255, ${opacity})` : (opacity = 3) => `rgba(0, 0, 0, ${opacity})`,
+    strokeWidth: 3,
+    xAxisLabel: "",
+    xAxisInterval: 5,
+  };
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background, paddingHorizontal: 20 }}>
       <Text />
 
-      <Text style={styles.subtitle}>Predicted Balance</Text>
+      <Text style={styles.smallSubtitle}>Predicted Balance in Crypto Wallets</Text>
       <Text style={styles.info}>Next four weeks</Text>
       <View style={{ borderRadius: 10, paddingVertical: 10}}>
         {
@@ -72,7 +139,7 @@ export default function CryptoWalletInsights() {
       </View>
       <Text />
 
-      <Text style={styles.subtitle}>Total Spent & Received</Text>
+      <Text style={styles.smallSubtitle}>Total Spent & Received in Crypto Wallets</Text>
       <View style={{ borderRadius: 10, paddingVertical: 10}}>
         {
           Object.keys(insights.received_spent).length === 0
@@ -90,7 +157,7 @@ export default function CryptoWalletInsights() {
       </View>
       <Text />
 
-      <Text style={styles.subtitle}>Average Spend</Text>
+      <Text style={styles.smallSubtitle}>Average Spend in Crypto Wallets</Text>
       <View style={{ borderRadius: 10, paddingVertical: 10}}>
         {
           Object.keys(insights.average_spend).length === 0
@@ -107,6 +174,40 @@ export default function CryptoWalletInsights() {
         }
       </View>
       <Text />
+
+      <Text style={styles.smallSubtitle}>Most Expensive Transaction in Crypto Exchanges</Text>
+      <View style={{ borderRadius: 10, paddingVertical: 10}}>
+        {exchangeInsights ? (
+          exchangeInsights.most_expensive_transaction[0] !== "empty" ? (
+            <InsightItem symbol={exchangeInsights.most_expensive_transaction[5]} upper={`${exchangeInsights.most_expensive_transaction[1]} ${exchangeInsights.most_expensive_transaction[0]} (£${exchangeInsights.most_expensive_transaction[2]}), type: ${exchangeInsights.most_expensive_transaction[3]}`} lower={`${exchangeInsights.most_expensive_transaction[4]}`}/>
+          ) : (
+            <Text>There are no transactions in your cryptocurrency exchanges.</Text>
+          )
+        ) : (
+          <Text>Loading...</Text>
+        )}
+      </View>
+      <Text />
+
+      <Text style={styles.smallSubtitle}>Number of Monthly Transactions in Crypto Exchanges</Text>
+      <View style={{ borderRadius: 10, paddingVertical: 10}}>
+        {graphData ? (
+          graphData === "empty" ? (
+            <Text>There is no transaction data from crypto exchanges.</Text>
+          ) : (
+            <LineChart
+              data={graphData}
+              width={SIZE}
+              height={SIZE/1.8}
+              chartConfig={chartConfig}
+              bezier
+              style={{ marginTop: 10, marginLeft: -20 }}
+            />
+          )
+        ) : (
+          <Text>Loading...</Text>
+        )}
+      </View>
 
     </ScrollView>
   )

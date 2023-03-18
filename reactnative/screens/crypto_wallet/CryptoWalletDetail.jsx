@@ -246,7 +246,7 @@ function CryptoWalletTransaction(props) {
   )
 }
 
-function OldChart(props) {
+export function OldChart(props) {
 
   const { graphData } = props
   const {dark, colors, setScheme} = useTheme();

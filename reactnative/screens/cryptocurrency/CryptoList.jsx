@@ -116,15 +116,15 @@ export default function CryptoList(props) {
             </View>
           </View>
         </View>
-
-        <Text style={[styles.cryptoWalletSubtitle, {color: colors.text, marginTop: 10}]}>Wallets</Text>
-
+        
         <TouchableOpacity
           style={styles.button}
           onPress={() => props.navigation.navigate("Crypto Wallet Insights")}
         >
-          <Text style={styles.buttonText}>Wallet Insights</Text>
+          <Text style={styles.buttonText}>Insights</Text>
         </TouchableOpacity>
+
+        <Text style={[styles.cryptoWalletSubtitle, {color: colors.text, marginTop: 10}]}>Wallets</Text>
 
         <View style={[styles.walletList]}>
           {
