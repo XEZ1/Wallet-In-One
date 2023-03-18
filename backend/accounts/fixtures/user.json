@@ -267,7 +267,7 @@
         "user":7,
         "cryptocurrency": "Bitcoin",
         "symbol": "BTC",
-        "address": "0x1",
+        "address": "0x5",
         "balance": 100.00,
         "received": 300.00,
         "spent": 200.00,
@@ -275,7 +275,6 @@
         "unspent_output_count": 20
       }
     },
-
     {
       "model": "accounts.user",
       "pk": 8,
@@ -294,7 +293,7 @@
         "user":8,
         "cryptocurrency": "Bitcoin",
         "symbol": "BTC",
-        "address": "0x2",
+        "address": "0x6",
         "balance": 100.00,
         "received": 300.00,
         "spent": 200.00,

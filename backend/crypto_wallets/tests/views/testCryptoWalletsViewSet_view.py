@@ -31,6 +31,7 @@ class CryptoWalletViewSetTestCase(TestCase):
         self.detail_url = reverse('crypto_wallet_view_set-detail', kwargs={"pk": self.detail_pk})
 
         self.crypto_wallet = CryptoWallet(
+            pk=1,
             user=self.user,
             cryptocurrency="Bitcoin",
             symbol="BTC",
