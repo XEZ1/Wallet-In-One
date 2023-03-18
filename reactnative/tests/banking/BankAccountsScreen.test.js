@@ -56,6 +56,8 @@ describe('<BankAccountsScreen />', () => {
             expect(activityIndicator).toBeNull();
         })
 
+        expect(snapshot).toMatchSnapshot();
+
         // Test button clicks
         fireEvent.press(await screen.getByText('Bank Insights'));
         expect(navigate).toHaveBeenCalledWith('Bank Insights');

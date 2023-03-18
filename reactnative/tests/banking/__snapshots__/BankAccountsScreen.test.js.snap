@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<BankAccountsScreen /> snapshot test 1`] = `
+exports[`<BankAccountsScreen /> snapshot and button test 1`] = `
 <View
   style={
     {
