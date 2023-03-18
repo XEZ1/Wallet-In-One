@@ -205,7 +205,7 @@ export default function HomePage({ navigation }) {
   const handleChartTypeChange = (type) => {
     setChartType(type);
   };
-
+  console.log(baseData)
   if (value == 0) {
     return (<NoWallets/>);
   } else {

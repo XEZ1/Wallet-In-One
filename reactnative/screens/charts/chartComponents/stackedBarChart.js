@@ -8,7 +8,6 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { Alert } from "react-native"
 
 export default function StackedChart({ data = fixture.all, handlePressIn  }) {
-  
   const {dark, colors, setScheme} = useTheme();
   return (
     <ScrollView
