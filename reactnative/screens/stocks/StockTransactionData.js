@@ -7,11 +7,14 @@ import Map from './Map';
 
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
+import Loading from '../banking/Loading';
+import { auth_get } from '../../authentication';
 
-export default function TransactionData({ route, navigation }){
+export default function TransactionData({ route }){
     const isFocused = useIsFocused()
     const [data, setTransactions] = useState()
     const {dark, colors, setScheme } = useTheme();
+    const[loading, setLoading] = useState(true);
 
     const stylesInternal = StyleSheet.create({
       item:{
@@ -42,32 +45,27 @@ export default function TransactionData({ route, navigation }){
     flex: 1,
   },
     });
-
-
   useEffect(() => {
     const getTransaction = async (id) => {
-      await fetch(api_url + `/stocks/get_transaction/${id}/`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token ${await SecureStore.getItemAsync('token')}`,
-        },
-      })
-        .then(async (res) => setTransactions(await res.json()))
-        .catch((error) => {
-          console.error(error);
-        });
+      response = await auth_get(`/stocks/get_transaction/${id}/`)
+      if(response.status == 200){
+        setTransactions(await response.body)
+        setLoading(false)
+      }
     };
-    if (isFocused) {
+    if (isFocused != false) {
       getTransaction(route.params.id);
     }
   }, [isFocused]);
 
+  if(loading){
+    return(<Loading/>)
+  }
+  else{
     return (
       <View style={stylesInternal.screen}>
         {/* <Text style={stylesInternal.text}>Transaction Data{"\n"}</Text> */}
 
-        {data ? (
           <View style={stylesInternal.screen}>
             <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Name</Text>
             <Text style={styles(dark, colors).text}>{data.name}{"\n"}</Text>
@@ -98,10 +96,10 @@ export default function TransactionData({ route, navigation }){
             </View>
             </View>
           </View>
-        ):(<Text style={styles(dark, colors).text}>Loading...</Text>)}
 
         {/* <Text>{JSON.stringify(data)}</Text> */}
       </View>
   );
+  }
     
 }

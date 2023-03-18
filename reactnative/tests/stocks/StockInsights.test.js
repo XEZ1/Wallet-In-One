@@ -51,6 +51,7 @@ describe('<StockInsight />', () => {
             expect(screen.getByText("Highest Fee(£): 7.99"))
             expect(screen.getByText("Lowest Fee(£): 0"))
             expect(screen.getByText("Average Fee(£): 3.07"))
+            expect(screen.UNSAFE_queryByType('Map')).toBeDefined()
         });
         expect(stockInsight).toMatchSnapshot();
     }
@@ -77,6 +78,7 @@ describe('<StockInsight />', () => {
             expect(screen.getByText("Highest Fee(£): 7.99"))
             expect(screen.getByText("Lowest Fee(£): 0"))
             expect(screen.getByText("Average Fee(£): 3.07"))
+            expect(screen.UNSAFE_queryByType('Map')).toBeDefined()
         });
         expect(stockInsight).toMatchSnapshot();
     }
@@ -103,6 +105,7 @@ describe('<StockInsight />', () => {
             expect(screen.getByText("Highest Fee(£): 7.99"))
             expect(screen.getByText("Lowest Fee(£): 0"))
             expect(screen.getByText("Average Fee(£): 3.07"))
+            expect(screen.UNSAFE_queryByType('Map')).toBeDefined()
         });
         expect(stockInsight).toMatchSnapshot();
     }
@@ -129,6 +132,7 @@ describe('<StockInsight />', () => {
             expect(screen.getByText("Highest Fee(£): 7.99"))
             expect(screen.getByText("Lowest Fee(£): 0"))
             expect(screen.getByText("Average Fee(£): 3.01"))
+            expect(screen.UNSAFE_queryByType('Map')).toBeDefined()
         });
         expect(stockInsight).toMatchSnapshot();
     }

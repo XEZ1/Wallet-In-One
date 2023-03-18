@@ -23,8 +23,9 @@ function BankTransactionsScreen({ route, navigation }) {
         else{
           response = await auth_get('/banking/transactions/' + route.params.accountID +'/')
         }
-        
+      
         if (response.status == 200){
+            console.log(response.body)
             setIsLoading(false)
             response.body.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
             setBankData(response.body)

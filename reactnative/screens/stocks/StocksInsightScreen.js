@@ -15,25 +15,20 @@ export default function StockInsight() {
     const [data, setData] = useState()
     const [currentData, setCurrentData] = useState()
     const [isLoading, setIsLoading] = useState(true)
-    const [index, setIndex] = useState(true)
-    console.log(data)
     useEffect( () => {
         const getMetrics = async () => {
         const response = await auth_get('/stocks/get_metrics/')
         if(response.status == 200){
             setData(response.body)
             setCurrentData(response.body.all)
-            setIndex("all")
             setIsLoading(false)
         }
-        
         }
         if(useIsFocused){getMetrics()}  
     }, [isFocused])
 
     const filter = (filter) => {
         setCurrentData(data[filter])
-        setIndex(filter)
     }
 
     const stylesInternal = StyleSheet.create({
