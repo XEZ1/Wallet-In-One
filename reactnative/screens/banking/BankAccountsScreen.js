@@ -10,7 +10,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ConditionalModal from '../Modal';
 
-export default function BankAccountsScreen({ navigation, testData=null }) {
+export default function BankAccountsScreen({ navigation }) {
   const [ isLoading, setIsLoading ] = useState(true)
   const [ bankData, setBankData ] = useState([])
   const isFocused = useIsFocused();
@@ -36,11 +36,7 @@ export default function BankAccountsScreen({ navigation, testData=null }) {
   }
 
   useEffect(() =>{
-    if (testData){
-      setBankData(testData)
-      setIsLoading(false)
-    }
-    if(isFocused){fetchData()}
+    if(isFocused != false){fetchData()}
   }, [isFocused])
 
   const displayTimestamp = (timestamp) => {
