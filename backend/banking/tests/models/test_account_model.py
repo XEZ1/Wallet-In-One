@@ -114,7 +114,7 @@ class AccountModelTestCase(TestCase):
 
     def test_add_balance_if_balance_already_exists(self):
         self.balance = Balance.objects.get(id=1)
-        self.assertEqual(len(Balance.objects.all()),1)
+        self.assertEqual(len(Balance.objects.all()),3)
         self.assertEqual(self.account.account_balance(),Money(100,'GBP'))
 
         test_data = [
@@ -129,7 +129,7 @@ class AccountModelTestCase(TestCase):
         ]
         self.account.add_balances(test_data)
 
-        self.assertEqual(len(Balance.objects.all()),1)
+        self.assertEqual(len(Balance.objects.all()),3)
         self.assertEqual(self.account.account_balance(),Money(300,'GBP'))
 
     def test_account_balance(self):
