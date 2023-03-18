@@ -91,4 +91,9 @@ describe('<LoginScreen />', () => {
     expect(errors1).toEqual([])
     expect(errors2).toEqual([])
   });
+
+  it('log in snapshot test', () => {
+    const renderer = render(<LoginScreen />)
+    expect(renderer).toMatchSnapshot();
+  });
 });

@@ -64,4 +64,9 @@ describe('<SignUpScreen />', () => {
       expect(errors).toEqual([])
     });
   });
+
+  it('sign up snapshot test', () => {
+    const renderer = render(<SignUpScreen />)
+    expect(renderer).toMatchSnapshot();
+  });
 });
