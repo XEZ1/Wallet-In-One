@@ -73,6 +73,7 @@ describe('<BankAccountsScreen />', () => {
         expect(navigate).toHaveBeenCalledWith('Bank Insights');
 
         fireEvent.press(await screen.getByText('All Transactions'));
+        fireEvent.press(await screen.getAllByTestId('account')[0]);
         expect(navigate).toHaveBeenCalledWith('All Bank Transactions');
         
         fireEvent.press(await screen.getAllByTestId('close1')[0]);

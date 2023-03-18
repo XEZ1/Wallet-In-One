@@ -168,7 +168,7 @@ export default function BankAccountsScreen({ navigation }) {
 
     return (
       <>
-      <TouchableOpacity style={mainStyle} key={index} onPress={ () => {  navigation.navigate('Bank Transactions', { accountID: item.id })}}>
+      <TouchableOpacity testID="account" style={mainStyle} key={index} onPress={ () => {  navigation.navigate('Bank Transactions', { accountID: item.id })}}>
         <View style={stylesInternal.row}>
           <Image
             source={{ uri: item.institution_logo }}

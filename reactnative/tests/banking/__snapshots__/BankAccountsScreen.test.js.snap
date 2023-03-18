@@ -249,6 +249,7 @@ You have no bank accounts
                 "padding": 20,
               }
             }
+            testID="account"
           >
             <View
               style={
@@ -449,6 +450,7 @@ You have no bank accounts
                 "padding": 20,
               }
             }
+            testID="account"
           >
             <View
               style={
