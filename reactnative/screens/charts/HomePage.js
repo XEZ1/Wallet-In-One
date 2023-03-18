@@ -16,6 +16,7 @@ import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
 import SwitchSelector from "react-native-switch-selector";
 import { FlatList } from "react-native-gesture-handler";
+import Loading from "../banking/Loading";
 export default function HomePage({ navigation }) {
   const originalColours = ["pink", "turquoise", "lime", "#FA991C"]
   const {dark, colors, setScheme } = useTheme();
@@ -27,6 +28,7 @@ export default function HomePage({ navigation }) {
   const [pressed, setPressed] = useState(null);
   const { removeWallet } = useCryptoWallet();
   const [colorScheme, setColors] = useState(originalColours);
+  const [loading, setIsLoading] = useState(true)
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
 
   // Uncomment to show bank data from backend
@@ -39,9 +41,10 @@ export default function HomePage({ navigation }) {
         setNewData(response.body.all);
         setPressed(null);
         setColors(originalColours);
+        setIsLoading(false)
       }
     };
-    if (isFocused) {
+    if (useIsFocused) {
       fetchData();
     }
     fetchExchanges();
@@ -122,8 +125,6 @@ export default function HomePage({ navigation }) {
         break;
       }
     }
-    console.log(index)
-    console.log(datapoint)
       if (pressed == "Banks"){
         for (let i = 0; i < baseData["Banks"].length; i++) {
           if (baseData["Banks"][i].x === index) {
@@ -149,16 +150,12 @@ export default function HomePage({ navigation }) {
         }
       }
       else if (pressed == "Stock Accounts") {
-        console.log(baseData["Stock Accounts"])
-        console.log(index)
         for (let i = 0; i < baseData["Stock Accounts"].length; i++) {
           if (baseData["Stock Accounts"][i].x === index) {
-            console.log(baseData["Stock Accounts"][i])
             var stockData = baseData["Stock Accounts"][i]
             break;
           }
         }
-        console.log(stockData)
         if (stockData.id) {
           var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
           const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
@@ -173,7 +170,6 @@ export default function HomePage({ navigation }) {
             balance_currency: response.body.balance_currency
           })
         }
-        console.log(stockData.id)
       }
       else if (pressed === "Cryptocurrency from exchanges") {
         for (let i = 0; i < baseData["Cryptocurrency from exchanges"].length; i++) {
@@ -205,8 +201,11 @@ export default function HomePage({ navigation }) {
   const handleChartTypeChange = (type) => {
     setChartType(type);
   };
-  console.log(baseData)
-  if (value == 0) {
+  
+  if(loading){
+    return(<Loading/>)
+  }
+  else if (value == 0) {
     return (<NoWallets/>);
   } else {
     return (
