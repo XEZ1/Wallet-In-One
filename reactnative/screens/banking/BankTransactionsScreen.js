@@ -30,7 +30,7 @@ function BankTransactionsScreen({ route, navigation }) {
             setBankData(response.body)
         }
     }
-    if (isFocused){fetchData()}
+    if (isFocused != false){fetchData()}
   }, [isFocused])
 
   const displayDate = (timestamp) => {
