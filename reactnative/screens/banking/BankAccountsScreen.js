@@ -180,11 +180,11 @@ export default function BankAccountsScreen({ navigation }) {
           </View>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={stylesInternal.closeButton} onPress={() => setModalVisible(true)}>
+      <TouchableOpacity testID="close1" style={stylesInternal.closeButton} onPress={() => setModalVisible(true)}>
         <FontAwesome style={stylesInternal.closeButtonText} name="close" size= {20}/>
       </TouchableOpacity>
 
-      <ConditionalModal
+      <ConditionalModal testID="model"
         headerText={"Remove Your Bank Account"}
         bodyText={"Are you sure you want to remove your bank account?"}
         visible={modalVisible}
@@ -193,7 +193,7 @@ export default function BankAccountsScreen({ navigation }) {
       />
 
       {item.disabled?(
-      <TouchableOpacity style={stylesInternal.closeButton2} onPress={() => Alert.alert('Warning','This account is not connected anymore. Please delete and readd this account.') }>
+      <TouchableOpacity testID="close2" style={stylesInternal.closeButton2} onPress={() => Alert.alert('Warning','This account is not connected anymore. Please delete and readd this account.') }>
         <FontAwesome style={stylesInternal.closeButtonText} name="exclamation" size= {20}/>
       </TouchableOpacity>):(<></>)}
       

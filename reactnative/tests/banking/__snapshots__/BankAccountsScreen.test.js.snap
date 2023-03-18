@@ -359,6 +359,7 @@ You have no bank accounts
                 "width": 27,
               }
             }
+            testID="close1"
           >
             <Text
               allowFontScaling={false}
@@ -558,6 +559,7 @@ You have no bank accounts
                 "width": 27,
               }
             }
+            testID="close1"
           >
             <Text
               allowFontScaling={false}
@@ -644,6 +646,7 @@ You have no bank accounts
                 "width": 27,
               }
             }
+            testID="close2"
           >
             <Text
               allowFontScaling={false}

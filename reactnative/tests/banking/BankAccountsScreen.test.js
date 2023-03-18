@@ -48,14 +48,36 @@ global.fetch =  jest.fn( async (api, data ) => {
 
 describe('<BankAccountsScreen />', () => {
     it('snapshot test', async () => {
+        const navigate = jest.fn();
         snapshot = render(<BankAccountsScreen />);
-        
+
         await waitFor( () => {
             const activityIndicator = screen.UNSAFE_queryByType('ActivityIndicator');
             expect(activityIndicator).toBeNull();
         })
 
         expect(snapshot).toMatchSnapshot();
-    }
-    )
+    })
+
+    it('test navigation buttons', async () => {
+        const navigate = jest.fn();
+        snapshot = render(<BankAccountsScreen navigation={{ navigate }} />);
+
+        await waitFor( () => {
+            const activityIndicator = screen.UNSAFE_queryByType('ActivityIndicator');
+            expect(activityIndicator).toBeNull();
+        })
+
+        // Test button clicks
+        fireEvent.press(await screen.getByText('Bank Insights'));
+        expect(navigate).toHaveBeenCalledWith('Bank Insights');
+
+        fireEvent.press(await screen.getByText('All Transactions'));
+        expect(navigate).toHaveBeenCalledWith('All Bank Transactions');
+        
+        fireEvent.press(await screen.getAllByTestId('close1')[0]);
+        fireEvent.press(await screen.getByTestId('close2'));
+    })
+    
+    
 });
