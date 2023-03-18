@@ -29,10 +29,9 @@ class CryptoWalletTestCase(TestCase):
         )
         self.crypto_wallet.save()
         self.crypto_wallet_transaction = CryptoWalletTransaction(
-            crypto_wallet = self.crypto_wallet,
+            crypto_wallet=self.crypto_wallet,
             value=234.323,
             time=23,
-
         )
 
     def _assert_is_valid(self, crypto_wallet_transaction):

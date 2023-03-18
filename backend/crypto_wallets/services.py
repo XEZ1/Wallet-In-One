@@ -29,7 +29,6 @@ class CryptoWalletService:
         self.transactions = response['data'][address]['transactions']
 
 
-
 def get_timestamp(date_time):
     dt = datetime.strptime(date_time, "%Y-%m-%d %H:%M:%S")
     return datetime.timestamp(dt)
@@ -47,26 +46,28 @@ def normalise_value(cryptocurrency, value):
         'eCash': value / 100,
     }.get(cryptocurrency, value)
 
-def getCryptoPrice(symbol):
+
+def get_crypto_price(symbol):
     url = f'https://min-api.cryptocompare.com/data/price?fsym={symbol}&tsyms=GBP'
     r = requests.get(url=url)
     response = r.json()
     price = float(response['GBP'])
     return price
 
+
 def total_user_balance_crypto(user):
     wallets = CryptoWallet.objects.filter(user=user)
     if wallets.exists():
-        return round(sum(getCryptoPrice(a.symbol)*a.balance for a in wallets), 2) 
+        return round(sum(get_crypto_price(a.symbol) * a.balance for a in wallets), 2)
     else:
         return 0
+
 
 def chart_breakdown_crypto(user):
     wallets = CryptoWallet.objects.filter(user=user)
     if wallets.exists():
-        for a in wallets:
-            print(a.cryptocurrency)
-        return [{'x': a.symbol + ' Wallet: ' + a.address[:15] + '...', 'y': round(getCryptoPrice(a.symbol)*a.balance,2), 'id': a.id} for a in wallets]
+        return [{'x': a.symbol + ' Wallet: ' + a.address[:15] + '...', 'y': round(get_crypto_price(a.symbol) * a.balance, 2), 'id': a.id} for a in wallets]
+
 
 def calculate_predicted_balance(user):
     """
