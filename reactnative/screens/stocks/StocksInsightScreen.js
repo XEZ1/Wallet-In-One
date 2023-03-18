@@ -16,7 +16,7 @@ export default function StockInsight() {
     const [currentData, setCurrentData] = useState()
     const [isLoading, setIsLoading] = useState(true)
     const [index, setIndex] = useState(true)
-
+    console.log(data)
     useEffect( () => {
         const getMetrics = async () => {
         const response = await auth_get('/stocks/get_metrics/')
