@@ -19,17 +19,18 @@ class GraphDataViewTestCase(TestCase):
     ]
 
     def setUp(self):
-        self.user = User.objects.get(id=1)
         disable_updates()
         self.factory = RequestFactory()
         self.client = APIClient()
-        self.client.force_authenticate(user=self.user)
         self.url = reverse('graph_data')
 
     def test_url(self):
         self.assertEqual(self.url,'/graph_data/')
 
     def test_no_graph_data(self):
+        # This user has no accounts connected
+        self.user = User.objects.get(id=2)
+        self.client.force_authenticate(user=self.user)
         request = self.factory.get(self.url)
         request.user = self.user
         response = self.client.get(self.url)
@@ -37,16 +38,12 @@ class GraphDataViewTestCase(TestCase):
         self.assertEqual(len(response.data['all']), 0)
 
     def test_bank_connected(self):
+        # This user has a bank account connected
+        self.user = User.objects.get(id=1)
+        self.client.force_authenticate(user=self.user)
         request = self.factory.get(self.url)
         request.user = self.user
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # self.assertEqual(response.data['all'][0]['x'], 'Banks')
-        # self.assertEqual(response.data['all'][0]['y'], 0)
-        # self.assertEqual(response.data['all'][1]['x'], 'Cryptocurrency from wallets')
-        # self.assertEqual(response.data['all'][1]['y'], 0)
-        # self.assertEqual(response.data['all'][2]['x'], 'Stock Accounts')
-        # self.assertEqual(response.data['all'][2]['y'], 0)
-        # self.assertEqual(response.data['all'][3]['x'], 'Cryptocurrency from exchanges')
-        # self.assertEqual(response.data['all'][3]['y'], 0)
+        self.assertEqual(response.data['all'][0]['x'], 'Banks')
+        self.assertEqual(response.data['all'][0]['y'], 100.00)
