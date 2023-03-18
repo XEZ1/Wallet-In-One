@@ -70,11 +70,11 @@ export default function StockInsight() {
         borderColor="#7a44cf"
         hasPadding
         options={[    
-          { label: "All", value: "all"},  
-          { label: "1 Month", value: "1 Month"},
-          { label: "3 Months", value: "3 Months"},
-          { label: "6 Months", value: "6 Months"},
-          { label: "1 Year", value: "12 Months"}  
+          { label: "All", value: "all", testID: "all"},  
+          { label: "1 Month", value: "1 Month", testID: "1 Month"},
+          { label: "3 Months", value: "3 Months", testID: "3 Months"},
+          { label: "6 Months", value: "6 Months", testID: "6 Months"},
+          { label: "1 Year", value: "12 Months", testID: "1 Year"}  
         ]}
         imageStyle={{ width: 20, height: 20 }}
         textStyle={{ fontWeight: 'bold', fontSize: 15 }}
@@ -99,6 +99,7 @@ export default function StockInsight() {
                 <Text style={[stylesInternal.text, styles(dark, colors).textBold, {color: colors.primary}]}>Transaction Statistics</Text>
                 <Text style={[stylesInternal.text, styles(dark, colors).text]}>Number of Transactions: {currentData.total_number_of_transactions}</Text>
                 <Text style={[stylesInternal.text, styles(dark, colors).text]}>Highest Transaction(£): {currentData.highest_transaction}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Lowest Transaction(£): {currentData.lowest_transaction}</Text>
                 <Text style={[stylesInternal.text, styles(dark, colors).text]}>Average Transaction(£): {currentData.average_transaction}</Text>
                 <Text style={[stylesInternal.text, styles(dark, colors).text]}>Variance: {currentData.variance}</Text>
                 <Text style={[stylesInternal.text, styles(dark, colors).text]}>Standard Deviation: {currentData.standard_deviation}</Text>
