@@ -15,7 +15,7 @@ from unittest.mock import MagicMock, patch, Mock
 
 from accounts.models import User
 from ...views import get_transactions, get_token_breakdown, get_exchange_balances, GenericCryptoExchanges, \
-    UpdateAllTokens, BinanceView, GateioView, CoinListView, CoinBaseView, KrakenView
+    BinanceView, GateioView, CoinListView, CoinBaseView, KrakenView
 from ...models import CryptoExchangeAccount, Transaction, Token
 from ...services import BinanceFetcher, GateioFetcher, CoinListFetcher, CoinBaseFetcher, KrakenFetcher
 from crypto_exchanges.serializers import *
@@ -625,12 +625,6 @@ class CryptoExchangeAccountCreationTestCase(APITestCase):
     # is sensitive information
     @patch('crypto_exchanges.services.BinanceFetcher')
     def test_create_binance_account_invalid(self, mock_fetcher):
-        mock_service = Mock()
-        mock_service.get_account_data.return_value = {'balances': [{'asset': 'BTC', 'free': '1.234'}]}
-        mock_service.get_trading_history.return_value = [
-            {'symbol': 'BTCUSDT', 'time': 1647637311000, 'price': '58914.22000000', 'qty': '0.00200000',
-             'commission': '0.00000200', 'commissionAsset': 'BNB'}]
-        mock_fetcher.return_value = mock_service
 
         url = reverse('binance')
         data = {'api_key': 'abcdefghijklmnopqrstuvwxyz', 'secret_key': 'abcdefghijklmnopqrstuvwxyz'}
@@ -641,12 +635,6 @@ class CryptoExchangeAccountCreationTestCase(APITestCase):
 
     @patch('crypto_exchanges.services.GateioFetcher')
     def test_create_gateio_account_invalid(self, mock_fetcher):
-        mock_service = Mock()
-        mock_service.get_account_data.return_value = {'balances': [{'asset': 'BTC', 'free': '1.234'}]}
-        mock_service.get_trading_history.return_value = [
-            {'symbol': 'BTCUSDT', 'time': 1647637311000, 'price': '58914.22000000', 'qty': '0.00200000',
-             'commission': '0.00000200', 'commissionAsset': 'BNB'}]
-        mock_fetcher.return_value = mock_service
 
         url = reverse('gateio')
         data = {'api_key': 'abcdefghijklmnopqrstuvwxyz', 'secret_key': 'abcdefghijklmnopqrstuvwxyz'}
@@ -657,12 +645,6 @@ class CryptoExchangeAccountCreationTestCase(APITestCase):
 
     @patch('crypto_exchanges.services.CoinListFetcher')
     def test_create_coin_list_account_invalid(self, mock_fetcher):
-        # mock_service = Mock()
-        # mock_service.get_account_data.return_value = {'asset_balances': {'BTC': 1.0, 'ETH': 0.5}}
-        # mock_service.get_trading_history.return_value = {'BTC': [
-        #     {'symbol': 'BTC', 'transaction_type': 'SWAP', 'amount': '0.01',
-        #      'created_at': '2022-03-09T06:04:53.525000Z'}]}
-        # mock_fetcher.return_value = mock_service
 
         url = reverse('coinlist')
         data = {'api_key': 'zNk5glD4B3owgefu347u9z3s+kHRZ5r/VM46isrhbiGkMFDkl7D/S', 'secret_key': '48/vZVp234ouitfwIG857AFW5d0vgIM48UgJKfETTl0RPEI3/DWHFi7byVDUSV65tdIQ-='}
@@ -673,12 +655,6 @@ class CryptoExchangeAccountCreationTestCase(APITestCase):
 
     @patch('crypto_exchanges.services.CoinBaseFetcher')
     def test_create_coinbase_account_invalid(self, mock_fetcher):
-        mock_service = Mock()
-        mock_service.get_account_data.return_value = {'balances': [{'asset': 'BTC', 'free': '1.234'}]}
-        mock_service.get_trading_history.return_value = {'fills': [
-            {'product_id': 'BTC-USD', 'trade_type': 'FILL', 'size': '0.01', 'trade_time': '2022-03-09T06:04:53.525Z'}
-        ]}
-        mock_fetcher.return_value = mock_service
 
         url = reverse('coinbase')
         data = {'api_key': 'abcdefghijklmnopqrstuvwxyz', 'secret_key': 'abcdefghijklmnopqrstuvwxyz'}
@@ -689,10 +665,6 @@ class CryptoExchangeAccountCreationTestCase(APITestCase):
 
     @patch('crypto_exchanges.services.KrakenFetcher')
     def test_create_kraken_account_invalid(self, mock_fetcher):
-        # mock_service = Mock()
-        # mock_service.get_account_data.return_value = {'result': {'XBT': '1.0', 'ETH': '0.5'}}
-        # mock_service.get_trading_history.return_value = {'result': {'trades': [{'pair': 'XBTUSD','type': 'buy','vol': '0.001','time': 1675884861}]}}
-        # mock_fetcher.return_value = mock_service
 
         url = reverse('kraken')
         data = {'api_key': 'zNk5glD4B3owgefu347u9z3s+kHRZ5r/VM46isrhbiGkMFDkl7D/S', 'secret_key': '48/vZVp234ouitfwIG857AFW5d0vgIM48UgJKfETTl0RPEI3/DWHFi7byVDUSV65tdIQ-='}
@@ -701,45 +673,3 @@ class CryptoExchangeAccountCreationTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data, {'error': 'EAPI:Invalid key'})
 
-
-
-# potential removal
-# class UpdateAllTokensTestCase(APITestCase):
-#     def setUp(self):
-#         self.factory = APIRequestFactory()
-#         self.user = User.objects.create_user(username='testuser', password='testpass')
-#         self.crypto_exchange_account = CryptoExchangeAccount.objects.create(
-#             user=self.user,
-#             crypto_exchange_name='Binance',
-#             api_key='wfeioguhwe549876y43jh',
-#             secret_key='wfjbh234987trfhu'
-#         )
-#         self.object = UpdateAllTokens()
-#
-#     def test_update_all_tokens(self):
-#         url = reverse('update')
-#         request = self.factory.post(url)
-#         force_authenticate(request, user=self.user)
-#         response = self.object.post(request)
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.assertEqual(Token.objects.count(), 0)  # check that all tokens have been deleted
-#         self.assertEqual(CryptoExchangeAccount.objects.count(), 0)  # check that all exchange accounts have been deleted
-#
-#     def test_update_all_tokens_with_invalid_credentials(self):
-#         url = reverse('update')
-#         self.crypto_exchange_account.api_key = 'invalid_api_key'
-#         self.crypto_exchange_account.secret_key = 'invalid_secret_key'
-#         self.crypto_exchange_account.save()
-#         response = self.client.post(url, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-#         self.assertEqual(Token.objects.count(), 0)  # check that no tokens have been created
-#         self.assertEqual(CryptoExchangeAccount.objects.count(), 0)  # check that no exchange accounts have been deleted
-#
-#     def test_update_all_tokens_with_unknown_platform(self):
-#         url = reverse('update')
-#         self.crypto_exchange_account.crypto_exchange_name = 'UnknownPlatform'
-#         self.crypto_exchange_account.save()
-#         response = self.client.post(url, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-#         self.assertEqual(Token.objects.count(), 0)  # check that no tokens have been created
-#         self.assertEqual(CryptoExchangeAccount.objects.count(), 1)  # check that exchange account has not been deleted
