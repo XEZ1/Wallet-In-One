@@ -185,7 +185,7 @@ export default function ExchangeTransactions(props) {
 
       {/* Exchange logo, title and balance */}
       <View style={[stylesInternal.exchangeAsset, styles(dark, colors).container, {flexDirection: 'row'}]}>
-        <Image
+        <Image testID='exchange-image'
           style={stylesInternal.exchangeAssetImage}
           source={getCryptoIcon(item.crypto_exchange_name)}/>
         <View style={{marginLeft: 10}}>
@@ -195,28 +195,6 @@ export default function ExchangeTransactions(props) {
           </Text>
         </View>
       </View>
-
-      {/* Switch Menus Buttons */}
-      {/* <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
-        <TouchableOpacity
-          style={[
-            styles(dark, colors).btn,
-            chartType === "pie" && { backgroundColor: 'aliceblue'},
-          ]}
-          onPress={() => handleChartTypeChange("pie")}
-        >
-        <Text>Coin Breakdown</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles(dark, colors).btn,
-            chartType === "transactions" && { backgroundColor: 'aliceblue'},
-          ]}
-          onPress={() => handleChartTypeChange("transactions")}
-        >
-        <Text>Transactions</Text>
-        </TouchableOpacity>
-      </View> */}
 
       <View style={{paddingHorizontal: 40}}>
         <SwitchSelector
@@ -235,6 +213,7 @@ export default function ExchangeTransactions(props) {
           textStyle={{ fontWeight: 'bold', fontSize: 15 }}
           buttonMargin={1}
           height={45}
+          testID='switchSelector'
         />
       </View>
 
