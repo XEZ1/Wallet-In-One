@@ -1,31 +1,28 @@
-from datetime import datetime, timezone,timedelta
+from datetime import datetime, timezone, timedelta
 
-import pytz
-from django.contrib.auth.models import User
-
+from django.http import HttpResponse, HttpRequest
 from rest_framework.test import APIRequestFactory, force_authenticate, APITestCase, APIClient
-
 from rest_framework.response import Response
-from unittest.mock import patch, Mock
-import unittest
+from rest_framework.test import APITestCase, APIRequestFactory
+
+from django.contrib.auth.models import User
 from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 from rest_framework import status
 
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch, Mock
 
 from accounts.models import User
 from ...views import get_transactions, get_token_breakdown, get_exchange_balances, GenericCryptoExchanges, \
     UpdateAllTokens, BinanceView, GateioView, CoinListView, CoinBaseView, KrakenView
 from ...models import CryptoExchangeAccount, Transaction, Token
 from ...services import BinanceFetcher, GateioFetcher, CoinListFetcher, CoinBaseFetcher, KrakenFetcher
+from crypto_exchanges.serializers import *
 from typing import List, Dict, Any
 from collections import OrderedDict
 
-from django.urls import reverse
-
-from rest_framework.test import APITestCase, APIRequestFactory
+import json
 
 
 def millis_to_datetime(millis):
@@ -40,6 +37,11 @@ def convert_to_dict_list(data: List[OrderedDict]) -> List[Dict[str, Any]]:
             dict_item[key] = value
         result.append(dict_item)
     return result
+
+
+def convert_date_string(date_string):
+    dt = datetime.fromisoformat(date_string)
+    return dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 
 
 class TestGetTransactions(TestCase):
@@ -410,7 +412,8 @@ class SaveTransactionsTestCase(TestCase):
                                                                              api_key='apikey', secret_key='secretkey')
 
         view.save_transactions(transactions, request, saved_exchange_account_object)
-        saved_transaction = Transaction.objects.get(asset='ETH_USDT', amount=2.5, crypto_exchange_object=saved_exchange_account_object)
+        saved_transaction = Transaction.objects.get(asset='ETH_USDT', amount=2.5,
+                                                    crypto_exchange_object=saved_exchange_account_object)
         self.assertEqual(saved_transaction.asset, 'ETH_USDT')
         self.assertEqual(saved_transaction.amount, 2.5)
         self.assertEqual(saved_transaction.transaction_type, 'sell')
@@ -421,7 +424,8 @@ class SaveTransactionsTestCase(TestCase):
         view = CoinListView()
         # prepare test data
         transactions = {'BTC': [
-            {'symbol': 'BTC', 'transaction_type': 'SWAP', 'amount': '0.01', 'created_at': '2022-03-09T06:04:53.525000Z'}]}
+            {'symbol': 'BTC', 'transaction_type': 'SWAP', 'amount': '0.01',
+             'created_at': '2022-03-09T06:04:53.525000Z'}]}
         request = RequestFactory().get('/')
         new_user = User.objects.create_user(username='testuser', password='testpass')
         saved_exchange_account_object = CryptoExchangeAccount.objects.create(user=new_user,
@@ -463,18 +467,7 @@ class SaveTransactionsTestCase(TestCase):
     def test_kraken_save_transactions(self):
         view = KrakenView()
         # prepare test data
-        transactions = {
-            'result': {
-                'trades': [
-                    {
-                        'pair': 'XBTUSD',
-                        'type': 'buy',
-                        'vol': '0.001',
-                        'time': 1675884861
-                    }
-                ]
-            }
-        }
+        transactions = {'result': {'trades': [{'pair': 'XBTUSD','type': 'buy','vol': '0.001','time': 1675884861}]}}
         request = RequestFactory().get('/')
         new_user = User.objects.create_user(username='testuser', password='testpass')
         saved_exchange_account_object = CryptoExchangeAccount.objects.create(user=new_user,
@@ -490,6 +483,245 @@ class SaveTransactionsTestCase(TestCase):
         self.assertEqual(saved_transaction.transaction_type, 'buy')
         self.assertEqual(saved_transaction.timestamp,
                          datetime(2023, 2, 8, 19, 34, 21, 0, tzinfo=timezone.utc))
+
+
+# class GetTestCase(APITestCase):
+#     def setUp(self):
+#         self.user = User.objects.create_user(username='testuser', password='testpass')
+#         self.factory = APIRequestFactory()
+#
+#     def test_binance_get(self):
+#         view = BinanceView.as_view()
+#         request = self.factory.get('/binance')
+#         force_authenticate(request, user=self.user)
+#         response = view(request)
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#
+#     def test_gateio_get(self):
+#         view = GateioView.as_view()
+#         request = self.factory.get('/gateio')
+#         force_authenticate(request, user=self.user)
+#         response = view(request)
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class GetMethodsOfViewsTestCase(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.client.force_authenticate(user=self.user)
+        self.url = reverse('crypto-exchanges')
+
+    def test_get_crypto_exchange_accounts(self):
+        # create a CryptoExchangeAccount object
+        account = CryptoExchangeAccount.objects.create(
+            user=self.user,
+            api_key='my_api_key',
+            secret_key='my_secret_key',
+            crypto_exchange_name='binance',
+        )
+
+        # make a GET request to the view
+        response = self.client.get(self.url)
+
+        # assert that the response status code is 200 OK
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # assert that the response data is the expected data
+        expected_data = [OrderedDict([('crypto_exchange_name', 'binance'), ('api_key', 'my_api_key'),
+                                      ('secret_key', 'my_secret_key'),
+                                      ('created_at', convert_date_string(str(account.created_at))), ('id', 1)])]
+        self.assertEqual(response.data, expected_data)
+
+    @patch.object(GenericCryptoExchanges, 'get')
+    def test_binance_view_get(self, mock_get):
+        mock_response_data = {'key': 'value'}
+        mock_response = HttpResponse(json.dumps(mock_response_data), content_type='application/json', status=200)
+        mock_get.return_value = mock_response
+
+        request = HttpRequest()
+        request.method = 'GET'
+        request.headers = {'Accept': 'application/json'}
+
+        force_authenticate(request, user=self.user)
+
+        view = BinanceView.as_view()
+
+        response = view(request)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content.decode('utf-8'), json.dumps(mock_response_data))
+
+    @patch.object(GenericCryptoExchanges, 'get')
+    def test_gateio_view_get(self, mock_get):
+        mock_response_data = {'key': 'value'}
+        mock_response = HttpResponse(json.dumps(mock_response_data), content_type='application/json', status=200)
+        mock_get.return_value = mock_response
+
+        request = HttpRequest()
+        request.method = 'GET'
+        request.headers = {'Accept': 'application/json'}
+
+        force_authenticate(request, user=self.user)
+
+        view = GateioView.as_view()
+
+        response = view(request)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content.decode('utf-8'), json.dumps(mock_response_data))
+
+    @patch.object(GenericCryptoExchanges, 'get')
+    def test_coinlist_view_get(self, mock_get):
+        mock_response_data = {'key': 'value'}
+        mock_response = HttpResponse(json.dumps(mock_response_data), content_type='application/json', status=200)
+        mock_get.return_value = mock_response
+
+        request = HttpRequest()
+        request.method = 'GET'
+        request.headers = {'Accept': 'application/json'}
+
+        force_authenticate(request, user=self.user)
+
+        view = CoinListView.as_view()
+
+        response = view(request)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content.decode('utf-8'), json.dumps(mock_response_data))
+
+    @patch.object(GenericCryptoExchanges, 'get')
+    def test_coinbase_view_get(self, mock_get):
+        mock_response_data = {'key': 'value'}
+        mock_response = HttpResponse(json.dumps(mock_response_data), content_type='application/json', status=200)
+        mock_get.return_value = mock_response
+
+        request = HttpRequest()
+        request.method = 'GET'
+        request.headers = {'Accept': 'application/json'}
+
+        force_authenticate(request, user=self.user)
+
+        view = CoinBaseView.as_view()
+
+        response = view(request)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content.decode('utf-8'), json.dumps(mock_response_data))
+
+    @patch.object(GenericCryptoExchanges, 'get')
+    def test_kraken_view_get(self, mock_get):
+        mock_response_data = {'key': 'value'}
+        mock_response = HttpResponse(json.dumps(mock_response_data), content_type='application/json', status=200)
+        mock_get.return_value = mock_response
+
+        request = HttpRequest()
+        request.method = 'GET'
+        request.headers = {'Accept': 'application/json'}
+
+        force_authenticate(request, user=self.user)
+
+        view = KrakenView.as_view()
+
+        response = view(request)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content.decode('utf-8'), json.dumps(mock_response_data))
+
+
+class CryptoExchangeAccountCreationTestCase(APITestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = User.objects.create_user(username='test_user', password='password')
+
+    def setUp(self):
+        self.client.force_authenticate(user=self.user)
+
+    def tearDown(self):
+        self.client.logout()
+
+    # Testing for post is limited because real api/secret key pairs are needed for testing successful posting, which
+    # is sensitive information
+    @patch('crypto_exchanges.services.BinanceFetcher')
+    def test_create_binance_account_invalid(self, mock_fetcher):
+        mock_service = Mock()
+        mock_service.get_account_data.return_value = {'balances': [{'asset': 'BTC', 'free': '1.234'}]}
+        mock_service.get_trading_history.return_value = [
+            {'symbol': 'BTCUSDT', 'time': 1647637311000, 'price': '58914.22000000', 'qty': '0.00200000',
+             'commission': '0.00000200', 'commissionAsset': 'BNB'}]
+        mock_fetcher.return_value = mock_service
+
+        url = reverse('binance')
+        data = {'api_key': 'abcdefghijklmnopqrstuvwxyz', 'secret_key': 'abcdefghijklmnopqrstuvwxyz'}
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {'error': 'API-key format invalid.'})
+
+    @patch('crypto_exchanges.services.GateioFetcher')
+    def test_create_gateio_account_invalid(self, mock_fetcher):
+        mock_service = Mock()
+        mock_service.get_account_data.return_value = {'balances': [{'asset': 'BTC', 'free': '1.234'}]}
+        mock_service.get_trading_history.return_value = [
+            {'symbol': 'BTCUSDT', 'time': 1647637311000, 'price': '58914.22000000', 'qty': '0.00200000',
+             'commission': '0.00000200', 'commissionAsset': 'BNB'}]
+        mock_fetcher.return_value = mock_service
+
+        url = reverse('gateio')
+        data = {'api_key': 'abcdefghijklmnopqrstuvwxyz', 'secret_key': 'abcdefghijklmnopqrstuvwxyz'}
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {'error': 'Invalid key provided'})
+
+    @patch('crypto_exchanges.services.CoinListFetcher')
+    def test_create_coin_list_account_invalid(self, mock_fetcher):
+        # mock_service = Mock()
+        # mock_service.get_account_data.return_value = {'asset_balances': {'BTC': 1.0, 'ETH': 0.5}}
+        # mock_service.get_trading_history.return_value = {'BTC': [
+        #     {'symbol': 'BTC', 'transaction_type': 'SWAP', 'amount': '0.01',
+        #      'created_at': '2022-03-09T06:04:53.525000Z'}]}
+        # mock_fetcher.return_value = mock_service
+
+        url = reverse('coinlist')
+        data = {'api_key': 'zNk5glD4B3owgefu347u9z3s+kHRZ5r/VM46isrhbiGkMFDkl7D/S', 'secret_key': '48/vZVp234ouitfwIG857AFW5d0vgIM48UgJKfETTl0RPEI3/DWHFi7byVDUSV65tdIQ-='}
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {'error': 'invalid api key'})
+
+    @patch('crypto_exchanges.services.CoinBaseFetcher')
+    def test_create_coinbase_account_invalid(self, mock_fetcher):
+        mock_service = Mock()
+        mock_service.get_account_data.return_value = {'balances': [{'asset': 'BTC', 'free': '1.234'}]}
+        mock_service.get_trading_history.return_value = {'fills': [
+            {'product_id': 'BTC-USD', 'trade_type': 'FILL', 'size': '0.01', 'trade_time': '2022-03-09T06:04:53.525Z'}
+        ]}
+        mock_fetcher.return_value = mock_service
+
+        url = reverse('coinbase')
+        data = {'api_key': 'abcdefghijklmnopqrstuvwxyz', 'secret_key': 'abcdefghijklmnopqrstuvwxyz'}
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {'error': 'invalid api key'})
+
+    @patch('crypto_exchanges.services.KrakenFetcher')
+    def test_create_kraken_account_invalid(self, mock_fetcher):
+        # mock_service = Mock()
+        # mock_service.get_account_data.return_value = {'result': {'XBT': '1.0', 'ETH': '0.5'}}
+        # mock_service.get_trading_history.return_value = {'result': {'trades': [{'pair': 'XBTUSD','type': 'buy','vol': '0.001','time': 1675884861}]}}
+        # mock_fetcher.return_value = mock_service
+
+        url = reverse('kraken')
+        data = {'api_key': 'zNk5glD4B3owgefu347u9z3s+kHRZ5r/VM46isrhbiGkMFDkl7D/S', 'secret_key': '48/vZVp234ouitfwIG857AFW5d0vgIM48UgJKfETTl0RPEI3/DWHFi7byVDUSV65tdIQ-='}
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {'error': 'EAPI:Invalid key'})
+
+
 
 # potential removal
 # class UpdateAllTokensTestCase(APITestCase):
