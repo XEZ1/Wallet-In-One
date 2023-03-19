@@ -66,7 +66,7 @@ describe('<HomePage />', () => {
         delete global.fetch;
       })
 
-    it('homePage snapshot test', async () => {
+    it('homePage pie chart bar chart test', async () => {
         const homePage = render(<HomePage/>);
         await act( async () => {
         await waitFor( () => {

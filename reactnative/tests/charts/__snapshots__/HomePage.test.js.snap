@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<HomePage /> homePage snapshot test 1`] = `
+exports[`<HomePage /> homePage pie chart bar chart test 1`] = `
 <RCTScrollView
   ListHeaderComponent={
     <React.Fragment>
@@ -39,10 +39,12 @@ exports[`<HomePage /> homePage snapshot test 1`] = `
             [
               {
                 "label": "Pie Chart",
+                "testID": "pie",
                 "value": "pie",
               },
               {
                 "label": "Stacked Bar Chart",
+                "testID": "stacked",
                 "value": "stacked",
               },
             ]
@@ -841,6 +843,7 @@ exports[`<HomePage /> homePage snapshot test 1`] = `
                       "opacity": 1,
                     }
                   }
+                  testID="pie"
                 >
                   <Text
                     style={
@@ -896,6 +899,7 @@ exports[`<HomePage /> homePage snapshot test 1`] = `
                       "opacity": 1,
                     }
                   }
+                  testID="stacked"
                 >
                   <Text
                     style={
