@@ -3,12 +3,12 @@ import React, {useEffect, useState} from "react";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { BACKEND_URL } from "@env"
 import * as SecureStore from "expo-secure-store";
-import getCryptoIcon from "../cryptocurrency/icons/icon";
+import getCryptoIcon from "./icons/icon";
 import LineChartScreen from "../charts/LineChart";
 import { LineChart } from 'react-native-chart-kit';
 import { unescapeLeadingUnderscores } from "typescript";
 
-export default function CryptoWalletInsights() {
+export default function CryptoInsights() {
   const [insights, setInsights] = useState({predicted_balance: {}, received_spent: {}, average_spend: {}});
   const [exchangeInsights, setExchangeInsights] = useState({all_transactions: {}, most_expensive_transaction: {}});
   const {dark, colors, setScheme} = useTheme();
