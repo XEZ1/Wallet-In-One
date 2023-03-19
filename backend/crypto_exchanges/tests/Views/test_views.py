@@ -1,5 +1,6 @@
 from datetime import datetime, timezone, timedelta
 
+import pytz
 from django.http import HttpResponse, HttpRequest
 from rest_framework.test import APIRequestFactory, force_authenticate, APITestCase, APIClient
 from rest_framework.response import Response
@@ -61,7 +62,7 @@ class TestGetTransactions(TestCase):
 
         transaction = Transaction.objects.create(
             crypto_exchange_object=self.crypto_exchange_account,
-            timestamp=datetime.now(),
+            timestamp=datetime.now(pytz.timezone('Europe/London')),
             transaction_type="buy",
             amount=1.0,
             asset='BTC'
@@ -85,7 +86,7 @@ class TestGetTransactions(TestCase):
         # assert that the response data is the expected data
         expected_data = [{'crypto_exchange_object': self.crypto_exchange_account.id, 'asset': 'BTC',
                           'transaction_type': 'buy', 'amount': 1.0,
-                          'timestamp': str(transaction.timestamp.isoformat()) + 'Z'
+                          'timestamp': str(transaction.timestamp.isoformat()).replace('+00:00', 'Z')
                           }]
         self.assertEqual(convert_to_dict_list(response.data), expected_data)
 
@@ -635,9 +636,16 @@ class CryptoExchangeAccountCreationTestCase(APITestCase):
 
     @patch('crypto_exchanges.services.GateioFetcher')
     def test_create_gateio_account_invalid(self, mock_fetcher):
+        # mock_service = Mock()
+        # mock_service.get_account_data.return_value = {'balances': [{'asset': 'BTC', 'free': '1.234'}]}
+        # mock_service.get_trading_history.return_value = [
+        #     {'symbol': 'BTCUSDT', 'time': 1647637311000, 'price': '58914.22000000', 'qty': '0.00200000',
+        #      'commission': '0.00000200', 'commissionAsset': 'BNB'}]
+        # mock_fetcher.return_value = mock_service
 
         url = reverse('gateio')
-        data = {'api_key': 'abcdefghijklmnopqrstuvwxyz', 'secret_key': 'abcdefghijklmnopqrstuvwxyz'}
+        data = {'api_key': 'zNk5glD4B3owgefu347u9z3s+kHRZ5r/VM46isrhbiGkMFDkl7D/S',
+                'secret_key': '48/vZVp234ouitfwIG857AFW5d0vgIM48UgJKfETTl0RPEI3/DWHFi7byVDUSV65tdIQ-='}
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
