@@ -76,4 +76,16 @@ describe('<HomePage />', () => {
         expect(homePage).toMatchSnapshot();
         })
     })
+
+    it('homepage stacked bar chart test', async () => {
+        const homePage = render(<HomePage/>);
+        await act( async () => {
+        await waitFor( () => {
+            const activityIndicator = screen.UNSAFE_queryByType('ActivityIndicator');
+            expect(activityIndicator).toBeNull();
+        })
+        fireEvent.press(await screen.getByTestId("stacked"))
+        expect(homePage).toMatchSnapshot();
+        })
+    })
 })

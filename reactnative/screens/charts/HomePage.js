@@ -253,8 +253,8 @@ export default function HomePage({ navigation }) {
               borderColor="#7a44cf"
               hasPadding
               options={[    
-                { label: "Pie Chart", value: "pie"},  
-                { label: "Stacked Bar Chart", value: "stacked"} 
+                { label: "Pie Chart", value: "pie", testID: "pie"},  
+                { label: "Stacked Bar Chart", value: "stacked", testID: "stacked"} 
               ]}
               imageStyle={{ width: 20, height: 20 }}
               textStyle={{ fontWeight: 'bold', fontSize: 18 }}
