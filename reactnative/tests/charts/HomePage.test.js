@@ -74,18 +74,50 @@ describe('<HomePage />', () => {
             expect(activityIndicator).toBeNull();
         })
         expect(homePage).toMatchSnapshot();
+        fireEvent.press(await screen.getByTestId("stacked"))
+        fireEvent.press(await screen.getByTestId("pie"))
+        expect(homePage).toMatchSnapshot();
         })
     })
 
     it('homepage stacked bar chart test', async () => {
         const homePage = render(<HomePage/>);
         await act( async () => {
-        await waitFor( () => {
-            const activityIndicator = screen.UNSAFE_queryByType('ActivityIndicator');
-            expect(activityIndicator).toBeNull();
+            await waitFor( () => {
+                const activityIndicator = screen.UNSAFE_queryByType('ActivityIndicator');
+                expect(activityIndicator).toBeNull();
+            })
+            fireEvent.press(await screen.getByTestId("stacked"))
+            expect(homePage).toMatchSnapshot();
         })
-        fireEvent.press(await screen.getByTestId("stacked"))
-        expect(homePage).toMatchSnapshot();
+    })
+})
+
+var emptyData = {"all": []}
+describe('<HomePage /> No Data', () => {
+
+    beforeEach(() => {
+        global.fetch =  jest.fn( async () => {
+            return Promise.resolve({
+                status: 200, json: () => emptyData
+            })
+        })
+      })
+
+      afterEach(() => {
+        global.fetch.mockClear();
+        delete global.fetch;
+      })
+
+    
+    it('homepage noData test', async () => {
+        const homePage = render(<HomePage/>)
+        await act( async () => {
+            await waitFor( () => {
+                const activityIndicator = screen.UNSAFE_queryByType('ActivityIndicator');
+                expect(activityIndicator).toBeNull();
+            })
+            expect(homePage).toMatchSnapshot();
         })
     })
 })
