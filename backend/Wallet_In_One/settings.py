@@ -144,3 +144,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # User model for authentication purposes
 AUTH_USER_MODEL = 'accounts.User'
+
+import django_on_heroku
+django_on_heroku.settings(locals(), db_ssl_required=False, test_runner=False)
