@@ -41,8 +41,6 @@ export default function StockDetails({ route, navigation }){
     }
   }, [stock, getStockTransactions]);
 
-  // console.log(stockTransactions);
-
   const current_balance = stockTransactions?.map(item => item.amount).reduce((acc, current) => acc + current, 0);
   
 
