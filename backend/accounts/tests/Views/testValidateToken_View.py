@@ -34,6 +34,14 @@ class ValidateTokenTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data, {'detail': ErrorDetail(string='Invalid token.', code='authentication_failed')})
 
+    def test_token_invalid_if_user_deleted(self):
+        self.request.META['HTTP_AUTHORIZATION'] = f'Token {self.token.key}'
+        self.user.delete()
+        response = validate_token(self.request)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.data, {'detail': ErrorDetail(string='Invalid token.', code='authentication_failed')})
+
+
     def test_missing_token(self):
         response = validate_token(self.request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
