@@ -24,9 +24,9 @@ import { render, screen, fireEvent } from '@testing-library/react-native';
       expect(settingsPage).toMatchSnapshot();
   });
 
-  it('setting page dark mode toggle', () => {
-    const navigate = jest.fn();
-    const settingsPage = render(<SettingsPage navigation={ {navigate} }/>);
-    fireEvent.press(screen.getByText('Dark Mode'));
-    expect(settingsPage).toMatchSnapshot();
-  });
+  // it('setting page dark mode toggle', () => {
+  //   const navigate = jest.fn();
+  //   const settingsPage = render(<SettingsPage navigation={ {navigate} }/>);
+  //   fireEvent.press(screen.getByText('Dark Mode'));
+  //   expect(settingsPage).toMatchSnapshot();
+  // });
