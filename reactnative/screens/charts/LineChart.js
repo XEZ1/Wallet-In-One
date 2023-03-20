@@ -38,60 +38,6 @@ export default function LineChartScreen({graph_version, height, width, current_b
     //     }
     // }, [transactions]);
 
-    let color1 = '';
-    
-    if (data && data.length > 0) {
-        if (data[0]?.value > data[data.length -1]?.value){
-            color1 = 'red';
-        } 
-        else {
-            color1 = 'green';
-        }
-    }
-    // console.log(graphData);
-
-    // let candlestickData = null;
-
-    // if(graph_version == 3){
-    //     const transformedData = data.reduce((acc, transaction) => {
-    //         const date = new Date(transaction.timestamp);
-    //         const month = `${date.getFullYear()}-${date.getMonth() + 1}`;
-
-    //         if (!acc[month]) {
-    //             acc[month] = {
-    //                 high: transaction.value,
-    //                 low: transaction.value,
-    //                 open: transaction.value,
-    //                 close: transaction.value,
-    //             };
-    //         } 
-    //         else {
-    //             if (transaction.value > acc[month].high) {
-    //                 acc[month].high = transaction.value;
-    //             }
-
-    //             if (transaction.value < acc[month].low) {
-    //                 acc[month].low = transaction.value;
-    //             }
-
-    //             acc[month].close = transaction.value;
-    //         }b
-
-    //         return acc;
-    //     }, {});
-        
-    //     candlestickData = Object.keys(transformedData).map((key) => {
-    //         const [year, month] = key.split('-');
-    //         return {
-    //             timestamp: (new Date(year, month - 1)).getTime(),
-    //             open: parseFloat(transformedData[key].open),
-    //             close: parseFloat(transformedData[key].close),
-    //             high: parseFloat(transformedData[key].high),
-    //             low: parseFloat(transformedData[key].low),
-    //         };
-    //     });
-    // }
-
     let percentageChange = null;
     let priceChange = null;
     
@@ -112,16 +58,76 @@ export default function LineChartScreen({graph_version, height, width, current_b
             priceChange = '+' + priceChange;
         }
     }
+    calculateChange(current_balance, data[0]?.value);
 
-    if(graph_version != 3){
-        calculateChange(current_balance, data[0]?.value);
+    let color1 = '';
+    
+    if (data && data.length > 0) {
+        if (data[0]?.value > data[data.length -1]?.value){
+            color1 = 'red';
+        } 
+        else {
+            color1 = 'green';
+        }
     }
-    else if (current_balance != null){
-        calculateChange(current_balance, data[0]?.open);
+    // console.log(graphData);
+
+    let candlestickData = null;
+
+    if(graph_version == 3){
+        const transformedData = data.reduce((acc, transaction) => {
+            const date = new Date(transaction.timestamp);
+            const month = `${date.getFullYear()}-${date.getMonth() + 1}`;
+
+            if (!acc[month]) {
+                acc[month] = {
+                    high: transaction.value,
+                    low: transaction.value,
+                    open: transaction.value,
+                    close: transaction.value,
+                };
+            } 
+            else {
+                if (transaction.value > acc[month].high) {
+                    acc[month].high = transaction.value;
+                }
+
+                if (transaction.value < acc[month].low) {
+                    acc[month].low = transaction.value;
+                }
+
+                acc[month].close = transaction.value;
+            }
+
+            return acc;
+        }, {});
+        
+        candlestickData = Object.keys(transformedData).map((key) => {
+            const [year, month] = key.split('-');
+            return {
+                timestamp: (new Date(year, month - 1)).getTime(),
+                open: parseFloat(transformedData[key].open),
+                close: parseFloat(transformedData[key].close),
+                high: parseFloat(transformedData[key].high),
+                low: parseFloat(transformedData[key].low),
+            };
+        });
     }
-    else{
-        calculateChange(data[data.length-1].close, data[0]?.open);
-    }
+
+    // console.log(candlestickData)
+    
+
+    // if(graph_version != 3){
+    //     calculateChange(current_balance, data[0]?.value);
+    // }
+    // else if (current_balance != null){
+    //     calculateChange(current_balance, data[0]?.open);
+    // }
+    // else{
+    //     calculateChange(candlestickData[candlestickData.length-1].close, candlestickData[0]?.open);
+    // }
+    // console.log(candlestickData)
+    // console.log(priceChange)
 
     return (
         <View >
@@ -172,14 +178,14 @@ export default function LineChartScreen({graph_version, height, width, current_b
                         </LineChart.Provider></>
                     }
                     {/* Candelstick graph */}   
-                    { graph_version == 3 && data &&
+                    { graph_version == 3 && candlestickData &&
                         <>
                         <View style={{flexDirection: 'row', paddingBottom: 14, paddingHorizontal: 10}}>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}>{priceChange}</Text>
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}> ({percentageChange}%)</Text>
                         </View>
 
-                        <CandlestickChart.Provider data={data}>
+                        <CandlestickChart.Provider data={candlestickData}>
                             <CandlestickChart height={height} width={width}>
                                 <CandlestickChart.Candles />
                                 <CandlestickChart.Crosshair />
@@ -215,6 +221,7 @@ export default function LineChartScreen({graph_version, height, width, current_b
                             </View>
 
                         </CandlestickChart.Provider></>
+                        
                     }
 
                     {/* Interactive graph WalletAssetVersion */}

@@ -9,7 +9,8 @@ jest.mock('@react-navigation/native', () => ({
         'react-native-wagmi-charts/lib/commonjs/charts/line/utils',
       ),
       getDomain: jest.fn((rows) => {
-        return 0;
+        const values = rows.map(({value})=> value);
+        return [Math.min(...values), Math.max(...values)];
       }),
       lineChartDataPropToArray: jest.fn((dataProp) => {
         if (!dataProp) {

@@ -213,64 +213,29 @@ export default function StockAsset({ route, navigation, }){
   const [graphVersion,setGraphVersion] = React.useState(1);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const setData = (transaction, current_balance, graph_Version) => {
-    if(graph_Version == 3){
-      const transformedData = data.reduce((acc, transaction) => {
-        const date = new Date(transaction.timestamp);
-        const month = `${date.getFullYear()}-${date.getMonth() + 1}`;
 
-        if (!acc[month]) {
-            acc[month] = {
-                high: transaction.value,
-                low: transaction.value,
-                open: transaction.value,
-                close: transaction.value,
-            };
-        } 
-        else {
-            if (transaction.value > acc[month].high) {
-                acc[month].high = transaction.value;
+   useEffect(() => {
+        // if(data == null){
+            let graph_data = transactions.map((item) => [item.amount, item.date]);
+            graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
+
+            let points = [];
+            let balance = route.params.balance;
+
+            for (let i = 0; i < graph_data.length; i++) {
+                let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
+                balance -= graph_data[i][0]
+                points = [point, ...points]
             }
-
-            if (transaction.value < acc[month].low) {
-                acc[month].low = transaction.value;
+            if (points.length > 0) {
+                points[points.length - 1].value = parseFloat(points[points.length - 1].value);
             }
+            setGraph(points)
+        // } else{
+        //     setGraph(data);
+        // }
+    }, [transactions]);
 
-            acc[month].close = transaction.value;
-        }b
-
-        return acc;
-    }, {});
-    let candlestickData = Object.keys(transformedData).map((key) => {
-        const [year, month] = key.split('-');
-        return {
-            timestamp: (new Date(year, month - 1)).getTime(),
-            open: parseFloat(transformedData[key].open),
-            close: parseFloat(transformedData[key].close),
-            high: parseFloat(transformedData[key].high),
-            low: parseFloat(transformedData[key].low),
-        };
-    });
-    setGraph(candlestickData)
-    }
-    else{
-    let graph_data = transaction.map((item) => [item.amount, item.date]);
-    graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
-
-    let points = [];
-    let balance = current_balance;
-
-    for (let i = 0; i < graph_data.length; i++) {
-        let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
-        balance -= graph_data[i][0]
-        points = [point, ...points]
-    }
-    if (points.length > 0) {
-        points[points.length - 1].value = parseFloat(points[points.length - 1].value);
-    }
-    setGraph(points)
-  }
-}
 
   if(loading){
     return(<Loading/>)
@@ -336,7 +301,7 @@ export default function StockAsset({ route, navigation, }){
 
           {transactions && 
             <LineChartScreen 
-              data={setData(transactions, route.params.balance, graphVersion)}
+              data={graph}
               current_balance={route.params.balance}
               graph_version={graphVersion}
               height={275}
