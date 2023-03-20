@@ -91,7 +91,7 @@ export default function StockInsight() {
         <View style={styles(dark, colors).container}>
             {buttons}
             <View style={stylesInternal.container}>
-                <Text style={[stylesInternal.text, styles(dark, colors).textBold, {color: colors.primary}]}>Transaction Statistics</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).textBold, {color: colors.text}]}>Transaction Statistics</Text>
                 <Text style={[stylesInternal.text, styles(dark, colors).text]}>Number of Transactions: {currentData.total_number_of_transactions}</Text>
                 <Text style={[stylesInternal.text, styles(dark, colors).text]}>Highest Transaction(£): {currentData.highest_transaction}</Text>
                 <Text style={[stylesInternal.text, styles(dark, colors).text]}>Lowest Transaction(£): {currentData.lowest_transaction}</Text>

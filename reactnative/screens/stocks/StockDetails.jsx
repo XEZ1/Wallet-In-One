@@ -9,12 +9,16 @@ import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
 import LineChartScreen from '../charts/LineChart';
 
+import { ConvertTransactionsToGraphCompatibleData } from '../helper';
+
 export default function StockDetails({ route, navigation }){
 
   const [stockTransactions, setStockTransactions] = useState();
   const stock = route.params.stock;
   const {dark, colors, setScheme } = useTheme();
-  
+  let current_balance = null;
+
+  const [transformedData, setTransformedData] = useState();
 
   const {width: SIZE} = Dimensions.get('window');
 
@@ -29,34 +33,28 @@ export default function StockDetails({ route, navigation }){
       });
       let data = await response.json();
       data = data.filter(item => item.security_id === route.params.stock.security_id);
-      let graph_data = data.map((item) => [item.amount, item.date]);
-      graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
-
-      let points = [];
-      let balance = current_balance;
-
-      for (let i = 0; i < graph_data.length; i++) {
-          let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
-          balance -= graph_data[i][0]
-          points = [point, ...points]
-      }
-      if (points.length > 0) {
-          points[points.length - 1].value = parseFloat(points[points.length - 1].value);
-      }
-      setStockTransactions(points);
+      setStockTransactions(data);
+      current_balance = data.map(item => item.amount).reduce((acc, current) => acc + current, 0);
+      console.log(current_balance)
+      setTransformedData(ConvertTransactionsToGraphCompatibleData(data, current_balance));
+      console.log(transformedData)
     } catch (error) {
       // console.error(error);
     }
   }, []);
 
+  console.log(current_balance)
+  console.log(transformedData)
+
   useEffect(() => {
     if (stock) {
       getStockTransactions(stock.stockAccount);
     }
+
   }, [stock, getStockTransactions]);
 
-  const current_balance = stockTransactions?.map(item => item.amount).reduce((acc, current) => acc + current, 0);
-  
+// useEffect(() =>
+// }, [stockTransactions])
 
   const data = {
     tableHead: ['ID', 'Amount', 'Date', 'Quantity', 'Fees'],
@@ -103,11 +101,11 @@ export default function StockDetails({ route, navigation }){
   });
 
     return (
-      <ScrollView style={[styles(dark, colors).container, {padding: 20}]}>
+      <ScrollView style={[styles(dark, colors).container]}>
         {/* <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Stock Data{"\n"}</Text> */}
 
         {stock ? (
-          <View>
+          <View style={{padding: 20}}>
             <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Name</Text>
             <Text style={styles(dark, colors).text}>{stock.name}{"\n"}</Text>
 
@@ -130,21 +128,21 @@ export default function StockDetails({ route, navigation }){
           </View>
         ):(<Text style={styles(dark, colors).text}>Loading...</Text>)}
 
-          <Text style={[styles(dark, colors).textBold, {color: colors.text, fontSize: 21}]}>Line Graph</Text>
-          {stockTransactions && (
+          <Text style={[styles(dark, colors).textBold, {color: colors.text, fontSize: 21, padding: 20}]}>Line Graph</Text>
+
+          {transformedData && (
             <LineChartScreen
-            graph_version={1} 
-            height={SIZE / 2} 
-            width={SIZE * 0.85}
-            current_balance={current_balance}
-            data={stockTransactions}
+              graph_version={1} 
+              height={SIZE / 2} 
+              width={SIZE}
+              current_balance={current_balance}
+              data={transformedData}
             />
           )}
 
-
-        <Text style={[styles(dark, colors).textBold, {color: colors.text, fontSize: 21}]}>Stock Transactions</Text>
+        <Text style={[styles(dark, colors).textBold, {color: colors.text, fontSize: 21, padding: 20}]}>Stock Transactions</Text>
         {data && (
-          <View style={stylesInternal.table}>
+          <View style={[stylesInternal.table], {padding: 20}}>
               {data && data.tableData && data.tableData.length > 0 ? (
                 <View>
                   <Table style={{paddingBottom:20}} borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>

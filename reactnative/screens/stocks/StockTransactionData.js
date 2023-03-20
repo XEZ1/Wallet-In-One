@@ -77,7 +77,7 @@ export default function TransactionData({ route }){
             <Text style={styles(dark, colors).text}>{data.stock}{"\n"}</Text> */}
 
             <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Amount</Text>
-            <Text style={styles(dark, colors).text}>£ {data.amount}{"\n"}</Text>
+            <Text style={styles(dark, colors).text}>£ {data.amount.toFixed(2)}{"\n"}</Text>
 
             <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Date</Text>
             <Text style={styles(dark, colors).text}>{data.date}{"\n"}</Text>
