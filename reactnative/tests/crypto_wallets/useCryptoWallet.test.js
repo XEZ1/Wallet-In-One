@@ -119,7 +119,7 @@ describe('<useCryptoWallet />', () => {
     await act(async () => {
       await result.current.removeWallet(1)
     })
-    
+
     expect(result.current.wallets).toEqual([])
 
   })
