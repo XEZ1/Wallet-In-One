@@ -32,6 +32,8 @@ describe('<CryptoList />', () => {
       fireEvent.press(await screen.getByText('Insights'))
     })
 
+    expect(snapshot).toMatchSnapshot()
+
   })
 
   it('display wallets and exchanges test', async () => {
