@@ -39,7 +39,6 @@ export default function StockDetails({ route, navigation }){
       setTransformedData(ConvertTransactionsToGraphCompatibleData(data, current_balance));
       console.log(transformedData)
     } catch (error) {
-      // console.error(error);
     }
   }, []);
 
@@ -52,9 +51,6 @@ export default function StockDetails({ route, navigation }){
     }
 
   }, [stock, getStockTransactions]);
-
-// useEffect(() =>
-// }, [stockTransactions])
 
   const data = {
     tableHead: ['ID', 'Amount', 'Date', 'Quantity', 'Fees'],

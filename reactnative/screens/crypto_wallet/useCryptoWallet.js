@@ -36,9 +36,8 @@ export default function useCryptoWallet() {
       .catch((err) => console.log(err));
 
     const data = await response.json()
-    //console.log(data)
 
-    if (response.ok) setWallets([...wallets, data])
+    if (response.status === 201) setWallets([...wallets, data])
     else Alert.alert("Connection Fault", `Error - ${data.address[0].toLowerCase()}`)
   };
 

@@ -28,6 +28,9 @@ export default function CryptoWalletDetail(props) {
   const [ loading, setLoading ] = useState(true);
   const [ chartType, setChartType ] = useState("breakdown");
   const [modalVisible, setModalVisible] = useState(false);
+  const {width: SIZE} = Dimensions.get('window');
+  const [graphVersion, setGraphVersion] = useState(4);
+
 
   const retrieveWallet = async (id) => {
     await fetch(`${BACKEND_URL}/crypto_wallets/${id}/`, {
@@ -96,28 +99,6 @@ export default function CryptoWalletDetail(props) {
         />
         <Text style={styles(dark, colors).largeTextBold}>{walletData.cryptocurrency} Wallet</Text>
       </View>
-
-
-      {/* <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30, paddingHorizontal: 30 }}>
-        <TouchableOpacity
-          style={[
-            styles(dark, colors).btn,
-            chartType === "breakdown" && { backgroundColor: 'aliceblue'},
-          ]}
-          onPress={() => handleChartTypeChange("breakdown")}
-        >
-          <Text>Breakdown</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles(dark, colors).btn,
-            chartType === "transactions" && { backgroundColor: 'aliceblue'},
-          ]}
-          onPress={() => handleChartTypeChange("transactions")}
-        >
-          <Text>Transactions</Text>
-        </TouchableOpacity>
-      </View> */}
 
       <View style={{paddingHorizontal: 40,paddingVertical:20}}>
         <SwitchSelector
@@ -195,7 +176,44 @@ export default function CryptoWalletDetail(props) {
             />
 
             <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10,paddingHorizontal:30, color: colors.text}}>Balance History Graph</Text>
-            <OldChart graphData={graphData} />
+            <View>
+              {
+                graphData.length <= 2 ?
+                  <Text style={{color: colors.text,paddingHorizontal:30}}>Not enough data to display graph.</Text>
+                  :
+                  <View style={[styles.walletAsset, {backgroundColor: colors.background,paddingBottom:30}]}>
+
+                    <View style={{padding: 15,paddingHorizontal: 45}}>
+                      <SwitchSelector
+                        initial={0}
+                        onPress={value => setGraphVersion(value)}
+                        // textColor="#7a44cf"
+                        selectedColor="#fff"
+                        buttonColor="#7a44cf"
+                        borderColor="#7a44cf"
+                        hasPadding
+                        options={[
+                          { label: "Line Chart", value: 4},
+                          { label: "Candlestick Chart", value: 3}
+                        ]}
+                        imageStyle={{ width: 20, height: 20 }}
+                        textStyle={{ fontWeight: 'bold' }}
+                      />
+                    </View>
+
+                    {graphData &&
+                      <LineChartScreen
+                        transactions={null}
+                        current_balance={graphData[graphData.length-1].value}
+                        graph_version={graphVersion}
+                        height={SIZE / 2}
+                        width={SIZE}
+                        data={graphData}
+                      />}
+
+                  </View>
+              }
+            </View>
 
           </ScrollView>
           :
