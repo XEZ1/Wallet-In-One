@@ -66,6 +66,14 @@ const SuccessComponent = ({ route, ...props }) => {
           const response = await auth_get('/stocks/list_accounts/')
           const accountList = response.body;
           setList(accountList);
+          // if(list){
+          //   list.forEach((account) => {
+          //     getTransactions(account.account_id);
+          //   });
+          //   console.log(list)
+          // }
+          // console.log(transactions)
+          // setLoading(false)
 
           // if (scrollToLastItem && list.length > 0) {
           //   const last = list[list.length - 1];
@@ -113,6 +121,24 @@ const SuccessComponent = ({ route, ...props }) => {
         }
       }, [isFocused, list, getTransactions]);
 
+
+      const setData = (transaction, current_balance) => {
+            let graph_data = transaction.map((item) => [item.amount, item.date]);
+            graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
+
+            let points = [];
+            let balance = current_balance;
+
+            for (let i = 0; i < graph_data.length; i++) {
+                let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
+                balance -= graph_data[i][0]
+                points = [point, ...points]
+            }
+            if (points.length > 0) {
+                points[points.length - 1].value = parseFloat(points[points.length - 1].value);
+            }
+            return points
+      }
 
       const ItemSeparator = () => <View style={stylesInternal.separator} />;
     if(loading){
@@ -171,11 +197,11 @@ const SuccessComponent = ({ route, ...props }) => {
 
                   {transactions[item.account_id] && 
                     <LineChartScreen 
-                      transactions={transactions[item.account_id]}
                       current_balance={item.balance}
                       graph_version={2}
                       height={75}
                       width={SIZE*0.85}
+                      data={setData(transactions[item.account_id], item.balance)}
                   />}
 
                 </TouchableOpacity>

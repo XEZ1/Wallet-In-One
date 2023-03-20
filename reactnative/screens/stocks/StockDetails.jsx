@@ -29,7 +29,21 @@ export default function StockDetails({ route, navigation }){
       });
       let data = await response.json();
       data = data.filter(item => item.security_id === route.params.stock.security_id);
-      setStockTransactions(data);
+      let graph_data = data.map((item) => [item.amount, item.date]);
+      graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
+
+      let points = [];
+      let balance = current_balance;
+
+      for (let i = 0; i < graph_data.length; i++) {
+          let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
+          balance -= graph_data[i][0]
+          points = [point, ...points]
+      }
+      if (points.length > 0) {
+          points[points.length - 1].value = parseFloat(points[points.length - 1].value);
+      }
+      setStockTransactions(points);
     } catch (error) {
       // console.error(error);
     }
@@ -119,12 +133,11 @@ export default function StockDetails({ route, navigation }){
           <Text style={[styles(dark, colors).textBold, {color: colors.text, fontSize: 21}]}>Line Graph</Text>
           {stockTransactions && (
             <LineChartScreen
-            transactions={stockTransactions} 
             graph_version={1} 
             height={SIZE / 2} 
             width={SIZE * 0.85}
             current_balance={current_balance}
-            // data={null}
+            data={stockTransactions}
             />
           )}
 

@@ -1,0 +1,322 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<LineChartScreen /> test line chart 1`] = `
+<View>
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "paddingBottom": 14,
+        "paddingHorizontal": 10,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "red",
+          "fontSize": 14,
+          "fontWeight": "bold",
+        }
+      }
+    >
+      -2890.600
+    </Text>
+    <Text
+      style={
+        {
+          "color": "red",
+          "fontSize": 14,
+          "fontWeight": "bold",
+        }
+      }
+    >
+       (
+      -99.66
+      %)
+    </Text>
+  </View>
+  <View
+    style={
+      [
+        undefined,
+        undefined,
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "height": 10,
+          "width": 100,
+        }
+      }
+    >
+      <RNSVGSvgView
+        bbHeight="10"
+        bbWidth="100"
+        focusable={false}
+        height={10}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "flex": 0,
+              "height": 10,
+              "width": 100,
+            },
+          ]
+        }
+        width={100}
+      >
+        <RNSVGGroup>
+          <RNSVGPath
+            fill={
+              {
+                "payload": 0,
+                "type": 0,
+              }
+            }
+            propList={
+              [
+                "fill",
+                "stroke",
+                "strokeWidth",
+                "strokeOpacity",
+              ]
+            }
+            stroke={
+              {
+                "payload": 4278190080,
+                "type": 0,
+              }
+            }
+            strokeOpacity={0.2}
+            strokeWidth="3"
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+    <View
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    >
+      <RNSVGSvgView
+        animatedProps={
+          {
+            "width": 120,
+          }
+        }
+        bbHeight="10"
+        focusable={false}
+        height={10}
+        style={
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          }
+        }
+      >
+        <RNSVGGroup>
+          <RNSVGPath
+            fill={
+              {
+                "payload": 0,
+                "type": 0,
+              }
+            }
+            propList={
+              [
+                "fill",
+                "stroke",
+                "strokeWidth",
+                "strokeOpacity",
+              ]
+            }
+            stroke={
+              {
+                "payload": 4278190080,
+                "type": 0,
+              }
+            }
+            strokeOpacity={1}
+            strokeWidth="3"
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+    <View
+      collapsable={false}
+      handlerTag={1}
+      handlerType="LongPressGestureHandler"
+      onGestureHandlerEvent={[Function]}
+      onGestureHandlerStateChange={[Function]}
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "alignItems": "center",
+              "height": 32,
+              "justifyContent": "center",
+              "width": 32,
+            },
+            {
+              "transform": [
+                {
+                  "translateX": -17,
+                },
+                {
+                  "translateY": -16,
+                },
+                {
+                  "scale": 0,
+                },
+              ],
+            },
+            undefined,
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "black",
+                "borderRadius": 32,
+                "height": 32,
+                "opacity": 0.1,
+                "position": "absolute",
+                "width": 32,
+              },
+              undefined,
+            ]
+          }
+        />
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "black",
+                "borderRadius": 8,
+                "height": 8,
+                "width": 8,
+              },
+              undefined,
+            ]
+          }
+        />
+      </View>
+      <View
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "alignSelf": "flex-start",
+              "padding": 4,
+              "position": "absolute",
+            },
+            {
+              "opacity": 0,
+              "transform": [
+                {
+                  "translateX": 8,
+                },
+                {
+                  "translateY": 8,
+                },
+              ],
+            },
+            undefined,
+          ]
+        }
+      >
+        <TextInput
+          animatedProps={
+            {
+              "text": "",
+            }
+          }
+          editable={false}
+          style={
+            [
+              {
+                "color": "black",
+              },
+              {
+                "color": "black",
+              },
+            ]
+          }
+          underlineColorAndroid="transparent"
+          value=""
+        />
+      </View>
+      <View
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "alignSelf": "flex-start",
+              "padding": 4,
+              "position": "absolute",
+            },
+            {
+              "opacity": 0,
+              "transform": [
+                {
+                  "translateX": 8,
+                },
+                {
+                  "translateY": 2,
+                },
+              ],
+            },
+            undefined,
+          ]
+        }
+      >
+        <TextInput
+          animatedProps={
+            {
+              "text": "",
+            }
+          }
+          editable={false}
+          style={
+            [
+              {
+                "color": "black",
+              },
+              {
+                "color": "black",
+              },
+            ]
+          }
+          underlineColorAndroid="transparent"
+          value=""
+        />
+      </View>
+    </View>
+  </View>
+</View>
+`;
