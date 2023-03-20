@@ -11,10 +11,7 @@ describe('useCryptoExchange', () => {
 
         expect(result.current).toMatchSnapshot();
     });
-});
 
-
-describe('useCryptoExchange', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -29,7 +26,7 @@ describe('useCryptoExchange', () => {
 
         const { result, waitForNextUpdate } = renderHook(() => useCryptoExchange());
         expect(result.current.exchanges).toEqual([]);
-
+    await act( async () => {
         await result.current.fetchExchanges();
 
         expect(mockFetch).toHaveBeenCalledWith(`http://10.0.2.2:8000/crypto-exchanges`, {
@@ -40,6 +37,7 @@ describe('useCryptoExchange', () => {
             },
         });
         expect(result.current.exchanges).toEqual([{ id: 1, name: 'Exchange 1' }]);
+    });
     });
 
     test('removeExchange works correctly', async () => {
