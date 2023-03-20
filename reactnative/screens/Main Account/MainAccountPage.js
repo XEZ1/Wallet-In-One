@@ -50,7 +50,7 @@ export default function MainAccountPage({ navigation }) {
             </TouchableOpacity>
             <TouchableOpacity
                 style={[stylesInternal.box, { backgroundColor: '#55a755' }]}
-                onPress={() => navigation.navigate("Stock Accounts")}
+                onPress={() => navigation.navigate("Stock Account List")}
             >
                 <Icon style={{ color: 'white' }} name="line-chart" size={80} />
                 <Text style={stylesInternal.text}>{'Stock Accounts'}</Text>

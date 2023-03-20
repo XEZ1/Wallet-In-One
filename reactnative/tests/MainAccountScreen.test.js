@@ -31,7 +31,7 @@ describe('<MainAccountPage />', () => {
         const navigate = jest.fn();
         const mainAccountPage = render(<MainAccountPage navigation={ {navigate} }/>);
         fireEvent.press(screen.getByText('Stock Accounts'));
-        expect(navigate).toHaveBeenCalledWith('Stock Accounts');
+        expect(navigate).toHaveBeenCalledWith('Stock Account List');
         expect(mainAccountPage).toMatchSnapshot();
     }
     )
