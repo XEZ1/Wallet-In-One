@@ -1,6 +1,7 @@
 import React from "react";
 import {LogBox, Text, TouchableOpacity} from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { View } from "react-native";
 
 //Bank Screens
 import AddBankScreen from "../banking/AddBankScreen";
@@ -19,13 +20,19 @@ import CryptoConnector from "../cryptocurrency/CryptoConnector"
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 import ExchangeTransactions from "../cryptoExchanges/ExchangeTransactions";
 
-import StockStackNavigator from "../stocks/StockStackNavigator";
-
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import CryptoInsights from "../cryptocurrency/CryptoInsights";
 
 //Crypto Exchanges Screens
 import ExchangeCredentials from "../cryptoExchanges/ExchangeCredentials";
+
+import StockAsset from "../stocks/StockAsset";
+import SuccessComponent from "../stocks/ListStocksScreen";
+import TransactionData from "../stocks/StockTransactionData";
+import LineChartScreen from "reactnative/screens/charts/LineChart.js";
+import PlaidComponent from "../stocks/AddStocksScreen";
+import StockDetails from "../stocks/StockDetails";
+import StockInsight from "../stocks/StocksInsightScreen";
 
 const Stack = createStackNavigator();
 
@@ -93,7 +100,32 @@ export default function MainStackNavigator() {
 
       <Stack.Screen name="ExchangeTransactions" component={ExchangeTransactions} />
 
-      <Stack.Screen name="Stock Accounts" component={StockStackNavigator} options={{headerShown: false}} />
+      <Stack.Screen name="Stock Account List" component={SuccessComponent}
+                options={({ navigation }) => ({
+                  headerRight: () => (
+                    <View style={{flexDirection: "row"}}>
+                    <TouchableOpacity 
+                      style={{ marginRight: 15 }} 
+                      onPress={() => navigation.navigate('Insights')}
+                    >
+                      <Text style={{ color: colors.text }}>Insights</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                      style={{ marginRight: 15 }} 
+                      onPress={() => navigation.navigate('Stocks')}
+                    >
+                      <Text style={{ color: colors.text }}>Add</Text>
+                    </TouchableOpacity>
+                    </View>
+                  ),
+                })}
+        />
+        <Stack.Screen name="Insights" component={StockInsight} />
+        <Stack.Screen name="StockAsset" component={StockAsset} />
+        <Stack.Screen name="TransactionData" component={TransactionData} />
+        <Stack.Screen name="LineGraph" component={LineChartScreen} />
+        <Stack.Screen name="Stocks" component={PlaidComponent} />
+        <Stack.Screen name="StockDetails" component={StockDetails} />
 
 
     </Stack.Navigator>
