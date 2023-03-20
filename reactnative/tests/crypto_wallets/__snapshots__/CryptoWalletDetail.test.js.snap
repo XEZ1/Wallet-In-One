@@ -1954,7 +1954,7 @@ exports[`<CryptoWalletDetail /> wallet transaction data test 1`] = `
                   }
                 }
               >
-                Tue, 17 Jan 2023 16:44:50 GMT
+                January 17, 2023, 4:44 PM
               </Text>
             </View>
           </View>
@@ -1985,7 +1985,7 @@ exports[`<CryptoWalletDetail /> wallet transaction data test 1`] = `
                   }
                 }
               >
-                Tue, 10 Jan 2023 07:02:24 GMT
+                January 10, 2023, 7:02 AM
               </Text>
             </View>
           </View>
@@ -2016,7 +2016,7 @@ exports[`<CryptoWalletDetail /> wallet transaction data test 1`] = `
                   }
                 }
               >
-                Sat, 07 Jan 2023 04:39:33 GMT
+                January 7, 2023, 4:39 AM
               </Text>
             </View>
           </View>
