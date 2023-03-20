@@ -16,7 +16,6 @@ import { logout } from '../authentication';
 import { useContext } from 'react';
 import { userContext } from '../data';
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-
 import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 import Icon from 'react-native-vector-icons/Feather';
@@ -83,7 +82,6 @@ export default function SettingsPage ({ navigation }) {
       fontSize:  20,
     },
     list: {
-      backgroundColor: colors.background,
       width: "80%",
       borderWidth: 1,
       borderRadius: 4,
@@ -222,7 +220,7 @@ export default function SettingsPage ({ navigation }) {
         />
       </View> */}
 
-      <View style={stylesInternal.list}>
+      <View style={[stylesInternal.list, {backgroundColor: colors.background}]}>
         <Item label={'System Default'} value={null} />
         <Item label={'Light Mode'} value={'false'}/>
         <Item label={'Dark Mode'} value={'true'} style={[stylesInternal.item, stylesInternal.last_item]}/>
