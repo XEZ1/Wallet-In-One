@@ -261,22 +261,6 @@ export function OldChart(props) {
           <Text style={{color: colors.text,paddingHorizontal:30}}>Not enough data to display graph.</Text>
           :
           <View style={[styles.walletAsset, {backgroundColor: colors.background,paddingBottom:30}]}>
-            {/* <LineChart.Provider data={graphData}>
-              <LineChart height={SIZE / 2} width={SIZE * 0.85}>
-                <LineChart.Path color={colors.text}/>
-                <LineChart.CursorCrosshair color={colors.text}>
-
-                  <LineChart.Tooltip textStyle={{color: colors.text}}>
-                    <LineChart.PriceText precision={10} style={{color: colors.text}} />
-                  </LineChart.Tooltip>
-
-                  <LineChart.Tooltip position="bottom" >
-                    <LineChart.DatetimeText style={{color: colors.text}} />
-                  </LineChart.Tooltip>
-
-                </LineChart.CursorCrosshair>
-              </LineChart>
-            </LineChart.Provider> */}
 
             <View style={{padding: 15,paddingHorizontal: 45}}>
               <SwitchSelector
@@ -297,8 +281,7 @@ export function OldChart(props) {
             </View>
 
             {graphData && 
-            <LineChartScreen 
-              transactions={null}
+            <LineChartScreen
               current_balance={graphData[graphData.length-1].value}
               graph_version={graphVersion}
               height={SIZE / 2} 
