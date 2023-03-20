@@ -472,14 +472,11 @@ class KrakenView(GenericCryptoExchanges, ABC):
 # Update the existing tokens retrieved from crypto exchanges
 class UpdateAllTokens(APIView):
     def post(self, request):
-        Token.objects.all().delete()
-        counter = 1
-        fixed_accounts = CryptoExchangeAccount.objects.all()
+        fixed_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
         for account in fixed_accounts:
             api_key = account.api_key
             secret_key = account.secret_key
             platform = account.crypto_exchange_name
-            counter += 1
             account.delete()
             request.data['api_key'] = api_key
             request.data['secret_key'] = secret_key
@@ -494,5 +491,7 @@ class UpdateAllTokens(APIView):
                 response = CoinBaseView()
             elif platform == 'Kraken':
                 response = KrakenView()
+            else:
+                pass
             response.post(request)
         return Response({'message': 'Success. Data was updated successfully'}, status=200)

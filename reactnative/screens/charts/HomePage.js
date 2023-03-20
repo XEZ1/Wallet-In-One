@@ -143,9 +143,8 @@ export default function HomePage({ navigation }) {
             break;
           }
         }
-        var wallet = wallets.find(x => x.id === cryptoData.id)
         if (cryptoData.id) {
-          navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
+          navigation.navigate("Wallet Detail", { id: cryptoData.id, value: cryptoData.y, removeWallet: removeWallet })
           return
         }
       }

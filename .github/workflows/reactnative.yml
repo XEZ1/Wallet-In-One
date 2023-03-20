@@ -27,7 +27,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install Dependencies
-        run: yarn install
+        run: npm install --force
 
       - name: Run Tests
-        run: yarn test
+        run: npx jest
