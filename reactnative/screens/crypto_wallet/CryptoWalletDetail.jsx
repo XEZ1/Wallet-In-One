@@ -12,7 +12,6 @@ import React, {useEffect, useState} from "react";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {styles} from '../All_Styles.style.js';
-import { LineChart } from 'react-native-wagmi-charts';
 import * as SecureStore from "expo-secure-store";
 import { BACKEND_URL } from "@env"
 import LineChartScreen from "../charts/LineChart";
@@ -253,7 +252,7 @@ function CryptoWalletTransaction(props) {
   };
 
   const raw_date = new Date(Number(props.transaction.item.time * 1000))
-  const formatted_date = raw_date.toLocaleString("en-JP", date_options);
+  const formatted_date = raw_date.toUTCString()
 
   return (
     <View style={styles.transaction}>
