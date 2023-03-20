@@ -1,5 +1,158 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<SuccessComponent /> listStocksScreen empty data 1`] = `
+<View
+  style={
+    {
+      "backArrow": {
+        "color": "purple",
+        "fontSize": 30,
+        "fontWeight": "900",
+        "paddingVertical": 10,
+      },
+      "btn": {
+        "alignItems": "center",
+        "borderRadius": 10,
+        "margin": 10,
+        "padding": 10,
+        "width": "40%",
+      },
+      "button": {
+        "backgroundColor": "purple",
+        "borderRadius": 25,
+        "color": "black",
+        "fontSize": 20,
+        "fontWeight": "bold",
+        "marginTop": "4%",
+        "paddingHorizontal": "12%",
+        "paddingVertical": "2%",
+        "textAlign": "center",
+        "width": "75%",
+      },
+      "buttonWide": {
+        "backgroundColor": "purple",
+        "borderRadius": 10,
+        "marginVertical": 10,
+        "padding": 20,
+      },
+      "container": {
+        "backgroundColor": "white",
+        "flex": 1,
+      },
+      "input": {
+        "borderColor": "gray",
+        "borderRadius": 5,
+        "borderWidth": 0.5,
+        "height": 40,
+        "marginBottom": 5,
+        "marginTop": 5,
+        "padding": 10,
+        "width": "100%",
+      },
+      "largeTextBold": {
+        "color": "black",
+        "fontSize": 40,
+        "fontWeight": "800",
+      },
+      "paddingBottom": 8,
+      "paddingTop": 8,
+      "smallButton": {
+        "backgroundColor": "purple",
+        "borderRadius": 5,
+        "marginTop": 10,
+        "padding": 10,
+        "paddingHorizontal": 30,
+      },
+      "text": {
+        "color": "black",
+      },
+      "textBold": {
+        "color": "black",
+        "fontWeight": "700",
+      },
+      "title": {
+        "alignSelf": "center",
+        "color": "black",
+        "fontSize": 50,
+        "fontWeight": "900",
+        "paddingVertical": 10,
+      },
+    }
+  }
+>
+  <View>
+    <RCTScrollView
+      ItemSeparatorComponent={[Function]}
+      ListEmptyComponent={
+        <Text
+          style={
+            {
+              "color": "black",
+            }
+          }
+        >
+          
+You have no stock accounts
+
+        </Text>
+      }
+      collapsable={false}
+      data={null}
+      getItem={[Function]}
+      getItemCount={[Function]}
+      handlerTag={3}
+      handlerType="NativeViewGestureHandler"
+      keyExtractor={[Function]}
+      onContentSizeChange={[Function]}
+      onGestureHandlerEvent={[Function]}
+      onGestureHandlerStateChange={[Function]}
+      onLayout={[Function]}
+      onMomentumScrollBegin={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
+      renderItem={[Function]}
+      renderScrollComponent={[Function]}
+      scrollEventThrottle={50}
+      stickyHeaderIndices={[]}
+      style={
+        {
+          "paddingHorizontal": 8,
+        }
+      }
+      viewabilityConfigCallbackPairs={[]}
+      waitFor={
+        [
+          {
+            "current": null,
+          },
+          {
+            "current": null,
+          },
+        ]
+      }
+    >
+      <View>
+        <Text
+          onLayout={[Function]}
+          style={
+            {
+              "color": "black",
+            }
+          }
+        >
+          
+You have no stock accounts
+
+        </Text>
+      </View>
+    </RCTScrollView>
+  </View>
+</View>
+`;
+
 exports[`<SuccessComponent /> listStocksScreen snapshot test 1`] = `
 <View
   style={
