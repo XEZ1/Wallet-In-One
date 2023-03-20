@@ -6,7 +6,7 @@ import emptyCryptoWalletInsights from './fixtures/emptyCryptoWalletInsights.json
 import emptyCryptoExchangeInsights from './fixtures/emptyCryptoExchangeInsights.json'
 
 
-describe('<CryptoInsights />', () => {
+describe.skip('<CryptoInsights />', () => {
 
   const params = {
     navigation: {

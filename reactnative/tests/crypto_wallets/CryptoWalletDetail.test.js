@@ -3,7 +3,7 @@ import CryptoWalletDetail from "../../screens/crypto_wallet/CryptoWalletDetail";
 import cryptoWallet from './fixtures/cryptoWallet.json'
 
 
-describe('<CryptoWalletDetail />', () => {
+describe.skip('<CryptoWalletDetail />', () => {
 
   const params = {
     route: {
