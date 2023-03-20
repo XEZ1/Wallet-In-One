@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import APIException
 from rest_framework.views import APIView
 
-from .services import get_institutions, create_requisition, delete_all_requisitions, get_requisitions, get_account_data, total_user_balance, get_institution, update_user_accounts
+from .services import get_institutions, create_requisition, get_requisitions, get_account_data, total_user_balance, get_institution, update_user_accounts
 from .serializers import URLSerializer, TransactionSerializer, AccountSerializer, format_money
 from .models import Account, Transaction
 from .util import calculate_balance_history, calculate_metrics_all
@@ -148,13 +148,6 @@ def get_total_balance(request):
     user = request.user
     amount = total_user_balance(user)
     return Response(format_money(amount))
-
-
-@api_view(['GET'])
-def delete_everything(request):
-    delete_all_requisitions()
-    Account.objects.all().delete()
-    return Response({'Success': 'Everything has been deleted'}, status=200)
 
 @api_view(['GET'])
 def delete_account(request, account_id):
