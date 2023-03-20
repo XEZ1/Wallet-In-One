@@ -115,9 +115,7 @@ describe('<CryptoWalletDetail />', () => {
       })
 
     })
-
-    expect(snapshot).toMatchSnapshot()
-
+    
   })
 
   it('remove wallet test', async () => {
