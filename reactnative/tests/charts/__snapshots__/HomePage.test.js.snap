@@ -113,6 +113,8 @@ exports[`<HomePage /> homePage pie chart bar chart test 1`] = `
               },
               {
                 "fontSize": 30,
+                "paddingTop": 20,
+                "textAlign": "center",
               },
             ]
           }
@@ -970,6 +972,8 @@ exports[`<HomePage /> homePage pie chart bar chart test 1`] = `
             },
             {
               "fontSize": 30,
+              "paddingTop": 20,
+              "textAlign": "center",
             },
           ]
         }
@@ -2100,6 +2104,8 @@ exports[`<HomePage /> homePage pie chart bar chart test 2`] = `
               },
               {
                 "fontSize": 30,
+                "paddingTop": 20,
+                "textAlign": "center",
               },
             ]
           }
@@ -2957,6 +2963,8 @@ exports[`<HomePage /> homePage pie chart bar chart test 2`] = `
             },
             {
               "fontSize": 30,
+              "paddingTop": 20,
+              "textAlign": "center",
             },
           ]
         }

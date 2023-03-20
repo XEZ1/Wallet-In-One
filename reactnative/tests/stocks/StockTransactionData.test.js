@@ -41,7 +41,7 @@ describe('<TransactionData />', () => {
         expect(screen.getByText("Transaction ID"))
         expect(screen.getByText("WraX31pG9AuzLlKzAG8JIAAyNV9PZEuPaBq3k"))
         expect(screen.getByText("Amount"))
-        expect(screen.getByText("£ 38.4456"))
+        expect(screen.getByText("£ 38.45"))
         expect(screen.getByText("Date"))
         expect(screen.getByText("2023-03-10"))
         expect(screen.getByText("Quantity"))

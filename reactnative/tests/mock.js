@@ -36,7 +36,9 @@ jest.mock('@react-navigation/native', () => ({
 
   jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
 
-// jest.mock('react-native-wagmi-charts')
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
+
+
+//jest.mock('react-native-wagmi-charts/lib/commonjs/charts/candle')
+// jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
 
 // jest.mock('react-native-wagmi-charts')

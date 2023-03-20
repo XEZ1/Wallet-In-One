@@ -3,10 +3,16 @@
 exports[`<TransactionData /> transactionData snapshot test 1`] = `
 <View
   style={
-    {
-      "flex": 1,
-      "padding": 10,
-    }
+    [
+      {
+        "flex": 1,
+        "padding": 10,
+      },
+      {
+        "backgroundColor": "white",
+        "flex": 1,
+      },
+    ]
   }
 >
   <View
@@ -92,7 +98,7 @@ exports[`<TransactionData /> transactionData snapshot test 1`] = `
       }
     >
       £ 
-      38.4456
+      38.45
       
 
     </Text>
