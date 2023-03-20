@@ -139,21 +139,14 @@ export default function SettingsPage ({ navigation }) {
      setNotifications((previousState) => !previousState);
       const notificationSettings = (!notifications).toString();
       await SecureStore.setItemAsync("notificationSettings", notificationSettings);
-      //sendNotification(notificationSettings);
     if (notificationSettings === "true") {
       Notifications.requestPermissionsAsync();
       Notifications.scheduleNotificationAsync({ content: {
           title: "Notifications enabled!",
         },
         trigger: null, });
-      //console.log('notif are enabled')
 
     }
-    // else {
-    //   await Notifications.cancelAllScheduledNotificationsAsync();
-    //   console.log('notif are canceled')
-    // }
-
   };
 
   //Toggle and save theme setting

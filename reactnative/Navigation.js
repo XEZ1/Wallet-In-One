@@ -84,17 +84,6 @@ export default function Navigation() {
               ),
             }}
           />
-          {/* <Tab.Screen
-            name="Insights"
-            component={BankInsights}
-            options={{
-              tabBarIcon: ({ focused }) => (
-                <Text style={{ color: focused ? colors.primary : colors.text }}>
-                  <AntDesign name="notification" size={30} />
-                </Text>
-              ),
-            }}
-          /> */}
           <Tab.Screen
             name="Settings"
             component={SettingsPage}
