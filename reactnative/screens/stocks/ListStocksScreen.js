@@ -65,6 +65,13 @@ const SuccessComponent = ({ route, ...props }) => {
         const listAccounts = async () => {
           const response = await auth_get('/stocks/list_accounts/')
           const accountList = response.body;
+          // console.log(response.body)
+          if(accountList){
+          accountList.forEach((account) => {
+            getTransactions(account.account_id);
+          });
+          }
+          setLoading(false)
           setList(accountList);
           // if(list){
           //   list.forEach((account) => {
@@ -94,7 +101,7 @@ const SuccessComponent = ({ route, ...props }) => {
           // }
         }
         
-        if (isFocused) {
+        if (useIsFocused) {
           listAccounts();
         }        
       }, [isFocused])
@@ -102,6 +109,7 @@ const SuccessComponent = ({ route, ...props }) => {
       const getTransactions = useCallback(async (accountID) => {
         try {
           const response = await auth_get(`/stocks/list_transactions/${accountID}/`)
+          console.log(response.body)
           const data = response.body;
           setTransactions(prevTransactions => ({
             ...prevTransactions,
@@ -112,14 +120,14 @@ const SuccessComponent = ({ route, ...props }) => {
         }
       }, []);
     
-      useEffect(() => {
-        if (isFocused && list) {
-          list.forEach((account) => {
-            getTransactions(account.account_id);
-          });
-          setLoading(false)
-        }
-      }, [isFocused, list, getTransactions]);
+      // useEffect(() => {
+      //   if (isFocused && list) {
+      //     list.forEach((account) => {
+      //       getTransactions(account.account_id);
+      //     });
+      //     setLoading(false)
+      //   }
+      // }, [isFocused, list, getTransactions]);
 
 
       const setData = (transaction, current_balance) => {
