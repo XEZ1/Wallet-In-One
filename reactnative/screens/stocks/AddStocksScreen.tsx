@@ -61,7 +61,8 @@ const PlaidComponent = ({ navigation }) => {
     },
   });
 
-  const account_data = null;
+  let accountBody = '';
+
 
   const addAccount = async (account, success) => {
     const account_data = {
@@ -138,7 +139,7 @@ const PlaidComponent = ({ navigation }) => {
   const addTransaction = async (element) => {
     let latitude = parseFloat(((Math.random() * (7) + 35.5).toFixed(3)))
     let longitude = parseFloat(((Math.random() * (43) + 77).toFixed(3))) * -1
-    const body = {
+    accountBody = {
       account_id: element.account_id,
       investment_transaction_id: element.investment_transaction_id,
       security_id: element.security_id,
@@ -246,7 +247,7 @@ const PlaidComponent = ({ navigation }) => {
 
     visible={modalVisible}
     onEvent={() => {
-      navigation.navigate("Stock Account List", {scrollToLastItem: true})
+      navigation.navigate("Stock Account List", {account: accountBody})
     }
     }
     onClose={() => navigation.navigate("Stocks")}

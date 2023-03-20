@@ -75,23 +75,14 @@ const SuccessComponent = ({ route, ...props }) => {
           // console.log(transactions)
           // setLoading(false)
 
-          // if (scrollToLastItem && list.length > 0) {
-          //   const last = list[list.length - 1];
-          //   // const transactions = await getTransactions(last.account_id);
-          //   // console.log(transactions[last.account_id])
+          if ( route.params.account) {
+            // const last = list[list.length - 1];
+            // const transactions = await getTransactions(last.account_id);
+            // console.log(transactions[last.account_id])
 
             
-          //   props.navigation.navigate('StockAsset', {
-          //     accountID: last.account_id, 
-          //     accessToken: last.access_token, 
-          //     transactions: transactions[last.account_id],
-          //     logo: last.institution_logo,
-          //     balance: last.balance,
-          //     name: last.institution_name,
-          //     account_name: last.name,
-          //     balance_currency: last.balance_currency
-          //   });
-          // }
+            props.navigation.navigate('StockAsset', route.params.account);
+          }
         }
         
         if (isFocused) {
@@ -140,7 +131,6 @@ const SuccessComponent = ({ route, ...props }) => {
             return points
       }
 
-      const ItemSeparator = () => <View style={stylesInternal.separator} />;
     if(loading){
       return(<Loading/>)
     }

@@ -245,7 +245,7 @@ export default function HomePage({ navigation }) {
 
         {chartType == "pie" ? 
           <>
-            <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30}]}>{pressed}</Text>
+            <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30, textAlign: 'center', paddingTop:20 }]}>{pressed}</Text>
             <PieChart colours={colorScheme} data={data} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27}/>
             {BarChart(colorScheme, list, data, spacing, handlePressIn, colors)}
             {pressed ? (
