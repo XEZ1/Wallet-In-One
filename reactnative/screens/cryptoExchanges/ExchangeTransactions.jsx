@@ -1,16 +1,16 @@
-import {Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View, ScrollView} from "react-native";
+import {Dimensions, Image, Pressable, StyleSheet, Text, View, ScrollView} from "react-native";
 import * as SecureStore from 'expo-secure-store';
 import React, {useEffect, useState, useCallback} from "react";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
-import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-import { styles } from 'reactnative/screens/All_Styles.style.js';
+import { useTheme } from '../../src/theme/ThemeProvider'
+import { styles } from '../All_Styles.style.js';
 import { api_url } from '../../authentication';
 import {Table, Row, Cell} from 'react-native-table-component';
-import { VictoryPie, VictoryLabel, VictoryContainer } from "victory-native";
 import BarChart from "../charts/chartComponents/barChart";
 import ConditionalModal from "../Modal";
 import PieChart from "../charts/chartComponents/pieChart";
 import SwitchSelector from "react-native-switch-selector";
+
 export default function ExchangeTransactions(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const {dark, colors } = useTheme();
@@ -174,7 +174,7 @@ export default function ExchangeTransactions(props) {
           </View>
         </Pressable>
       </View>
-
+      <View testID={'conditional-modal'}>
       <ConditionalModal
         headerText={"Remove Your Exchange"}
         bodyText={"Are you sure you want to remove your crypto exchange?"}
@@ -182,6 +182,7 @@ export default function ExchangeTransactions(props) {
         onEvent={() => removeExchange(item.id).then(() => props.navigation.goBack())}
         onClose={() => setModalVisible(false)}
       />
+      </View>
 
       {/* Exchange logo, title and balance */}
       <View style={[stylesInternal.exchangeAsset, styles(dark, colors).container, {flexDirection: 'row'}]}>
@@ -236,7 +237,7 @@ export default function ExchangeTransactions(props) {
         </View>  
        : <>
       <View style={stylesInternal.container}>
-        <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
+        <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}} testID={'transactionTitle'}>Transactions</Text>
       </View>
       {!data || data.length === 0 ? (
         <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>Loading...</Text>

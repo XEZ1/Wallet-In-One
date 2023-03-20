@@ -20,4 +20,4 @@ export default function useCryptoExchangeBalances() {
     }
   
     return { balances, fetchBalances};
-  }
+}
