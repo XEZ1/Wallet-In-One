@@ -1,7 +1,6 @@
 import {render, act, fireEvent, screen, waitFor} from "@testing-library/react-native";
 import CryptoWalletDetail from "../../screens/crypto_wallet/CryptoWalletDetail";
 import cryptoWallet from './fixtures/cryptoWallet.json'
-import CryptoListWalletItem from "../../screens/crypto_wallet/CryptoListWalletItem";
 
 
 describe('<CryptoWalletDetail />', () => {
