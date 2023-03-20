@@ -63,7 +63,7 @@ export default function TransactionData({ route }){
   }
   else{
     return (
-      <View style={stylesInternal.screen}>
+      <View style={[stylesInternal.screen, styles(dark, colors).container]}>
         {/* <Text style={stylesInternal.text}>Transaction Data{"\n"}</Text> */}
 
           <View style={stylesInternal.screen}>

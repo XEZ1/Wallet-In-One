@@ -42,8 +42,8 @@ export default function StockDetails({ route, navigation }){
     }
   }, []);
 
-  console.log(current_balance)
-  console.log(transformedData)
+  // console.log(current_balance)
+  // console.log(transformedData)
 
   useEffect(() => {
     if (stock) {
