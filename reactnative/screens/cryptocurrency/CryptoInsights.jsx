@@ -110,7 +110,7 @@ export default function CryptoInsights() {
   const chartConfig = {
     backgroundGradientFrom: colors.background,
     backgroundGradientTo: colors.background,
-    color: dark ? (opacity = 3) => `rgba(255, 255, 255, ${opacity})` : (opacity = 3) => `rgba(0, 0, 0, ${opacity})`,
+    color: () => colors.text,
     strokeWidth: 3,
     xAxisLabel: "",
     xAxisInterval: 5,
