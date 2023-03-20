@@ -16,7 +16,6 @@ import { logout } from '../authentication';
 import { useContext } from 'react';
 import { userContext } from '../data';
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-
 import {styles} from 'reactnative/screens/All_Styles.style.js'
 
 import Icon from 'react-native-vector-icons/Feather';
@@ -82,13 +81,6 @@ export default function SettingsPage ({ navigation }) {
       paddingVertical: "2%",
       fontSize:  20,
     },
-    list: {
-      backgroundColor: colors.background,
-      width: "80%",
-      borderWidth: 1,
-      borderRadius: 4,
-      borderColor: 'lightgrey',
-    },
     item: {
       padding: 10,
       flexDirection: 'row',
@@ -108,7 +100,7 @@ export default function SettingsPage ({ navigation }) {
   function Item({label, value, style = stylesInternal.item}) {
     return <TouchableHighlight onPress={() => changeTheme(value)} underlayColor={dark?'#666':'#ddd'}>
       <View style={style}>
-        <Text style={{color: colors.text}}>{label}</Text>
+        <Text style={{color: colors?.text}}>{label}</Text>
         {selectedValue === value && (<Icon name={'check'} size={24} color={'green'} />)}
       </View>
     </TouchableHighlight>;
@@ -195,7 +187,6 @@ export default function SettingsPage ({ navigation }) {
         justifyContent: 'center',
         alignItems: 'center',
         paddingBottom: 20,
-        backgroundColor: colors.background,
         }}
       style={styles(dark, colors).container}
     >
@@ -204,7 +195,7 @@ export default function SettingsPage ({ navigation }) {
         <Text style={styles(dark, colors).text}>Receive notifications</Text>
         <Switch
           trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={notifications ? colors.primary : "#f4f3f4"}
+          thumbColor={notifications ? "purple" : "#f4f3f4"}
           onValueChange={toggleNotifications}
           value={notifications}
         />
@@ -212,17 +203,7 @@ export default function SettingsPage ({ navigation }) {
 
       <Text style={[styles(dark, colors).textBold, {fontSize: 24, marginBottom: 20}]}>Themes</Text>
 
-      {/* <View style={stylesInternal.switchContainer}>
-        <Text style={styles(dark, colors).text}>Dark Mode (Beta)</Text>
-        <Switch
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={dark ? colors.primary : "#f4f3f4"}
-          onValueChange={toggleTheme}
-          value={dark}
-        />
-      </View> */}
-
-      <View style={stylesInternal.list}>
+      <View style={[styles(dark, colors).list]}>
         <Item label={'System Default'} value={null} />
         <Item label={'Light Mode'} value={'false'}/>
         <Item label={'Dark Mode'} value={'true'} style={[stylesInternal.item, stylesInternal.last_item]}/>
@@ -231,20 +212,9 @@ export default function SettingsPage ({ navigation }) {
       <TouchableOpacity
         onPress={()=>{logout(user, setUser)}}
       >
-        <Text style={[{backgroundColor: colors.primary}, {color: "white"}, stylesInternal.button]}>Logout</Text>
+        <Text style={[{backgroundColor: colors?.primary}, {color: "white"}, stylesInternal.button]}>Logout</Text>
       </TouchableOpacity>
 
-      {/* <TouchableOpacity
-        onPress={() => navigation.navigate('About Us')}
-      >
-        <Text style={stylesInternal.aboutUs}>About Us</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Developer Info')}
-      >
-        <Text style={stylesInternal.developers}>Meet the team!</Text>
-      </TouchableOpacity> */}
     </ScrollView>
   );
 }
