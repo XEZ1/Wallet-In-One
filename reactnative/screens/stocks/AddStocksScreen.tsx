@@ -74,8 +74,6 @@ const PlaidComponent = ({ navigation }) => {
       institution_logo: image,
     }
     const response = await auth_post('/stocks/add_stock_account/', account_data)
-    console.log(response)
-    console.log(response.body)
     data_response = response.status
   };
     
@@ -136,7 +134,6 @@ const PlaidComponent = ({ navigation }) => {
     const response = await auth_post('/stocks/get_transactions/', body)
     fetched_transaction_list = response.body
   }
-//19614.54
 
   const addTransaction = async (element) => {
     let latitude = parseFloat(((Math.random() * (7) + 35.5).toFixed(3)))
@@ -156,22 +153,15 @@ const PlaidComponent = ({ navigation }) => {
       longitude: longitude
     }
     const response = await auth_post('/stocks/add_transaction_account/', body)
-    console.log(response.body)
     };
 
 
   const getLogo = async (success) => {
-    const response = await fetch(api_url + '/stocks/get_logo/', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-      },
-      body: JSON.stringify({ name: success.metadata.institution.name }),
-    });
-    const data = await response.json()
-    image = data.logo
+    const body = {
+      name: success.metadata.institution.name
+    }
+    const response = await auth_post('/stocks/get_logo/', body)
+    image = response.body.logo
   }
   
   const [modalVisible, setModalVisible] = useState(false);
@@ -254,66 +244,15 @@ const PlaidComponent = ({ navigation }) => {
       </View>
     }
 
-    // account_id: account._id,
-    //   name: account.meta.name,
-    //   institution_name: success.metadata.institution.name,
-    //   institution_id: success.metadata.institution.id,
-    //   access_token: access_token,
-    //   balance: balance,
-    //   institution_logo: image,
-
-
     visible={modalVisible}
     onEvent={() => {
       navigation.navigate("Stock Account List", {scrollToLastItem: true})
-      // navigation.navigate('StockAsset', {scrollToLastItem: true}) 
     }
     }
     onClose={() => navigation.navigate("Stocks")}
     cancelButtonName={"Exit"}
     continueButtonName={"View"}
   />
-
-    {/* <Modal
-      animationType="none"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
-        setModalVisible(false);
-      }}
-    >
-    <Animated.View style={[stylesInternal.modal, { transform: [{ scaleX: scaleValue.x }, { scaleY: scaleValue.y }] }]}>
-      <View style={stylesInternal.modalView}>
-        {modalText == "Stock account has been successfully added." && 
-          <Image
-            style={{ width: 100, height: 100 }}
-            source={{ uri: `https://cdn-icons-png.flaticon.com/512/4436/4436481.png` }}
-          />
-        }
-        {modalText == "Stock account has already been added!" && 
-          <Image
-            style={{ width: 100, height: 100 }}
-            source={{ uri: 'http://www.setra.com/hubfs/Sajni/crc_error.jpg' }}
-          />
-        }
-        <Text style={stylesInternal.modalText}>{modalText}</Text>
-        <Pressable
-          style={[stylesInternal.button, stylesInternal.buttonClose]}
-          onPress={() => {
-            Animated.timing(scaleValue, {
-              toValue: 0,
-              duration: 300,
-              useNativeDriver: true,
-            }).start(() => setModalVisible(false));
-            navigation.navigate("Stock Account List")
-          }}
-        >
-        <Text style={stylesInternal.textStyle}>Exit</Text>
-        </Pressable>
-      </View>
-    </Animated.View>
-    </Modal> */}
   </View>
     </>
   );

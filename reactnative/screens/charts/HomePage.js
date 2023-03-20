@@ -221,27 +221,6 @@ export default function HomePage({ navigation }) {
         ListHeaderComponent={
       
         <>
-        {/* Switch Graph Buttons */}
-        {/* <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
-          <TouchableOpacity
-            style={[
-              styles(dark, colors).btn,
-              chartType === "pie" && { backgroundColor: 'aliceblue'},
-            ]}
-            onPress={() => handleChartTypeChange("pie")}
-          >
-          <Text>Pie Chart</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles(dark, colors).btn,
-              chartType === "stacked" && { backgroundColor: 'aliceblue'},
-            ]}
-            onPress={() => handleChartTypeChange("stacked")}
-          >
-          <Text>Stacked Bar Chart</Text>
-          </TouchableOpacity>
-        </View> */}
 
         <View style={{paddingHorizontal: 40,paddingTop: 30}}>
             <SwitchSelector
@@ -253,8 +232,8 @@ export default function HomePage({ navigation }) {
               borderColor="#7a44cf"
               hasPadding
               options={[    
-                { label: "Pie Chart", value: "pie"},  
-                { label: "Stacked Bar Chart", value: "stacked"} 
+                { label: "Pie Chart", value: "pie", testID: "pie"},  
+                { label: "Stacked Bar Chart", value: "stacked", testID: "stacked"} 
               ]}
               imageStyle={{ width: 20, height: 20 }}
               textStyle={{ fontWeight: 'bold', fontSize: 18 }}
