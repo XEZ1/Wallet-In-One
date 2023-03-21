@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {
   TouchableOpacity,
   SafeAreaView,
@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Alert,
+  Alert, ActivityIndicator,
 } from "react-native";
 import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
@@ -26,6 +26,7 @@ export default function CryptoList(props) {
   const { balances, fetchBalances } = useCryptoExchangeBalances();
   const {dark, colors, setScheme} = useTheme();
   const isFocused = useIsFocused();
+  const [loading, setLoading] = useState(false);
 
   const styles = StyleSheet.create({
     cryptoWalletTitle: {
@@ -76,6 +77,25 @@ export default function CryptoList(props) {
 
   const handleSubmit = async () => {
 
+    setLoading(true)
+
+    try {
+      const response = await fetch(api_url + '/crypto_wallets/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+        },
+        body: JSON.stringify({ }),
+      });
+      const statusCode = response.status;
+      if (statusCode === 200) {
+        await listWallets();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
     try {
       const response = await fetch(api_url + '/crypto-exchanges/update', {
         method: 'POST',
@@ -87,7 +107,7 @@ export default function CryptoList(props) {
       });
       const data = await response.json();
       const statusCode = response.status;
-      if (statusCode == 200) {
+      if (statusCode === 200) {
         Alert.alert('Success', 'Updated account data successfully!');
       } else {
         Alert.alert('Error', data["error"]);
@@ -96,6 +116,8 @@ export default function CryptoList(props) {
       console.error(error);
       Alert.alert('Error', 'An error occurred while updating account info.');
     }
+
+    setLoading(false)
   };
 
   return (
@@ -110,12 +132,24 @@ export default function CryptoList(props) {
             <Text style={styles.buttonText}>Insights</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => handleSubmit()}
-          >
-            <Text style={styles.buttonText}>Update</Text>
-          </TouchableOpacity>
+          {loading
+            ?
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleSubmit()}
+            >
+              <ActivityIndicator color={colors.text}/>
+            </TouchableOpacity>
+            :
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleSubmit()}
+            >
+              <Text style={styles.buttonText}>Update</Text>
+            </TouchableOpacity>
+          }
+
+
         </View>
 
         <Text style={[styles.cryptoWalletSubtitle, {color: colors.text, marginTop: 10}]}>Wallets</Text>

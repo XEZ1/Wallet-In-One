@@ -44,3 +44,23 @@ class CryptoWalletInsights(APIView):
         received_spent = calculate_received_spent(self.request.user)
         average_spend = calculate_average_spend(self.request.user)
         return Response({'predicted_balance': predicted_balance, 'received_spent': received_spent, 'average_spend': average_spend})
+
+
+class CryptoWalletUpdate(APIView):
+
+    def put(self, request):
+        wallets = CryptoWallet.objects.filter(user=self.request.user)
+        for wallet in wallets:
+            cryptocurrency = wallet.cryptocurrency
+            symbol = wallet.symbol
+            address = wallet.address
+            wallet.delete()
+
+            serializer = CryptoWalletSerializer(
+                data={'cryptocurrency': cryptocurrency, 'symbol': symbol, 'address': address},
+                context={'request': request}
+            )
+            if serializer.is_valid():
+                serializer.save()
+
+        return Response(status=status.HTTP_200_OK)
