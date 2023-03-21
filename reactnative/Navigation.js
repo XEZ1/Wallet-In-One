@@ -7,7 +7,6 @@ import StockDetails from './screens/stocks/StockDetails';
 import { useContext, useEffect } from 'react';
 import { Text } from 'react-native';
 import MainStackNavigator from "./screens/Main Account/MainStackNavigator";
-import StockNavigator from './screens/stocks/StockNavigator';
 
 // Screens
 import StartScreen from './screens/pre_logged_in/StartScreen';
