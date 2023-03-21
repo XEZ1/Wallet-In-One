@@ -168,23 +168,6 @@ const PlaidComponent = ({ navigation }) => {
   const [modalText, setModalText] = useState("Empty Modal");
   const scaleValue = useRef(new Animated.ValueXY({x: 0.5, y: 0.5})).current;
 
-
-  // useEffect(() => {
-  //   if (modalVisible) {
-  //     Animated.timing(scaleValue, {
-  //       toValue: {x: 1, y: 1},
-  //       duration: 300,
-  //       useNativeDriver: true,
-  //     }).start();
-  //   } else {
-  //     Animated.timing(scaleValue, {
-  //       toValue: {x: 0, y: 0},
-  //       duration: 300,
-  //       useNativeDriver: true,
-  //     }).start();
-  //   }
-  // }, [modalVisible]);
-
   const {dark, colors, setScheme } = useTheme();
 
   return (
