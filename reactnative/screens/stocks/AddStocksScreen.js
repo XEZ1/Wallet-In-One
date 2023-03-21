@@ -15,7 +15,7 @@ const { width, height } = Dimensions.get('window');
 
 
 const PlaidComponent = ({ navigation }) => {
-  const [linkToken, setLinkToken] = useState<string | undefined>(undefined)
+  const [linkToken, setLinkToken] = useState('')
   const isFocused = useIsFocused()
   let access_token = ''
   let balance = ''
@@ -80,7 +80,9 @@ const PlaidComponent = ({ navigation }) => {
   useEffect(() => {
   const initiatePlaidLink = async () => {
       const response = await auth_post('/stocks/initiate_plaid_link/')
-      setLinkToken(response.body.link_token);
+      if(response.status == 200){
+        setLinkToken(response.body.link_token)
+      }
   };
   if(isFocused){initiatePlaidLink()}
 }, [isFocused])
