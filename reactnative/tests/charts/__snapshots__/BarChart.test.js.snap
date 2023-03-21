@@ -268,7 +268,6 @@ A 0 0 0 0 1, 107, 49
             }
             font={
               {
-                "fontFamily": "Gill Sans",
                 "fontSize": "22",
                 "fontWeight": "900",
                 "textAnchor": "start",
@@ -337,7 +336,6 @@ A 0 0 0 0 1, 107, 49
             }
             font={
               {
-                "fontFamily": "Gill Sans",
                 "fontSize": "22",
                 "fontWeight": "900",
                 "textAnchor": "start",
@@ -406,7 +404,6 @@ A 0 0 0 0 1, 107, 49
             }
             font={
               {
-                "fontFamily": "Gill Sans",
                 "fontSize": "22",
                 "fontWeight": "900",
                 "textAnchor": "start",
@@ -475,7 +472,6 @@ A 0 0 0 0 1, 107, 49
             }
             font={
               {
-                "fontFamily": "Gill Sans",
                 "fontSize": "22",
                 "fontWeight": "900",
                 "textAnchor": "start",
@@ -818,7 +814,6 @@ A 0 0 0 0 1, 107.53466334164588, 49
             }
             font={
               {
-                "fontFamily": "Gill Sans",
                 "fontSize": "22",
                 "fontWeight": "900",
                 "textAnchor": "start",
@@ -887,7 +882,6 @@ A 0 0 0 0 1, 107.53466334164588, 49
             }
             font={
               {
-                "fontFamily": "Gill Sans",
                 "fontSize": "22",
                 "fontWeight": "900",
                 "textAnchor": "start",
@@ -956,7 +950,6 @@ A 0 0 0 0 1, 107.53466334164588, 49
             }
             font={
               {
-                "fontFamily": "Gill Sans",
                 "fontSize": "22",
                 "fontWeight": "900",
                 "textAnchor": "start",
@@ -1025,7 +1018,6 @@ A 0 0 0 0 1, 107.53466334164588, 49
             }
             font={
               {
-                "fontFamily": "Gill Sans",
                 "fontSize": "22",
                 "fontWeight": "900",
                 "textAnchor": "start",

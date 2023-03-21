@@ -6,6 +6,7 @@ import Navigation from './Navigation';
 
 
 import { userContext } from './data';
+import {StatusBar} from "expo-status-bar";
 
 export default function App() {
   
@@ -16,6 +17,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <userContext.Provider value={user}>
+        <StatusBar barStyle="dark-content" />
         <Navigation></Navigation>
       </userContext.Provider>
     </ThemeProvider>

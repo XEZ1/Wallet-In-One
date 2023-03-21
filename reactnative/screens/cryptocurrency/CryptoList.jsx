@@ -47,7 +47,8 @@ export default function CryptoList(props) {
     button: {
       padding: 10,
       borderRadius: 10,
-      marginVertical: 10,
+      marginVertical: 4,
+      marginHorizontal: 8,
       backgroundColor: colors.primary,
       alignSelf: 'center',
     },
@@ -87,7 +88,7 @@ export default function CryptoList(props) {
       const data = await response.json();
       const statusCode = response.status;
       if (statusCode == 200) {
-        Alert.alert('Success', 'updated account data successfully!');
+        Alert.alert('Success', 'Updated account data successfully!');
       } else {
         Alert.alert('Error', data["error"]);
       }
@@ -101,29 +102,21 @@ export default function CryptoList(props) {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView>
 
-        <TouchableOpacity onPress={handleSubmit} style={styles.refreshButton}>
-          <Ionicons name="refresh-outline" size={25} color="white" />
-        </TouchableOpacity>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "column",
-              justifyContent: "center",
-            }}
+        <View style={{flexDirection:'row', justifyContent: 'center'}}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => props.navigation.navigate("Crypto Wallet Insights")}
           >
-            <View style={{ marginRight: 20 }}>
-              <Text style={[styles.cryptoWalletTitle, {color: colors.text}]}>Cryptocurrency</Text>
-            </View>
-          </View>
+            <Text style={styles.buttonText}>Insights</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleSubmit()}
+          >
+            <Text style={styles.buttonText}>Update</Text>
+          </TouchableOpacity>
         </View>
-        
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => props.navigation.navigate("Crypto Wallet Insights")}
-        >
-          <Text style={styles.buttonText}>Insights</Text>
-        </TouchableOpacity>
 
         <Text style={[styles.cryptoWalletSubtitle, {color: colors.text, marginTop: 10}]}>Wallets</Text>
 

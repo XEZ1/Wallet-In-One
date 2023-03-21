@@ -14,7 +14,12 @@
     },
     "android": {
       "userInterfaceStyle": "automatic",
-      "package": "com.matyog.walletinone"
+      "package": "com.matyog.walletinone",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAbLKX3LXwIRuu3GYiDRc-jgbKmMvZbq9k"
+        }
+      }
     },
     "extra": {
       "eas": {
