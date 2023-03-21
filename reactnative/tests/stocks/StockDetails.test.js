@@ -25,7 +25,7 @@ describe('<StockDetails />', () => {
                 const loading = screen.UNSAFE_queryByType('ActivityIndicator');
                 expect(loading).toBeNull();
             })
-        expect(stockInsight).toMatchSnapshot();
+        expect(stockDetails).toMatchSnapshot();
     }
     )
 })

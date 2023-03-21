@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<StockDetails /> stockDetails snapshot test 1`] = `
+<RCTScrollView
+  collapsable={false}
+  handlerTag={1}
+  handlerType="NativeViewGestureHandler"
+  onGestureHandlerEvent={[Function]}
+  onGestureHandlerStateChange={[Function]}
+  style={
+    [
+      {
+        "backgroundColor": "white",
+        "flex": 1,
+      },
+    ]
+  }
+  waitFor={
+    [
+      {
+        "current": null,
+      },
+    ]
+  }
+>
+  <View>
+    <Text
+      style={
+        {
+          "color": "black",
+        }
+      }
+    >
+      Loading...
+    </Text>
+    <Text
+      style={
+        [
+          {
+            "color": "black",
+            "fontWeight": "700",
+          },
+          {
+            "color": "black",
+            "fontSize": 21,
+            "padding": 20,
+          },
+        ]
+      }
+    >
+      Line Graph
+    </Text>
+    <Text
+      style={
+        [
+          {
+            "color": "black",
+            "fontWeight": "700",
+          },
+          {
+            "color": "black",
+            "fontSize": 21,
+            "padding": 20,
+          },
+        ]
+      }
+    >
+      Stock Transactions
+    </Text>
+    <View
+      style={
+        {
+          "padding": 20,
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+            },
+            {
+              "alignSelf": "center",
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        ... Loading
+      </Text>
+    </View>
+  </View>
+</RCTScrollView>
+`;
