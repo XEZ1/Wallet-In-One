@@ -38,7 +38,8 @@ export default function useCryptoWallet() {
     const data = await response.json()
 
     if (response.status === 201) setWallets([...wallets, data])
-    else Alert.alert("Connection Fault", `Error - ${data.address[0].toLowerCase()}`)
+    else Alert.alert("Connection Fault",
+      `Error - ${data.address?.[0].toLowerCase() || data.non_field_errors}`)
   };
 
   const removeWallet = async (id) => {

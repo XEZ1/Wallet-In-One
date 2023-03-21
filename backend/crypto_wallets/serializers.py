@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
+
 from crypto_wallets.models import CryptoWallet, CryptoWalletTransaction
 from crypto_wallets.services import CryptoWalletService, get_timestamp, normalise_value
 
@@ -22,6 +24,12 @@ class CryptoWalletSerializer(serializers.ModelSerializer):
                             spent={'required': False},
                             output_count={'required': False},
                             unspent_output_count={'required': False})
+        validators = [UniqueTogetherValidator(
+            queryset=CryptoWallet.objects.all(),
+            fields=['user', 'cryptocurrency', 'address'],
+            message="you have already added this address."
+        )]
+
 
     def get_fields(self):
         fields = super().get_fields()
@@ -43,6 +51,7 @@ class CryptoWalletSerializer(serializers.ModelSerializer):
             output_count=crypto_wallet_service.output_count,
             unspent_output_count=crypto_wallet_service.unspent_output_count,
         )
+        print(crypto_wallet.full_clean())
         crypto_wallet.save()
 
         for transaction in crypto_wallet_service.transactions:

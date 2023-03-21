@@ -14,12 +14,15 @@ class CryptoWallet(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     cryptocurrency = models.CharField(max_length=256)
     symbol = models.CharField(max_length=16)
-    address = models.CharField(max_length=256, blank=False, unique=True)
+    address = models.CharField(max_length=256, blank=False)
     balance = models.FloatField()
     received = models.FloatField()
     spent = models.FloatField()
     output_count = models.IntegerField()
     unspent_output_count = models.IntegerField()
+
+    class Meta:
+        unique_together = ['user', 'cryptocurrency', 'address']
 
 
 class CryptoWalletTransaction(models.Model):
