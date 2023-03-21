@@ -4,9 +4,7 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { BACKEND_URL } from "@env"
 import * as SecureStore from "expo-secure-store";
 import getCryptoIcon from "./icons/icon";
-import LineChartScreen from "../charts/LineChart";
 import { LineChart } from 'react-native-chart-kit';
-import { unescapeLeadingUnderscores } from "typescript";
 
 export default function CryptoInsights() {
   const [insights, setInsights] = useState({predicted_balance: {}, received_spent: {}, average_spend: {}});
