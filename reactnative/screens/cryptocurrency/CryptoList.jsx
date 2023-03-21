@@ -101,6 +101,22 @@ export default function CryptoList(props) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView>
+        <TouchableOpacity onPress={handleSubmit} style={styles.refreshButton}>
+          <Ionicons name="refresh-outline" size={25} color="white" />
+        </TouchableOpacity>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <View style={{ marginRight: 20 }}>
+              <Text style={[styles.cryptoWalletTitle, {color: colors.text}]}>Cryptocurrency</Text>
+            </View>
+          </View>
+        </View>
 
         <View style={{flexDirection:'row', justifyContent: 'center'}}>
           <TouchableOpacity
