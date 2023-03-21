@@ -84,6 +84,8 @@ export default function CryptoConnector(props) {
             </View>
           </TouchableOpacity>)
       }
+      <View style={{paddingBottom:20}}>
+      </View>
 
     </ScrollView>
   );
