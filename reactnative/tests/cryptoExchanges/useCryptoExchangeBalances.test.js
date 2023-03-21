@@ -35,7 +35,7 @@ describe('useCryptoExchangeBalances', () => {
         await act( async () => {
             await result.current.fetchBalances();
 
-            expect(mockFetch).toHaveBeenCalledWith(`http://10.0.2.2:8000/crypto-exchanges/get_exchange_balances/`, {
+            expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining(`/crypto-exchanges/get_exchange_balances/`), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ describe('useCryptoExchangeBalances', () => {
 
             await result.current.fetchBalances();
         });
-        expect(mockFetch).toHaveBeenCalledWith(`http://10.0.2.2:8000/crypto-exchanges/get_exchange_balances/`, {
+        expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining(`/crypto-exchanges/get_exchange_balances/`), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

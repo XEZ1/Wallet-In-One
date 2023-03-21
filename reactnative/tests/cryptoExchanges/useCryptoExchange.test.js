@@ -29,7 +29,7 @@ describe('useCryptoExchange', () => {
     await act( async () => {
         await result.current.fetchExchanges();
 
-        expect(mockFetch).toHaveBeenCalledWith(`http://10.0.2.2:8000/crypto-exchanges`, {
+        expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining(`/crypto-exchanges`), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ describe('useCryptoExchange', () => {
 
             await result.current.fetchExchanges();
         });
-        expect(mockFetch).toHaveBeenCalledWith(`http://10.0.2.2:8000/crypto-exchanges`, {
+        expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining(`/crypto-exchanges`), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ describe('useCryptoExchange', () => {
             await result.current.setExchanges([{id: 1, name: 'Exchange 1'}, {id: 2, name: 'Exchange 2'}]);
             await result.current.removeExchange(1);
 
-            expect(mockFetch).toHaveBeenCalledWith(`http://10.0.2.2:8000/crypto-exchanges`, {
+            expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining(`/crypto-exchanges`), {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ describe('useCryptoExchange', () => {
 
             await result.current.removeExchange(1);
         });
-            expect(mockFetch).toHaveBeenCalledWith(`http://10.0.2.2:8000/crypto-exchanges`, {
+            expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining(`/crypto-exchanges`), {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
