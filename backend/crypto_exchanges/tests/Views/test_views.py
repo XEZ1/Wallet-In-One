@@ -628,7 +628,7 @@ class CryptoExchangeAccountCreationTestCase(APITestCase):
     def test_create_binance_account_invalid(self, mock_fetcher):
 
         url = reverse('binance')
-        data = {'api_key': 'abcdefghijklmnopqrstuvwxyz', 'secret_key': 'abcdefghijklmnopqrstuvwxyz'}
+        data = {'api_key': '12345wrongapikeyabcdefghijklmnopqrstuvwxyz', 'secret_key': 'abcdefghijklmnopqrstuvwxyz'}
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
