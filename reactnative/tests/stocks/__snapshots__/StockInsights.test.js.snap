@@ -761,7 +761,7 @@ exports[`<StockInsight /> stockInsight snapshot test 1`] = `
             "fontWeight": "700",
           },
           {
-            "color": "purple",
+            "color": "black",
           },
         ]
       }
@@ -1377,7 +1377,7 @@ exports[`<StockInsight /> test 1 month stock insight 1`] = `
             "fontWeight": "700",
           },
           {
-            "color": "purple",
+            "color": "black",
           },
         ]
       }
@@ -1993,7 +1993,7 @@ exports[`<StockInsight /> test 1 year stock insight 1`] = `
             "fontWeight": "700",
           },
           {
-            "color": "purple",
+            "color": "black",
           },
         ]
       }
@@ -2609,7 +2609,7 @@ exports[`<StockInsight /> test 3 months stock insight 1`] = `
             "fontWeight": "700",
           },
           {
-            "color": "purple",
+            "color": "black",
           },
         ]
       }
@@ -3225,7 +3225,7 @@ exports[`<StockInsight /> test 6 months stock insight 1`] = `
             "fontWeight": "700",
           },
           {
-            "color": "purple",
+            "color": "black",
           },
         ]
       }

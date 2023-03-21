@@ -2,6 +2,8 @@ import {render, act, fireEvent, screen, waitFor} from "@testing-library/react-na
 import CryptoWalletDetail from "../../screens/crypto_wallet/CryptoWalletDetail";
 import cryptoWallet from './fixtures/cryptoWallet.json'
 
+jest.mock('react-native-wagmi-charts')
+
 
 describe('<CryptoWalletDetail />', () => {
 

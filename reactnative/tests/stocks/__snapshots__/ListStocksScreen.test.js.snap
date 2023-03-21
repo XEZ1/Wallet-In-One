@@ -54,6 +54,13 @@ exports[`<SuccessComponent /> listStocksScreen empty data 1`] = `
         "fontSize": 40,
         "fontWeight": "800",
       },
+      "list": {
+        "backgroundColor": "white",
+        "borderColor": "lightgrey",
+        "borderRadius": 4,
+        "borderWidth": 1,
+        "width": "80%",
+      },
       "paddingBottom": 8,
       "paddingTop": 8,
       "smallButton": {
@@ -206,6 +213,13 @@ exports[`<SuccessComponent /> listStocksScreen snapshot test 1`] = `
         "color": "black",
         "fontSize": 40,
         "fontWeight": "800",
+      },
+      "list": {
+        "backgroundColor": "white",
+        "borderColor": "lightgrey",
+        "borderRadius": 4,
+        "borderWidth": 1,
+        "width": "80%",
       },
       "paddingBottom": 8,
       "paddingTop": 8,

@@ -12,6 +12,7 @@ import React, {useEffect, useState} from "react";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import {styles} from '../All_Styles.style.js';
+import { LineChart } from 'react-native-wagmi-charts';
 import * as SecureStore from "expo-secure-store";
 import { BACKEND_URL } from "@env"
 import LineChartScreen from "../charts/LineChart";
@@ -252,62 +253,13 @@ function CryptoWalletTransaction(props) {
   };
 
   const raw_date = new Date(Number(props.transaction.item.time * 1000))
-  const formatted_date = raw_date.toUTCString()
+  const formatted_date = raw_date.toLocaleString("en-JP", date_options);
 
   return (
     <View style={styles.transaction}>
       <Text />
       <Text style={{color: colors.text, fontWeight: "700", fontSize: 16}}>{props.transaction.item.value} {props.symbol}</Text>
       <Text style={{color: colors.text}}>{formatted_date}</Text>
-    </View>
-  )
-}
-
-export function OldChart(props) {
-
-  const { graphData } = props
-  const {dark, colors, setScheme} = useTheme();
-
-  const {width: SIZE} = Dimensions.get('window');
-  const [graphVersion,setGraphVersion] = useState(4);
-  
-  return(
-    <View>
-      {
-        graphData.length <= 2 ?
-          <Text style={{color: colors.text,paddingHorizontal:30}}>Not enough data to display graph.</Text>
-          :
-          <View style={[styles.walletAsset, {backgroundColor: colors.background,paddingBottom:30}]}>
-
-            <View style={{padding: 15,paddingHorizontal: 45}}>
-              <SwitchSelector
-                initial={0}
-                onPress={value => setGraphVersion(value)}
-                // textColor="#7a44cf"
-                selectedColor="#fff"
-                buttonColor="#7a44cf"
-                borderColor="#7a44cf"
-                hasPadding
-                options={[    
-                  { label: "Line Chart", value: 4},  
-                  { label: "Candlestick Chart", value: 3} 
-                ]}
-                imageStyle={{ width: 20, height: 20 }}
-                textStyle={{ fontWeight: 'bold' }}
-              />
-            </View>
-
-            {graphData && 
-            <LineChartScreen
-              current_balance={graphData[graphData.length-1].value}
-              graph_version={graphVersion}
-              height={SIZE / 2} 
-              width={SIZE}
-              data={graphData}
-          />}
-            
-          </View>
-      }
     </View>
   )
 }
