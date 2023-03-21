@@ -1,34 +1,25 @@
-from datetime import datetime, timezone, timedelta
-
+from datetime import datetime, timezone
+from typing import Any, Dict, List
 import pytz
 from django.http import HttpResponse, HttpRequest
-from rest_framework.test import APIRequestFactory, force_authenticate, APITestCase, APIClient
+from rest_framework.test import force_authenticate, APIClient
 from rest_framework.response import Response
 from rest_framework.test import APITestCase, APIRequestFactory
-
 from django.contrib.auth.models import User
-from django.test import TestCase, Client, RequestFactory
+from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from rest_framework import status
-
 import unittest
-from unittest.mock import MagicMock, patch, Mock
-
-from accounts.models import User
+from unittest.mock import MagicMock, patch
 from ...views import get_transactions, get_token_breakdown, get_exchange_balances, GenericCryptoExchanges, \
     BinanceView, GateioView, CoinListView, CoinBaseView, KrakenView
-from ...models import CryptoExchangeAccount, Transaction, Token
 from ...services import BinanceFetcher, GateioFetcher, CoinListFetcher, CoinBaseFetcher, KrakenFetcher
 from crypto_exchanges.serializers import *
-from typing import List, Dict, Any
 from collections import OrderedDict
-
 import json
-
 
 def millis_to_datetime(millis):
     return datetime.fromtimestamp(millis / 1000.0)
-
 
 def convert_to_dict_list(data: List[OrderedDict]) -> List[Dict[str, Any]]:
     result = []
@@ -39,11 +30,9 @@ def convert_to_dict_list(data: List[OrderedDict]) -> List[Dict[str, Any]]:
         result.append(dict_item)
     return result
 
-
 def convert_date_string(date_string):
     dt = datetime.fromisoformat(date_string)
     return dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
-
 
 class TestGetTransactions(TestCase):
     def setUp(self):
