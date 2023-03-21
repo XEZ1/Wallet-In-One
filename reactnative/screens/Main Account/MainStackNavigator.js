@@ -1,6 +1,7 @@
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import {LogBox, Text, TouchableOpacity} from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { View } from "react-native";
 
 //Bank Screens
 import AddBankScreen from "../banking/AddBankScreen";
@@ -19,13 +20,19 @@ import CryptoConnector from "../cryptocurrency/CryptoConnector"
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 import ExchangeTransactions from "../cryptoExchanges/ExchangeTransactions";
 
-import StockStackNavigator from "../stocks/StockStackNavigator";
-
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-import CryptoWalletInsights from "../crypto_wallet/CryptoWalletInsights";
+import CryptoInsights from "../cryptocurrency/CryptoInsights";
 
 //Crypto Exchanges Screens
 import ExchangeCredentials from "../cryptoExchanges/ExchangeCredentials";
+
+import StockAsset from "../stocks/StockAsset";
+import SuccessComponent from "../stocks/ListStocksScreen";
+import TransactionData from "../stocks/StockTransactionData";
+import LineChartScreen from "reactnative/screens/charts/LineChart.js";
+import PlaidComponent from "../stocks/AddStocksScreen";
+import StockDetails from "../stocks/StockDetails";
+import StockInsight from "../stocks/StocksInsightScreen";
 
 const Stack = createStackNavigator();
 
@@ -73,29 +80,60 @@ export default function MainStackNavigator() {
           headerRight: () => (
             <TouchableOpacity 
               style={{ marginRight: 15 }} 
-              onPress={() => navigation.navigate("Add Cryptocurrency Wallet or Account")}
+              onPress={() => navigation.navigate("Add Cryptocurrency Asset")}
             >
               <Text style={{ color: '#007AFF' }}>Add</Text>
             </TouchableOpacity>
           )
       })}/>
       <Stack.Screen
-        name="Add Cryptocurrency Wallet or Account"
+        name="Add Cryptocurrency Asset"
         component={CryptoConnector} />
       <Stack.Screen
         name="Crypto Wallet Detail"
         component={CryptoWalletDetail}
       />
       <Stack.Screen name="WalletConnector" component={CryptoWalletConnector} />
-      <Stack.Screen name="Crypto Wallet Insights" component={CryptoWalletInsights} />
+      <Stack.Screen name="Crypto Wallet Insights" component={CryptoInsights} />
 
       <Stack.Screen name="Exchange Credentials" component={ExchangeCredentials} />
 
       <Stack.Screen name="ExchangeTransactions" component={ExchangeTransactions} />
 
-      <Stack.Screen name="Stock Accounts" component={StockStackNavigator} options={{headerShown: false}} />
+      <Stack.Screen name="Stock Account List" component={SuccessComponent}
+                options={({ navigation }) => ({
+                  headerRight: () => (
+                    <View style={{flexDirection: "row"}}>
+                    <TouchableOpacity 
+                      style={{ marginRight: 15 }} 
+                      onPress={() => navigation.navigate('Insights')}
+                    >
+                      <Text style={{ color: colors.text }}>Insights</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                      style={{ marginRight: 15 }} 
+                      onPress={() => navigation.navigate('Add Stocks Account')}
+                    >
+                      <Text style={{ color: colors.text }}>Add</Text>
+                    </TouchableOpacity>
+                    </View>
+                  ),
+                })}
+        />
+        <Stack.Screen name="Insights" component={StockInsight} />
+        <Stack.Screen name="StockAsset" component={StockAsset} />
+        <Stack.Screen name="TransactionData" component={TransactionData} />
+        <Stack.Screen name="LineGraph" component={LineChartScreen} />
+        <Stack.Screen name="Add Stocks Account" component={PlaidComponent} />
+        <Stack.Screen name="StockDetails" component={StockDetails} />
 
 
     </Stack.Navigator>
   );
 }
+
+// This warning can be safely ignored.
+// https://reactnavigation.org/docs/troubleshooting/#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state
+LogBox.ignoreLogs([
+  "Non-serializable values were found in the navigation state",
+])

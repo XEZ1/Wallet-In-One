@@ -5,6 +5,9 @@ import { auth_get } from "../../authentication";
 import Loading from "../banking/Loading";
 import Map from "./Map";
 import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import { styles } from "reactnative/screens/All_Styles.style.js";
+import SwitchSelector from "react-native-switch-selector";
+
 
 export default function StockInsight() {
     const {dark, colors, setScheme} = useTheme();
@@ -12,44 +15,28 @@ export default function StockInsight() {
     const [data, setData] = useState()
     const [currentData, setCurrentData] = useState()
     const [isLoading, setIsLoading] = useState(true)
-    const [index, setIndex] = useState(true)
-    
-
     useEffect( () => {
         const getMetrics = async () => {
         const response = await auth_get('/stocks/get_metrics/')
         if(response.status == 200){
-            console.log(response.body)
             setData(response.body)
             setCurrentData(response.body.all)
-            setIndex("all")
             setIsLoading(false)
         }
-        
         }
         if(useIsFocused){getMetrics()}  
     }, [isFocused])
 
     const filter = (filter) => {
         setCurrentData(data[filter])
-        setIndex(filter)
-        console.log(currentData)
     }
 
-    const styles = StyleSheet.create({
-        // container: {
-        //     alignItems: 'center',
-        // },
+    const stylesInternal = StyleSheet.create({
         button: {
             flexDirection: "row" , justifyContent: 'space-evenly'
         },
-        // text: {
-        //     fontWeight: "700",
-        //     fontSize: 25
-        // },
         container: {
             padding: 10,
-            backgroundColor: '#fff',
             borderRadius: 5,
             marginVertical: 10,
             shadowColor: '#000',
@@ -68,13 +55,27 @@ export default function StockInsight() {
     })
 
     const buttons = [
-        <View style={styles.button}>
-            <Button color={index === "all" ? colors.primary : 'grey'} onPress={() => filter('all')} title="All"/>
-            <Button color={index === "1 Month" ? colors.primary : 'grey'} onPress={() => filter('1 Month')} title="1 Month"/>
-            <Button color={index === "3 Months" ? colors.primary : 'grey'} onPress={() => filter('3 Months')} title="3 Months"/>
-            <Button color={index === "6 Months" ? colors.primary : 'grey'} onPress={() => filter('6 Months')} title="6 Months"/>
-            <Button color={index === "12 Months" ? colors.primary : 'grey'} onPress={() => filter('12 Months')} title="12 Months"/>
-        </View>
+        <SwitchSelector
+        key={"all"}
+        initial={0}
+        onPress={value => filter(value)}
+        // textColor="#7a44cf"
+        selectedColor="#fff"
+        buttonColor="#7a44cf"
+        borderColor="#7a44cf"
+        hasPadding
+        options={[    
+          { label: "All", value: "all", testID: "all"},  
+          { label: "1 Month", value: "1 Month", testID: "1 Month"},
+          { label: "3 Months", value: "3 Months", testID: "3 Months"},
+          { label: "6 Months", value: "6 Months", testID: "6 Months"},
+          { label: "1 Year", value: "12 Months", testID: "1 Year"}  
+        ]}
+        imageStyle={{ width: 20, height: 20 }}
+        textStyle={{ fontWeight: 'bold', fontSize: 15 }}
+        buttonMargin={1}
+        height={60}
+      />
     ]
     if(isLoading){
         return (<Loading/>)
@@ -82,25 +83,25 @@ export default function StockInsight() {
         return(
         <View style={{flex: 1}}>
             {buttons}
-            <Text style={{textAlign: 'center'}}>No Data for Selected Date</Text>
+            <Text style={[styles(dark, colors).text, {textAlign: 'center'}]}>No Data for Selected Date</Text>
         </View>
         )
     }
     return(
-        <View style={{flex: 1}}>
+        <View style={styles(dark, colors).container}>
             {buttons}
-            <View style={styles.container}>
-                <Text style={[styles.text, {fontWeight: 'bold'}]}>Transaction Statistics</Text>
-                <Text style={styles.text}>Number of Transactions: {currentData.total_number_of_transactions}</Text>
-                <Text style={styles.text}>Highest Transaction(£): {currentData.highest_transaction}</Text>
-                <Text style={styles.text}>Lowest Transaction(£): {currentData.lowest_transaction}</Text>
-                <Text style={styles.text}>Average Transaction(£): {currentData.average_transaction}</Text>
-                <Text style={styles.text}>Variance: {currentData.variance}</Text>
-                <Text style={styles.text}>Standard Deviation: {currentData.standard_deviation}</Text>
-                <Text style={styles.text}>Highest Fee(£): {currentData.highest_fee}</Text>
-                <Text style={styles.text}>Lowest Fee(£): {currentData.lowest_fee}</Text>
-                <Text style={styles.text}>Average Fee(£): {currentData.average_fee}</Text>
-                <Text style={styles.text}>Centroid of Transaction Locations:</Text>
+            <View style={stylesInternal.container}>
+                <Text style={[stylesInternal.text, styles(dark, colors).textBold, {color: colors.text}]}>Transaction Statistics</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Number of Transactions: {currentData.total_number_of_transactions}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Highest Transaction(£): {currentData.highest_transaction}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Lowest Transaction(£): {currentData.lowest_transaction}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Average Transaction(£): {currentData.average_transaction}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Variance: {currentData.variance}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Standard Deviation: {currentData.standard_deviation}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Highest Fee(£): {currentData.highest_fee}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Lowest Fee(£): {currentData.lowest_fee}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Average Fee(£): {currentData.average_fee}</Text>
+                <Text style={[stylesInternal.text, styles(dark, colors).text]}>Centroid of Transaction Locations:</Text>
             </View>
             <View style={{flex: 1}}>
                 <View style={{height: '100%'}}>

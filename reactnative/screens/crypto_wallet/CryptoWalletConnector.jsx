@@ -53,6 +53,7 @@ export default function CryptoWalletConnector(props) {
           onChangeText={(text) => setAddress(text)}
           placeholderTextColor= {colors.text}
           placeholder="Wallet Address"
+          testID="addressInput"
         />
 
         {

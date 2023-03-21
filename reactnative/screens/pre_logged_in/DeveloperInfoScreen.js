@@ -90,7 +90,7 @@ export default function DeveloperInfoScreen ({ navigation }) {
 
     return (
         <ImageBackground
-            source={require('reactnative/assets/background.png')}
+            source={require('reactnative/assets/background.jpg')}
             style={styles.background}
         >
         <ScrollView

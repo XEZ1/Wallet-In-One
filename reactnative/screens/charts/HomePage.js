@@ -16,6 +16,7 @@ import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
 import SwitchSelector from "react-native-switch-selector";
 import { FlatList } from "react-native-gesture-handler";
+import Loading from "../banking/Loading";
 export default function HomePage({ navigation }) {
   const originalColours = ["pink", "turquoise", "lime", "#FA991C"]
   const {dark, colors, setScheme } = useTheme();
@@ -27,6 +28,7 @@ export default function HomePage({ navigation }) {
   const [pressed, setPressed] = useState(null);
   const { removeWallet } = useCryptoWallet();
   const [colorScheme, setColors] = useState(originalColours);
+  const [loading, setIsLoading] = useState(true)
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
 
   // Uncomment to show bank data from backend
@@ -39,9 +41,10 @@ export default function HomePage({ navigation }) {
         setNewData(response.body.all);
         setPressed(null);
         setColors(originalColours);
+        setIsLoading(false)
       }
     };
-    if (isFocused) {
+    if (useIsFocused) {
       fetchData();
     }
     fetchExchanges();
@@ -72,6 +75,7 @@ export default function HomePage({ navigation }) {
           var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
           const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
           setColors(originalColours)
+          if(response.status == 200 && res.status == 200){
           navigation.navigate("Stock Account Transactions", {
             accountID: stockData.id, 
             accessToken: response.body.access_token, 
@@ -82,6 +86,7 @@ export default function HomePage({ navigation }) {
             account_name: response.body.name,
             balance_currency: 'GBP'
           })
+          }
         }
         console.log(stockData.id)
       }
@@ -122,8 +127,6 @@ export default function HomePage({ navigation }) {
         break;
       }
     }
-    console.log(index)
-    console.log(datapoint)
       if (pressed == "Banks"){
         for (let i = 0; i < baseData["Banks"].length; i++) {
           if (baseData["Banks"][i].x === index) {
@@ -142,38 +145,34 @@ export default function HomePage({ navigation }) {
             break;
           }
         }
-        var wallet = wallets.find(x => x.id === cryptoData.id)
         if (cryptoData.id) {
-          navigation.navigate("Wallet Detail", { item: wallet, value: cryptoData.y, removeWallet: removeWallet })
+          navigation.navigate("Wallet Detail", { id: cryptoData.id, value: cryptoData.y, removeWallet: removeWallet })
           return
         }
       }
       else if (pressed == "Stock Accounts") {
-        console.log(baseData["Stock Accounts"])
-        console.log(index)
         for (let i = 0; i < baseData["Stock Accounts"].length; i++) {
           if (baseData["Stock Accounts"][i].x === index) {
-            console.log(baseData["Stock Accounts"][i])
             var stockData = baseData["Stock Accounts"][i]
             break;
           }
         }
-        console.log(stockData)
         if (stockData.id) {
           var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
           const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
-          navigation.navigate("Stock Account Transactions", {
-            accountID: stockData.id, 
-            accessToken: response.body.access_token, 
-            transactions: res.body,
-            logo: response.body.logo,
-            balance: response.body.balance,
-            name: response.body.institution_name,
-            account_name: response.body.name,
-            balance_currency: response.body.balance_currency
-          })
+          if(response.status == 200 && res.status == 200){
+            navigation.navigate("Stock Account Transactions", {
+              accountID: stockData.id, 
+              accessToken: response.body.access_token, 
+              transactions: res.body,
+              logo: response.body.logo,
+              balance: response.body.balance,
+              name: response.body.institution_name,
+              account_name: response.body.name,
+              balance_currency: 'GBP'
+            })
+            }
         }
-        console.log(stockData.id)
       }
       else if (pressed === "Cryptocurrency from exchanges") {
         for (let i = 0; i < baseData["Cryptocurrency from exchanges"].length; i++) {
@@ -205,8 +204,11 @@ export default function HomePage({ navigation }) {
   const handleChartTypeChange = (type) => {
     setChartType(type);
   };
-
-  if (value == 0) {
+  
+  if(loading){
+    return(<Loading/>)
+  }
+  else if (value == 0) {
     return (<NoWallets/>);
   } else {
     return (
@@ -222,27 +224,6 @@ export default function HomePage({ navigation }) {
         ListHeaderComponent={
       
         <>
-        {/* Switch Graph Buttons */}
-        {/* <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
-          <TouchableOpacity
-            style={[
-              styles(dark, colors).btn,
-              chartType === "pie" && { backgroundColor: 'aliceblue'},
-            ]}
-            onPress={() => handleChartTypeChange("pie")}
-          >
-          <Text>Pie Chart</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles(dark, colors).btn,
-              chartType === "stacked" && { backgroundColor: 'aliceblue'},
-            ]}
-            onPress={() => handleChartTypeChange("stacked")}
-          >
-          <Text>Stacked Bar Chart</Text>
-          </TouchableOpacity>
-        </View> */}
 
         <View style={{paddingHorizontal: 40,paddingTop: 30}}>
             <SwitchSelector
@@ -254,8 +235,8 @@ export default function HomePage({ navigation }) {
               borderColor="#7a44cf"
               hasPadding
               options={[    
-                { label: "Pie Chart", value: "pie"},  
-                { label: "Stacked Bar Chart", value: "stacked"} 
+                { label: "Pie Chart", value: "pie", testID: "pie"},  
+                { label: "Stacked Bar Chart", value: "stacked", testID: "stacked"} 
               ]}
               imageStyle={{ width: 20, height: 20 }}
               textStyle={{ fontWeight: 'bold', fontSize: 18 }}
@@ -267,9 +248,9 @@ export default function HomePage({ navigation }) {
 
         {chartType == "pie" ? 
           <>
-            <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30}]}>{pressed}</Text>
+            <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30, textAlign: 'center', paddingTop:20 }]}>{pressed}</Text>
             <PieChart colours={colorScheme} data={data} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27}/>
-            {BarChart(colorScheme, list, data, colors, spacing, handlePressIn)}
+            {BarChart(colorScheme, list, data, spacing, handlePressIn, colors)}
             {pressed ? (
           <TouchableOpacity
             style={{ justifyContent: 'center', alignItems: 'center' }}

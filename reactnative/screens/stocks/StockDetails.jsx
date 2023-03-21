@@ -8,30 +8,32 @@ import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
 import LineChartScreen from '../charts/LineChart';
+import { auth_get } from '../../authentication';
+
+import { ConvertTransactionsToGraphCompatibleData } from '../helper';
 
 export default function StockDetails({ route, navigation }){
 
   const [stockTransactions, setStockTransactions] = useState();
   const stock = route.params.stock;
   const {dark, colors, setScheme } = useTheme();
-  
+  let current_balance = null;
+
+  const [transformedData, setTransformedData] = useState();
 
   const {width: SIZE} = Dimensions.get('window');
 
   let getStockTransactions = useCallback(async (stock) => {
     try {
-      const response = await fetch(api_url + `/stocks/list_transactions/${stock}/`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-        },
-      });
-      let data = await response.json();
+      const response = await auth_get(`/stocks/list_transactions/${stock}/`)
+      let data = await response.body;
       data = data.filter(item => item.security_id === route.params.stock.security_id);
+      console.log(data)
       setStockTransactions(data);
+      current_balance = data.map(item => item.amount).reduce((acc, current) => acc + current, 0);
+      console.log(current_balance)
+      setTransformedData(ConvertTransactionsToGraphCompatibleData(data, current_balance));
     } catch (error) {
-      // console.error(error);
     }
   }, []);
 
@@ -39,12 +41,8 @@ export default function StockDetails({ route, navigation }){
     if (stock) {
       getStockTransactions(stock.stockAccount);
     }
+
   }, [stock, getStockTransactions]);
-
-  // console.log(stockTransactions);
-
-  const current_balance = stockTransactions?.map(item => item.amount).reduce((acc, current) => acc + current, 0);
-  
 
   const data = {
     tableHead: ['ID', 'Amount', 'Date', 'Quantity', 'Fees'],
@@ -58,10 +56,6 @@ export default function StockDetails({ route, navigation }){
   };
 
   const stylesInternal = StyleSheet.create({
-    item:{
-      padding: 20,
-      borderRadius: 10,
-    },
     row:{
       flexDirection: 'row',
       alignItems: 'flex-start',
@@ -89,13 +83,12 @@ export default function StockDetails({ route, navigation }){
       flexDirection: 'row',
     },
   });
-
     return (
-      <ScrollView style={[styles(dark, colors).container, {padding: 20}]}>
+      <ScrollView style={[styles(dark, colors).container]}>
         {/* <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Stock Data{"\n"}</Text> */}
 
         {stock ? (
-          <View>
+          <View style={{padding: 20}}>
             <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Name</Text>
             <Text style={styles(dark, colors).text}>{stock.name}{"\n"}</Text>
 
@@ -118,22 +111,21 @@ export default function StockDetails({ route, navigation }){
           </View>
         ):(<Text style={styles(dark, colors).text}>Loading...</Text>)}
 
-          <Text style={[styles(dark, colors).textBold, {color: colors.text, fontSize: 21}]}>Line Graph</Text>
-          {stockTransactions && (
+          <Text style={[styles(dark, colors).textBold, {color: colors.text, fontSize: 21, padding: 20}]}>Line Graph</Text>
+
+          {transformedData && (
             <LineChartScreen
-            transactions={stockTransactions} 
-            graph_version={1} 
-            height={SIZE / 2} 
-            width={SIZE * 0.85}
-            current_balance={current_balance}
-            // data={null}
+              graph_version={1} 
+              height={SIZE / 2} 
+              width={SIZE}
+              current_balance={current_balance}
+              data={transformedData}
             />
           )}
 
-
-        <Text style={[styles(dark, colors).textBold, {color: colors.text, fontSize: 21}]}>Stock Transactions</Text>
+        <Text style={[styles(dark, colors).textBold, {color: colors.text, fontSize: 21, padding: 20}]}>Stock Transactions</Text>
         {data && (
-          <View style={stylesInternal.table}>
+          <View style={[stylesInternal.table], {padding: 20}}>
               {data && data.tableData && data.tableData.length > 0 ? (
                 <View>
                   <Table style={{paddingBottom:20}} borderStyle={{ borderWidth: 2, borderColor: '#42b983' }}>
@@ -150,7 +142,7 @@ export default function StockDetails({ route, navigation }){
                   </Table>
                 </View>
               ) : (
-                <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>... Loading</Text>
+                <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>Loading...</Text>
               )}
           </View>
           )}

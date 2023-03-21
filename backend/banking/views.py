@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import APIException
 from rest_framework.views import APIView
 
-from .services import get_institutions, create_requisition, delete_all_requisitions, get_requisitions, get_account_data, total_user_balance, get_institution, update_user_accounts
+from .services import get_institutions, create_requisition, get_requisitions, get_account_data, total_user_balance, get_institution, update_user_accounts
 from .serializers import URLSerializer, TransactionSerializer, AccountSerializer, format_money
 from .models import Account, Transaction
 from .util import calculate_balance_history, calculate_metrics_all
@@ -95,13 +95,6 @@ class TransactionList(generics.ListAPIView):
         else:
             return Transaction.objects.filter(account__user = self.request.user).order_by('-time')
 
-class TransactionChartView(APIView):
-    def get(self, request):
-        balance = total_user_balance(request.user)
-        transactions = Transaction.objects.filter(account__user = self.request.user)
-        daily_balances = calculate_balance_history(transactions, balance, interval='day', format=True)
-        return Response(daily_balances)
-
 from dateutil.relativedelta import relativedelta
 
 @api_view(['GET'])
@@ -136,25 +129,6 @@ def metrics(request, account_id=None):
     res['6month'] = calculate_metrics_all(transactions.filter(time__gte=start6month),balance)
     return Response(res)    
     
-
-@api_view(['GET'])
-def delete_account(request, account_id):
-    Account.objects.filter(user=request.user, id=account_id).delete()
-    return Response({'Success': 'Deleted'}, status=200)
-    
-# Returns total balance of all user's bank accounts
-@api_view(['GET'])
-def get_total_balance(request):
-    user = request.user
-    amount = total_user_balance(user)
-    return Response(format_money(amount))
-
-
-@api_view(['GET'])
-def delete_everything(request):
-    delete_all_requisitions()
-    Account.objects.all().delete()
-    return Response({'Success': 'Everything has been deleted'}, status=200)
 
 @api_view(['GET'])
 def delete_account(request, account_id):

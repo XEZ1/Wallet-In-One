@@ -3,12 +3,22 @@ import time
 import hmac
 from hashlib import sha256, sha512
 from base64 import b64encode, b64decode
+from datetime import datetime, timezone
+from urllib.parse import quote_plus, urlencode
+from crypto_exchanges.serializers import TransactionSerializer
+from crypto_exchanges.models import Token, CryptoExchangeAccount, Transaction
+from abc import ABC, ABCMeta, abstractmethod
+from collections import defaultdict
 from urllib.parse import urlencode
 
 from crypto_exchanges.models import Token, CryptoExchangeAccount
 
 from abc import abstractmethod
 
+
+def iso8601_to_datetime(iso8601_string):
+    dt = datetime.strptime(iso8601_string, '%Y-%m-%d %H:%M:%S.%f%z')
+    return dt
 
 # Generic fetcher class
 class ExchangeFetcher:
@@ -384,3 +394,44 @@ class CurrentMarketPriceFetcher:
             return [{'x': exchange.crypto_exchange_name,
                      'y': self.get_exchange_balance(exchange), 'id': exchange.id}
                     for exchange in exchanges]
+
+
+def get_all_transactions(request):
+    transactions = Transaction.objects.filter(crypto_exchange_object__user=request.user).order_by('timestamp')
+    data = TransactionSerializer(transactions, many=True).data
+    if len(data) == 0:
+        data = ['empty']
+    return data
+
+
+def get_most_expensive_transaction(request):
+    transactions = Transaction.objects.filter(crypto_exchange_object__user=request.user)
+    # Create dict with the highest amount of each asset for minimum API calls to crypto price fetcher
+    asset_max_transactions = defaultdict(
+        lambda: {'amount': 0.0, 'type': None, 'timestamp': None, 'exchange_name': None})
+    for transaction in transactions:
+        asset = transaction.asset[:3].upper()
+        amount = transaction.amount
+        if amount > asset_max_transactions[asset]['amount']:
+            asset_max_transactions[asset]['amount'] = amount
+            asset_max_transactions[asset]['type'] = transaction.transaction_type
+            asset_max_transactions[asset]['timestamp'] = transaction.timestamp
+            asset_max_transactions[asset]['exchange_name'] = transaction.crypto_exchange_object.crypto_exchange_name
+
+    price_getter_obj = CurrentMarketPriceFetcher(request.user)
+    most_expensive_transaction = None
+    max_crypto_price_amount = 0.0
+    # Look for the most expensive transaction
+    for asset, data in asset_max_transactions.items():
+        amount = data['amount']
+        crypto_price = price_getter_obj.get_crypto_price(asset)  # Get price of crypto asset
+        crypto_price_amount = crypto_price * amount
+        if crypto_price_amount > max_crypto_price_amount:
+            most_expensive_transaction = (
+                asset, amount, round(crypto_price_amount, 2), data['type'], iso8601_to_datetime(str(data['timestamp'])).strftime('%Y-%m-%d %H:%M:%S'), data['exchange_name'])
+            max_crypto_price_amount = crypto_price_amount
+
+    if most_expensive_transaction is None:
+        most_expensive_transaction = ('empty', 0.0, 0.0, None, None, None)
+    print(most_expensive_transaction)
+    return most_expensive_transaction

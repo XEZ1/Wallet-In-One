@@ -7,8 +7,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from crypto_exchanges.serializers import *
-from crypto_exchanges.services import *
+from crypto_exchanges.serializers import TransactionSerializer, CryptoExchangeAccountSerializer
+from crypto_exchanges.services import CurrentMarketPriceFetcher, get_all_transactions, get_most_expensive_transaction, BinanceFetcher, CoinBaseFetcher, CoinListFetcher, KrakenFetcher, GateioFetcher
 from crypto_exchanges.models import Transaction, CryptoExchangeAccount, Token
 
 
@@ -27,6 +27,15 @@ def unix_timestamp_to_datetime(unix_timestamp):
 
 
 # Create your views here.
+@api_view(['GET'])
+def get_insights(request):
+    all_transactions = get_all_transactions(request)
+    most_expensive_transaction = get_most_expensive_transaction(request)
+    insights = {'all_transactions': all_transactions, 'most_expensive_transaction': most_expensive_transaction}
+    print(insights)
+    return Response(insights)
+
+
 @api_view(['GET'])
 def get_transactions(request, exchange):
     exchange_obj = CryptoExchangeAccount.objects.get(id=exchange)
@@ -458,3 +467,31 @@ class KrakenView(GenericCryptoExchanges, ABC):
 
     def delete(self, request):
         return super(KrakenView, self).delete(request)
+
+
+# Update the existing tokens retrieved from crypto exchanges
+class UpdateAllTokens(APIView):
+    def post(self, request):
+        fixed_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
+        for account in fixed_accounts:
+            api_key = account.api_key
+            secret_key = account.secret_key
+            platform = account.crypto_exchange_name
+            account.delete()
+            request.data['api_key'] = api_key
+            request.data['secret_key'] = secret_key
+            response = 0
+            if platform == 'Binance':
+                response = BinanceView()
+            elif platform == 'GateIo':
+                response = GateioView()
+            elif platform == 'CoinList':
+                response = CoinListView()
+            elif platform == 'CoinBase':
+                response = CoinBaseView()
+            elif platform == 'Kraken':
+                response = KrakenView()
+            else:
+                pass
+            response.post(request)
+        return Response({'message': 'Success. Data was updated successfully'}, status=200)

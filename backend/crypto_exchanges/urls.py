@@ -10,5 +10,6 @@ urlpatterns = [
     path('crypto-exchanges/kraken', views.KrakenView.as_view(), name='kraken'),
     path('crypto-exchanges/get_transactions/<int:exchange>/', views.get_transactions),
     path('crypto-exchanges/get_token_breakdown/<int:exchange>/', views.get_token_breakdown),
-    path('crypto-exchanges/get_exchange_balances/', views.get_exchange_balances)
+    path('crypto-exchanges/get_exchange_balances/', views.get_exchange_balances),
+    path('crypto-exchanges/get_insights/', views.get_insights)
 ]

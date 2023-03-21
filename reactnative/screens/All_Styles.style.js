@@ -72,4 +72,11 @@ export const styles = (dark, colors) => StyleSheet.create({
     width: "40%",
     alignItems: "center",
   },
+  list: {
+    backgroundColor: colors?.background,
+    width: "80%",
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: 'lightgrey',
+  }
 });

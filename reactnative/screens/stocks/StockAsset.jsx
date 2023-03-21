@@ -14,11 +14,14 @@ import { styles } from "reactnative/screens/All_Styles.style.js";
 import SwitchSelector from "react-native-switch-selector";
 import ConditionalModal from '../Modal';
 import Loading from '../banking/Loading';
+import { ConvertTransactionsToGraphCompatibleData } from '../helper';
+
 
 export default function StockAsset({ route, navigation, }){
   const [stocks, setStocks] = useState()
   const {dark, colors, setScheme } = useTheme();
   const [loading, setLoading] = useState(true);
+  const [graph, setGraph] = useState({})
 
   const stylesInternal = StyleSheet.create({
     buttonContainer: {
@@ -212,6 +215,34 @@ export default function StockAsset({ route, navigation, }){
   const [graphVersion,setGraphVersion] = React.useState(1);
   const [modalVisible, setModalVisible] = useState(false);
 
+
+   useEffect(() => {
+        let transformedData = ConvertTransactionsToGraphCompatibleData(transactions, route.params.balance);
+
+        setGraph(transformedData);
+
+        // if(data == null){
+            // let graph_data = transactions.map((item) => [item.amount, item.date]);
+            // graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
+
+            // let points = [];
+            // let balance = route.params.balance;
+
+            // for (let i = 0; i < graph_data.length; i++) {
+            //     let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
+            //     balance -= graph_data[i][0]
+            //     points = [point, ...points]
+            // }
+            // if (points.length > 0) {
+            //     points[points.length - 1].value = parseFloat(points[points.length - 1].value);
+            // }
+            // setGraph(points)
+        // } else{
+        //     setGraph(data);
+        // }
+    }, [transactions]);
+
+
   if(loading){
     return(<Loading/>)
   }
@@ -276,7 +307,7 @@ export default function StockAsset({ route, navigation, }){
 
           {transactions && 
             <LineChartScreen 
-              transactions={transactions}
+              data={graph}
               current_balance={route.params.balance}
               graph_version={graphVersion}
               height={275}

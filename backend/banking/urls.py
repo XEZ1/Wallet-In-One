@@ -9,9 +9,6 @@ urlpatterns = [
     path('user_accounts/', views.AccountList.as_view(), name='user_accounts'),
     path('transactions/<str:account_id>/', views.TransactionList.as_view(), name='transactions'),
     path('transactions/', views.TransactionList.as_view(), name='transactions'),
-    path('delete_everything/', views.delete_everything, name='delete_everything'), # View only for debugging purposes
-    path('get_total_balance/', views.get_total_balance, name='get_total_balance'),
-    path('chart/', views.TransactionChartView.as_view(), name='chart'),
     path('metrics/', views.metrics, name='metrics'),
     path('delete_account/<str:account_id>/', views.delete_account, name='delete_account'),
 ]   

@@ -1,7 +1,9 @@
 import { NavigationContainer,  DefaultTheme, DarkTheme} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import TransactionData from './screens/stocks/StockTransactionData';
+import LineChartScreen from "reactnative/screens/charts/LineChart.js";
+import StockDetails from './screens/stocks/StockDetails';
 import { useContext, useEffect } from 'react';
 import { Text } from 'react-native';
 import MainStackNavigator from "./screens/Main Account/MainStackNavigator";
@@ -84,17 +86,6 @@ export default function Navigation() {
               ),
             }}
           />
-          {/* <Tab.Screen
-            name="Insights"
-            component={BankInsights}
-            options={{
-              tabBarIcon: ({ focused }) => (
-                <Text style={{ color: focused ? colors.primary : colors.text }}>
-                  <AntDesign name="notification" size={30} />
-                </Text>
-              ),
-            }}
-          /> */}
           <Tab.Screen
             name="Settings"
             component={SettingsPage}
@@ -178,6 +169,9 @@ function HomePageNavigator() {
         <Stack.Screen
         name='ExchangeTransactions'
         component={ExchangeTransactions} />
+      <Stack.Screen name="TransactionData" component={TransactionData} />
+      <Stack.Screen name="LineGraph" component={LineChartScreen} />
+      <Stack.Screen name="StockDetails" component={StockDetails} />
     </Stack.Navigator>)
 }
 

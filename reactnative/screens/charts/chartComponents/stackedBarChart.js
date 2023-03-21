@@ -8,15 +8,7 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import { Alert } from "react-native"
 
 export default function StackedChart({ data = fixture.all, handlePressIn  }) {
-  
   const {dark, colors, setScheme} = useTheme();
-
-  const labels = ["Banks", "Cryptocurrency", "Stocks"]; // ["Crypto-Wallets","Bank","Stocks","Crypto-Exchange"]
-
-  const test = (event, datapoint) => {
-    console.log(datapoint)
-  }
-
   return (
     <ScrollView
       contentContainerStyle={{

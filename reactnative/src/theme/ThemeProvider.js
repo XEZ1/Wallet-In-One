@@ -1,6 +1,5 @@
 import React, {createContext, useEffect, useContext, useState, AsyncStorage} from 'react';
 import {lightColors, darkColors} from './colors';
-
 import {useColorScheme} from 'react-native';
 export const ThemeContext = createContext({
     dark: false,

@@ -28,6 +28,7 @@ export default function BankAccountsScreen({ navigation }) {
     console.log('fetch bank accounts data')
     setIsLoading(true)
     const response = await auth_get('/banking/user_accounts/')
+    console.log('status', response.status)
     if (response.status == 200){
         setIsLoading(false)
         setBankData(response.body)
@@ -35,7 +36,7 @@ export default function BankAccountsScreen({ navigation }) {
   }
 
   useEffect(() =>{
-    if(isFocused){fetchData()}
+    if(isFocused != false){fetchData()}
   }, [isFocused])
 
   const displayTimestamp = (timestamp) => {
@@ -167,7 +168,7 @@ export default function BankAccountsScreen({ navigation }) {
 
     return (
       <>
-      <TouchableOpacity style={mainStyle} key={index} onPress={ () => {  navigation.navigate('Bank Transactions', { accountID: item.id })}}>
+      <TouchableOpacity testID="account" style={mainStyle} key={index} onPress={ () => {  navigation.navigate('Bank Transactions', { accountID: item.id })}}>
         <View style={stylesInternal.row}>
           <Image
             source={{ uri: item.institution_logo }}
@@ -179,11 +180,11 @@ export default function BankAccountsScreen({ navigation }) {
           </View>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={stylesInternal.closeButton} onPress={() => setModalVisible(true)}>
+      <TouchableOpacity testID="close1" style={stylesInternal.closeButton} onPress={() => setModalVisible(true)}>
         <FontAwesome style={stylesInternal.closeButtonText} name="close" size= {20}/>
       </TouchableOpacity>
 
-      <ConditionalModal
+      <ConditionalModal testID="model"
         headerText={"Remove Your Bank Account"}
         bodyText={"Are you sure you want to remove your bank account?"}
         visible={modalVisible}
@@ -192,7 +193,7 @@ export default function BankAccountsScreen({ navigation }) {
       />
 
       {item.disabled?(
-      <TouchableOpacity style={stylesInternal.closeButton2} onPress={() => Alert.alert('Warning','This account is not connected anymore. Please delete and readd this account.') }>
+      <TouchableOpacity testID="close2" style={stylesInternal.closeButton2} onPress={() => Alert.alert('Warning','This account is not connected anymore. Please delete and readd this account.') }>
         <FontAwesome style={stylesInternal.closeButtonText} name="exclamation" size= {20}/>
       </TouchableOpacity>):(<></>)}
       
