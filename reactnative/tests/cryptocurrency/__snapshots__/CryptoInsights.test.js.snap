@@ -246,7 +246,17 @@ exports[`<CryptoInsights /> display empty insights test 1`] = `
         }
       }
     >
-      <Text>
+      <Text
+        style={
+          {
+            "alignSelf": "center",
+            "color": "black",
+            "fontSize": 24,
+            "fontWeight": "900",
+            "textAlign": "center",
+          }
+        }
+      >
         Loading...
       </Text>
     </View>
@@ -2048,7 +2058,17 @@ exports[`<CryptoInsights /> fetch insights fail test 1`] = `
         }
       }
     >
-      <Text>
+      <Text
+        style={
+          {
+            "alignSelf": "center",
+            "color": "black",
+            "fontSize": 24,
+            "fontWeight": "900",
+            "textAlign": "center",
+          }
+        }
+      >
         Loading...
       </Text>
     </View>
@@ -2302,7 +2322,17 @@ exports[`<CryptoInsights /> snapshot test 1`] = `
         }
       }
     >
-      <Text>
+      <Text
+        style={
+          {
+            "alignSelf": "center",
+            "color": "black",
+            "fontSize": 24,
+            "fontWeight": "900",
+            "textAlign": "center",
+          }
+        }
+      >
         Loading...
       </Text>
     </View>
