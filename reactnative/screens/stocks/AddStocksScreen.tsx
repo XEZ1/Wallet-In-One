@@ -189,38 +189,46 @@ const PlaidComponent = ({ navigation }) => {
 
   return (
     <>
-      <PlaidLink
+
+      {
+        linkToken !== undefined
+            ?
+            <PlaidLink
+
+                linkToken={linkToken}
+                onEvent={(event) => console.log(event)}
+                onExit={(exit) => console.log(exit)}
+                onSuccess={async (success) => {
+                  let account_list = success.metadata.accounts
+                  await getAccessToken(success.publicToken)
+                  await getBalance(access_token)
+                  await getStocks(access_token)
+
+                  account_list.forEach(async element => {
+                    await getLogo(success)
+                    await addAccount(element, success)
+
+                    if(data_response != 400){
+                      await getTransaction(access_token)
+                      fetched_transaction_list.investment_transactions.forEach(element => {addTransaction(element)})
+
+                      stocks.forEach(element => {
+                        let stockInfo = securities[stocks.indexOf(element)]
+                        addStock(element, stockInfo)
+                      })
+                      setModalText("Stock account has been successfully added.")
+                    }else{
+                      setModalText("Stock account has already been added!")
+                      setModalVisible(true);
+                    }
+                    // setModalVisible(true)
+                  });
+                }}
+            />
+            :
+            <View />
+      }
       
-      linkToken={linkToken}
-      onEvent={(event) => console.log(event)}
-      onExit={(exit) => console.log(exit)}
-      onSuccess={async (success) => {
-        let account_list = success.metadata.accounts
-        await getAccessToken(success.publicToken)
-        await getBalance(access_token)
-        await getStocks(access_token)
-
-        account_list.forEach(async element => {
-          await getLogo(success)
-          await addAccount(element, success)
-
-          if(data_response != 400){
-            await getTransaction(access_token)
-            fetched_transaction_list.investment_transactions.forEach(element => {addTransaction(element)})
-    
-            stocks.forEach(element => {
-              let stockInfo = securities[stocks.indexOf(element)]
-              addStock(element, stockInfo)
-            })
-            setModalText("Stock account has been successfully added.")
-          }else{
-            setModalText("Stock account has already been added!")
-            setModalVisible(true);
-          }
-          // setModalVisible(true)
-        });
-      }}
-    />
   <View>
 
   
