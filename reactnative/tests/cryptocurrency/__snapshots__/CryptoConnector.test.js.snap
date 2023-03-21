@@ -1137,6 +1137,13 @@ exports[`<CryptoConnector /> snapshot test 1`] = `
         </Text>
       </View>
     </View>
+    <View
+      style={
+        {
+          "paddingBottom": 20,
+        }
+      }
+    />
   </View>
 </RCTScrollView>
 `;

@@ -80,14 +80,14 @@ export default function MainStackNavigator() {
           headerRight: () => (
             <TouchableOpacity 
               style={{ marginRight: 15 }} 
-              onPress={() => navigation.navigate("Add Cryptocurrency Wallet or Account")}
+              onPress={() => navigation.navigate("Add Cryptocurrency Asset")}
             >
               <Text style={{ color: '#007AFF' }}>Add</Text>
             </TouchableOpacity>
           )
       })}/>
       <Stack.Screen
-        name="Add Cryptocurrency Wallet or Account"
+        name="Add Cryptocurrency Asset"
         component={CryptoConnector} />
       <Stack.Screen
         name="Crypto Wallet Detail"
@@ -112,7 +112,7 @@ export default function MainStackNavigator() {
                     </TouchableOpacity>
                     <TouchableOpacity 
                       style={{ marginRight: 15 }} 
-                      onPress={() => navigation.navigate('Stocks')}
+                      onPress={() => navigation.navigate('Add Stocks Account')}
                     >
                       <Text style={{ color: colors.text }}>Add</Text>
                     </TouchableOpacity>
@@ -124,7 +124,7 @@ export default function MainStackNavigator() {
         <Stack.Screen name="StockAsset" component={StockAsset} />
         <Stack.Screen name="TransactionData" component={TransactionData} />
         <Stack.Screen name="LineGraph" component={LineChartScreen} />
-        <Stack.Screen name="Stocks" component={PlaidComponent} />
+        <Stack.Screen name="Add Stocks Account" component={PlaidComponent} />
         <Stack.Screen name="StockDetails" component={StockDetails} />
 
 
