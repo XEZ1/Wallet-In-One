@@ -13,7 +13,7 @@ class CryptoWalletService:
         url = f"https://api.blockchair.com/{cryptocurrency.lower()}/dashboards/address/{address}?key={API_KEY}" \
               f"&transaction_details=true&limit=1000"
         r = requests.get(url=url)
-        if r.status_code != 200:
+        if r.status_code != 200 or address.isnumeric():
             self.type = None
             return
 
