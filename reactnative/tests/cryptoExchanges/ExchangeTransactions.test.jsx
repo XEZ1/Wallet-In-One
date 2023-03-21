@@ -1,6 +1,6 @@
 import React from 'react';
 import ExchangeTransactions from '../../screens/cryptoExchanges/ExchangeTransactions';
-import {render, fireEvent, waitFor, act} from '@testing-library/react-native';
+import {render, fireEvent, waitFor, act, screen} from '@testing-library/react-native';
 import {describe, it, test} from "@jest/globals";
 import expect from "expect";
 
@@ -22,6 +22,15 @@ describe('ExchangeTransactions', () => {
       goBack: jest.fn(),
     },
   };
+
+  beforeEach(() => {
+    global.fetch = jest.fn();
+  })
+
+  afterEach(() => {
+    global.fetch.mockClear();
+    delete global.fetch;
+  })
 
   it('renders correctly', () => {
     const { toJSON } = render(<ExchangeTransactions {...props} />);
@@ -64,6 +73,17 @@ describe('ExchangeTransactions', () => {
     expect(getByTestId('conditional-modal')).toBeDefined();
   });
 
+  test('switch selector opens transactions', async () => {
+    const props = createTestProps();
+    const { getByText, getByTestId } = render(<ExchangeTransactions {...props} />);
+
+    fireEvent.press(getByText('Transactions'));
+    await waitFor(() => {
+      expect(screen.getByText('Pair')).toBeDefined()
+    });
+
+  });
+
   test('switch selector works correctly', async () => {
     const props = createTestProps();
     const { getByText, getByTestId } = render(<ExchangeTransactions {...props} />);
@@ -104,50 +124,52 @@ describe('ExchangeTransactions', () => {
       }]}
 
   test('API calls are made and data is rendered correctly', async () => {
+    global.fetch = jest.fn((url, options) => {
+      console.log(url)
+      if (url.includes('/crypto-exchanges/get_transactions/1/')) {
+        return Promise.resolve({
+          json: () => Promise.resolve(mockTransactionData),
+        });
+      } else if (url.includes('/crypto-exchanges/get_token_breakdown/1/')) {
+        return Promise.resolve({
+          json: () => Promise.resolve(mockTokenData),
+        });
+      } else {
+        return Promise.reject(new Error('Invalid API call'));
+      }
+    });
+
+    act(() => {
+    });
+  });
+
+  test('API calls are made and errors are thrown', async () => {
     act(() => {
       global.fetch = jest.fn((url, options) => {
         if (url.includes('/crypto-exchanges/get_transactions/1/')) {
-          return Promise.resolve({
-            json: () => Promise.resolve(mockTransactionData),
+          return Promise.reject({
+            json: () => Promise.reject(mockTransactionData),
           });
         } else if (url.includes('/crypto-exchanges/get_token_breakdown/1/')) {
-          return Promise.resolve({
-            json: () => Promise.resolve(mockTokenData),
-          });
-        } else {
-          return Promise.reject(new Error('Invalid API call'));
+          return Promise.reject({json: () => Promise.reject(mockTokenData)});
         }
       });
+     global.fetch.mockClear();
     });
   });
 
-  // test('API calls are made and errors are thrown', async () => {
-  //   act(() => {
-  //     global.fetch = jest.fn((url, options) => {
-  //       if (url.includes('/crypto-exchanges/get_transactions/1/')) {
-  //         return Promise.reject({
-  //           json: () => Promise.reject(mockTransactionData),
-  //         });
-  //       } else if (url.includes('/crypto-exchanges/get_token_breakdown/1/')) {
-  //         return Promise.reject({json: () => Promise.reject(mockTokenData)});
-  //       }
-  //     });
-  //     global.fetch.mockClear();
-  //   });
-  // });
+  test('remove exchange breaks expectedly', async () => {
 
-    test('remove exchange breaks expectedly', async () => {
+    const props = createTestProps();
+    const {getByText, getByTestId} = render(<ExchangeTransactions {...props} />);
 
-      const props = createTestProps();
-      const {getByText, getByTestId} = render(<ExchangeTransactions {...props} />);
+    fireEvent.press(getByText('Remove'));
+    await waitFor(() => getByTestId('conditional-modal'));
 
-      fireEvent.press(getByText('Remove'));
-      await waitFor(() => getByTestId('conditional-modal'));
-
-      try {
-        fireEvent.press(getByText('Yes'));
-      } catch (error) {
-        expect(error.message).toBe("Cannot read properties of undefined (reading 'then')");
-      }
-    });
+    try {
+      fireEvent.press(getByText('Yes'));
+    } catch (error) {
+      expect(error.message).toBe("Cannot read properties of undefined (reading 'then')");
+    }
   });
+});
