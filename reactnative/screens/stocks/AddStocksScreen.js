@@ -1,8 +1,6 @@
 import React, { useState, useEffect,useRef  } from 'react';
-import { Button, Text, Image ,Dimensions } from 'react-native';
+import { Image ,Dimensions } from 'react-native';
 import PlaidLink from '@burstware/expo-plaid-link'
-import * as SecureStore from 'expo-secure-store';
-import { api_url } from '../../authentication';
 import { useIsFocused } from '@react-navigation/native';
 import { auth_post } from '../../authentication';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
@@ -84,7 +82,7 @@ const PlaidComponent = ({ navigation }) => {
         setLinkToken(response.body.link_token)
       }
   };
-  if(isFocused){initiatePlaidLink()}
+  if(useIsFocused){initiatePlaidLink()}
 }, [isFocused])
 
   const getAccessToken = async (publicToken) => {
@@ -171,28 +169,27 @@ const PlaidComponent = ({ navigation }) => {
   const scaleValue = useRef(new Animated.ValueXY({x: 0.5, y: 0.5})).current;
 
 
-  useEffect(() => {
-    if (modalVisible) {
-      Animated.timing(scaleValue, {
-        toValue: {x: 1, y: 1},
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(scaleValue, {
-        toValue: {x: 0, y: 0},
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [modalVisible]);
+  // useEffect(() => {
+  //   if (modalVisible) {
+  //     Animated.timing(scaleValue, {
+  //       toValue: {x: 1, y: 1},
+  //       duration: 300,
+  //       useNativeDriver: true,
+  //     }).start();
+  //   } else {
+  //     Animated.timing(scaleValue, {
+  //       toValue: {x: 0, y: 0},
+  //       duration: 300,
+  //       useNativeDriver: true,
+  //     }).start();
+  //   }
+  // }, [modalVisible]);
 
   const {dark, colors, setScheme } = useTheme();
 
   return (
     <>
       <PlaidLink
-      
       linkToken={linkToken}
       onEvent={(event) => console.log(event)}
       onExit={(exit) => console.log(exit)}
