@@ -40,18 +40,41 @@ describe('useCryptoExchange', () => {
     });
     });
 
+    test('fetchExchange rejects expectedly', async () => {
+        const mockFetch = jest.fn(() => {
+            return Promise.reject();
+        })
+
+        global.fetch = mockFetch;
+        const {result} = renderHook(() => useCryptoExchange());
+
+        await act(async () => {
+            result.current.setExchanges([{id: 1, name: 'Exchange 1'}]);
+
+            await result.current.fetchExchanges();
+        });
+        expect(mockFetch).toHaveBeenCalledWith(`http://10.0.2.2:8000/crypto-exchanges`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Token undefined`,
+            }
+        });
+    });
+
     test('removeExchange works correctly', async () => {
             const mockFetch = jest.fn(() =>
                 Promise.resolve({
-                    json: () => Promise.resolve([{id: 1, name: 'Exchange 1'}]),
+                    json: () => Promise.resolve([{id: 1, name: 'Exchange 1'}, {id: 2, name: 'Exchange 2'}]),
                 })
             );
             global.fetch = mockFetch;
             const {result} = renderHook(() => useCryptoExchange());
 
-        await act(async () => {
-            result.current.setExchanges([{use: 1, name: 'Exchange 1'}]);
 
+        await act(async () => {
+
+            await result.current.setExchanges([{id: 1, name: 'Exchange 1'}, {id: 2, name: 'Exchange 2'}]);
             await result.current.removeExchange(1);
 
             expect(mockFetch).toHaveBeenCalledWith(`http://10.0.2.2:8000/crypto-exchanges`, {
@@ -64,8 +87,35 @@ describe('useCryptoExchange', () => {
                     id: 1,
                 }),
             });
-            expect(result.current.exchanges).toEqual([]);
+            expect(result.current.exchanges).toEqual([{id: 2, name: 'Exchange 2'}]);
         });
 
     });
+
+    test('removeExchange rejects expectedly', async () => {
+        const mockFetch = jest.fn(() => {
+            return Promise.reject();
+        })
+
+        global.fetch = mockFetch;
+        const {result} = renderHook(() => useCryptoExchange());
+
+        await act(async () => {
+            result.current.setExchanges([{use: 1, name: 'Exchange 1'}]);
+
+            await result.current.removeExchange(1);
+        });
+            expect(mockFetch).toHaveBeenCalledWith(`http://10.0.2.2:8000/crypto-exchanges`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Token undefined`,
+                },
+                body: JSON.stringify({
+                    id: 1,
+                }),
+            });
+    });
+
+
 });

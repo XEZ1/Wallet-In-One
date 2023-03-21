@@ -219,10 +219,10 @@ export default function ExchangeTransactions(props) {
       </View>
 
       {/* Pie chart and transactions table */}    
-      {chartType == "pie" ?
+      {chartType === "pie" ?
         <View style={stylesInternal.container}>
           <Text style={stylesInternal.mediumBoldText}>Coin Breakdown</Text>
-          {exchangeTokens.length == 0 ? (
+          {exchangeTokens.length === 0 ? (
             <Text style={styles(dark, colors).text}>Loading...</Text>
           ) : exchangeTokens.length === 1 && exchangeTokens[0].x === "empty" ? (
             <Text style={styles(dark, colors).text}>No coins in this account</Text>
@@ -256,7 +256,7 @@ export default function ExchangeTransactions(props) {
               />
               {data.tableData.map((rowData, rowIndex) => (
                 <Row key={rowIndex} data={rowData.map((cellData, cellIndex) => (<Cell key={cellIndex} data={cellData} textStyle={{color: colors.text}} />))} 
-                  style={{ ...stylesInternal.row, backgroundColor: rowData[2] == "sell" ? dark ? "#8b0000" : "#f87171" : rowData[2] == "buy" ? dark ? "#006400" : "#90ee90" : dark ? "#323232" : "#f3f3f3"}}
+                  style={{ ...stylesInternal.row, backgroundColor: rowData[2] === "sell" ? dark ? "#8b0000" : "#f87171" : rowData[2] === "buy" ? dark ? "#006400" : "#90ee90" : dark ? "#323232" : "#f3f3f3"}}
                 />
               ))}
             </Table>

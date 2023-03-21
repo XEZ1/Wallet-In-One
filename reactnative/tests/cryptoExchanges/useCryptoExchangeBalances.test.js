@@ -3,6 +3,7 @@ import useCryptoExchangeBalances from "../../screens/cryptoExchanges/useCryptoEx
 import expect from "expect";
 import {describe, test} from "@jest/globals";
 import {act} from "@testing-library/react-native";
+import useCryptoExchange from "../../screens/cryptoExchanges/useCryptoExchange";
 
 
 describe('useCryptoExchangeBalances', () => {
@@ -29,7 +30,7 @@ describe('useCryptoExchangeBalances', () => {
         );
         global.fetch = mockFetch;
 
-        const { result, waitForNextUpdate } = renderHook(() => useCryptoExchangeBalances());
+        const { result } = renderHook(() => useCryptoExchangeBalances());
         expect(result.current.balances).toEqual([]);
         await act( async () => {
             await result.current.fetchBalances();
@@ -48,6 +49,28 @@ describe('useCryptoExchangeBalances', () => {
                     "id": 1
                 }
             ]);
+        });
+    });
+
+    test('fetchBalances rejects expectedly', async () => {
+        const mockFetch = jest.fn(() => {
+            return Promise.reject();
+        })
+
+        global.fetch = mockFetch;
+        const {result} = renderHook(() => useCryptoExchangeBalances());
+
+        await act(async () => {
+            result.current.setBalances([{"x": "Binance", "y": 500, "id": 1}]);
+
+            await result.current.fetchBalances();
+        });
+        expect(mockFetch).toHaveBeenCalledWith(`http://10.0.2.2:8000/crypto-exchanges/get_exchange_balances/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Token undefined`,
+            }
         });
     });
 });
