@@ -6,7 +6,6 @@ from django.db.models import Max, Min, StdDev, Avg, Variance, Sum
 
 PLAID_CLIENT_ID = '63ef90fc73e3070014496336'
 PLAID_SECRET = 'a57f2537ac53e9842da752b987bb5b'
-PLAID_ENV = 'sandbox'  # Change to 'development' or 'production' in production environment
 
 def setUpClient():
     host = plaid.Environment.Sandbox
