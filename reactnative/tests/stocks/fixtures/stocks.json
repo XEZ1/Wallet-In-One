@@ -10,5 +10,16 @@
             "institution_name": "Vanguard",
             "name": "Plaid IRA"
         }
-    ]
+    ],
+    "stock":
+        {
+            "id": 49,
+            "institution_price": "1.00",
+            "institution_price_currency": "GBP",
+            "name": "Nflx Feb 01'18 $355 Call",
+            "quantity": 0.01,
+            "security_id": "8E4L9XLl6MudjEpwPAAgivmdZRdBPJuvMPlPb",
+            "stockAccount": "ALxMKPjkkdtZVpLBdXx8ia9prXRBmwh67wXWd",
+            "ticker_symbol": "NFLX180201C00355000"
+        }
 }

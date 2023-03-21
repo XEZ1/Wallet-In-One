@@ -25,26 +25,17 @@ export default function StockDetails({ route, navigation }){
 
   let getStockTransactions = useCallback(async (stock) => {
     try {
-      // const response = await fetch(api_url + `/stocks/list_transactions/${stock}/`, {
-      //   method: "GET",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-      //   },
-      // });
       const response = await auth_get(`/stocks/list_transactions/${stock}/`)
       let data = await response.body;
       data = data.filter(item => item.security_id === route.params.stock.security_id);
       console.log(data)
       setStockTransactions(data);
       current_balance = data.map(item => item.amount).reduce((acc, current) => acc + current, 0);
+      console.log(current_balance)
       setTransformedData(ConvertTransactionsToGraphCompatibleData(data, current_balance));
     } catch (error) {
     }
   }, []);
-
-  // console.log(current_balance)
-  // console.log(transformedData)
 
   useEffect(() => {
     if (stock) {
@@ -65,10 +56,6 @@ export default function StockDetails({ route, navigation }){
   };
 
   const stylesInternal = StyleSheet.create({
-    item:{
-      padding: 20,
-      borderRadius: 10,
-    },
     row:{
       flexDirection: 'row',
       alignItems: 'flex-start',
@@ -96,7 +83,6 @@ export default function StockDetails({ route, navigation }){
       flexDirection: 'row',
     },
   });
-
     return (
       <ScrollView style={[styles(dark, colors).container]}>
         {/* <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Stock Data{"\n"}</Text> */}
@@ -156,7 +142,7 @@ export default function StockDetails({ route, navigation }){
                   </Table>
                 </View>
               ) : (
-                <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>... Loading</Text>
+                <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>Loading...</Text>
               )}
           </View>
           )}
