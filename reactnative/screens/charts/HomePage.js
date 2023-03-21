@@ -75,6 +75,7 @@ export default function HomePage({ navigation }) {
           var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
           const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
           setColors(originalColours)
+          if(response.status == 200 && res.status == 200){
           navigation.navigate("Stock Account Transactions", {
             accountID: stockData.id, 
             accessToken: response.body.access_token, 
@@ -85,6 +86,7 @@ export default function HomePage({ navigation }) {
             account_name: response.body.name,
             balance_currency: 'GBP'
           })
+          }
         }
         console.log(stockData.id)
       }
@@ -158,7 +160,7 @@ export default function HomePage({ navigation }) {
         if (stockData.id) {
           var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
           const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
-          navigation.navigate("Stock Account Transactions", {
+          navigation.navigate("StockAsset", {
             accountID: stockData.id, 
             accessToken: response.body.access_token, 
             transactions: res.body,
