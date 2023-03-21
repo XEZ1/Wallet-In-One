@@ -136,11 +136,9 @@ def update_user_accounts(user):
                 update_account_transactions(i)
             except KeyError as e:
                 i.last_update = None
-                i.save()
-                print()
-                print("Error with bank data received")
+                #print("Error with bank data received")
                 if (get_account_data(i.id)['status'] == "SUSPENDED"):
-                    print('Account is suspended')
+                    #print('Account is suspended')
                     i.disabled = True
                     i.save()
 
