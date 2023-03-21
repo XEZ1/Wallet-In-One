@@ -8,6 +8,7 @@ import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
 import LineChartScreen from '../charts/LineChart';
+import { auth_get } from '../../authentication';
 
 import { ConvertTransactionsToGraphCompatibleData } from '../helper';
 
@@ -24,20 +25,20 @@ export default function StockDetails({ route, navigation }){
 
   let getStockTransactions = useCallback(async (stock) => {
     try {
-      const response = await fetch(api_url + `/stocks/list_transactions/${stock}/`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
-        },
-      });
-      let data = await response.json();
+      // const response = await fetch(api_url + `/stocks/list_transactions/${stock}/`, {
+      //   method: "GET",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+      //   },
+      // });
+      const response = await auth_get(`/stocks/list_transactions/${stock}/`)
+      let data = await response.body;
       data = data.filter(item => item.security_id === route.params.stock.security_id);
+      console.log(data)
       setStockTransactions(data);
       current_balance = data.map(item => item.amount).reduce((acc, current) => acc + current, 0);
-      console.log(current_balance)
       setTransformedData(ConvertTransactionsToGraphCompatibleData(data, current_balance));
-      console.log(transformedData)
     } catch (error) {
     }
   }, []);
