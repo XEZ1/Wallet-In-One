@@ -160,16 +160,18 @@ export default function HomePage({ navigation }) {
         if (stockData.id) {
           var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
           const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
-          navigation.navigate("StockAsset", {
-            accountID: stockData.id, 
-            accessToken: response.body.access_token, 
-            transactions: res.body,
-            logo: response.body.logo,
-            balance: response.body.balance,
-            name: response.body.institution_name,
-            account_name: response.body.name,
-            balance_currency: response.body.balance_currency
-          })
+          if(response.status == 200 && res.status == 200){
+            navigation.navigate("Stock Account Transactions", {
+              accountID: stockData.id, 
+              accessToken: response.body.access_token, 
+              transactions: res.body,
+              logo: response.body.logo,
+              balance: response.body.balance,
+              name: response.body.institution_name,
+              account_name: response.body.name,
+              balance_currency: 'GBP'
+            })
+            }
         }
       }
       else if (pressed === "Cryptocurrency from exchanges") {
