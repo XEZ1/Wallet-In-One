@@ -181,10 +181,10 @@ export default function CryptoInsights() {
           exchangeInsights.most_expensive_transaction[0] !== "empty" ? (
             <InsightItem symbol={exchangeInsights.most_expensive_transaction[5]} upper={`${exchangeInsights.most_expensive_transaction[1]} ${exchangeInsights.most_expensive_transaction[0]} (£${exchangeInsights.most_expensive_transaction[2]}), type: ${exchangeInsights.most_expensive_transaction[3]}`} lower={`${exchangeInsights.most_expensive_transaction[4]}`}/>
           ) : (
-            <Text>There are no transactions in your cryptocurrency exchanges.</Text>
+            <Text style={{color: colors.text}}>There are no transactions in your cryptocurrency exchanges.</Text>
           )
         ) : (
-          <Text>Loading...</Text>
+          <Text style={{color: colors.text}}>Loading...</Text>
         )}
       </View>
       <Text />
@@ -193,7 +193,7 @@ export default function CryptoInsights() {
       <View style={{ borderRadius: 10, paddingVertical: 10}}>
         {graphData ? (
           graphData === "empty" ? (
-            <Text>There is no transaction data from crypto exchanges.</Text>
+            <Text style={{color: colors.text}}>There is no transaction data from crypto exchanges.</Text>
           ) : (
             <LineChart
               data={graphData}
@@ -205,7 +205,7 @@ export default function CryptoInsights() {
             />
           )
         ) : (
-          <Text>Loading...</Text>
+          <Text style={styles.smallSubtitle}>Loading...</Text>
         )}
       </View>
 
