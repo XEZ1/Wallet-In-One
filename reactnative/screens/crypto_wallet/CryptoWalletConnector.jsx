@@ -49,6 +49,8 @@ export default function CryptoWalletConnector(props) {
         </View>
 
         <TextInput
+          autoCapitalize='none'
+          autoCorrect={false}
           style={[styles(dark, colors).input, {color: colors.text}, {backgroundColor: colors.background}]}
           onChangeText={(text) => setAddress(text)}
           placeholderTextColor= {colors.text}
