@@ -8,7 +8,6 @@ from rest_framework.test import APIRequestFactory
 
 
 class WalletSerializerTestCase(TestCase):
-    """Unit tests for WalletSerializer class."""
 
     fixtures = [
         'accounts/fixtures/user.json',

@@ -1,19 +1,13 @@
-"""Collection of tests that will be used to test the CryptoWalletViewSet view."""
-
 from django.test import TestCase
 from django.urls import reverse
-from django.core.exceptions import ValidationError
-from rest_framework.test import APIClient, APIRequestFactory
+from rest_framework.test import APIClient
 from rest_framework import status
 
-from crypto_wallets.views import CryptoWalletViewSet
 from accounts.models import User
 from crypto_wallets.models import CryptoWallet
-from crypto_wallets.serializers import CryptoWalletSerializer
 
 
 class CryptoWalletViewSetTestCase(TestCase):
-    """Unit tests that will be used to test the CryptoWalletViewSet view."""
 
     fixtures = [
         'accounts/fixtures/user.json',

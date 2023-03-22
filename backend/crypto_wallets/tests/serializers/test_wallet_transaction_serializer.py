@@ -1,11 +1,8 @@
-"""Wallet Transaction serializer unit tests"""
 from django.test import TestCase
-from rest_framework import serializers
 from crypto_wallets.serializers import CryptoWalletTransactionSerializer
 
 
 class WalletTransactionSerializerTestCase(TestCase):
-    """Wallet Transaction serializer unit tests"""
 
     def setUp(self):
         self.serializer_input = {
