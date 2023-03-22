@@ -104,6 +104,8 @@ const sendLogInNotification = async () => {
 
       <Text style={[stylesInternal.text, styles(dark, colors)?.text]}>Username:</Text>
       <TextInput
+        autoCapitalize='none'
+        autoCorrect={false}
         style={[inputStyle("username"), styles(dark, colors)?.input, {color: colors?.text}]}
         onChangeText={setUsername}
         testID="username"
@@ -112,6 +114,8 @@ const sendLogInNotification = async () => {
 
       <Text style={[stylesInternal.text, styles(dark, colors)?.text]}>Password:</Text>
       <TextInput
+        autoCapitalize='none'
+        autoCorrect={false}
         style={[inputStyle("password"), styles(dark, colors)?.input, {color: colors?.text}]}
         onChangeText={setPassword}
         secureTextEntry={true}

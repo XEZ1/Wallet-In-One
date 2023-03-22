@@ -82,4 +82,114 @@ describe('<CryptoList />', () => {
 
   })
 
+  it('update crypto wallet and exchange test', async () => {
+    global.fetch =  jest.fn( async (api) => {
+      const exchangeBalancesPattern = /get_exchange_balances/
+      const walletPattern = /crypto_wallets/
+      const exchangePattern = /crypto-exchanges/
+
+      if (exchangeBalancesPattern.test(api)) {
+        return Promise.resolve({
+          status: 200, json: () => ([
+            {
+              "x": "Binance",
+              "y": 0.13,
+              "id": 2
+            }
+          ])
+        })
+      } else if (walletPattern.test(api)) {
+        return Promise.resolve({
+          status: 200, json: () => cryptoWallets
+        })
+      } else if (exchangePattern.test(api)) {
+        return Promise.resolve({
+          status: 200, json: () => cryptoWallets
+        })
+      }
+
+    })
+
+    const snapshot = render(<CryptoList {...params} />)
+
+    await act(async () => {
+      fireEvent.press(await screen.getByText('Update'))
+    })
+
+    expect(snapshot).toMatchSnapshot()
+
+  })
+
+  it('update invalid crypto wallet and exchange test', async () => {
+    global.fetch =  jest.fn( async (api) => {
+      const exchangeBalancesPattern = /get_exchange_balances/
+      const walletPattern = /crypto_wallets/
+      const exchangePattern = /crypto-exchanges/
+
+      if (exchangeBalancesPattern.test(api)) {
+        return Promise.resolve({
+          status: 200, json: () => ([
+            {
+              "x": "Binance",
+              "y": 0.13,
+              "id": 2
+            }
+          ])
+        })
+      } else if (walletPattern.test(api)) {
+        return Promise.resolve({
+          status: 400, json: () => cryptoWallets
+        })
+      } else if (exchangePattern.test(api)) {
+        return Promise.resolve({
+          status: 400, json: () => cryptoWallets
+        })
+      }
+
+    })
+
+    const snapshot = render(<CryptoList {...params} />)
+
+    await act(async () => {
+      fireEvent.press(await screen.getByText('Update'))
+    })
+
+    expect(snapshot).toMatchSnapshot()
+
+  })
+
+  it('update invalid crypto wallet and exchange test', async () => {
+    global.fetch =  jest.fn( async (api) => {
+      const exchangeBalancesPattern = /get_exchange_balances/
+      const walletPattern = /crypto_wallets/
+      const exchangePattern = /crypto-exchanges/
+
+      if (exchangeBalancesPattern.test(api)) {
+        return Promise.resolve({
+          status: 200, json: () => ([
+            {
+              "x": "Binance",
+              "y": 0.13,
+              "id": 2
+            }
+          ])
+        })
+      } else if (walletPattern.test(api)) {
+        return Promise.reject()
+      } else if (exchangePattern.test(api)) {
+        return Promise.resolve({
+          status: 400, json: () => Promise.reject()
+        })
+      }
+
+    })
+
+    const snapshot = render(<CryptoList {...params} />)
+
+    await act(async () => {
+      fireEvent.press(await screen.getByText('Update'))
+    })
+
+  })
+
 })

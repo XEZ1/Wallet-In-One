@@ -32,6 +32,8 @@ exports[`<LoginScreen /> log in snapshot test 1`] = `
       Username:
     </Text>
     <TextInput
+      autoCapitalize="none"
+      autoCorrect={false}
       onChangeText={[Function]}
       style={
         [
@@ -78,6 +80,8 @@ exports[`<LoginScreen /> log in snapshot test 1`] = `
       Password:
     </Text>
     <TextInput
+      autoCapitalize="none"
+      autoCorrect={false}
       onChangeText={[Function]}
       secureTextEntry={true}
       style={

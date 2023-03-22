@@ -1,5 +1,3 @@
-"""Unit tests that will be used to test the CryptoWallet model."""
-
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from accounts.models import User
@@ -7,7 +5,6 @@ from crypto_wallets.models import CryptoWallet
 
 
 class CryptoWalletTestCase(TestCase):
-    """Unit tests that will be used to test the CryptoWallet model."""
 
     fixtures = [
         'accounts/fixtures/user.json',

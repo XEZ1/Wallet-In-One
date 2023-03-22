@@ -1,12 +1,12 @@
 from django.test import TestCase
 from django.urls import reverse
-from rest_framework.test import APIClient, APIRequestFactory
+from rest_framework.test import APIClient
 from rest_framework import status
 
 from accounts.models import User
 
 
-class CryptoWalletViewSetTestCase(TestCase):
+class CryptoWalletInsightsTestCase(TestCase):
 
     fixtures = [
         'accounts/fixtures/user.json',

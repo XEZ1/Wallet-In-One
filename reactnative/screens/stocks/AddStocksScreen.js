@@ -74,7 +74,7 @@ const PlaidComponent = ({ navigation }) => {
     const response = await auth_post('/stocks/add_stock_account/', account_data)
     data_response = response.status
   };
-    
+
   useEffect(() => {
   const initiatePlaidLink = async () => {
       const response = await auth_post('/stocks/initiate_plaid_link/')
@@ -99,7 +99,7 @@ const PlaidComponent = ({ navigation }) => {
     }
     const response = await auth_post('/stocks/get_balance/', body)
     const data = response.body;
-    balance = (parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2) 
+    balance = (parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2)
   }
 
   const getStocks = async (accessToken) => {
@@ -163,7 +163,7 @@ const PlaidComponent = ({ navigation }) => {
     const response = await auth_post('/stocks/get_logo/', body)
     image = response.body.logo
   }
-  
+
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState("Empty Modal");
   const scaleValue = useRef(new Animated.ValueXY({x: 0.5, y: 0.5})).current;
@@ -172,51 +172,61 @@ const PlaidComponent = ({ navigation }) => {
 
   return (
     <>
-      <PlaidLink
-      linkToken={linkToken}
-      onEvent={(event) => console.log(event)}
-      onExit={(exit) => console.log(exit)}
-      onSuccess={async (success) => {
-        let account_list = success.metadata.accounts
-        await getAccessToken(success.publicToken)
-        await getBalance(access_token)
-        await getStocks(access_token)
 
-        account_list.forEach(async element => {
-          await getLogo(success)
-          await addAccount(element, success)
+      {
+        linkToken !== undefined
+          ?
+          <PlaidLink
+            linkToken={linkToken}
+            onEvent={(event) => console.log(event)}
+            onExit={(exit) => console.log(exit)}
+            onSuccess={async (success) => {
+              let account_list = success.metadata.accounts
+              await getAccessToken(success.publicToken)
+              await getBalance(access_token)
+              await getStocks(access_token)
 
-          if(data_response != 400){
-            await getTransaction(access_token)
-            fetched_transaction_list.investment_transactions.forEach(element => {addTransaction(element)})
-    
-            stocks.forEach(element => {
-              let stockInfo = securities[stocks.indexOf(element)]
-              addStock(element, stockInfo)
-            })
-            setModalText("Stock account has been successfully added.")
-          }else{
-            setModalText("Stock account has already been added!")
-            setModalVisible(true);
-          }
-          // setModalVisible(true)
-        });
-      }}
-    />
+              account_list.forEach(async element => {
+                await getLogo(success)
+                await addAccount(element, success)
+
+                if(data_response != 400){
+                  await getTransaction(access_token)
+                  fetched_transaction_list.investment_transactions.forEach(element => {addTransaction(element)})
+
+                  stocks.forEach(element => {
+                    let stockInfo = securities[stocks.indexOf(element)]
+                    addStock(element, stockInfo)
+                  })
+                  setModalText("Stock account has been successfully added.")
+                }else{
+                  setModalText("Stock account has already been added!")
+                  setModalVisible(true);
+                }
+                // setModalVisible(true)
+              });
+            }}
+          />
+          :
+          <View />
+      }
+
+
+
   <View>
 
-  
+
   <ConditionalModal
     headerText={modalText}
     bodyText={
       <View style={stylesInternal.modalView}>
-        {modalText == "Stock account has been successfully added." && 
+        {modalText == "Stock account has been successfully added." &&
           <Image
             style={{ width: 100, height: 100 }}
             source={{ uri: `https://cdn-icons-png.flaticon.com/512/4436/4436481.png` }}
           />
         }
-        {modalText == "Stock account has already been added!" && 
+        {modalText == "Stock account has already been added!" &&
           <View>
             <Image
               style={{ width: 100, height: 100 }}

@@ -80,6 +80,8 @@ exports[`<CryptoWalletConnector /> snapshot test 1`] = `
       />
     </View>
     <TextInput
+      autoCapitalize="none"
+      autoCorrect={false}
       onChangeText={[Function]}
       placeholder="Wallet Address"
       placeholderTextColor="black"

@@ -7,10 +7,6 @@ from crypto_wallets.models import CryptoWallet, CryptoWalletTransaction
 from crypto_wallets.services import calculate_predicted_balance, calculate_received_spent, calculate_average_spend
 
 
-class CryptoWalletTransactions:
-    pass
-
-
 class CryptoWalletInsightsTestCase(TestCase):
 
     fixtures = [

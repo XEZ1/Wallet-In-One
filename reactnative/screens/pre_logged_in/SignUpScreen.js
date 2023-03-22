@@ -133,6 +133,8 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Username:</Text>
       <TextInput
+        autoCapitalize='none'
+        autoCorrect={false}
         style={[inputStyle("username"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setUsername}
         testID="username"
@@ -141,6 +143,8 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Email:</Text>
       <TextInput
+        autoCapitalize='none'
+        autoCorrect={false}
         style={[inputStyle("email"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setEmail}
         testID="email"
@@ -149,6 +153,8 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>First Name:</Text>
       <TextInput
+        autoCapitalize='none'
+        autoCorrect={false}
         style={[inputStyle("first_name"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setFirstName}
         testID="first_name"
@@ -157,6 +163,8 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Last Name:</Text>
       <TextInput
+        autoCapitalize='none'
+        autoCorrect={false}
         style={[inputStyle("last_name"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setLastName}
         testID="last_name"
@@ -165,6 +173,8 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Password:</Text>
       <TextInput
+        autoCapitalize='none'
+        autoCorrect={false}
         style={[inputStyle("new_password"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setPassword}
         secureTextEntry={true}
@@ -174,6 +184,8 @@ export default function SignUpScreen({ navigation }) {
 
       <Text style={[stylesInternal.text, styles(dark, colors).text]}>Password Confirmation:</Text>
       <TextInput
+        autoCapitalize='none'
+        autoCorrect={false}
         style={[inputStyle("password_confirmation"), styles(dark, colors).input, {color: colors?.text}]}
         onChangeText={setPasswordConfirmation}
         secureTextEntry={true}

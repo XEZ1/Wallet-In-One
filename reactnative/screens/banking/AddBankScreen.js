@@ -167,6 +167,8 @@ export default function AddBankScreen({ navigation }) {
             style={[{flex:1, margin: 4, marginBottom: 54}]}
         >
                 <TextInput
+                    autoCapitalize='none'
+                    autoCorrect={false}
                     style={stylesInternal.bankingInput}
                     placeholder='Search'
                     placeholderTextColor= {colors.text}

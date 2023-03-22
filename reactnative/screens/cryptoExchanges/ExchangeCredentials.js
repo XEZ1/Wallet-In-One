@@ -70,6 +70,8 @@ export default function ExchangeCredentials({ route, navigation }) {
       </View>
       <Text style={{ fontSize: 20, marginBottom: 10, color: colors.text }}>API Key:</Text>
       <TextInput
+        autoCapitalize='none'
+        autoCorrect={false}
         value={apiKey}
         onChangeText={setApiKey}
         style={styles.input}
@@ -77,6 +79,8 @@ export default function ExchangeCredentials({ route, navigation }) {
       />
       <Text style={{ fontSize: 20, marginBottom: 10, color: colors.text }}>Secret Key:</Text>
       <TextInput
+        autoCapitalize='none'
+        autoCorrect={false}
         value={secretKey}
         onChangeText={setSecretKey}
         secureTextEntry

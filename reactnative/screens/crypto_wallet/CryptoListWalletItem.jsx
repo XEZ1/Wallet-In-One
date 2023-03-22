@@ -7,11 +7,15 @@ import {
 } from "react-native";
 import React, {useEffect, useState} from "react";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
-import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import { useTheme } from '../../src/theme/ThemeProvider'
 
+/**
+ * Component that displays a crypto wallet within the crypto wallet list, which includes a logo, the balance of the
+ * crypto wallet in its currency, and the value of the crypto wallet in pounds.
+ */
 export default function CryptoListWalletItem(props) {
 
-  const [cryptoValue, setCryptoValue] = useState(0); {/* Display `-` if not retrievable */}
+  const [cryptoValue, setCryptoValue] = useState(0);
   const {dark, colors, setScheme} = useTheme();
 
   const styles = StyleSheet.create({
@@ -30,8 +34,10 @@ export default function CryptoListWalletItem(props) {
       height: 30,
     },
   });
-  
 
+  /**
+   * Function that gets the conversion rate of the target cryptocurrency into pounds and stores it in the component.
+   */
   const getCryptoValue = async () => {
     await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${props.item.symbol}&tsyms=GBP`)
       .then((res) => res.json())
@@ -43,7 +49,6 @@ export default function CryptoListWalletItem(props) {
   useEffect(() => {
     getCryptoValue();
   }, []);
-
 
   return (
     <TouchableOpacity
