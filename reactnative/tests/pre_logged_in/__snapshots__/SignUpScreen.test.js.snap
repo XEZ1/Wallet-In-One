@@ -32,6 +32,8 @@ exports[`<SignUpScreen /> sign up snapshot test 1`] = `
       Username:
     </Text>
     <TextInput
+      autoCapitalize="none"
+      autoCorrect={false}
       onChangeText={[Function]}
       style={
         [
@@ -78,6 +80,8 @@ exports[`<SignUpScreen /> sign up snapshot test 1`] = `
       Email:
     </Text>
     <TextInput
+      autoCapitalize="none"
+      autoCorrect={false}
       onChangeText={[Function]}
       style={
         [
@@ -124,6 +128,8 @@ exports[`<SignUpScreen /> sign up snapshot test 1`] = `
       First Name:
     </Text>
     <TextInput
+      autoCapitalize="none"
+      autoCorrect={false}
       onChangeText={[Function]}
       style={
         [
@@ -170,6 +176,8 @@ exports[`<SignUpScreen /> sign up snapshot test 1`] = `
       Last Name:
     </Text>
     <TextInput
+      autoCapitalize="none"
+      autoCorrect={false}
       onChangeText={[Function]}
       style={
         [
@@ -216,6 +224,8 @@ exports[`<SignUpScreen /> sign up snapshot test 1`] = `
       Password:
     </Text>
     <TextInput
+      autoCapitalize="none"
+      autoCorrect={false}
       onChangeText={[Function]}
       secureTextEntry={true}
       style={
@@ -263,6 +273,8 @@ exports[`<SignUpScreen /> sign up snapshot test 1`] = `
       Password Confirmation:
     </Text>
     <TextInput
+      autoCapitalize="none"
+      autoCorrect={false}
       onChangeText={[Function]}
       secureTextEntry={true}
       style={

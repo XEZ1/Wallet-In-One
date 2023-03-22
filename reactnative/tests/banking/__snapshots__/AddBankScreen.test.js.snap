@@ -13,6 +13,8 @@ exports[`<AddBankScreen /> snapshot test 1`] = `
   }
 >
   <TextInput
+    autoCapitalize="none"
+    autoCorrect={false}
     onChangeText={[Function]}
     placeholder="Search"
     placeholderTextColor="black"
