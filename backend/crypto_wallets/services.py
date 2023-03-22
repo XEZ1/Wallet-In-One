@@ -67,7 +67,7 @@ def get_crypto_price(symbol):
     url = f'https://min-api.cryptocompare.com/data/price?fsym={symbol}&tsyms=GBP'
     r = requests.get(url=url)
     response = r.json()
-    price = float(response['GBP'])
+    price = float(response.get('GBP', 0))
     return price
 
 
