@@ -71,6 +71,11 @@ describe('ExchangeTransactions', () => {
     await waitFor(() => getByTestId('conditional-modal'));
 
     expect(getByTestId('conditional-modal')).toBeDefined();
+
+    act(async () => {
+      fireEvent.press(getByText('No'));
+    })
+
   });
 
   test('switch selector opens transactions', async () => {
@@ -111,7 +116,7 @@ describe('ExchangeTransactions', () => {
       "timestamp": "2021-04-26T14:39:17.825000Z"
     }]
 
-  const mockTokenData ={
+  const mockTokenData = {
     "balance": 44.54,
     "token_data": [
       {
@@ -122,6 +127,13 @@ describe('ExchangeTransactions', () => {
         "x": "ADA: £0.0",
         "y": 0.0
       }]}
+
+  const mockEmptyTransactionData = ["empty"]
+
+  const mockEmptyTokenData = {
+    "balance": 0,
+    "token_data": ["empty"]
+  }
 
   test('API calls are made and data is rendered correctly', async () => {
     global.fetch = jest.fn((url, options) => {
@@ -139,7 +151,33 @@ describe('ExchangeTransactions', () => {
       }
     });
 
-    act(() => {
+    const {getByText, getByTestId} = render(<ExchangeTransactions {...props} />);
+
+    act(async () => {
+      fireEvent.press(await screen.getByText('Transactions'));
+    });
+  });
+
+  test('API calls are made and empty data is rendered correctly', async () => {
+    global.fetch = jest.fn((url, options) => {
+      console.log(url)
+      if (url.includes('/crypto-exchanges/get_transactions/1/')) {
+        return Promise.resolve({
+          json: () => Promise.resolve(mockEmptyTransactionData),
+        });
+      } else if (url.includes('/crypto-exchanges/get_token_breakdown/1/')) {
+        return Promise.resolve({
+          json: () => Promise.resolve(mockEmptyTokenData),
+        });
+      } else {
+        return Promise.reject(new Error('Invalid API call'));
+      }
+    });
+
+    render(<ExchangeTransactions {...props} />);
+
+    await act(async () => {
+      fireEvent.press(await screen.getByText('Transactions'));
     });
   });
 
