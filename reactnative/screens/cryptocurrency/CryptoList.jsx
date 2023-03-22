@@ -142,7 +142,6 @@ export default function CryptoList(props) {
             ?
             <TouchableOpacity
               style={styles.button}
-              onPress={() => handleSubmit()}
             >
               <ActivityIndicator color={colors.text}/>
             </TouchableOpacity>
