@@ -3,6 +3,7 @@ from accounts.models import User
 from crypto_exchanges.models import *
 from crypto_exchanges.services import *
 
+
 class TestGetAllTransactions(TestCase):
 
     def setUp(self):
@@ -24,3 +25,14 @@ class TestGetAllTransactions(TestCase):
         response = get_all_transactions(request)
         expected_data = TransactionSerializer([self.transaction_1, self.transaction_2], many=True).data
         self.assertEqual(response, expected_data)
+
+    def test_empty_transactions(self):
+        request = RequestFactory().get('/')
+        request.user = self.user
+        self.transaction_1.delete()
+        self.transaction_2.delete()
+        transactions = Transaction.objects.filter(crypto_exchange_object__user=self.user)
+        self.assertEqual(transactions.count(), 0)
+
+        response = get_all_transactions(request)
+        self.assertEqual(response, ['empty'])

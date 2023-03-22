@@ -40,3 +40,14 @@ class GetMostExpensiveTransactionTest(TestCase):
         self.assertEqual(result, (
         'BTC', 0.5, 15000, 'buy', self.transaction1.timestamp.strftime('%Y-%m-%d %H:%M:%S'), 'TestExchange'))
 
+    @patch.object(CurrentMarketPriceFetcher, 'get_crypto_price')
+    def test_get_most_expensive_transaction_with_no_transactions(self, mock_get_crypto_price):
+        mock_get_crypto_price.side_effect = lambda symbol: {'BTC': 30000.00, 'ETH': 2000.00}[symbol]
+        self.transaction1.delete()
+        self.transaction2.delete()
+        self.client.login(username='testuser', password='testpassword')
+        request = self.client.get('/crypto-exchanges/get_insights/').wsgi_request
+        request.user = self.user
+
+        result = get_most_expensive_transaction(request)
+        self.assertEqual(result, ('empty', 0.0, 0.0, None, None, None))

@@ -1,6 +1,7 @@
 from django.test import TestCase
 from unittest.mock import patch, MagicMock, call
 from crypto_exchanges.services import *
+from datetime import datetime
 
 
 class TestBinanceFetcher(TestCase):
@@ -101,4 +102,18 @@ class TestBinanceFetcher(TestCase):
             call('https://api.binance.com/api/v3/myTrades', headers=expected_headers,
                  params={**expected_params_solusdt, **{'signature': expected_signature_solusdt}}),
         ])
+
+    @patch('crypto_exchanges.services.ExchangeFetcher.get_current_time')
+    def test_get_trading_history_no_timestamp(self, mock_get_current_time):
+        mock_get_current_time.return_value = datetime(2022, 3, 22, 12, 0, 0)
+
+        result = self.fetcher.get_trading_history()
+
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, dict)
+        self.assertEqual(len(result), 5)
+
+        for trades in result.values():
+            self.assertEqual(trades, {'code': -1100, 'msg': "Illegal characters found in parameter 'timestamp';"
+                                                            " legal range is '^[0-9]{1,20}$'."})
 
