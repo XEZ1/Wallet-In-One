@@ -45,7 +45,7 @@ class Transaction(models.Model):
 
     pending_transaction_id = models.CharField(max_length=100, blank=True, null=True)
     account_owner = models.CharField(max_length=50, blank=True, null=True)
-    investment_transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)#transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    investment_transaction_id = models.CharField(max_length=100, blank=False, null=False)#transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)
     security_id = models.CharField(max_length=100, blank=False, null=False)
     transaction_code = models.CharField(
         max_length=30,

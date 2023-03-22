@@ -230,7 +230,7 @@ const PlaidComponent = ({ navigation }) => {
           <View>
             <Image
               style={{ width: 100, height: 100 }}
-              source={{ uri: 'http://www.setra.com/hubfs/Sajni/crc_error.jpg' }}
+              source={{ uri: `http://www.setra.com/hubfs/Sajni/crc_error.jpg` }}
             />
           </View>
         }
