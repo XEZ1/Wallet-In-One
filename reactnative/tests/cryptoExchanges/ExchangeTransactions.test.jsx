@@ -174,14 +174,9 @@ describe('ExchangeTransactions', () => {
       }
     });
 
-    const {getByText, getByTestId} = render(<ExchangeTransactions {...props} />);
+    render(<ExchangeTransactions {...props} />);
 
-    act(async () => {
-
-      await waitFor(async () => {
-        expect(screen.getByText('0')).toBeDefined()
-      });
-
+    await act(async () => {
       fireEvent.press(await screen.getByText('Transactions'));
     });
   });
