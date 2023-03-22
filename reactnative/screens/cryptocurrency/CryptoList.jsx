@@ -14,12 +14,14 @@ import CryptoListWalletItem from "../crypto_wallet/CryptoListWalletItem";
 import useCryptoExchangeBalances from "../cryptoExchanges/useCryptoExchangeBalances";
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 import { useTheme } from '../../src/theme/ThemeProvider'
-import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
 import { api_url } from '../../authentication';
 import {useIsFocused} from "@react-navigation/native";
 
-
+/**
+ * Component that displays a list of users crypto wallet and exchanges, with navigation paths to insights, and a crypto
+ * connector, along with an update button, to refresh the values of the crypto assets..
+ */
 export default function CryptoList(props) {
   const { wallets, listWallets, connectWallet, removeWallet } = useCryptoWallet();
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
@@ -75,6 +77,10 @@ export default function CryptoList(props) {
     fetchBalances();
   }, [isFocused]);
 
+  /**
+   * Function that handles the submission of the update button, which will call the backend to update the values of both
+   * the cryptocurrency wallets and the exchanges.
+   */
   const handleSubmit = async () => {
 
     setLoading(true)

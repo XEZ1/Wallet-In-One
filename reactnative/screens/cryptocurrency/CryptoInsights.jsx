@@ -1,11 +1,16 @@
 import {View, Text, StyleSheet, Image, ScrollView, Dimensions} from "react-native";
 import React, {useEffect, useState} from "react";
-import { useTheme } from 'reactnative/src/theme/ThemeProvider'
+import { useTheme } from '../../src/theme/ThemeProvider'
 import { BACKEND_URL } from "@env"
 import * as SecureStore from "expo-secure-store";
 import getCryptoIcon from "./icons/icon";
 import { LineChart } from 'react-native-chart-kit';
 
+/**
+ * Component that displays crypto insights for both wallets and exchanges, including insights for predicted balance,
+ * total spend and received, average spend for crypto wallets, and most expensive transaction and a chart of monthly
+ * transactions for crypto exchanges.
+ */
 export default function CryptoInsights() {
   const [insights, setInsights] = useState({predicted_balance: {}, received_spent: {}, average_spend: {}});
   const [exchangeInsights, setExchangeInsights] = useState({all_transactions: {}, most_expensive_transaction: {}});
@@ -47,6 +52,9 @@ export default function CryptoInsights() {
     fetchExchangeInsights();
   }, [])
 
+  /**
+   * Function that fetches the crypto wallet insights from the backend according to the requesting user.
+   */
   const fetchInsights = async () => {
     await fetch(`${BACKEND_URL}/crypto_wallets/insights`, {
       method: "GET",
@@ -60,6 +68,9 @@ export default function CryptoInsights() {
       .catch((err) => console.log(err));
   };
 
+  /**
+   * Function that fetches the crypto exchange insights from the backend according to the requesting user.
+   */
   const fetchExchangeInsights = async () => {
     await fetch(`${BACKEND_URL}/crypto-exchanges/get_insights/`, {
       method: "GET",
@@ -129,7 +140,7 @@ export default function CryptoInsights() {
             <View>
               {
                 Object.entries(insights.predicted_balance).map(([key, value]) =>
-                  <InsightItem key={key} symbol={key} upper={`${value} ${key}`} />
+                  <InsightItem key={key} symbol={key} upper={value} />
                 )
               }
             </View>
@@ -147,7 +158,7 @@ export default function CryptoInsights() {
             <View>
               {
                 Object.entries(insights.received_spent).map(([key, value]) =>
-                  <InsightItem key={key} symbol={key} upper={`+${value.received} ${key}`} lower={`-${value.spent} ${key}`} />
+                  <InsightItem key={key} symbol={key} upper={`+${value.received}`} lower={`-${value.spent} ${key}`} />
                 )
               }
             </View>
@@ -165,7 +176,7 @@ export default function CryptoInsights() {
             <View>
               {
                 Object.entries(insights.average_spend).map(([key, value]) =>
-                  <InsightItem key={key} symbol={key} upper={`${value * -1} ${key}`} />
+                  <InsightItem key={key} symbol={key} upper={`${value * -1}`} />
                 )
               }
             </View>
@@ -211,11 +222,17 @@ export default function CryptoInsights() {
   )
 }
 
+/**
+ * Component that formats each insight item displaying each of the values, the associated cryptocurrency and the icon.
+ */
 function InsightItem(props) {
 
   const {dark, colors, setScheme} = useTheme();
   const [value, setValue] = useState(0);
 
+  /**
+   * Function that gets the conversion rate of the target cryptocurrency into pounds and stores it in the component.
+   */
   const getCryptoValue = async () => {
     await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${props.symbol}&tsyms=GBP`)
       .then((res) => res.json())
@@ -271,7 +288,7 @@ function InsightItem(props) {
           </Text>
 
           <Text style={[styles.walletAssetTitle, {color: colors.text}]}>
-            {props.upper}
+            {props.upper} {props.symbol}
           </Text>
 
           {
@@ -282,7 +299,7 @@ function InsightItem(props) {
               </Text>
               :
               <Text style={[styles.walletAssetTitle, {color: colors.text}]}>
-                £{value}
+                £{value * props.upper} {props.symbol}
               </Text>
           }
 
