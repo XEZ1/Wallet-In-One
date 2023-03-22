@@ -16,6 +16,7 @@ export default function AddStocksHelper(){
         }
         const response = await auth_post('/stocks/get_balance/', body)
         const data = response.body;
+        console.log(data.accounts[0].balances)
         return (parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2)
     }
 
@@ -69,9 +70,7 @@ export default function AddStocksHelper(){
           stockAccount: stock.account_id,
           security_id: stockInfo.security_id
         }
-        const res = await auth_post('/stocks/add_stock/', body)
-        console.log(res.status)
-        return res.status
+        await auth_post('/stocks/add_stock/', body)
     }
 
     const getLogo = async (success) => {
