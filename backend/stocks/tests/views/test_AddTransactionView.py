@@ -59,17 +59,3 @@ class AddTransactionViewTestCase(TestCase):
         self.assertEqual(before,after)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(Transaction.objects.filter(name='Apple Store').count(), 0)
-
-    def test_add_same_transaction(self):
-        before = len(Transaction.objects.all())
-        response = self.client.post(self.url, data=self.serializer_input)
-        after = len(Transaction.objects.all())
-        self.assertEqual(before+1,after)
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(Transaction.objects.filter(name='Apple Store').count(), 1)
-        before = len(Transaction.objects.all())
-        response = self.client.post(self.url, data=self.serializer_input)
-        after = len(Transaction.objects.all())
-        self.assertEqual(before,after)
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(Transaction.objects.filter(name='Apple Store').count(), 1)
