@@ -44,7 +44,6 @@ it('settings page pressing log out button test', () => {
 
 
 it('setting page dark mode toggle', () => {
-  SecureStore.getItemAsync.mockReset();
   const navigate = jest.fn();
   const settingsPage = render(<SettingsPage navigation={{ navigate }} />);
   fireEvent.press(screen.getByText('Dark Mode'));
@@ -52,7 +51,6 @@ it('setting page dark mode toggle', () => {
 });
 
 it('setting page system default toggle', () => {
-  SecureStore.getItemAsync.mockReset();
   const navigate = jest.fn();
   const settingsPage = render(<SettingsPage navigation={{ navigate }} />);
   fireEvent.press(screen.getByText('System Default'));
@@ -60,7 +58,6 @@ it('setting page system default toggle', () => {
 });
 
 it('setting page light mode toggle', () => {
-  SecureStore.getItemAsync.mockReset();
   const navigate = jest.fn();
   const settingsPage = render(<SettingsPage navigation={{ navigate }} />);
   fireEvent.press(screen.getByText('Light Mode'));
