@@ -6,7 +6,7 @@ from rest_framework import status
 from accounts.models import User
 
 
-class CryptoWalletViewSetTestCase(TestCase):
+class CryptoWalletInsightsTestCase(TestCase):
 
     fixtures = [
         'accounts/fixtures/user.json',

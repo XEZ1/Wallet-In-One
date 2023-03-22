@@ -99,7 +99,7 @@ class CryptoWalletUpdate(APIView):
                 data={'cryptocurrency': cryptocurrency, 'symbol': symbol, 'address': address},
                 context={'request': request}
             )
-            if serializer.is_valid():
-                serializer.save()
+            serializer.is_valid()
+            serializer.save()
 
         return Response(status=status.HTTP_200_OK)

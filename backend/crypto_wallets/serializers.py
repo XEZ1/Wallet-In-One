@@ -68,7 +68,6 @@ class CryptoWalletSerializer(serializers.ModelSerializer):
             output_count=crypto_wallet_service.output_count,
             unspent_output_count=crypto_wallet_service.unspent_output_count,
         )
-        print(crypto_wallet.full_clean())
         crypto_wallet.save()
 
         for transaction in crypto_wallet_service.transactions:
