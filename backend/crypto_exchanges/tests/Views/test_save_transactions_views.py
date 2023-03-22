@@ -13,7 +13,7 @@ class SaveTransactionsTestCase(TestCase):
 
     def test_binance_save_transactions(self):
         view = BinanceView()
-        # prepare test data
+
         transactions = {'ETHUSDT': [{'symbol': 'ETHUSDT', 'time': 1646805893525, 'isBuyer': True, 'qty': 0.12345678}]}
         request = RequestFactory().get('/')
         new_user = User.objects.create_user(username='testuser', password='testpass')
@@ -31,7 +31,7 @@ class SaveTransactionsTestCase(TestCase):
 
     def test_gateio_save_transactions(self):
         view = GateioView()
-        # Mock data
+
         transactions = {
             "ETH_USDT": [
                 {
@@ -59,7 +59,7 @@ class SaveTransactionsTestCase(TestCase):
 
     def test_coinlist_save_transactions(self):
         view = CoinListView()
-        # prepare test data
+
         transactions = {'BTC': [
             {'symbol': 'BTC', 'transaction_type': 'SWAP', 'amount': '0.01',
              'created_at': '2022-03-09T06:04:53.525000Z'}]}
@@ -71,7 +71,6 @@ class SaveTransactionsTestCase(TestCase):
 
         view.save_transactions(transactions, request, saved_exchange_account_object)
 
-        # assert saved transaction data
         saved_transaction = Transaction.objects.get(asset='BTC', amount=0.01)
         self.assertEqual(saved_transaction.asset, 'BTC')
         self.assertEqual(saved_transaction.amount, 0.01)
@@ -81,7 +80,7 @@ class SaveTransactionsTestCase(TestCase):
 
     def test_coinbase_save_transactions(self):
         view = CoinBaseView()
-        # prepare test data
+
         transactions = {'fills': [
             {'product_id': 'BTC-USD', 'trade_type': 'FILL', 'size': '0.01', 'trade_time': '2022-03-09T06:04:53.525Z'}
         ]}
@@ -93,7 +92,6 @@ class SaveTransactionsTestCase(TestCase):
 
         view.save_transactions(transactions, request, saved_exchange_account_object)
 
-        # assert saved transaction data
         saved_transaction = Transaction.objects.get(asset='BTC-USD', amount=0.01)
         self.assertEqual(saved_transaction.asset, 'BTC-USD')
         self.assertEqual(saved_transaction.amount, 0.01)
@@ -103,8 +101,8 @@ class SaveTransactionsTestCase(TestCase):
 
     def test_kraken_save_transactions(self):
         view = KrakenView()
-        # prepare test data
-        transactions = {'result': {'trades': [{'pair': 'XBTUSD','type': 'buy','vol': '0.001','time': 1675884861}]}}
+
+        transactions = {'result': {'trades': [{'pair': 'XBTUSD', 'type': 'buy', 'vol': '0.001', 'time': 1675884861}]}}
         request = RequestFactory().get('/')
         new_user = User.objects.create_user(username='testuser', password='testpass')
         saved_exchange_account_object = CryptoExchangeAccount.objects.create(user=new_user,
@@ -113,7 +111,6 @@ class SaveTransactionsTestCase(TestCase):
 
         view.save_transactions(transactions, request, saved_exchange_account_object)
 
-        # assert saved transaction data
         saved_transaction = Transaction.objects.get(asset='XBTUSD', amount=0.001)
         self.assertEqual(saved_transaction.asset, 'XBTUSD')
         self.assertEqual(saved_transaction.amount, 0.001)

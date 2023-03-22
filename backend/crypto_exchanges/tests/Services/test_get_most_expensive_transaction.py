@@ -39,3 +39,4 @@ class GetMostExpensiveTransactionTest(TestCase):
         result = get_most_expensive_transaction(request)
         self.assertEqual(result, (
         'BTC', 0.5, 15000, 'buy', self.transaction1.timestamp.strftime('%Y-%m-%d %H:%M:%S'), 'TestExchange'))
+

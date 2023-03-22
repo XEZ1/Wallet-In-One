@@ -1,13 +1,9 @@
 import json
 
 from django.test import TestCase, RequestFactory
-from rest_framework import status
 from rest_framework.test import force_authenticate
-from accounts.models import *
-from crypto_exchanges.models import *
 from crypto_exchanges.serializers import *
 from crypto_exchanges.views import *
-import requests
 
 
 class CryptoExchangeAccountViewTestCase(TestCase):
@@ -58,10 +54,8 @@ class CryptoExchangeAccountViewTestCase(TestCase):
         view = BinanceView.as_view()
         response = view(request)
 
-        # Check that the response status code is HTTP_204_NO_CONTENT
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-        # Check that the CryptoExchangeAccount was deleted from the database
         self.assertFalse(CryptoExchangeAccount.objects.filter(id=self.crypto_exchange_account_binance.id).exists())
 
     def test_delete_gateio(self):
@@ -75,10 +69,8 @@ class CryptoExchangeAccountViewTestCase(TestCase):
         view = GateioView.as_view()
         response = view(request)
 
-        # Check that the response status code is HTTP_204_NO_CONTENT
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-        # Check that the CryptoExchangeAccount was deleted from the database
         self.assertFalse(CryptoExchangeAccount.objects.filter(id=self.crypto_exchange_account_gateio.id).exists())
 
     def test_delete_coinlist(self):
@@ -92,10 +84,8 @@ class CryptoExchangeAccountViewTestCase(TestCase):
         view = CoinListView.as_view()
         response = view(request)
 
-        # Check that the response status code is HTTP_204_NO_CONTENT
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-        # Check that the CryptoExchangeAccount was deleted from the database
         self.assertFalse(CryptoExchangeAccount.objects.filter(id=self.crypto_exchange_account_coinlist.id).exists())
 
     def test_delete_coinbase(self):
@@ -109,10 +99,8 @@ class CryptoExchangeAccountViewTestCase(TestCase):
         view = CoinBaseView.as_view()
         response = view(request)
 
-        # Check that the response status code is HTTP_204_NO_CONTENT
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-        # Check that the CryptoExchangeAccount was deleted from the database
         self.assertFalse(CryptoExchangeAccount.objects.filter(id=self.crypto_exchange_account_coinbase.id).exists())
 
     def test_delete_kraken(self):
@@ -126,16 +114,13 @@ class CryptoExchangeAccountViewTestCase(TestCase):
         view = KrakenView.as_view()
         response = view(request)
 
-        # Check that the response status code is HTTP_204_NO_CONTENT
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-        # Check that the CryptoExchangeAccount was deleted from the database
         self.assertFalse(CryptoExchangeAccount.objects.filter(id=self.crypto_exchange_account_kraken.id).exists())
 
     def test_delete_binance_unauthorised(self):
-
         other_user = User.objects.create_user(username='otheruser', first_name='Lesya', last_name='Abakhova',
-                                             email='la@hse.edu.ru')
+                                              email='la@hse.edu.ru')
 
         url = '/crypto_exchange_accounts/binance/'
 
@@ -147,16 +132,13 @@ class CryptoExchangeAccountViewTestCase(TestCase):
         view = BinanceView.as_view()
         response = view(request)
 
-        # Check that the response status code is HTTP_401_UNAUTHORIZED
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        # Check that the CryptoExchangeAccount was not deleted from the database
         self.assertTrue(CryptoExchangeAccount.objects.filter(id=self.crypto_exchange_account_binance.id).exists())
 
     def test_delete_gateio_unauthorised(self):
-
         other_user = User.objects.create_user(username='otheruser', first_name='Lesya', last_name='Abakhova',
-                                             email='la@hse.edu.ru')
+                                              email='la@hse.edu.ru')
 
         url = '/crypto_exchange_accounts/gateio/'
 
@@ -168,16 +150,13 @@ class CryptoExchangeAccountViewTestCase(TestCase):
         view = GateioView.as_view()
         response = view(request)
 
-        # Check that the response status code is HTTP_401_UNAUTHORIZED
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        # Check that the CryptoExchangeAccount was not deleted from the database
         self.assertTrue(CryptoExchangeAccount.objects.filter(id=self.crypto_exchange_account_binance.id).exists())
 
     def test_delete_coinlist_unauthorised(self):
-
         other_user = User.objects.create_user(username='otheruser', first_name='Lesya', last_name='Abakhova',
-                                             email='la@hse.edu.ru')
+                                              email='la@hse.edu.ru')
 
         url = '/crypto_exchange_accounts/coinlist/'
 
@@ -189,16 +168,13 @@ class CryptoExchangeAccountViewTestCase(TestCase):
         view = CoinListView.as_view()
         response = view(request)
 
-        # Check that the response status code is HTTP_401_UNAUTHORIZED
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        # Check that the CryptoExchangeAccount was not deleted from the database
         self.assertTrue(CryptoExchangeAccount.objects.filter(id=self.crypto_exchange_account_coinlist.id).exists())
 
     def test_delete_coinbase_unauthorised(self):
-
         other_user = User.objects.create_user(username='otheruser', first_name='Lesya', last_name='Abakhova',
-                                             email='la@hse.edu.ru')
+                                              email='la@hse.edu.ru')
 
         url = '/crypto_exchange_accounts/binance/'
 
@@ -210,16 +186,13 @@ class CryptoExchangeAccountViewTestCase(TestCase):
         view = CoinBaseView.as_view()
         response = view(request)
 
-        # Check that the response status code is HTTP_401_UNAUTHORIZED
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        # Check that the CryptoExchangeAccount was not deleted from the database
         self.assertTrue(CryptoExchangeAccount.objects.filter(id=self.crypto_exchange_account_coinbase.id).exists())
 
     def test_delete_kraken_unauthorised(self):
-
         other_user = User.objects.create_user(username='otheruser', first_name='Lesya', last_name='Abakhova',
-                                             email='la@hse.edu.ru')
+                                              email='la@hse.edu.ru')
 
         url = '/crypto_exchange_accounts/binance/'
 
@@ -231,8 +204,6 @@ class CryptoExchangeAccountViewTestCase(TestCase):
         view = KrakenView.as_view()
         response = view(request)
 
-        # Check that the response status code is HTTP_401_UNAUTHORIZED
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        # Check that the CryptoExchangeAccount was not deleted from the database
         self.assertTrue(CryptoExchangeAccount.objects.filter(id=self.crypto_exchange_account_kraken.id).exists())

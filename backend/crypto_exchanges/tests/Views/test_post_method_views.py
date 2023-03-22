@@ -15,11 +15,8 @@ class CryptoExchangeAccountCreationTestCase(APITestCase):
     def setUp(self):
         self.client.force_authenticate(user=self.user)
 
-    # Testing for post is limited because real api/secret key pairs are needed for testing successful posting, which
-    # is sensitive information
     @patch('crypto_exchanges.services.BinanceFetcher')
     def test_create_binance_account_invalid(self, mock_fetcher):
-
         url = reverse('binance')
         data = {'api_key': '12345wrongapikeyabcdefghijklmnopqrstuvwxyz', 'secret_key': 'abcdefghijklmnopqrstuvwxyz'}
         response = self.client.post(url, data, format='json')
@@ -38,9 +35,9 @@ class CryptoExchangeAccountCreationTestCase(APITestCase):
 
     @patch('crypto_exchanges.services.CoinListFetcher')
     def test_create_coin_list_account_invalid(self, mock_fetcher):
-
         url = reverse('coinlist')
-        data = {'api_key': 'zNk5glD4B3owgefu347u9z3s+kHRZ5r/VM46isrhbiGkMFDkl7D/S', 'secret_key': '48/vZVp234ouitfwIG857AFW5d0vgIM48UgJKfETTl0RPEI3/DWHFi7byVDUSV65tdIQ-='}
+        data = {'api_key': 'zNk5glD4B3owgefu347u9z3s+kHRZ5r/VM46isrhbiGkMFDkl7D/S',
+                'secret_key': '48/vZVp234ouitfwIG857AFW5d0vgIM48UgJKfETTl0RPEI3/DWHFi7byVDUSV65tdIQ-='}
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -48,7 +45,6 @@ class CryptoExchangeAccountCreationTestCase(APITestCase):
 
     @patch('crypto_exchanges.services.CoinBaseFetcher')
     def test_create_coinbase_account_invalid(self, mock_fetcher):
-
         url = reverse('coinbase')
         data = {'api_key': 'abcdefghijklmnopqrstuvwxyz', 'secret_key': 'abcdefghijklmnopqrstuvwxyz'}
         response = self.client.post(url, data, format='json')
@@ -58,11 +54,10 @@ class CryptoExchangeAccountCreationTestCase(APITestCase):
 
     @patch('crypto_exchanges.services.KrakenFetcher')
     def test_create_kraken_account_invalid(self, mock_fetcher):
-
         url = reverse('kraken')
-        data = {'api_key': 'zNk5glD4B3owgefu347u9z3s+kHRZ5r/VM46isrhbiGkMFDkl7D/S', 'secret_key': '48/vZVp234ouitfwIG857AFW5d0vgIM48UgJKfETTl0RPEI3/DWHFi7byVDUSV65tdIQ-='}
+        data = {'api_key': 'zNk5glD4B3owgefu347u9z3s+kHRZ5r/VM46isrhbiGkMFDkl7D/S',
+                'secret_key': '48/vZVp234ouitfwIG857AFW5d0vgIM48UgJKfETTl0RPEI3/DWHFi7byVDUSV65tdIQ-='}
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data, {'error': 'EAPI:Invalid key'})
-

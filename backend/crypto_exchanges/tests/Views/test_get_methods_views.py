@@ -25,7 +25,6 @@ class GetMethodsOfViewsTestCase(APITestCase):
         self.url = reverse('crypto-exchanges')
 
     def test_get_crypto_exchange_accounts(self):
-        # create a CryptoExchangeAccount object
         account = CryptoExchangeAccount.objects.create(
             user=self.user,
             api_key='my_api_key',
@@ -33,13 +32,10 @@ class GetMethodsOfViewsTestCase(APITestCase):
             crypto_exchange_name='binance',
         )
 
-        # make a GET request to the view
         response = self.client.get(self.url)
 
-        # assert that the response status code is 200 OK
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # assert that the response data is the expected data
         expected_data = [OrderedDict([('crypto_exchange_name', 'binance'), ('api_key', 'my_api_key'),
                                       ('secret_key', 'my_secret_key'),
                                       ('created_at', convert_date_string(str(account.created_at))), ('id', 1)])]

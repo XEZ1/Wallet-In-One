@@ -32,7 +32,6 @@ class TestGetTransactions(TestCase):
         )
 
     def test_get_transactions(self):
-        # create a CryptoExchangeAccount and Transaction objects
 
         transaction = Transaction.objects.create(
             crypto_exchange_object=self.crypto_exchange_account,
@@ -44,20 +43,11 @@ class TestGetTransactions(TestCase):
 
         transaction.save()
 
-        # create a GET request to get the transactions for the created exchange object
         url = f'/crypto-exchanges/get_transactions/{self.crypto_exchange_account.id}/'
         request = self.factory.get(url)
-
-        # authenticate the user
         force_authenticate(request, user=self.user)
-
-        # call the get_transactions view function and get the response
         response = get_transactions(request, self.crypto_exchange_account.id)
-
-        # assert that the response status code is 200 OK
         self.assertEqual(response.status_code, 200)
-
-        # assert that the response data is the expected data
         expected_data = [{'crypto_exchange_object': self.crypto_exchange_account.id, 'asset': 'BTC',
                           'transaction_type': 'buy', 'amount': 1.0,
                           'timestamp': str(transaction.timestamp.isoformat()).replace('+00:00', 'Z')

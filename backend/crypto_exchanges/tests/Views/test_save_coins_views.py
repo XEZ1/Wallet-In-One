@@ -17,7 +17,7 @@ class SaveCoinsTestCase(TestCase):
                                                                              crypto_exchange_name='Binance',
                                                                              api_key='apikey', secret_key='secretkey')
         binance.save_coins(filtered_data, request, saved_exchange_account_object)
-        # assert that the tokens were saved with the expected values
+
         self.assertEqual(saved_exchange_account_object.token_set.count(), 2)
         self.assertEqual(saved_exchange_account_object.token_set.get(asset='BTC').free_amount, 1.0)
         self.assertEqual(saved_exchange_account_object.token_set.get(asset='ETH').free_amount, 0.5)
@@ -33,7 +33,7 @@ class SaveCoinsTestCase(TestCase):
                                                                              crypto_exchange_name='Binance',
                                                                              api_key='apikey', secret_key='secretkey')
         gateio.save_coins(filtered_data, request, saved_exchange_account_object)
-        # assert that the tokens were saved with the expected values
+
         self.assertEqual(saved_exchange_account_object.token_set.count(), 2)
         self.assertEqual(saved_exchange_account_object.token_set.get(asset='BTC').free_amount, 1.0)
         self.assertEqual(saved_exchange_account_object.token_set.get(asset='ETH').free_amount, 0.5)
@@ -48,7 +48,7 @@ class SaveCoinsTestCase(TestCase):
                                                                              crypto_exchange_name='Binance',
                                                                              api_key='apikey', secret_key='secretkey')
         coin_list.save_coins(filtered_data, request, saved_exchange_account_object)
-        # assert that the tokens were saved with the expected values
+
         self.assertEqual(saved_exchange_account_object.token_set.count(), 2)
         self.assertEqual(saved_exchange_account_object.token_set.get(asset='BTC').free_amount, 1.0)
         self.assertEqual(saved_exchange_account_object.token_set.get(asset='ETH').free_amount, 0.5)
@@ -63,7 +63,7 @@ class SaveCoinsTestCase(TestCase):
                                                                              crypto_exchange_name='Binance',
                                                                              api_key='apikey', secret_key='secretkey')
         coin_base.save_coins(filtered_data, request, saved_exchange_account_object)
-        # assert that the tokens were saved with the expected values
+
         self.assertEqual(saved_exchange_account_object.token_set.count(), 2)
         self.assertEqual(saved_exchange_account_object.token_set.get(asset='BTC').free_amount, 1.0)
         self.assertEqual(saved_exchange_account_object.token_set.get(asset='ETH').free_amount, 0.5)
@@ -78,7 +78,7 @@ class SaveCoinsTestCase(TestCase):
                                                                              crypto_exchange_name='Binance',
                                                                              api_key='apikey', secret_key='secretkey')
         kraken.save_coins(filtered_data, request, saved_exchange_account_object)
-        # assert that the tokens were saved with the expected values
+
         self.assertEqual(saved_exchange_account_object.token_set.count(), 2)
         self.assertEqual(saved_exchange_account_object.token_set.get(asset='BTC').free_amount, 1.0)
         self.assertEqual(saved_exchange_account_object.token_set.get(asset='ETH').free_amount, 0.5)

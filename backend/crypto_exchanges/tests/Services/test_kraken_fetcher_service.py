@@ -35,15 +35,15 @@ class TestKrakenFetcher(TestCase):
         path = '/0/private/Balance'
         timestamp = {"nonce": str(int(1000 * time.time()))}
 
-        # Mock the requests library to return a response with a known JSON payload
+
         mock_response = MagicMock()
         mock_response.json.return_value = {'result': {'XXBT': '10.12345678', 'ZUSD': '1000.00'}}
         mock_post.return_value = mock_response
 
-        # Call the method being tested
+
         account_data = self.fetcher.get_account_data()
 
-        # Check that the mocked request was made with the expected arguments
+
         mock_post.assert_called_once_with(
             'https://api.kraken.com/0/private/Balance',
             headers={'API-Key': self.api_key, 'API-Sign': ANY,
@@ -51,29 +51,25 @@ class TestKrakenFetcher(TestCase):
             data={'nonce': ANY}
         )
 
-        # Check that the method returns the expected account data
+
         expected_data = {'result': {'XXBT': '10.12345678', 'ZUSD': '1000.00'}}
         self.assertEqual(account_data, expected_data)
 
     @patch('requests.post')
     def test_get_trading_history(self, mock_post):
-        # Mock the requests library to return a response with a known JSON payload
+
         mock_response = MagicMock()
         mock_response.json.return_value = {
             'result': {'trades': [{'id': '123', 'price': '100.00'}, {'id': '456', 'price': '99.50'}]}}
         mock_post.return_value = mock_response
 
-        # Call the method being tested
         trading_history = self.fetcher.get_trading_history()
 
-        # Check that the mocked request was made with the expected arguments
         mock_post.assert_called_once_with(
             'https://api.kraken.com/0/private/TradesHistory',
             headers=ANY,
             data={'nonce': ANY}
         )
 
-        # Check that the method returns the expected trading history data
         expected_data = {'result': {'trades': [{'id': '123', 'price': '100.00'}, {'id': '456', 'price': '99.50'}]}}
         self.assertEqual(trading_history, expected_data)
-
