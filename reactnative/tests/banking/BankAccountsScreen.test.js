@@ -1,6 +1,13 @@
 import React from 'react';
 import { renderHook, render, screen, fireEvent, act, within, waitFor} from '@testing-library/react-native';
 import BankAccountsScreen from '../../screens/banking/BankAccountsScreen'
+import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import * as SecureStore from "expo-secure-store";
+
+jest.mock("expo-secure-store");
+jest.mock('reactnative/src/theme/ThemeProvider');
+
+SecureStore.getItemAsync.mockReset();
 
 global.fetch =  jest.fn( async (api, data ) => {
     var response = [
@@ -48,6 +55,17 @@ global.fetch =  jest.fn( async (api, data ) => {
 
 describe('<BankAccountsScreen />', () => {
     it('snapshot and button test', async () => {
+        useTheme.mockReturnValue({
+            dark: true,
+            colors: {
+              text: '#000',
+              background: '#fff',
+              primary: '#0af',
+            },
+            setScheme: jest.fn(),
+            update: jest.fn(),
+          });
+
         const navigate = jest.fn();
         snapshot = render(<BankAccountsScreen navigation={{ navigate }} />);
 
@@ -72,6 +90,17 @@ describe('<BankAccountsScreen />', () => {
     })
 
     it('test pressing button 1 on model', async () => {
+        useTheme.mockReturnValue({
+            dark: false,
+            colors: {
+              text: '#000',
+              background: '#fff',
+              primary: '#0af',
+            },
+            setScheme: jest.fn(),
+            update: jest.fn(),
+          });
+
         const navigate = jest.fn();
         snapshot = render(<BankAccountsScreen navigation={{ navigate }} />);
 
@@ -84,6 +113,18 @@ describe('<BankAccountsScreen />', () => {
     })
 
     it('test pressing button 2 on model', async () => {
+
+        useTheme.mockReturnValue({
+            dark: false,
+            colors: {
+              text: '#000',
+              background: '#fff',
+              primary: '#0af',
+            },
+            setScheme: jest.fn(),
+            update: jest.fn(),
+          });
+
         const navigate = jest.fn();
         snapshot = render(<BankAccountsScreen navigation={{ navigate }} />);
 

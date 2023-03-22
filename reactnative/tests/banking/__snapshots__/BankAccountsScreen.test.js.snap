@@ -4,7 +4,7 @@ exports[`<BankAccountsScreen /> snapshot and button test 1`] = `
 <View
   style={
     {
-      "backgroundColor": "white",
+      "backgroundColor": "#fff",
       "flex": 1,
     }
   }
@@ -48,7 +48,7 @@ exports[`<BankAccountsScreen /> snapshot and button test 1`] = `
       style={
         {
           "alignSelf": "center",
-          "backgroundColor": "purple",
+          "backgroundColor": "#0af",
           "borderRadius": 10,
           "marginHorizontal": 8,
           "marginVertical": 4,
@@ -60,7 +60,7 @@ exports[`<BankAccountsScreen /> snapshot and button test 1`] = `
       <Text
         style={
           {
-            "color": "black",
+            "color": "#000",
             "fontWeight": "bold",
             "textAlign": "center",
           }
@@ -100,7 +100,7 @@ exports[`<BankAccountsScreen /> snapshot and button test 1`] = `
       style={
         {
           "alignSelf": "center",
-          "backgroundColor": "purple",
+          "backgroundColor": "#0af",
           "borderRadius": 10,
           "marginHorizontal": 8,
           "marginVertical": 4,
@@ -112,7 +112,7 @@ exports[`<BankAccountsScreen /> snapshot and button test 1`] = `
       <Text
         style={
           {
-            "color": "black",
+            "color": "#000",
             "fontWeight": "bold",
             "textAlign": "center",
           }
@@ -126,7 +126,7 @@ exports[`<BankAccountsScreen /> snapshot and button test 1`] = `
     style={
       [
         {
-          "borderColor": "#ddd",
+          "borderColor": "#fff",
           "borderRadius": 5,
           "overflow": "hidden",
           "paddingBottom": 0,
@@ -143,7 +143,7 @@ exports[`<BankAccountsScreen /> snapshot and button test 1`] = `
         <Text
           style={
             {
-              "color": "black",
+              "color": "#000",
             }
           }
         >
@@ -408,7 +408,7 @@ You have no bank accounts
                 style={
                   {
                     "alignItems": "center",
-                    "backgroundColor": "white",
+                    "backgroundColor": "#fff",
                     "borderBottomColor": "gray",
                     "borderBottomWidth": 1,
                     "borderRadius": 20,
@@ -429,7 +429,7 @@ You have no bank accounts
                 <Text
                   style={
                     {
-                      "color": "black",
+                      "color": "#000",
                       "fontSize": 22,
                       "fontWeight": "bold",
                       "marginBottom": 10,
@@ -451,7 +451,7 @@ You have no bank accounts
                 <Text
                   style={
                     {
-                      "color": "black",
+                      "color": "#000",
                       "fontSize": 18,
                       "marginVertical": 15,
                       "textAlign": "center",
@@ -801,7 +801,7 @@ You have no bank accounts
                 style={
                   {
                     "alignItems": "center",
-                    "backgroundColor": "white",
+                    "backgroundColor": "#fff",
                     "borderBottomColor": "gray",
                     "borderBottomWidth": 1,
                     "borderRadius": 20,
@@ -822,7 +822,7 @@ You have no bank accounts
                 <Text
                   style={
                     {
-                      "color": "black",
+                      "color": "#000",
                       "fontSize": 22,
                       "fontWeight": "bold",
                       "marginBottom": 10,
@@ -844,7 +844,7 @@ You have no bank accounts
                 <Text
                   style={
                     {
-                      "color": "black",
+                      "color": "#000",
                       "fontSize": 18,
                       "marginVertical": 15,
                       "textAlign": "center",
