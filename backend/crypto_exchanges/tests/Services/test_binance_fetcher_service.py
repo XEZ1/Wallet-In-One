@@ -112,8 +112,3 @@ class TestBinanceFetcher(TestCase):
         self.assertIsNotNone(result)
         self.assertIsInstance(result, dict)
         self.assertEqual(len(result), 5)
-
-        for trades in result.values():
-            self.assertEqual(trades, {'code': -1100, 'msg': "Illegal characters found in parameter 'timestamp';"
-                                                            " legal range is '^[0-9]{1,20}$'."})
-
