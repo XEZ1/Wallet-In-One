@@ -2,7 +2,7 @@ import AddStocksHelper from "../../screens/stocks/AddStocksHelper";
 import {renderHook, act} from "@testing-library/react-native";
 import transaction from "./fixtures/transaction.json"
 
-describe('<useCryptoWallet />', () => {
+describe('<AddStocksHelper />', () => {
 
     afterEach(() => {
         global.fetch.mockClear();

@@ -19,6 +19,7 @@ import { auth_get } from '../../authentication';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
 import Loading from '../banking/Loading';
+import { ConvertTransactionsToGraphCompatibleData } from '../helper';
 
 
 import LineChartScreen from '../charts/LineChart';
@@ -130,23 +131,23 @@ const SuccessComponent = ({ route, ...props }) => {
       // }, [isFocused, list, getTransactions]);
 
 
-      const setData = (transaction, current_balance) => {
-            let graph_data = transaction.map((item) => [item.amount, item.date]);
-            graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
+      // const setData = (transaction, current_balance) => {
+      //       let graph_data = transaction.map((item) => [item.amount, item.date]);
+      //       graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
 
-            let points = [];
-            let balance = current_balance;
+      //       let points = [];
+      //       let balance = current_balance;
 
-            for (let i = 0; i < graph_data.length; i++) {
-                let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
-                balance -= graph_data[i][0]
-                points = [point, ...points]
-            }
-            if (points.length > 0) {
-                points[points.length - 1].value = parseFloat(points[points.length - 1].value);
-            }
-            return points
-      }
+      //       for (let i = 0; i < graph_data.length; i++) {
+      //           let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
+      //           balance -= graph_data[i][0]
+      //           points = [point, ...points]
+      //       }
+      //       if (points.length > 0) {
+      //           points[points.length - 1].value = parseFloat(points[points.length - 1].value);
+      //       }
+      //       return points
+      // }
 
     if(loading){
       return(<Loading/>)
@@ -208,7 +209,7 @@ const SuccessComponent = ({ route, ...props }) => {
                       graph_version={2}
                       height={75}
                       width={SIZE*0.85}
-                      data={setData(transactions[item.account_id], item.balance)}
+                      data={ConvertTransactionsToGraphCompatibleData(transactions[item.account_id], item.balance)}
                   />}
 
                 </TouchableOpacity>
