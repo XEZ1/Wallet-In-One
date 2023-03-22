@@ -5,7 +5,8 @@ from accounts.models import User
 from rest_framework.exceptions import ErrorDetail
 from stocks.models import Transaction
 
-class GetAccountViewTestCase(TestCase):
+""" Tests for calculating Metrics for a User's stock accounts """
+class MetricsViewTestCase(TestCase):
     fixtures = [
         'stocks/tests/fixtures/user.json',
         'stocks/tests/fixtures/stocks.json',

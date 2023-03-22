@@ -6,6 +6,7 @@ from djmoney.money import Money
 from stocks.services import calculate_metrics, chart_breakdown_stocks, total_stock_balance, setUpClient, PLAID_CLIENT_ID, PLAID_SECRET
 from decimal import Decimal
 
+""" Unit Tests for Stocks Services """
 class ServicesTest(TestCase):
     fixtures = [
         'stocks/tests/fixtures/user.json',

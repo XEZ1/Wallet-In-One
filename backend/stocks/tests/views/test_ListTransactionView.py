@@ -5,6 +5,7 @@ from accounts.models import User
 from rest_framework.exceptions import ErrorDetail
 from stocks.models import Transaction
 
+""" Tests for Listing all Transactions for a specified user """
 class ListTransactionViewTestCase(TestCase):
     fixtures = [
         'stocks/tests/fixtures/user.json',

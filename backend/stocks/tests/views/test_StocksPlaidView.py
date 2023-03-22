@@ -4,6 +4,7 @@ from django.urls import reverse
 from accounts.models import User
 from rest_framework import status
 
+""" Tests for Plaid Stocks Endpoint """
 class StocksPlaidViewTestCase(TestCase):
     fixtures = [
         'stocks/tests/fixtures/user.json',

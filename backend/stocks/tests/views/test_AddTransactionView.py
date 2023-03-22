@@ -4,6 +4,8 @@ from django.urls import reverse
 from accounts.models import User
 from stocks.models import StockAccount, Transaction
 
+
+""" Tests for Adding a Transaction View """
 class AddTransactionViewTestCase(TestCase):
     fixtures = [
         'stocks/tests/fixtures/user.json',

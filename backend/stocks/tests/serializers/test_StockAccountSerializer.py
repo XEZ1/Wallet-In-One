@@ -7,6 +7,8 @@ from accounts.models import User
 from django.test import TestCase
 from rest_framework.exceptions import ErrorDetail
 
+
+""" Unit Tests for Stock Account Serializer """
 class StockAccountSerializerTestCase(TestCase):
 
     fixtures = [

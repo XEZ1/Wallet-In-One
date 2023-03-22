@@ -7,6 +7,7 @@ from stocks.services import setUpClient
 from plaid.model.sandbox_public_token_create_request import SandboxPublicTokenCreateRequest
 from plaid.model.products import Products
 
+""" Tests for Plaid Access Token Endpoint """
 class AccessTokenTestCase(TestCase):
 
     fixtures = [
