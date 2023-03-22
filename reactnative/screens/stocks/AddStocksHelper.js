@@ -82,5 +82,14 @@ export default function AddStocksHelper(){
         return response.body.logo
     }
 
-    return { getAccessToken, getBalance, getTransaction, addAccount, addTransaction, addStock, getLogo };
+    const getStocks = async (accessToken) => {
+        const body = {
+          access_token: accessToken
+        }
+        const response = await auth_post('/stocks/get_stocks/', body)
+        const data = response.body;
+        return [data.holdings, data.securities]
+    }
+
+    return { getAccessToken, getBalance, getTransaction, addAccount, addTransaction, addStock, getLogo, getStocks };
 }

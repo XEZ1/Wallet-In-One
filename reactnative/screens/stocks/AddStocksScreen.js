@@ -16,7 +16,7 @@ const { width, height } = Dimensions.get('window');
 const PlaidComponent = ({ navigation }) => {
   const [linkToken, setLinkToken] = useState('');
   const isFocused = useIsFocused();
-  const {getAccessToken, getBalance, getTransaction, addAccount, addTransaction, addStock, getLogo} = AddStocksHelper();
+  const {getAccessToken, getBalance, getTransaction, addAccount, addTransaction, addStock, getLogo, getStocks} = AddStocksHelper();
   let access_token = ''
   let balance = ''
   let image = ''
@@ -104,15 +104,15 @@ const PlaidComponent = ({ navigation }) => {
   //   balance = (parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2)
   // }
 
-  const getStocks = async (accessToken) => {
-    const body = {
-      access_token: accessToken
-    }
-    const response = await auth_post('/stocks/get_stocks/', body)
-    const data = response.body;
-    stocks = data.holdings
-    securities = data.securities
-  }
+  // const getStocks = async (accessToken) => {
+  //   const body = {
+  //     access_token: accessToken
+  //   }
+  //   const response = await auth_post('/stocks/get_stocks/', body)
+  //   const data = response.body;
+  //   stocks = data.holdings
+  //   securities = data.securities
+  // }
 
   // const addStock = async (stock, stockInfo) => {
   //   const body = {
@@ -187,7 +187,9 @@ const PlaidComponent = ({ navigation }) => {
               access_token = await getAccessToken(success.publicToken)
               console.log(access_token)
               balance = await getBalance(access_token)
-              await getStocks(access_token)
+              let stock_response = await getStocks(access_token)
+              stocks = stock_response[0]
+              securities = stock_response[1]
 
               account_list.forEach(async element => {
                 image = await getLogo(success)
