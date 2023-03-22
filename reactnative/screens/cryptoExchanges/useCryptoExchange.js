@@ -36,5 +36,5 @@ export default function useCryptoExchange() {
 
     }
 
-  return { exchanges, fetchExchanges, removeExchange };
+  return { exchanges, setExchanges, fetchExchanges, removeExchange };
 }

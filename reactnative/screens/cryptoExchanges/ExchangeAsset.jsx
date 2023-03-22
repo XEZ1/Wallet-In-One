@@ -43,6 +43,7 @@ export default function ExchangeAsset(props) {
           props.navigation.navigate("ExchangeTransactions",
             { item: props.item, removeExchange: props.removeExchange})
         }
+        testID="exchangeAsset"
       >
         <View style={[styles.exchangeAsset, {backgroundColor: colors.primary}]}>
           <View
