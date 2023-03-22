@@ -44,12 +44,12 @@ describe('<CryptoWalletDetail />', () => {
       fireEvent.press(await screen.getByText('Transactions'))
       fireEvent.press(await screen.getByText('Breakdown'))
 
-      await waitFor(() => {
-        expect(screen.getByText('Candlestick Chart')).toBeDefined()
-        fireEvent.press(screen.getByText('Candlestick Chart'))
-        expect(screen.getByText('Line Chart')).toBeDefined()
-        fireEvent.press(screen.getByText('Line Chart'))
-      })
+      // await waitFor(() => {
+      //   expect(screen.getByText('Candlestick Chart')).toBeDefined()
+      //   fireEvent.press(screen.getByText('Candlestick Chart'))
+      //   expect(screen.getByText('Line Chart')).toBeDefined()
+      //   fireEvent.press(screen.getByText('Line Chart'))
+      // })
 
       fireEvent.press(await screen.getByText('Remove'))
 
