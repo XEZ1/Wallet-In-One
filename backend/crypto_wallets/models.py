@@ -3,12 +3,10 @@ from django.db import models
 from accounts.models import User
 
 
-# Create your models here.
-
 class CryptoWallet(models.Model):
     """
-    This is a temporary model, which will be replaced with either the Account / Asset model that will be created in
-    another user story.
+    Model that contains data on a crypto wallet, including the cryptocurrency of the wallet, the identifying address,
+    the amount received and spent, the output counts and the transactions.
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -26,6 +24,11 @@ class CryptoWallet(models.Model):
 
 
 class CryptoWalletTransaction(models.Model):
+    """
+    Model that contains data on a single transaction from a crypto wallet, including its value and the timestamp of
+    the transaction.
+    """
+
     crypto_wallet = models.ForeignKey(CryptoWallet, on_delete=models.CASCADE)
     value = models.FloatField()
     time = models.IntegerField()

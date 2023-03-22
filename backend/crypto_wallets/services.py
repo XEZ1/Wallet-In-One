@@ -1,4 +1,4 @@
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 import statistics
 import requests
 from crypto_wallets.models import CryptoWallet, CryptoWalletTransaction
@@ -6,8 +6,11 @@ from crypto_wallets.models import CryptoWallet, CryptoWalletTransaction
 API_KEY = "G___EAU7R8HuOi9HGRarUuX0xOujt6QQ"
 
 
-# Handle unknown address
 class CryptoWalletService:
+    """
+    Service that gathers data from an address and its cryptocurrency and stores it as fields in a class, which can be
+    accessed by the serializer for wallet creation, using the Blockchair API.
+    """
 
     def __init__(self, cryptocurrency, address):
         url = f"https://api.blockchair.com/{cryptocurrency.lower()}/dashboards/address/{address}?key={API_KEY}" \
@@ -30,11 +33,20 @@ class CryptoWalletService:
 
 
 def get_timestamp(date_time):
+    """
+    Function that converts a date and time string into a unix timestamp.
+    """
+
     dt = datetime.strptime(date_time, "%Y-%m-%d %H:%M:%S")
     return datetime.timestamp(dt)
 
 
 def normalise_value(cryptocurrency, value):
+    """
+    Function that converts the value of a crypto wallet received from the crypto wallet service into its normalised
+    form.
+    """
+
     return {
         'Bitcoin': value / 100_000_000,
         'Bitcoin-Cash': value / 100_000_000,
@@ -48,6 +60,10 @@ def normalise_value(cryptocurrency, value):
 
 
 def get_crypto_price(symbol):
+    """
+    Function that converts the value of a cryptocurrency into its value in pounds.
+    """
+
     url = f'https://min-api.cryptocompare.com/data/price?fsym={symbol}&tsyms=GBP'
     r = requests.get(url=url)
     response = r.json()
@@ -56,6 +72,10 @@ def get_crypto_price(symbol):
 
 
 def total_user_balance_crypto(user):
+    """
+    Function that gathers all the wallets of a specified user and calculates the sum of their values in pounds.
+    """
+
     wallets = CryptoWallet.objects.filter(user=user)
     if wallets.exists():
         return round(sum(get_crypto_price(a.symbol) * a.balance for a in wallets), 2)
@@ -64,6 +84,10 @@ def total_user_balance_crypto(user):
 
 
 def chart_breakdown_crypto(user):
+    """
+    Function that creates the graph data for the crypto wallets of a specified user for the frontend.
+    """
+
     wallets = CryptoWallet.objects.filter(user=user)
     if wallets.exists():
         return [{'x': a.symbol + ' Wallet: ' + a.address[:15] + '...', 'y': round(get_crypto_price(a.symbol) * a.balance, 2), 'id': a.id} for a in wallets]
@@ -71,8 +95,9 @@ def chart_breakdown_crypto(user):
 
 def calculate_predicted_balance(user):
     """
-    First calculate spending over four weeks
+    Function that calculates the predicted balance of a users crypto wallets in the next four weeks.
     """
+
     today = datetime.today()
     last_month = today - timedelta(days=28)
 
@@ -98,6 +123,10 @@ def calculate_predicted_balance(user):
 
 
 def calculate_received_spent(user):
+    """
+    Function that calculates the total amount of cryptocurrency received ant spend from a users crypto wallets.
+    """
+
     spent_received = {}
     crypto_wallets = list(CryptoWallet.objects.filter(user=user))
     for wallet in crypto_wallets:
@@ -110,6 +139,10 @@ def calculate_received_spent(user):
 
 
 def calculate_average_spend(user):
+    """
+    Function that calculates the average spent from a users crypto wallets.
+    """
+
     average_spend = {}
     crypto_wallets = list(CryptoWallet.objects.filter(user=user))
 
