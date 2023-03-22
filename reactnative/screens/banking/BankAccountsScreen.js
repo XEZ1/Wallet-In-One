@@ -39,11 +39,6 @@ export default function BankAccountsScreen({ navigation }) {
     if(isFocused != false){fetchData()}
   }, [isFocused])
 
-  const displayTimestamp = (timestamp) => {
-    const date = new Date(timestamp);
-    return  date.toLocaleDateString() + " "+  date.toLocaleTimeString();
-  };
-
   const stylesInternal = StyleSheet.create({
     container: {
       width: '100%',
@@ -184,7 +179,7 @@ export default function BankAccountsScreen({ navigation }) {
         <FontAwesome style={stylesInternal.closeButtonText} name="close" size= {20}/>
       </TouchableOpacity>
 
-      <ConditionalModal testID="model"
+      <ConditionalModal
         headerText={"Remove Your Bank Account"}
         bodyText={"Are you sure you want to remove your bank account?"}
         visible={modalVisible}

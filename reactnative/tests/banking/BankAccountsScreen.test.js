@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act, within, waitFor} from '@testing-library/react-native';
+import { renderHook, render, screen, fireEvent, act, within, waitFor} from '@testing-library/react-native';
 import BankAccountsScreen from '../../screens/banking/BankAccountsScreen'
 
 global.fetch =  jest.fn( async (api, data ) => {
@@ -56,17 +56,42 @@ describe('<BankAccountsScreen />', () => {
             expect(activityIndicator).toBeNull();
         })
 
-        expect(snapshot).toMatchSnapshot();
-
         // Test button clicks
-        fireEvent.press(await screen.getByText('Bank Insights'));
+        await fireEvent.press(await screen.getByText('Bank Insights'));
         expect(navigate).toHaveBeenCalledWith('Bank Insights');
 
-        fireEvent.press(await screen.getByText('All Transactions'));
-        fireEvent.press(await screen.getAllByTestId('account')[0]);
+        await fireEvent.press(await screen.getByText('All Transactions'));
+        await fireEvent.press(await screen.getAllByTestId('account')[0]);
         expect(navigate).toHaveBeenCalledWith('All Bank Transactions');
         
-        fireEvent.press(await screen.getAllByTestId('close1')[0]);
-        fireEvent.press(await screen.getByTestId('close2'));
+        await fireEvent.press(await screen.getAllByTestId('close1')[0]);
+        await fireEvent.press(await screen.getByTestId('close2'));
+        
+        //const model = screen.UNSAFE_queryByType('Model');   
+        expect(snapshot).toMatchSnapshot();
+    })
+
+    it('test pressing button 1 on model', async () => {
+        const navigate = jest.fn();
+        snapshot = render(<BankAccountsScreen navigation={{ navigate }} />);
+
+        await waitFor( () => {
+            const activityIndicator = screen.UNSAFE_queryByType('ActivityIndicator');
+            expect(activityIndicator).toBeNull();
+        })
+        await fireEvent.press(await screen.getAllByTestId('close1')[0]);
+        await fireEvent.press(await screen.getAllByTestId('pressable1')[0]);
+    })
+
+    it('test pressing button 2 on model', async () => {
+        const navigate = jest.fn();
+        snapshot = render(<BankAccountsScreen navigation={{ navigate }} />);
+
+        await waitFor( () => {
+            const activityIndicator = screen.UNSAFE_queryByType('ActivityIndicator');
+            expect(activityIndicator).toBeNull();
+        })
+        await fireEvent.press(await screen.getAllByTestId('close1')[0]);
+        await fireEvent.press(await screen.getAllByTestId('pressable2')[0]);
     })
 });
