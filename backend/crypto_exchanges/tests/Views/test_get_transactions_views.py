@@ -19,6 +19,7 @@ def convert_to_dict_list(data: List[OrderedDict]) -> List[Dict[str, Any]]:
         result.append(dict_item)
     return result
 
+
 class TestGetTransactions(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -32,7 +33,6 @@ class TestGetTransactions(TestCase):
         )
 
     def test_get_transactions(self):
-
         transaction = Transaction.objects.create(
             crypto_exchange_object=self.crypto_exchange_account,
             timestamp=datetime.now(pytz.timezone('Europe/London')),
@@ -53,3 +53,11 @@ class TestGetTransactions(TestCase):
                           'timestamp': str(transaction.timestamp.isoformat()).replace('+00:00', 'Z')
                           }]
         self.assertEqual(convert_to_dict_list(response.data), expected_data)
+
+    def test_get_transactions_with_empty_data(self):
+        url = f'/crypto-exchanges/get_transactions/{self.crypto_exchange_account.id}/'
+        request = self.factory.get(url)
+        force_authenticate(request, user=self.user)
+        response = get_transactions(request, self.crypto_exchange_account.id)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, ['empty'])
