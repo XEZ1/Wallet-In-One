@@ -433,5 +433,4 @@ def get_most_expensive_transaction(request):
 
     if most_expensive_transaction is None:
         most_expensive_transaction = ('empty', 0.0, 0.0, None, None, None)
-    print(most_expensive_transaction)
     return most_expensive_transaction

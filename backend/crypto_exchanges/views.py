@@ -26,13 +26,12 @@ def unix_timestamp_to_datetime(unix_timestamp):
     return dt
 
 
-# Create your views here.
+# Views
 @api_view(['GET'])
 def get_insights(request):
     all_transactions = get_all_transactions(request)
     most_expensive_transaction = get_most_expensive_transaction(request)
     insights = {'all_transactions': all_transactions, 'most_expensive_transaction': most_expensive_transaction}
-    print(insights)
     return Response(insights)
 
 
@@ -155,14 +154,10 @@ class GenericCryptoExchanges(APIView):
 
         # Save the binance account to the database
         saved_exchange_account_object = account.save()
-
         filtered_data = list(filter(self.filter_not_empty_balance, self.get_data_unified(data)))
-
         self.save_coins(filtered_data, request, saved_exchange_account_object)
-
         transactions = service.get_trading_history()
         self.save_transactions(transactions, request, saved_exchange_account_object)
-
         return Response(filtered_data, status=status.HTTP_200_OK)
 
     def delete(self, request):
