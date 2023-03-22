@@ -35,3 +35,18 @@ class TestGetTokenBreakdown(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, {'token_data': [{'x': 'token1', 'y': 1}, {'x': 'token2', 'y': 2}]})
+
+    @patch('crypto_exchanges.views.CurrentMarketPriceFetcher.get_exchange_token_breakdown')
+    def test_get_token_breakdown_empty_token_data(self, mock_fetcher):
+        mock_fetcher.return_value = {
+            'token_data': []
+        }
+
+        url = f'crypto-exchanges/get_token_breakdown/{self.crypto_exchange_account.id}/'
+        request = self.factory.get(url)
+        force_authenticate(request, user=self.user)
+
+        response = get_token_breakdown(request, self.crypto_exchange_account.id)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {'token_data': [{'x': 'empty'}]})

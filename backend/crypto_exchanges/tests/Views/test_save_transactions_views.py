@@ -14,7 +14,8 @@ class SaveTransactionsTestCase(TestCase):
     def test_binance_save_transactions(self):
         view = BinanceView()
 
-        transactions = {'ETHUSDT': [{'symbol': 'ETHUSDT', 'time': 1646805893525, 'isBuyer': True, 'qty': 0.12345678}]}
+        transactions = {'ETHUSDT': [{'symbol': 'ETHUSDT', 'time': 1646805893525, 'isBuyer': True, 'qty': 0.12345678},
+                                    {'symbol': 'ETHUSDT', 'time': 1646805893525, 'isBuyer': False, 'qty': 0.1234}]}
         request = RequestFactory().get('/')
         new_user = User.objects.create_user(username='testuser', password='testpass')
         saved_exchange_account_object = CryptoExchangeAccount.objects.create(user=new_user,
@@ -22,11 +23,16 @@ class SaveTransactionsTestCase(TestCase):
                                                                              api_key='apikey', secret_key='secretkey')
 
         view.save_transactions(transactions, request, saved_exchange_account_object)
-        saved_transaction = Transaction.objects.get(asset='ETHUSDT', amount=0.12345678)
-        self.assertEqual(saved_transaction.asset, 'ETHUSDT')
-        self.assertEqual(saved_transaction.amount, 0.12345678)
-        self.assertEqual(saved_transaction.transaction_type, 'buy')
-        self.assertEqual(saved_transaction.timestamp.astimezone(None),
+        saved_transaction = Transaction.objects.all()
+        self.assertEqual(saved_transaction[0].asset, 'ETHUSDT')
+        self.assertEqual(saved_transaction[0].amount, 0.12345678)
+        self.assertEqual(saved_transaction[0].transaction_type, 'buy')
+        self.assertEqual(saved_transaction[0].timestamp.astimezone(None),
+                         millis_to_datetime(1646805893525).astimezone(None))
+        self.assertEqual(saved_transaction[1].asset, 'ETHUSDT')
+        self.assertEqual(saved_transaction[1].amount, 0.1234)
+        self.assertEqual(saved_transaction[1].transaction_type, 'sell')
+        self.assertEqual(saved_transaction[1].timestamp.astimezone(None),
                          millis_to_datetime(1646805893525).astimezone(None))
 
     def test_gateio_save_transactions(self):
