@@ -17,20 +17,16 @@ class TestCoinBaseFetcher(TestCase):
         self.assertEquals(self.fetcher.secret_key, self.secret_key.encode('utf-8'))
 
     def test_call_method(self):
-        # Create a mock request object
         request = MagicMock()
         request.method = 'GET'
         request.path_url = '/v1/accounts/'
         request.body = None
         request.headers = {}
 
-        # Create an instance of the class being tested
         instance = CoinBaseFetcher(self.api_key, self.secret_key)
 
-        # Call the __call__ method
         response = instance(request)
 
-        # Assert that the headers were updated correctly
         expected_signature = instance.signature(str(int(time.time())) + request.method + request.path_url)
         self.assertEqual(request.headers['CB-ACCESS-SIGN'], expected_signature)
         self.assertEqual(request.headers['CB-ACCESS-TIMESTAMP'], str(int(time.time())))
@@ -61,21 +57,17 @@ class TestCoinBaseFetcher(TestCase):
         }
         mock_get.return_value = mock_response
 
-        # Call the method being tested
         account_data = self.fetcher.get_account_data()
 
-        # Verify that requests.get() was called with the correct parameters
         mock_get.assert_called_once_with(
             'https://api.coinbase.com/v2/accounts',
             auth=self.fetcher
         )
 
-        # Verify that the expected data was returned
         self.assertEqual(account_data, ['100.0', '200.0'])
 
     @patch('requests.get')
     def test_get_trading_history(self, mock_get):
-        # Set up mock response from Coinbase API
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
@@ -98,16 +90,14 @@ class TestCoinBaseFetcher(TestCase):
         }
         mock_get.return_value = mock_response
 
-        # Call the method being tested
         trading_history = self.fetcher.get_trading_history()
 
-        # Verify that requests.get() was called with the correct parameters
         mock_get.assert_called_once_with(
             'https://api.coinbase.com/api/v3/brokerage/orders/historical/fills',
             auth=self.fetcher,
         )
 
-        # Verify that the expected data was returned
+
         self.assertEqual(trading_history['data'][0]['id'], '123')
         self.assertEqual(trading_history['data'][0]['product_id'], 'BTC-USD')
         self.assertEqual(trading_history['data'][0]['size'], '1.0')
@@ -119,4 +109,3 @@ class TestCoinBaseFetcher(TestCase):
         self.assertEqual(trading_history['data'][1]['size'], '2.0')
         self.assertEqual(trading_history['data'][1]['price'], '2000.0')
         self.assertEqual(trading_history['data'][1]['side'], 'sell')
-

@@ -32,16 +32,16 @@ class TestCoinListFetcher(TestCase):
 
     @patch('requests.get')
     def test_get_account_data(self, mock_get):
-        # Mock the response
+
         mock_response = MagicMock()
         mock_response.json.return_value = {"accounts": [{"trader_id": "1234"}, {"trader_id": "5678"}]}
         mock_get.return_value = mock_response
 
-        # Call the method
+
         result = self.fetcher.get_account_data()
         self.assertEqual(len(result), 1)
 
-        # Check that requests.get was called with the correct arguments
+
         mock_get.assert_any_call(
             url="https://trade-api.coinlist.co/v1/accounts/",
             headers={
@@ -52,24 +52,24 @@ class TestCoinListFetcher(TestCase):
             }
         )
 
-        # Check the result
+
         self.assertEqual(result, {'accounts': [{'trader_id': '1234'}, {'trader_id': '5678'}]})
 
     def test_get_trading_history_types(self):
-        # Call the get_trading_history method
+
         result = self.fetcher.get_trading_history()
 
-        # Assert that the result is a dictionary with keys matching the symbols in the symbols list
+
         self.assertIsInstance(result, dict)
 
-        # Assert that the values in the dictionary are non-empty lists
+
         for symbol, trades in result.items():
             self.assertIsInstance(trades, list)
             self.assertTrue(trades)
 
     @patch('requests.get')
     def test_get_trading_history(self, mock_get):
-        # Set up mock response
+
         mock_response = MagicMock()
         mock_response.json.return_value = [
             {'symbol': 'BTC', 'amount': '1.00000000', 'type': 'deposit'},
@@ -77,7 +77,6 @@ class TestCoinListFetcher(TestCase):
         ]
         mock_get.return_value = mock_response
 
-        # Call method and assert results
         result = self.fetcher.get_trading_history()
         self.assertEqual(len(result), 2)
 
@@ -92,20 +91,20 @@ class TestCoinListFetcher(TestCase):
                 return self.json_data
 
         mock_get.side_effect = [
-            # Response for getting account IDs
+
             MockResponse({
                 'accounts': [
                     {'trader_id': '123'},
                     {'trader_id': '456'}
                 ]
             }, 200),
-            # Response for getting trading history for account ID 123
+
             MockResponse({
                 'history': [
                     {'id': '123-1', 'timestamp': ANY, 'amount': '10.0', 'currency': 'BTC'},
                 ]
             }, 200),
-            # Response for getting trading history for account ID 456
+
             MockResponse({
                 'history': [
                     {'id': '456-1', 'timestamp': ANY, 'amount': '100.0', 'currency': 'BTC'}
@@ -113,7 +112,7 @@ class TestCoinListFetcher(TestCase):
             }, 200)
         ]
 
-        # Call the get_trading_history method
+
         trading_history = self.fetcher.get_trading_history()
 
         expected_result = {
@@ -127,16 +126,10 @@ class TestCoinListFetcher(TestCase):
             ]
         }
 
-        # Sort the trading history in the expected result
-        # expected_result['history'].sort(key=lambda x: x['id'])
-
-        # Assert that the response has the expected data
         self.assertEqual(trading_history, expected_result)
 
-        # Assert that requests.get was called with the expected parameters
         mock_get.assert_has_calls([
             call(url='https://trade-api.coinlist.co/v1/accounts/', headers=ANY),
             call(url='https://trade-api.coinlist.co/v1/accounts/123/ledger', headers=ANY),
             call(url='https://trade-api.coinlist.co/v1/accounts/456/ledger', headers=ANY)
         ])
-

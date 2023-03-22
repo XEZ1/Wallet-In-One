@@ -1,71 +1,41 @@
 from django.test import TestCase
+from accounts.models import User
 from unittest.mock import patch
-from datetime import datetime
-from decimal import Decimal
-from collections import defaultdict
-from crypto_exchanges.models import *
-from accounts.models import *
-from crypto_exchanges.services import CurrentMarketPriceFetcher, iso8601_to_datetime, get_most_expensive_transaction
+from ...models import CryptoExchangeAccount, Transaction
+from ...services import CurrentMarketPriceFetcher, get_most_expensive_transaction
 
 
-class GetMostExpensiveTransactionTestCase(TestCase):
+class GetMostExpensiveTransactionTest(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', first_name='Lesya', last_name='Abakhova',
-                                             email='example@hse.edu.ru', password='testpassword')
-        self.exchange = CryptoExchangeAccount.objects.create(user=self.user, crypto_exchange_name='Binance')
-        self.timestamp = datetime(2022, 1, 1, 0, 0, 0)
-        self.transactions = [
-            Transaction.objects.create(
-                crypto_exchange_object=self.exchange,
-                asset='BTC',
-                amount=1.0,
-                transaction_type='buy',
-                timestamp=self.timestamp
-            ),
-            Transaction.objects.create(
-                crypto_exchange_object=self.exchange,
-                asset='ETH',
-                amount=2.0,
-                transaction_type='buy',
-                timestamp=self.timestamp
-            ),
-            Transaction.objects.create(
-                crypto_exchange_object=self.exchange,
-                asset='BTC',
-                amount=0.5,
-                transaction_type='sell',
-                timestamp=self.timestamp
-            ),
-        ]
-    #@patch('crypto_exchanges.services.CurrentMarketPriceFetcher.get_crypto_price')
-    #def test_get_most_expensive_transaction(self, mock_get_crypto_price):
-    #    # Set up mock prices for BTC and ETH
-    #    mock_get_crypto_price.side_effect = lambda asset: Decimal('10000.00') if asset == 'BTC' else Decimal('500.00')
-#
-    #    # Call the function and check the result
-    #    result = get_most_expensive_transaction(self.user)
-#
-    #    # Expected result: (asset, amount, price, type, timestamp, exchange_name)
-    #    expected = ('BTC', 1.0, 10000.0, 'buy', '2022-01-01 00:00:00', 'binance')
-    #    self.assertEqual(result, expected)
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.crypto_exchange_account = CryptoExchangeAccount.objects.create(
+            user=self.user,
+            crypto_exchange_name='TestExchange',
+            api_key='testapikey',
+            secret_key='testsecretkey'
+        )
+        self.transaction1 = Transaction.objects.create(
+            crypto_exchange_object=self.crypto_exchange_account,
+            asset='BTC',
+            transaction_type='buy',
+            amount=0.5
+        )
+        self.transaction2 = Transaction.objects.create(
+            crypto_exchange_object=self.crypto_exchange_account,
+            asset='ETH',
+            transaction_type='sell',
+            amount=2.0
+        )
 
-    #def test_get_most_expensive_transaction(self):
-    #    response = get_most_expensive_transaction(self.user)
-    #    self.assertTupleEqual(response, ('ETH', 2.0, 4000.0, 'buy', '2022-01-01 00:00:00', 'Binance'))
-#
-    #def test_get_most_expensive_transaction_no_transactions(self):
-    #    Transaction.objects.all().delete()
-    #    response = get_most_expensive_transaction(self.user)
-    #    self.assertTupleEqual(response, ('empty', 0.0, 0.0, None, None, None))
-#
-    #def test_get_most_expensive_transaction_same_max_amount(self):
-    #    Transaction.objects.create(
-    #        crypto_exchange_object=self.exchange,
-    #        asset='ETH',
-    #        amount=2.0,
-    #        transaction_type='buy',
-    #        timestamp=self.timestamp
-    #    )
-    #    response = get_most_expensive_transaction(self.user)
-    #    self.assertTupleEqual(response, ('ETH', 2.0, 4000.0, 'buy', '2022-01-01 00:00:00', 'Binance'))
+    @patch.object(CurrentMarketPriceFetcher, 'get_crypto_price')
+    def test_get_most_expensive_transaction(self, mock_get_crypto_price):
+        mock_get_crypto_price.side_effect = lambda symbol: {'BTC': 30000.00, 'ETH': 2000.00}[symbol]
+
+        self.client.login(username='testuser', password='testpassword')
+        request = self.client.get('/crypto-exchanges/get_insights/').wsgi_request
+        request.user = self.user
+
+        result = get_most_expensive_transaction(request)
+        self.assertEqual(result, (
+        'BTC', 0.5, 15000, 'buy', self.transaction1.timestamp.strftime('%Y-%m-%d %H:%M:%S'), 'TestExchange'))
