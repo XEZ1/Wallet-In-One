@@ -15,7 +15,7 @@ from crypto_exchanges.models import Token, CryptoExchangeAccount
 
 from abc import abstractmethod
 
-
+# Data time translation
 def iso8601_to_datetime(iso8601_string):
     dt = datetime.strptime(iso8601_string, '%Y-%m-%d %H:%M:%S.%f%z')
     return dt
@@ -26,23 +26,29 @@ class ExchangeFetcher:
         self.api_key = api_key
         self.secret_key = secret_key
 
+    # Timestamp
     def get_current_time(self):
         return round(time.time() * 1000)
 
+    # Prehashing that is required for some further hashing
     def prehash(self, timestamp, method, path, body):
         return timestamp + method.upper() + path + (body or '')
 
+    # Hashing that is required for signature validation
     def hash(self, timestamp):
         return hmac.new(self.secret_key.encode('utf-8'), timestamp.encode('utf-8'), sha256).hexdigest()
 
+    # Abstract signature creation
     @abstractmethod
     def signature(self, *args, **kwargs):
         raise NotImplementedError("Subclasses must implement this method")
 
+    # Abstract account data retrieval
     @abstractmethod
     def get_account_data(self):
         raise NotImplementedError("Subclasses must implement this method")
 
+    # Abstract trading history retrieval
     @abstractmethod
     def get_trading_history(self):
         raise NotImplementedError("Subclasses must implement this method")
@@ -60,9 +66,11 @@ class BinanceFetcher(ExchangeFetcher):
 
     def get_account_data(self, timestamp=None):
         endpoint = "https://api.binance.com/api"
+        # Timestamp may be passed for testing to avoid CPU racing (e.g. concurrency racing)
         if not timestamp:
             timestamp = f"timestamp={self.get_current_time()}"
         request_url = f"{endpoint}/v3/account?{timestamp}&signature={self.hash(timestamp)}"
+        # Set headers
         headers = {'X-MBX-APIKEY': self.api_key}
         response = requests.get(url=request_url, headers=headers)
         return response.json()
@@ -70,13 +78,16 @@ class BinanceFetcher(ExchangeFetcher):
     def get_trading_history(self, timestamp=None):
         to_return = {}
         for symbol in self.symbols:
+            # Timestamp may be passed for testing to avoid CPU racing (e.g. concurrency racing)
             if not timestamp:
                 timestamp = str(self.get_current_time())
             params = {'symbol': symbol, 'timestamp': timestamp}
             signature = self.signature(params)
             request_url = "https://api.binance.com/api/v3/myTrades"
+            # Set headers
             headers = {'X-MBX-APIKEY': self.api_key}
             response = requests.get(request_url, headers=headers, params={**params, **{'signature': signature}})
+            # Filtering data
             to_return[symbol] = response.json()
 
         return to_return
@@ -92,6 +103,7 @@ class GateioFetcher(ExchangeFetcher):
         self.headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
 
     def signature(self, method, url, query_string=None, payload_string=None, timestamp=None):
+        # Timestamp may be passed for testing to avoid CPU racing (e.g. concurrency racing)
         if not timestamp:
             timestamp = str(time.time())
         message = sha512()
@@ -105,20 +117,24 @@ class GateioFetcher(ExchangeFetcher):
         endpoint = f"{self.host}{self.prefix}/spot/accounts"
         query_param = ''
         sign_headers = self.signature('GET', self.prefix + '/spot/accounts', query_param)
+        # Set headers
         headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
         headers.update(sign_headers)
         response = requests.get(endpoint, headers=headers)
         return response.json()
 
     def get_trading_history(self):
+        # Limit response time
         limit = 10
         to_return = {}
         for currency_pair in self.symbols:
             url = f"/spot/trades?currency_pair={currency_pair}&limit={limit}"
             sign_headers = self.signature('GET', self.prefix + url)
+            # Set headers
             headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
             headers.update(sign_headers)
             response = requests.get(self.host + self.prefix + url, headers=headers)
+            # Filtering data
             to_return[currency_pair] = response.json()
         return to_return
 
@@ -145,6 +161,7 @@ class CoinListFetcher(ExchangeFetcher):
         secret = b64decode(self.secret_key)
         signature = self.signature(prehashed, secret)
 
+        # Set headers
         headers = {
             'Content-Type': 'application/json',
             'CL-ACCESS-KEY': self.api_key,
@@ -152,8 +169,10 @@ class CoinListFetcher(ExchangeFetcher):
             'CL-ACCESS-TIMESTAMP': timestamp
         }
 
+        # Get response IDs
         response_id = requests.get(url=request_url, headers=headers)
 
+        # Check for errors in the API response
         if 'accounts' not in response_id.json():
             return response_id.json()
 
@@ -171,6 +190,7 @@ class CoinListFetcher(ExchangeFetcher):
             secret = b64decode(self.secret_key)
             signature = self.signature(prehashed, secret)
 
+            # Set headers
             headers = {
                 'Content-Type': 'application/json',
                 'CL-ACCESS-KEY': self.api_key,
@@ -179,6 +199,7 @@ class CoinListFetcher(ExchangeFetcher):
             }
 
             response = requests.get(url=request_url, headers=headers)
+            # Filtering data
             to_return.update(response.json())
 
         return to_return
@@ -195,6 +216,7 @@ class CoinListFetcher(ExchangeFetcher):
         secret = b64decode(self.secret_key)
         signature = self.signature(prehashed, secret)
 
+        # Set headers
         headers = {
             'Content-Type': 'application/json',
             'CL-ACCESS-KEY': self.api_key,
@@ -202,8 +224,10 @@ class CoinListFetcher(ExchangeFetcher):
             'CL-ACCESS-TIMESTAMP': timestamp
         }
 
+        # Get response IDs
         response_id = requests.get(url=request_url, headers=headers)
 
+        # Check for errors in the API response
         if 'accounts' not in response_id.json():
             return response_id.json()
 
@@ -222,6 +246,7 @@ class CoinListFetcher(ExchangeFetcher):
             secret = b64decode(self.secret_key)
             signature = self.signature(prehashed, secret)
 
+            # Set headers
             headers = {
                 'Content-Type': 'application/json',
                 'CL-ACCESS-KEY': self.api_key,
@@ -230,6 +255,7 @@ class CoinListFetcher(ExchangeFetcher):
             }
 
             response = requests.get(url=request_url, headers=headers)
+            # Filtering data
             to_return.update(response.json())
 
         return to_return
@@ -243,9 +269,11 @@ class CoinBaseFetcher(ExchangeFetcher):
         self.secret_key = secret_key.encode('utf-8')
         self.timestamp = str(int(time.time()))
 
+    # Auth Base authorisation method
     def __call__(self, request):
         message = self.timestamp + request.method + request.path_url + (request.body or '')
         signature = self.signature(message)
+        # Set headers
         request.headers.update({
             'CB-ACCESS-SIGN': signature,
             'CB-ACCESS-TIMESTAMP': self.timestamp,
@@ -258,16 +286,19 @@ class CoinBaseFetcher(ExchangeFetcher):
 
     def get_account_data(self):
         api_url = 'https://api.coinbase.com/v2/'
+        # call the __call__ auth function
         auth = self
 
         response = requests.get(api_url + 'accounts', auth=auth)
 
+        # Check for errors
         if response.status_code == 400 or response.status_code == 401 or response.status_code == 402 \
                 or response.status_code == 403 or response.status_code == 404 or response.status_code == 405:
             return response.json()
 
         data_to_return = []
 
+        # Filtering data
         data = response.json()['data']
         for coin in data:
             data_to_return.append(coin['balance'])
@@ -304,6 +335,7 @@ class KrakenFetcher(ExchangeFetcher):
         path = '/0/private/Balance'
         timestamp = {"nonce": str(int(1000 * time.time()))}
 
+        # Set headers
         headers = {
             'API-Key': self.api_key,
             'API-Sign': self.signature(path, timestamp, self.secret_key),
@@ -319,6 +351,7 @@ class KrakenFetcher(ExchangeFetcher):
         path = '/0/private/TradesHistory'
         timestamp = {"nonce": str(int(1000 * time.time()))}
 
+        # Set headers
         headers = {
             'API-Key': self.api_key,
             'API-Sign': self.signature(path, timestamp, self.secret_key),
