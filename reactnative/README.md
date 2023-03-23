@@ -16,6 +16,7 @@ The members of the team are:
 - Plaid API Documentation
 - Plaid API Quickstart Repository
 - Victory Chart Documentation
+- React-Native-Wagmi-Charts Github Repository
 
 ## Deployed System
 
