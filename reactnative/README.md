@@ -21,6 +21,8 @@ The members of the team are:
 
 You require at least either the Android emulator, an Android device or the iOS simulator to run the frontend mobile application on your machine.
 
+The application has been tested on both a Pixel 6 XL Android emulation device, and an iPhone 14 Pro Max iOS simulation device.
+
 To install the Android emulator you need to install Android Studio and then set up a device.
 * https://docs.expo.dev/workflow/android-studio-emulator/
 
