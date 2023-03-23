@@ -149,12 +149,6 @@ export default function AddBankScreen({ navigation }) {
                         <View style={{flex: 1,justifyContent:'center', alignItems:'center'}}>
                             <Text style={styles(dark, colors).text}> Bank account(s) have been added</Text>
                         </View>
-                        <FlatList data={savedBanks} renderItem={({item, index}) =>{
-                            return (
-                                    <Text style={styles(dark, colors).text} key={index}>{JSON.stringify(savedBanks)}</Text>
-                                )
-                            }}
-                        />
                         <Button title="Back" onPress={reset}/>
                     </>
                 )}

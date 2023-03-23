@@ -52,5 +52,3 @@ class UpdateAllTokensTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['message'], 'Success. Data was updated successfully')
         self.assertFalse(CryptoExchangeAccount.objects.filter(user=self.user).exists())
-
-

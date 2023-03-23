@@ -6,7 +6,7 @@ import { api_url } from '../../authentication';
 
 export default function useCryptoExchange() {
   const [exchanges, setExchanges] = useState([]);
-
+  // Fetch the crypto exchange accounts
   const fetchExchanges = async () => {
     await fetch(`${api_url}/crypto-exchanges`, {
         method: "GET",
@@ -19,7 +19,7 @@ export default function useCryptoExchange() {
         .then((res) => setExchanges(res))
         .catch((err) => console.log(err));
   }
-
+  // Remove exchange backend call
   const removeExchange = async (id) => {
     await fetch(`${api_url}/crypto-exchanges`, {
       method: "DELETE",

@@ -483,8 +483,6 @@ class KrakenView(GenericCryptoExchanges, ABC):
 class UpdateAllTokens(APIView):
     def post(self, request):
         fixed_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
-        if len(fixed_accounts) == 0:
-            return Response({'message': 'There are no accounts connected'}, status=status.HTTP_204_NO_CONTENT)
         for account in fixed_accounts:
             api_key = account.api_key
             secret_key = account.secret_key
