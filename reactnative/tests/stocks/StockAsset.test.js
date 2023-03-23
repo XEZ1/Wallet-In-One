@@ -71,7 +71,6 @@ describe('<StockAsset />', () => {
         })
 
         await act( () => {
-            // console.log(screen.debug());
             expect(screen.getByText("Fidelity • GBP • Plaid  IRA"))
             expect(screen.getByText("BALANCE:  "))
             expect(screen.getByText("£266.23"))
@@ -229,7 +228,6 @@ describe('<StockAsset />', () => {
         })
     
         await act(async () => {
-            // console.log(screen.debug());
             fireEvent.press(await screen.getByText('REMOVE'));
             fireEvent.press(await screen.getByText('Yes'));
         });
@@ -297,7 +295,6 @@ describe('<StockAsset Empty />', () => {
 
         const button = getByText("View Stocks");
         fireEvent.press(button);
-        console.log(screen.debug());
 
         expect(button.props.children).toEqual('Hide Stocks');
 
