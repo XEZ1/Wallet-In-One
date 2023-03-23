@@ -8,7 +8,9 @@ import { useTheme } from 'reactnative/src/theme/ThemeProvider';
 import { styles } from "reactnative/screens/All_Styles.style.js";
 import SwitchSelector from "react-native-switch-selector";
 
-
+/**
+ * Component that displays insights/metrics for all stock accounts currently held by the user.
+ */
 export default function StockInsight() {
     const {dark, colors, setScheme} = useTheme();
     const isFocused = useIsFocused()
@@ -27,6 +29,10 @@ export default function StockInsight() {
         if(useIsFocused){getMetrics()}  
     }, [isFocused])
 
+    /**
+     * Function that filters the current data based on the toggle that has currently been set.
+     * @param {*} filter 
+     */
     const filter = (filter) => {
         setCurrentData(data[filter])
     }
@@ -54,12 +60,14 @@ export default function StockInsight() {
         },
     })
 
-    const buttons = [
+    /**
+     * Switch Selector, used for filtering the insights based on time.
+     */
+    const switchButtons = [
         <SwitchSelector
         key={"all"}
         initial={0}
         onPress={value => filter(value)}
-        // textColor="#7a44cf"
         selectedColor="#fff"
         buttonColor="#7a44cf"
         borderColor="#7a44cf"
@@ -82,14 +90,14 @@ export default function StockInsight() {
     }else if(currentData.average_latitude == 0 && currentData.average_longitude == 0){
         return(
         <View style={{flex: 1}}>
-            {buttons}
+            {switchButtons}
             <Text style={[styles(dark, colors).text, {textAlign: 'center'}]}>No Data for Selected Date</Text>
         </View>
         )
     }
     return(
         <View style={styles(dark, colors).container}>
-            {buttons}
+            {switchButtons}
             <View style={stylesInternal.container}>
                 <Text style={[stylesInternal.text, styles(dark, colors).textBold, {color: colors.text}]}>Transaction Statistics</Text>
                 <Text style={[stylesInternal.text, styles(dark, colors).text]}>Number of Transactions: {currentData.total_number_of_transactions}</Text>

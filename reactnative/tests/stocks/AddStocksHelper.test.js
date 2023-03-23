@@ -2,6 +2,9 @@ import AddStocksHelper from "../../screens/stocks/AddStocksHelper";
 import {renderHook, act} from "@testing-library/react-native";
 import transaction from "./fixtures/transaction.json"
 
+/**
+ * Tests for the AddStocksHelper custom react hook
+ */
 describe('<AddStocksHelper />', () => {
 
     afterEach(() => {

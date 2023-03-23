@@ -15,6 +15,9 @@ var navigationData = {
     "transactions": undefined
 }
 
+/**
+ * Tests for the ListStocksScreen
+ */
 describe('<SuccessComponent />', () => {
 
     beforeEach(() => {

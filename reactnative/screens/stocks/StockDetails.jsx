@@ -28,10 +28,8 @@ export default function StockDetails({ route, navigation }){
       const response = await auth_get(`/stocks/list_transactions/${stock}/`)
       let data = await response.body;
       data = data.filter(item => item.security_id === route.params.stock.security_id);
-      console.log(data)
       setStockTransactions(data);
       current_balance = data.map(item => item.amount).reduce((acc, current) => acc + current, 0);
-      console.log(current_balance)
       setTransformedData(ConvertTransactionsToGraphCompatibleData(data, current_balance));
     } catch (error) {
     }

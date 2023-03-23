@@ -10,6 +10,10 @@ import ConditionalModal from '../Modal';
 
 import { StyleSheet, Pressable, View, Animated} from 'react-native';
 
+/**
+ * Component that displays the Plaid SDK for connecting Stock Accounts to the app
+ */
+
 const PlaidComponent = ({ navigation }) => {
   const [linkToken, setLinkToken] = useState('');
   const isFocused = useIsFocused();
@@ -58,6 +62,9 @@ const PlaidComponent = ({ navigation }) => {
     },
   });
 
+  /**
+   * Whenever the screen is in focus, a call to the backend is made to access a temporary link token to open the SDK.
+   */
   useEffect(() => {
   const initiatePlaidLink = async () => {
       const response = await auth_post('/stocks/initiate_plaid_link/')
@@ -82,12 +89,9 @@ const PlaidComponent = ({ navigation }) => {
           ?
           <PlaidLink
             linkToken={linkToken}
-            onEvent={(event) => console.log(event)}
-            onExit={(exit) => console.log(exit)}
             onSuccess={async (success) => {
               let account_list = success.metadata.accounts
               access_token = await getAccessToken(success.publicToken)
-              console.log(access_token)
               balance = await getBalance(access_token)
               let stock_response = await getStocks(access_token)
               stocks = stock_response[0]
@@ -111,7 +115,6 @@ const PlaidComponent = ({ navigation }) => {
                   setModalText("Stock account has already been added!")
                   setModalVisible(true);
                 }
-                // setModalVisible(true)
               });
             }}
           />

@@ -1,42 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView, View, Dimensions, Button, TouchableHighlight, Alert,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 
 import data from "./chartData.json"
 import { LineChart, CandlestickChart } from 'react-native-wagmi-charts';
 import {useEffect, useState} from "react";
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
-import { useIsFocused } from '@react-navigation/native';
 
-import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 
 export default function LineChartScreen({graph_version, height, width, current_balance, data})
 {
-    const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
-    const isFocused = useIsFocused()
-    // let graphData = [{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]
     const {dark, colors, setScheme } = useTheme();
-    // useEffect(() => {
-    //     if(data == null){
-    //         let graph_data = transactions.map((item) => [item.amount, item.date]);
-    //         graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
-
-    //         let points = [];
-    //         let balance = current_balance;
-
-    //         for (let i = 0; i < graph_data.length; i++) {
-    //             let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
-    //             balance -= graph_data[i][0]
-    //             points = [point, ...points]
-    //         }
-    //         if (points.length > 0) {
-    //             points[points.length - 1].value = parseFloat(points[points.length - 1].value);
-    //         }
-    //         setGraphData(points)
-    //     } else{
-    //         setGraphData(data);
-    //     }
-    // }, [transactions]);
 
     let percentageChange = null;
     let priceChange = null;
@@ -70,7 +44,6 @@ export default function LineChartScreen({graph_version, height, width, current_b
             color1 = 'green';
         }
     }
-    // console.log(graphData);
 
     let candlestickData = null;
 
@@ -113,21 +86,6 @@ export default function LineChartScreen({graph_version, height, width, current_b
             };
         });
     }
-
-    // console.log(candlestickData)
-    
-
-    // if(graph_version != 3){
-    //     calculateChange(current_balance, data[0]?.value);
-    // }
-    // else if (current_balance != null){
-    //     calculateChange(current_balance, data[0]?.open);
-    // }
-    // else{
-    //     calculateChange(candlestickData[candlestickData.length-1].close, candlestickData[0]?.open);
-    // }
-    // console.log(candlestickData)
-    // console.log(priceChange)
 
     return (
         <View >

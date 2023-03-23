@@ -25,7 +25,6 @@ import { ConvertTransactionsToGraphCompatibleData } from '../helper';
 import LineChartScreen from '../charts/LineChart';
 
 const SuccessComponent = ({ route, ...props }) => {
-  // const { scrollToLastItem } = route.params || {}; // default to empty object if params is undefined
     const [list, setList] = useState()
     const isFocused = useIsFocused()
     const [transactions, setTransactions] = useState({});
@@ -66,7 +65,6 @@ const SuccessComponent = ({ route, ...props }) => {
         const listAccounts = async () => {
           const response = await auth_get('/stocks/list_accounts/')
           const accountList = response.body;
-          // console.log(response.body)
           if(accountList){
           accountList.forEach((account) => {
             getTransactions(account.account_id);
@@ -74,32 +72,6 @@ const SuccessComponent = ({ route, ...props }) => {
           }
           setLoading(false)
           setList(accountList);
-          // if(list){
-          //   list.forEach((account) => {
-          //     getTransactions(account.account_id);
-          //   });
-          //   console.log(list)
-          // }
-          // console.log(transactions)
-          // setLoading(false)
-
-          // if (scrollToLastItem && list.length > 0) {
-          //   const last = list[list.length - 1];
-          //   // const transactions = await getTransactions(last.account_id);
-          //   // console.log(transactions[last.account_id])
-
-            
-          //   props.navigation.navigate('StockAsset', {
-          //     accountID: last.account_id, 
-          //     accessToken: last.access_token, 
-          //     transactions: transactions[last.account_id],
-          //     logo: last.institution_logo,
-          //     balance: last.balance,
-          //     name: last.institution_name,
-          //     account_name: last.name,
-          //     balance_currency: last.balance_currency
-          //   });
-          // }
         }
         
         if (useIsFocused) {
@@ -110,7 +82,6 @@ const SuccessComponent = ({ route, ...props }) => {
       const getTransactions = useCallback(async (accountID) => {
         try {
           const response = await auth_get(`/stocks/list_transactions/${accountID}/`)
-          console.log(response.body)
           const data = response.body;
           setTransactions(prevTransactions => ({
             ...prevTransactions,
@@ -120,34 +91,6 @@ const SuccessComponent = ({ route, ...props }) => {
           console.error(error);
         }
       }, []);
-    
-      // useEffect(() => {
-      //   if (isFocused && list) {
-      //     list.forEach((account) => {
-      //       getTransactions(account.account_id);
-      //     });
-      //     setLoading(false)
-      //   }
-      // }, [isFocused, list, getTransactions]);
-
-
-      // const setData = (transaction, current_balance) => {
-      //       let graph_data = transaction.map((item) => [item.amount, item.date]);
-      //       graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
-
-      //       let points = [];
-      //       let balance = current_balance;
-
-      //       for (let i = 0; i < graph_data.length; i++) {
-      //           let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
-      //           balance -= graph_data[i][0]
-      //           points = [point, ...points]
-      //       }
-      //       if (points.length > 0) {
-      //           points[points.length - 1].value = parseFloat(points[points.length - 1].value);
-      //       }
-      //       return points
-      // }
 
     if(loading){
       return(<Loading/>)

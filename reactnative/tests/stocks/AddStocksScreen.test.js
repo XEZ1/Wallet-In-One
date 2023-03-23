@@ -4,7 +4,9 @@ import PlaidComponent from "../../screens/stocks/AddStocksScreen";
 import { PlaidEnvironments, Configuration, PlaidApi,  } from 'plaid';
 import { describe } from "@jest/globals";
 
-
+/**
+ * Tests for the Plaid SDK
+ */
 const configuration = new Configuration({
   basePath: PlaidEnvironments.sandbox,
   baseOptions: {
