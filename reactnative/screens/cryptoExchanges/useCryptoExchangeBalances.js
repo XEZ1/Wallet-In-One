@@ -5,7 +5,7 @@ import { api_url } from '../../authentication';
 
 export default function useCryptoExchangeBalances() {
     const [balances, setBalances] = useState([]);
-  
+    // Fetch balances
     const fetchBalances = async () => {
       await fetch(`${api_url}/crypto-exchanges/get_exchange_balances/`, {
           method: "GET",

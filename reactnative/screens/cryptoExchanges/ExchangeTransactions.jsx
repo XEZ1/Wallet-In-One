@@ -76,6 +76,7 @@ export default function ExchangeTransactions(props) {
 
   });  
 
+  // Fetch the transactions from backend
   let getExchangeTransactions = useCallback(async (exchange) => {
     try {
       const response = await fetch(api_url + `/crypto-exchanges/get_transactions/${exchange}/`, {
@@ -92,6 +93,7 @@ export default function ExchangeTransactions(props) {
     }
   }, []);
 
+  // Fetch the exchange tokens
   let getExchangeTokens = useCallback(async (exchange) => {
     try {
       const response = await fetch(api_url + `/crypto-exchanges/get_token_breakdown/${exchange}/`, {
@@ -116,6 +118,7 @@ export default function ExchangeTransactions(props) {
     }
   }, [exchange, getExchangeTransactions, getExchangeTokens]);
 
+  // Set the table data
   const data = exchangeTransactions.length === 1 && exchangeTransactions[0] === "empty"
   ? ["empty"]
   : {
@@ -133,13 +136,14 @@ export default function ExchangeTransactions(props) {
       })
     ])
   };
-
+  // Stores switch value between pie chart and transactions
   const [chartType, setChartType] = useState("pie");
   const handleChartTypeChange = (type) => {
     setChartType(type);
   };
   const tokenList = exchangeTokens.map((val) => val.x);
   const colours = [];
+  // This loop generates a unique colour for each coin for the pie chart
   for (let i = 0; i < tokenList.length; i++) {
     const token = tokenList[i];
     let hex = '';
@@ -165,15 +169,16 @@ export default function ExchangeTransactions(props) {
 
       {/* Back arrow and remove button */}
       <View style={[styles(dark, colors).container, {flexDirection: 'row', alignItems: "flex-end"}]}>
+        {/*Remove crypto exchange button*/}
         <Pressable
           onPress={() => setModalVisible(true)}
-          // onPress={() => removeExchange(item.id).then(() => props.navigation.goBack())}
           style={{alignItems: "center", justifyContent: "center", marginLeft: 'auto'}}>
           <View style={styles(dark, colors).smallButton}>
             <Text style={{color: colors.text, fontWeight: "800"}}>Remove</Text>
           </View>
         </Pressable>
       </View>
+      {/*Confirmation for removing exchange*/}
       <View testID={'conditional-modal'}>
       <ConditionalModal
         headerText={"Remove Your Exchange"}
@@ -196,12 +201,11 @@ export default function ExchangeTransactions(props) {
           </Text>
         </View>
       </View>
-
+      {/*Switch selector to choose between pie chart and transactions table*/}
       <View style={{paddingHorizontal: 40}}>
         <SwitchSelector
           initial={0}
           onPress={value => handleChartTypeChange(value)}
-          // textColor="#7a44cf"
           selectedColor="#fff"
           buttonColor="#7a44cf"
           borderColor="#7a44cf"
@@ -210,7 +214,6 @@ export default function ExchangeTransactions(props) {
             { label: "Coin Breakdown", value: "pie"},  
             { label: "Transactions", value: "transactions"} 
           ]}
-          // imageStyle={{ width: 20, height: 20 }}
           textStyle={{ fontWeight: 'bold', fontSize: 15 }}
           buttonMargin={1}
           height={45}

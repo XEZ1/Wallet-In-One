@@ -11,12 +11,14 @@ export default function ExchangeCredentials({ route, navigation }) {
   const {dark, colors, setScheme} = useTheme();
   const {exchange} = route.params;
 
+  // The following function is triggered on press of Submit button
   const handleSubmit = async () => {
+    // If fields are empty, display appropriate error message
     if (!apiKey || !secretKey) {
       Alert.alert('Error', 'Please enter both API Key and Secret Key.');
       return;
     }
-
+    // else, try to find the exchange account and Post into backend
     try {
       const response = await fetch(`${api_url}/crypto-exchanges/${exchange.toLowerCase()}`, {
         method: 'POST',
@@ -28,11 +30,15 @@ export default function ExchangeCredentials({ route, navigation }) {
       });
       const data = await response.json();
       const statusCode = response.status;
+      // Success
       if (statusCode === 200) {
         navigation.navigate('Crypto Wallets & Exchanges');
-      } else {
+      }
+      // Error posting
+      else {
         Alert.alert('Error', data["error"]);
       }
+      // Any other error thrown in the try block
     } catch (error) {
       Alert.alert('Error', `An error occurred while retrieving ${exchange} account data.`);
     }
@@ -68,6 +74,7 @@ export default function ExchangeCredentials({ route, navigation }) {
       <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
         <Text style={styles.title}>{exchange} Credentials:</Text>
       </View>
+      {/*API key title and field*/}
       <Text style={{ fontSize: 20, marginBottom: 10, color: colors.text }}>API Key:</Text>
       <TextInput
         autoCapitalize='none'
@@ -77,6 +84,7 @@ export default function ExchangeCredentials({ route, navigation }) {
         style={styles.input}
         testID="apiKeyInput"
       />
+      {/*Secret key title and field*/}
       <Text style={{ fontSize: 20, marginBottom: 10, color: colors.text }}>Secret Key:</Text>
       <TextInput
         autoCapitalize='none'
@@ -87,6 +95,7 @@ export default function ExchangeCredentials({ route, navigation }) {
         style={styles.input}
         testID="secretKeyInput"
       />
+      {/*Submit button*/}
       <Button
         title="Submit"
         onPress={handleSubmit}
