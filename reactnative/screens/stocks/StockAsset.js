@@ -109,21 +109,26 @@ export default function StockAsset({ route, navigation, }){
           },
         });
         if(res.status == 200){
+          
           const data = await res.json();
+          console.log(data);
           setStocks(data);
-          setLoading(false)
+          setLoading(false);
         }
 
       } catch (error) {
         console.error(error);
       }
-  }, []);
+  });
   
   useEffect(() => {
-    if (isFocused ) {
+    if (useIsFocused ) {
       getStocks(route.params.accountID);
+      console.log(stocks)
     }
-  }, [isFocused, getStocks]);
+  }, [isFocused]);
+
+
 
   // console.log(route.params.accountID)
 
@@ -225,9 +230,9 @@ export default function StockAsset({ route, navigation, }){
 
         setGraph(transformedData);
     }, [transactions]);
-console.log(stocks);
+// console.log(stocks);
 
-  if(1 == 2){
+  if(loading){
     return(<Loading/>)
   }
   else{

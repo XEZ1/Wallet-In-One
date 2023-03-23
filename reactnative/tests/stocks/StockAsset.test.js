@@ -27,20 +27,18 @@ describe('<StockAsset />', () => {
         }
       };
 
-      beforeEach(() => {
-        const mockStocks = stockAssetList;
-      
-        global.fetch = jest.fn().mockResolvedValue({
-          json: jest.fn().mockResolvedValue(mockStocks),
-          ok: true
-        });
-      });
-      
+    beforeEach(() => {
+        global.fetch =  jest.fn( async (accountID) => {
+            return Promise.resolve({
+                status: 200, json: () => stockAssetList.stockAssetList
+            })
+        })
+      })
+
       afterEach(() => {
         global.fetch.mockClear();
         delete global.fetch;
-      });
-      
+      })
       
 
     it('StockAsset snapshot test', async () => {
@@ -67,6 +65,11 @@ describe('<StockAsset />', () => {
     it('stockDetails text test', async () => {
         const stockAssetDetails = render(<StockAsset {...params} />)
 
+        await waitFor( () => {
+            const loading = screen.UNSAFE_queryByType('ActivityIndicator');
+            expect(loading).toBeNull();
+        })
+
         await act( () => {
             // console.log(screen.debug());
             expect(screen.getByText("Fidelity • GBP • Plaid  IRA"))
@@ -76,12 +79,16 @@ describe('<StockAsset />', () => {
     }
     )
 
-    // it('test toggle between charts', async () => {
-        
-    // });
 
-    it('toggle transactions when table is clicked', () => {
+    it('toggle transactions when table is clicked',  async () => {
         const { getByText, queryByTestId } = render(<StockAsset {...params} />);
+
+        await waitFor( () => {
+            const loading = screen.UNSAFE_queryByType('ActivityIndicator');
+            expect(loading).toBeNull();
+        })
+
+
         const button = getByText('View Transactions');
         fireEvent.press(button);
         // console.log(screen.debug());
@@ -108,7 +115,7 @@ describe('<StockAsset />', () => {
       });
       
 
-    it("toggle table when transactions are empty", () => {
+    it("toggle table when transactions are empty",  async () => {
         const parameter = {
             route: {
               params: {
@@ -130,9 +137,16 @@ describe('<StockAsset />', () => {
           };
 
         const { getByText, queryByTestId } = render(<StockAsset {...parameter} />);
+
+        await waitFor( () => {
+            const loading = screen.UNSAFE_queryByType('ActivityIndicator');
+            expect(loading).toBeNull();
+        })
+
+
         const button = getByText('View Transactions');
         fireEvent.press(button);
-        console.log(screen.debug());
+        // console.log(screen.debug());
 
         expect(button.props.children).toEqual('Hide Transactions');
 
@@ -160,25 +174,18 @@ describe('<StockAsset />', () => {
     
 
     it("toggle stocks when clicked", async () => {
-        const mockedGetStocks = jest.fn().mockImplementation(() => {
-            return Promise.resolve([{"id": 4, "institution_price": "0.01", "institution_price_currency": "GBP", "name": "iShares Inc MSCI Brazil", "quantity": 10000, "security_id": "abJamDazkgfvBkVGgnnLUWXoxnomp5up8llg4", "stockAccount": "JDaKG8B86LCwkwKqKZwLfqR9Aby9NdtQeDelD", "ticker_symbol": "EWZ"}, {"id": 5, "institution_price": "42.15", "institution_price_currency": "GBP", "name": "U S Dollar", "quantity": 5, "security_id": "d6ePmbPxgWCWmMVv66q9iPV94n91vMtov5Are", "stockAccount": "JDaKG8B86LCwkwKqKZwLfqR9Aby9NdtQeDelD", "ticker_symbol": null}, {"id": 6, "institution_price": "1.00", "institution_price_currency": "GBP", "name": "Nflx Feb 01'18 $355 Call", "quantity": 0.01, "security_id": "8E4L9XLl6MudjEpwPAAgivmdZRdBPJuvMPlPb", "stockAccount": "JDaKG8B86LCwkwKqKZwLfqR9Aby9NdtQeDelD", "ticker_symbol": "NFLX180201C00355000"}]);
-          });
-
-          
-        const { getByText, queryByTestId } = render(<StockAsset {...params} getStocks={mockedGetStocks} />);
+        const { getByText, queryByTestId } = render(<StockAsset {...params}/>);
 
         await waitFor( () => {
             const loading = screen.UNSAFE_queryByType('ActivityIndicator');
             expect(loading).toBeNull();
         })
+        
 
         const button = getByText('View Stocks');
         fireEvent.press(button);
-        console.log(screen.debug());
 
         expect(button.props.children).toEqual('Hide Stocks');
-
-        expect(screen.queryByText("No stock data available.")).toBeNull();
 
         expect(screen.getByText("iShares Inc MSCI Brazil"))
         expect(screen.getByText("U S Dollar"))
@@ -195,64 +202,22 @@ describe('<StockAsset />', () => {
         expect(screen.queryByText("Nflx Feb 01'18 $355 Call")).toBeNull();
     });
 
-    // it("toggle stocks when stocks are empty", () => {
-    //     const parameter = {
-    //         route: {
-    //           params: {
-    //             accessToken: stockAssetData.accessToken,
-    //             accountID: "jdufsouy8739ud39u39du3",
-    //             account_name: stockAssetData.account_name,
-    //             balance: stockAssetData.balance,
-    //             balance_currency: stockAssetData.balance_currency,
-    //             logo: stockAssetData.logo,
-    //             name: stockAssetData.name,
-    //             transactions: [],
-    //             removeAccount: jest.fn(async () => {return Promise}),
-    //           },
-    //         },
-    //         navigation: {
-    //           navigate: jest.fn(),
-    //           goBack: jest.fn()
-    //         }
-    //       };
-
-    //     const { getByText, queryByTestId } = render(<StockAsset {...parameter} />);
-    //     const button = getByText("View Stocks");
-    //     fireEvent.press(button);
-    //     console.log(screen.debug());
-
-    //     expect(button.props.children).toEqual('Hide Stocks');
-
-    //     expect(screen.getByText("No stock data available."))
-
-    //     fireEvent.press(button);
-
-    //     expect(button.props.children).toEqual('View Stocks');
-
-    //     expect(screen.queryByText("No stock data available.")).toBeNull();
-    // });
-
     it('stockDetails test button press', async () => {
         const navigationData = {
-            stock: {
-                id: 6,
-                institution_price: '1.00',
-                institution_price_currency: 'GBP',
-                name: "Nflx Feb 01'18 $355 Call",
-                quantity: 0.01,
-                security_id: '8E4L9XLl6MudjEpwPAAgivmdZRdBPJuvMPlPb',
-                stockAccount: 'JDaKG8B86LCwkwKqKZwLfqR9Aby9NdtQeDelD',
-                ticker_symbol: 'NFLX180201C00355000'
-            },
-            security_id: '8E4L9XLl6MudjEpwPAAgivmdZRdBPJuvMPlPb'
+            "security_id": "8E4L9XLl6MudjEpwPAAgivmdZRdBPJuvMPlPb", "stock": {"id": 6, "institution_price": "1.00", "institution_price_currency": "GBP", "name": "Nflx Feb 01'18 $355 Call", "quantity": 0.01, "security_id": "8E4L9XLl6MudjEpwPAAgivmdZRdBPJuvMPlPb", "stockAccount": "JDaKG8B86LCwkwKqKZwLfqR9Aby9NdtQeDelD", "ticker_symbol": "NFLX180201C00355000"}
         };
 
         const navigate = jest.fn();
-        const stockDetails = render(<StockAsset {...params}/>);
+        const stockDetails = render(<StockAsset {...params} navigation={{ navigate }} />);
 
-        fireEvent.press(getByText('View Stocks'));
+        await waitFor( () => {
+            const loading = screen.UNSAFE_queryByType('ActivityIndicator');
+            expect(loading).toBeNull();
+        })
+
+        fireEvent.press(screen.getByText('View Stocks'));
         fireEvent.press(await screen.getByText("Nflx Feb 01'18 $355 Call"));
-        expect(navigate).toHaveBeenCalledWith("StockDetails", navigationData);
+        expect(navigate).toHaveBeenCalledWith("StockDetails", navigationData );
     })
 
     it('test remove account', async () => {
@@ -286,3 +251,64 @@ describe('<StockAsset />', () => {
         });
     })
 });
+
+describe('<StockAsset Empty />', () => {
+    beforeEach(() => {
+        global.fetch =  jest.fn( async (accountID) => {
+            return Promise.resolve({
+                status: 200, json: () => []
+            })
+        })
+      })
+
+      afterEach(() => {
+        global.fetch.mockClear();
+        delete global.fetch;
+      })
+
+      it("toggle stocks when stocks are empty", async () => {
+        const parameter = {
+            route: {
+              params: {
+                accessToken: stockAssetData.accessToken,
+                accountID: "jdufsouy8739ud39u39du3",
+                account_name: stockAssetData.account_name,
+                balance: stockAssetData.balance,
+                balance_currency: stockAssetData.balance_currency,
+                logo: stockAssetData.logo,
+                name: stockAssetData.name,
+                transactions: [],
+                removeAccount: jest.fn(async () => {return Promise}),
+              },
+            },
+            navigation: {
+              navigate: jest.fn(),
+              goBack: jest.fn()
+            }
+          };
+
+        const { getByText, queryByTestId } = render(<StockAsset {...parameter} />);
+
+        await waitFor( () => {
+            const loading = screen.UNSAFE_queryByType('ActivityIndicator');
+            expect(loading).toBeNull();
+        })
+
+
+        const button = getByText("View Stocks");
+        fireEvent.press(button);
+        console.log(screen.debug());
+
+        expect(button.props.children).toEqual('Hide Stocks');
+
+        expect(screen.getByText("No stock data available."))
+
+        fireEvent.press(button);
+
+        expect(button.props.children).toEqual('View Stocks');
+
+        expect(screen.queryByText("No stock data available.")).toBeNull();
+    });
+      
+    }
+)
