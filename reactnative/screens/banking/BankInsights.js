@@ -139,34 +139,23 @@ export default function BankInsights() {
       </View>
       <Text style={styles(dark, colors).text}>Balance History:</Text>
       <BalanceChart rawData={currentData.balance_history} highest={currentData.highest_balance}/>
-      {Object.keys(currentData).map((key) => {
-        if (!["balance_history",'net','total_money_in','total_money_out','positive','negative','both','bar_data'].includes(key)){
-          return (
-            <View key={key}>
-              <Text style={styles(dark, colors).text}>{key.replace('_', ' ').replace(/\b(\w)/g, k => k.toUpperCase())}: {currentData[key]}</Text>
-            </View>
-          )
-        }
-      })}
+
+      <Text style={styles(dark, colors).text}> Highest Balance: £{currentData['highest_balance'].toFixed(2)}</Text>
+      <Text style={styles(dark, colors).text}> Lowest Balance: £{currentData['lowest_balance'].toFixed(2)}</Text>
+
       <View style={stylesInternal.item}>
         <SegmentedControl segments={['Both', 'Income','Spending']} activeIndex={activeTab} setActiveIndex={setActiveTab} />
       </View>
 
-      {Object.keys(currentTabData).map((key) => {
-        if (!["balance_history",'net','total_money_in','total_money_out','positive','negative','both','bar_data'].includes(key)){
-          return (
-            <View key={key}>
-              <Text style={styles(dark, colors).text}>{key.replace('_', ' ').replace(/\b(\w)/g, k => k.toUpperCase())}: {currentTabData[key]}</Text>
-            </View>
-          )
-        }
-      })}
-
+      <Text style={styles(dark, colors).text}> Number of Transactions: {currentTabData['total_amount_of_transactions']}</Text>
+      <Text style={styles(dark, colors).text}> Highest Transaction: £{currentTabData['highest_transaction'].toFixed(2)}</Text>
+      <Text style={styles(dark, colors).text}> Lowest Transaction: £{currentTabData['lowest_transaction'].toFixed(2)}</Text>
+      <Text style={styles(dark, colors).text}> Average Transaction: £{currentTabData['average_transaction'].toFixed(2)}</Text>
+      <Text style={styles(dark, colors).text}> Variance: {currentTabData['variance'].toFixed(2)}</Text>
+      <Text style={styles(dark, colors).text}> Standard Deviation: {currentTabData['standard_deviation'].toFixed(2)}</Text>
       
       <BankBarChart rawData={currentTabData.bar_data} tab={activeTab}/>
       
-
-
     </View>
     </ScrollView>
   );
