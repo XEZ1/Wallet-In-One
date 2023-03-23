@@ -1326,6 +1326,7 @@ exports[`<CryptoWalletDetail /> snapshot test 2`] = `
                     },
                   ]
                 }
+                testID="pressable1"
               >
                 <Text
                   style={
@@ -1381,6 +1382,7 @@ exports[`<CryptoWalletDetail /> snapshot test 2`] = `
                     },
                   ]
                 }
+                testID="pressable2"
               >
                 <Text
                   style={

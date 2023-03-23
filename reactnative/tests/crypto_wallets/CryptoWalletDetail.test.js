@@ -40,6 +40,10 @@ describe('<CryptoWalletDetail />', () => {
     await act(async () => {
       expect(snapshot).toMatchSnapshot()
 
+      await waitFor(() => {
+        expect(screen.getByText('1P5ZEDWTKTFGxQjZphgWPQUpe554WKDfHQ')).toBeDefined()
+      })
+
       // Test button
       fireEvent.press(await screen.getByText('Transactions'))
       fireEvent.press(await screen.getByText('Breakdown'))

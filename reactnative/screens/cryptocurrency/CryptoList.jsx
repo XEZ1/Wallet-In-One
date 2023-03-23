@@ -157,6 +157,13 @@ export default function CryptoList(props) {
 
         </View>
 
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => handleSubmit()}
+        >
+          <Text style={styles.buttonText}>Refresh</Text>
+        </TouchableOpacity>
+
         <Text style={[styles.cryptoWalletSubtitle, {color: colors.text, marginTop: 10}]}>Wallets</Text>
 
         <View style={[styles.walletList]}>

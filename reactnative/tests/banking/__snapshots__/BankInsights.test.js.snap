@@ -1930,32 +1930,26 @@ exports[`<BankInsights /> snapshot test 1`] = `
           </RNSVGGroup>
         </RNSVGSvgView>
       </View>
-      <View>
-        <Text
-          style={
-            {
-              "color": "black",
-            }
+      <Text
+        style={
+          {
+            "color": "black",
           }
-        >
-          Highest Balance
-          : 
-          150
-        </Text>
-      </View>
-      <View>
-        <Text
-          style={
-            {
-              "color": "black",
-            }
+        }
+      >
+         Highest Balance: £
+        150.00
+      </Text>
+      <Text
+        style={
+          {
+            "color": "black",
           }
-        >
-          Lowest Balance
-          : 
-          -200
-        </Text>
-      </View>
+        }
+      >
+         Lowest Balance: £
+        -200.00
+      </Text>
       <View
         style={
           {
@@ -2183,84 +2177,66 @@ exports[`<BankInsights /> snapshot test 1`] = `
           </View>
         </View>
       </View>
-      <View>
-        <Text
-          style={
-            {
-              "color": "black",
-            }
+      <Text
+        style={
+          {
+            "color": "black",
           }
-        >
-          Total Amount_of_transactions
-          : 
-          7
-        </Text>
-      </View>
-      <View>
-        <Text
-          style={
-            {
-              "color": "black",
-            }
+        }
+      >
+         Number of Transactions: 
+        7
+      </Text>
+      <Text
+        style={
+          {
+            "color": "black",
           }
-        >
-          Highest Transaction
-          : 
-          200
-        </Text>
-      </View>
-      <View>
-        <Text
-          style={
-            {
-              "color": "black",
-            }
+        }
+      >
+         Highest Transaction: £
+        200.00
+      </Text>
+      <Text
+        style={
+          {
+            "color": "black",
           }
-        >
-          Lowest Transaction
-          : 
-          -50
-        </Text>
-      </View>
-      <View>
-        <Text
-          style={
-            {
-              "color": "black",
-            }
+        }
+      >
+         Lowest Transaction: £
+        -50.00
+      </Text>
+      <Text
+        style={
+          {
+            "color": "black",
           }
-        >
-          Average Transaction
-          : 
-          50
-        </Text>
-      </View>
-      <View>
-        <Text
-          style={
-            {
-              "color": "black",
-            }
+        }
+      >
+         Average Transaction: £
+        50.00
+      </Text>
+      <Text
+        style={
+          {
+            "color": "black",
           }
-        >
-          Variance
-          : 
-          8571.42857142857
-        </Text>
-      </View>
-      <View>
-        <Text
-          style={
-            {
-              "color": "black",
-            }
+        }
+      >
+         Variance: 
+        8571.43
+      </Text>
+      <Text
+        style={
+          {
+            "color": "black",
           }
-        >
-          Standard Deviation
-          : 
-          92.5820099772551
-        </Text>
-      </View>
+        }
+      >
+         Standard Deviation: 
+        92.58
+      </Text>
       <View
         style={{}}
       >

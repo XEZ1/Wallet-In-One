@@ -8,26 +8,20 @@ import {
   ScrollView,
   TouchableHighlight
 } from 'react-native';
-
 import * as Notifications from "expo-notifications";
-
 import * as SecureStore from 'expo-secure-store';
 import { logout } from '../authentication';
 import { useContext } from 'react';
 import { userContext } from '../data';
 import { useTheme } from 'reactnative/src/theme/ThemeProvider'
 import {styles} from 'reactnative/screens/All_Styles.style.js'
-
 import Icon from 'react-native-vector-icons/Feather';
 
 export default function SettingsPage ({ navigation }) {
+
   const [notifications, setNotifications] = useState(true);
-
   const [user, setUser] = useContext(userContext)
-
   const {dark, colors, setScheme, update} = useTheme();
-  
-  //const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(false);
 
   const stylesInternal = StyleSheet.create({
     container: {
@@ -106,8 +100,7 @@ export default function SettingsPage ({ navigation }) {
     </TouchableHighlight>;
   }
 
-  //Load notification setting
-
+  // Load notification setting
   useEffect(() => {
       async function loadNotificationSetting() {
     const initialValue = await SecureStore.getItemAsync('notificationSettings');
@@ -133,7 +126,7 @@ export default function SettingsPage ({ navigation }) {
 
 
 
-  //Toggle and save notification setting
+  // Toggle and save notification setting
   const toggleNotifications = async () => {
 
      setNotifications((previousState) => !previousState);
@@ -149,7 +142,7 @@ export default function SettingsPage ({ navigation }) {
     }
   };
 
-  //Toggle and save theme setting
+  // Toggle and save theme setting
   const changeTheme = async (theme) => {
       setSelectedValue(theme)
       update(theme)
@@ -183,6 +176,7 @@ export default function SettingsPage ({ navigation }) {
         }}
       style={styles(dark, colors).container}
     >
+      {/* Notifications section and toggle for enabling and disabling notifications */}
       <Text style={[styles(dark, colors).textBold, {fontSize: 24, marginBottom: 20}]}>Notifications</Text>
       <View style={stylesInternal.switchContainer}>
         <Text style={styles(dark, colors).text}>Receive notifications</Text>
@@ -194,14 +188,15 @@ export default function SettingsPage ({ navigation }) {
         />
       </View>
 
+      {/* Dark mode section and list for choosing between the 'System default' theme, light theme or dark theme*/}
       <Text style={[styles(dark, colors).textBold, {fontSize: 24, marginBottom: 20}]}>Themes</Text>
-
       <View style={[styles(dark, colors).list]}>
         <Item label={'System Default'} value={null} />
         <Item label={'Light Mode'} value={'false'}/>
         <Item label={'Dark Mode'} value={'true'} style={[stylesInternal.item, stylesInternal.last_item]}/>
       </View>
 
+      {/* Button for logging out of the app */}
       <TouchableOpacity
         onPress={()=>{logout(user, setUser)}}
       >

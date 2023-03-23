@@ -96,8 +96,6 @@ export default function TransactionData({ route }){
             </View>
             </View>
           </View>
-
-        {/* <Text>{JSON.stringify(data)}</Text> */}
       </View>
   );
   }

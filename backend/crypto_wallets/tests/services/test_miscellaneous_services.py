@@ -32,7 +32,8 @@ class CryptoWalletMiscellaneousTestCase(TestCase):
         self.assertIsInstance(crypto_price, float)
 
     def test_invalid_get_crypto_price(self):
-        self.assertRaises(KeyError, get_crypto_price, '???')
+        crypto_price = get_crypto_price('UNKNOWN')
+        self.assertEqual(crypto_price, 0)
 
     def test_total_user_balance_crypto(self):
         crypto_wallet_two = CryptoWallet(

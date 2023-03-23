@@ -1,20 +1,23 @@
 import React, { useState, useEffect,useRef  } from 'react';
-import { Image ,Dimensions } from 'react-native';
+import { Image } from 'react-native';
 import PlaidLink from '@burstware/expo-plaid-link'
 import { useIsFocused } from '@react-navigation/native';
 import { auth_post } from '../../authentication';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
+import AddStocksHelper from './AddStocksHelper';
 import { styles } from "reactnative/screens/All_Styles.style.js";
 import ConditionalModal from '../Modal';
 
-import {Alert, Modal, StyleSheet, Pressable, View, Animated} from 'react-native';
+import { StyleSheet, Pressable, View, Animated} from 'react-native';
 
-const { width, height } = Dimensions.get('window');
-
+/**
+ * Component that displays the Plaid SDK for connecting Stock Accounts to the app
+ */
 
 const PlaidComponent = ({ navigation }) => {
-  const [linkToken, setLinkToken] = useState('')
-  const isFocused = useIsFocused()
+  const [linkToken, setLinkToken] = useState('');
+  const isFocused = useIsFocused();
+  const {getAccessToken, getBalance, getTransaction, addAccount, addTransaction, addStock, getLogo, getStocks} = AddStocksHelper();
   let access_token = ''
   let balance = ''
   let image = ''
@@ -59,22 +62,9 @@ const PlaidComponent = ({ navigation }) => {
     },
   });
 
-  const account_data = null;
-
-  const addAccount = async (account, success) => {
-    const account_data = {
-      account_id: account._id,
-      name: account.meta.name,
-      institution_name: success.metadata.institution.name,
-      institution_id: success.metadata.institution.id,
-      access_token: access_token,
-      balance: balance,
-      institution_logo: image,
-    }
-    const response = await auth_post('/stocks/add_stock_account/', account_data)
-    data_response = response.status
-  };
-
+  /**
+   * Whenever the screen is in focus, a call to the backend is made to access a temporary link token to open the SDK.
+   */
   useEffect(() => {
   const initiatePlaidLink = async () => {
       const response = await auth_post('/stocks/initiate_plaid_link/')
@@ -84,85 +74,6 @@ const PlaidComponent = ({ navigation }) => {
   };
   if(useIsFocused){initiatePlaidLink()}
 }, [isFocused])
-
-  const getAccessToken = async (publicToken) => {
-    const body = {
-      public_token: publicToken
-    }
-    const response = await auth_post('/stocks/get_access_token/', body)
-    access_token = response.body.access_token
-  }
-
-  const getBalance = async (accessToken) => {
-    const body = {
-      access_token: accessToken
-    }
-    const response = await auth_post('/stocks/get_balance/', body)
-    const data = response.body;
-    balance = (parseFloat(data.accounts[0].balances.current)*0.83).toFixed(2)
-  }
-
-  const getStocks = async (accessToken) => {
-    const body = {
-      access_token: accessToken
-    }
-    const response = await auth_post('/stocks/get_stocks/', body)
-    const data = response.body;
-    stocks = data.holdings
-    securities = data.securities
-  }
-
-  const addStock = async (stock, stockInfo) => {
-    const body = {
-      institution_price: (stock.institution_price).toFixed(2),
-      quantity: stock.quantity,
-      name: stockInfo.name,
-      ticker_symbol: stockInfo.ticker_symbol,
-      stockAccount: stock.account_id,
-      security_id: stockInfo.security_id
-    }
-    const res = await auth_post('/stocks/add_stock/', body)
-    if(res.status == 201){
-      setModalVisible(true);
-    }
-  }
-
-  const getTransaction = async (accessToken) => {
-    const body = {
-      access_token: accessToken
-    }
-    const response = await auth_post('/stocks/get_transactions/', body)
-    fetched_transaction_list = response.body
-  }
-
-  const addTransaction = async (element) => {
-    let latitude = parseFloat(((Math.random() * (7) + 35.5).toFixed(3)))
-    let longitude = parseFloat(((Math.random() * (43) + 77).toFixed(3))) * -1
-    const body = {
-      account_id: element.account_id,
-      investment_transaction_id: element.investment_transaction_id,
-      security_id: element.security_id,
-      date: element.date,
-      name: element.name,
-      quantity: element.quantity,
-      amount: element.amount * 0.83, // to convert to GBP
-      price: element.price,
-      fees: element.fees,
-      stock: fetched_transaction_list.accounts[0].account_id,
-      latitude: latitude,
-      longitude: longitude
-    }
-    const response = await auth_post('/stocks/add_transaction_account/', body)
-    };
-
-
-  const getLogo = async (success) => {
-    const body = {
-      name: success.metadata.institution.name
-    }
-    const response = await auth_post('/stocks/get_logo/', body)
-    image = response.body.logo
-  }
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState("Empty Modal");
@@ -178,32 +89,32 @@ const PlaidComponent = ({ navigation }) => {
           ?
           <PlaidLink
             linkToken={linkToken}
-            onEvent={(event) => console.log(event)}
-            onExit={(exit) => console.log(exit)}
             onSuccess={async (success) => {
               let account_list = success.metadata.accounts
-              await getAccessToken(success.publicToken)
-              await getBalance(access_token)
-              await getStocks(access_token)
+              access_token = await getAccessToken(success.publicToken)
+              balance = await getBalance(access_token)
+              let stock_response = await getStocks(access_token)
+              stocks = stock_response[0]
+              securities = stock_response[1]
 
               account_list.forEach(async element => {
-                await getLogo(success)
-                await addAccount(element, success)
+                image = await getLogo(success)
+                data_response = await addAccount(element, success, access_token, balance, image)
 
                 if(data_response != 400){
-                  await getTransaction(access_token)
-                  fetched_transaction_list.investment_transactions.forEach(element => {addTransaction(element)})
+                  fetched_transaction_list = await getTransaction(access_token)
+                  fetched_transaction_list.investment_transactions.forEach(element => {addTransaction(element, fetched_transaction_list)})
 
                   stocks.forEach(element => {
                     let stockInfo = securities[stocks.indexOf(element)]
                     addStock(element, stockInfo)
                   })
                   setModalText("Stock account has been successfully added.")
+                  setModalVisible(true);
                 }else{
                   setModalText("Stock account has already been added!")
                   setModalVisible(true);
                 }
-                // setModalVisible(true)
               });
             }}
           />

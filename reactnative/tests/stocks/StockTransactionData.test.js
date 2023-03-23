@@ -3,6 +3,9 @@ import { render, screen, waitFor} from '@testing-library/react-native';
 import TransactionData from '../../screens/stocks/StockTransactionData';
 import transaction from './fixtures/transaction.json';
 
+/**
+ * Tests for transaction data screen
+ */
 describe('<TransactionData />', () => {
 
     beforeEach(() => {

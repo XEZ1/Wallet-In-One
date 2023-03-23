@@ -4,6 +4,9 @@ import StockInsight from '../../screens/stocks/StocksInsightScreen';
 import insights from './fixtures/insights.json'
 import emptyInsights from './fixtures/emptyInsights.json'
 
+/**
+ * Tests for stock insights screen
+ */
 describe('<StockInsight />', () => {
 
     beforeEach(() => {

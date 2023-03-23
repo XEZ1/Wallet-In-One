@@ -103,11 +103,11 @@ export default function ConditionalModal({ headerText, bodyText, visible, onEven
 
                 {!oneButton &&
                   <View style={modalStyles.buttonsContainer}>
-                      <Pressable style={[modalStyles.button, { backgroundColor: buttonColor }]} onPress={onEvent}>
+                      <Pressable testID = "pressable1" style={[modalStyles.button, { backgroundColor: buttonColor }]} onPress={onEvent}>
                           <Text style={modalStyles.buttonText}>{continueButtonLabel}</Text>
                       </Pressable>
 
-                      <Pressable style={[modalStyles.button, { backgroundColor: '#1E90FF' }]} onPress={onClose}>
+                      <Pressable testID = "pressable2" style={[modalStyles.button, { backgroundColor: '#1E90FF' }]} onPress={onClose}>
                           <Text style={modalStyles.buttonText}>{closeButtonLabel}</Text>
                       </Pressable>
                   </View>
@@ -115,7 +115,7 @@ export default function ConditionalModal({ headerText, bodyText, visible, onEven
 
                 {oneButton && 
                   <View style={modalStyles.buttonsContainer}>
-                    <Pressable style={[modalStyles.button, { backgroundColor: '#1E90FF' }]} onPress={onClose}>
+                    <Pressable testID = "pressable3" style={[modalStyles.button, { backgroundColor: '#1E90FF' }]} onPress={onClose}>
                         <Text style={modalStyles.buttonText}>{closeButtonLabel}</Text>
                     </Pressable>
                   </View>

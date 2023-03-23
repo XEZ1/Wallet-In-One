@@ -4,6 +4,9 @@ import StockDetails from '../../screens/stocks/StockDetails';
 import transactions from './fixtures/transactions.json';
 import stocks from './fixtures/stocks.json'
 
+/**
+ * Tests for StockDetails Screen
+ */
 describe('<StockDetails />', () => {
 
     beforeEach(() => {

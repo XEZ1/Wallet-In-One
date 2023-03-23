@@ -1,6 +1,13 @@
 import React from 'react';
 import { render, screen, fireEvent, act, within, waitFor} from '@testing-library/react-native';
 import BankTransactionsScreen from '../../screens/banking/BankTransactionsScreen'
+import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import * as SecureStore from "expo-secure-store";
+
+jest.mock("expo-secure-store");
+jest.mock('reactnative/src/theme/ThemeProvider');
+
+SecureStore.getItemAsync.mockReset();
 
 global.fetch =  jest.fn( async (api, data ) => {
 
@@ -51,6 +58,16 @@ global.fetch =  jest.fn( async (api, data ) => {
 describe('<BankTransactionsScreen />', () => {
     it('test transactions with multiple accounts', async () => {
         
+        useTheme.mockReturnValue({
+            dark: false,
+            colors: {
+              text: '#000',
+              background: '#fff',
+              primary: '#0af',
+            },
+            setScheme: jest.fn(),
+            update: jest.fn(),
+          });
 
         const snapshot = render(<BankTransactionsScreen route={{params: undefined}}/>);
 
@@ -73,6 +90,17 @@ describe('<BankTransactionsScreen />', () => {
     )
 
     it('test transactions with 1 account', async () => {
+
+        useTheme.mockReturnValue({
+            dark: true,
+            colors: {
+              text: '#000',
+              background: '#fff',
+              primary: '#0af',
+            },
+            setScheme: jest.fn(),
+            update: jest.fn(),
+          });
 
         const snapshot = render(<BankTransactionsScreen route={{params: 'abc'}}/>);
 

@@ -7,27 +7,24 @@ from rest_framework.decorators import api_view
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-# Create your views here.
-
 class sign_up(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = SignUpSerializer
     queryset = User.objects.all()
 
-
+# Token validation for the user logged in.
 @api_view(['GET'])
 def validate_token(request):
     return Response({'token_valid': True})
 
+
+# View for compliling all of the total balances for each wallet asset in the app.
+# Used on the homescreen to display the main pie chart and bar chart.
 from banking.services import total_user_balance, chart_breakdown
-
 from crypto_wallets.services import total_user_balance_crypto, chart_breakdown_crypto
-
-
 from stocks.services import total_stock_balance, chart_breakdown_stocks
 from crypto_exchanges.services import CurrentMarketPriceFetcher
 
-# Maybe this should go in new app
 @api_view(['GET'])
 def graph_data(request):
     data = {

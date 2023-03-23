@@ -8,31 +8,35 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from crypto_exchanges.serializers import TransactionSerializer, CryptoExchangeAccountSerializer
-from crypto_exchanges.services import CurrentMarketPriceFetcher, get_all_transactions, get_most_expensive_transaction, BinanceFetcher, CoinBaseFetcher, CoinListFetcher, KrakenFetcher, GateioFetcher
+from crypto_exchanges.services import CurrentMarketPriceFetcher, get_all_transactions, get_most_expensive_transaction, \
+    BinanceFetcher, CoinBaseFetcher, CoinListFetcher, KrakenFetcher, GateioFetcher
 from crypto_exchanges.models import Transaction, CryptoExchangeAccount, Token
 
 
+# Data time translation
 def millis_to_datetime(millis):
     return datetime.fromtimestamp(millis / 1000.0)
 
 
+# Data time translation
 def iso8601_to_datetime(iso8601_string):
     dt = datetime.strptime(iso8601_string, '%Y-%m-%dT%H:%M:%S.%fZ')
     return dt
 
 
+# Data time translation
 def unix_timestamp_to_datetime(unix_timestamp):
     dt = datetime.fromtimestamp(unix_timestamp)
     return dt
 
 
-# Create your views here.
+# Views
+# Crypto exchange insights - The most expensive transaction
 @api_view(['GET'])
 def get_insights(request):
     all_transactions = get_all_transactions(request)
     most_expensive_transaction = get_most_expensive_transaction(request)
     insights = {'all_transactions': all_transactions, 'most_expensive_transaction': most_expensive_transaction}
-    print(insights)
     return Response(insights)
 
 
@@ -70,7 +74,7 @@ class GenericCryptoExchanges(APIView):
         self.crypto_exchange_name = crypto_exchange_name
         self.fetcher = fetcher
 
-    # Function to check for error in the API call
+    # Function to check for errors in the API call
     @abstractmethod
     def check_for_errors_from_the_response_to_the_api_call(self, data, service):
         if self.fetcher == BinanceFetcher:
@@ -94,23 +98,27 @@ class GenericCryptoExchanges(APIView):
                 # encountering an error while retrieving data
                 return Response({'error': data['error'][0]}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Inner function for filtering data
+    # Abstract inner function for filtering data
     @abstractmethod
     def filter_not_empty_balance(self, coin_to_check):
         pass
 
+    # Abstract function for passing data in the right format
     @abstractmethod
     def get_data_unified(self, data):
         pass
 
+    # Abstract method for saving coin objects to the database
     @abstractmethod
     def save_coins(self, filtered_data, request, saved_exchange_account_object):
         pass
 
+    # Abstract method for saving transaction objects to the database
     @abstractmethod
     def save_transactions(self, transactions, request, saved_exchange_account_object):
         pass
 
+    # Abstract get call
     @abstractmethod
     def get(self, request):
         crypto_exchange_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
@@ -121,6 +129,7 @@ class GenericCryptoExchanges(APIView):
             serializer.update({'id': exchange.id})
         return Response(serializer_array)
 
+    # Abstract post call
     @abstractmethod
     def post(self, request):
         # CryptoExchangeAccount.objects.get(crypto_exchange_name="CoinList").delete()
@@ -155,16 +164,13 @@ class GenericCryptoExchanges(APIView):
 
         # Save the binance account to the database
         saved_exchange_account_object = account.save()
-
         filtered_data = list(filter(self.filter_not_empty_balance, self.get_data_unified(data)))
-
         self.save_coins(filtered_data, request, saved_exchange_account_object)
-
         transactions = service.get_trading_history()
         self.save_transactions(transactions, request, saved_exchange_account_object)
-
         return Response(filtered_data, status=status.HTTP_200_OK)
 
+    # Abstract delete call
     def delete(self, request):
         crypto_exchange_account = CryptoExchangeAccount.objects.get(id=request.data['id'])
         if crypto_exchange_account.user != request.user:
@@ -266,6 +272,7 @@ class GateioView(GenericCryptoExchanges, ABC):
                 transaction.transaction_type = gateio_transaction['side']
                 transaction.amount = gateio_transaction['amount']
 
+                # Avoid naive data time warning
                 naive_datetime = millis_to_datetime(float(gateio_transaction['create_time_ms']))
                 utc_timezone = pytz.timezone('UTC')
                 aware_datetime = utc_timezone.localize(naive_datetime)
@@ -334,6 +341,7 @@ class CoinListView(GenericCryptoExchanges, ABC):
                 else:
                     transaction.amount = float(coinlist_transaction['amount'])
 
+                # Avoid naive data time warning
                 naive_datetime = iso8601_to_datetime(coinlist_transaction['created_at'])
                 utc_timezone = pytz.timezone('UTC')
                 aware_datetime = utc_timezone.localize(naive_datetime)
@@ -393,6 +401,7 @@ class CoinBaseView(GenericCryptoExchanges, ABC):
 
             transaction.amount = coinbase_transaction['size']
 
+            # Avoid naive data time warning
             naive_datetime = iso8601_to_datetime(coinbase_transaction['trade_time'])
             utc_timezone = pytz.timezone('UTC')
             aware_datetime = utc_timezone.localize(naive_datetime)
@@ -452,6 +461,7 @@ class KrakenView(GenericCryptoExchanges, ABC):
 
             transaction.amount = kraken_transaction['vol']
 
+            # Avoid naive data time warning
             naive_datetime = unix_timestamp_to_datetime(kraken_transaction['time'])
             utc_timezone = pytz.timezone('UTC')
             aware_datetime = utc_timezone.localize(naive_datetime)
@@ -473,6 +483,8 @@ class KrakenView(GenericCryptoExchanges, ABC):
 class UpdateAllTokens(APIView):
     def post(self, request):
         fixed_accounts = CryptoExchangeAccount.objects.filter(user=request.user)
+        if len(fixed_accounts) == 0:
+            return Response({'message': 'There are no accounts connected'}, status=status.HTTP_204_NO_CONTENT)
         for account in fixed_accounts:
             api_key = account.api_key
             secret_key = account.secret_key
@@ -494,4 +506,4 @@ class UpdateAllTokens(APIView):
             else:
                 pass
             response.post(request)
-        return Response({'message': 'Success. Data was updated successfully'}, status=200)
+        return Response({'message': 'Success. Data was updated successfully'}, status=status.HTTP_200_OK)

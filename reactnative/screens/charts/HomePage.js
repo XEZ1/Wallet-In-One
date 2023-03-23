@@ -35,7 +35,6 @@ export default function HomePage({ navigation }) {
   useEffect(() => {
     const fetchData = async () => {
       const response = await auth_get("/graph_data/");
-      console.log("fetch graph data", response.status);
       if (response.status == 200) {
         setBaseData(response.body);
         setNewData(response.body.all);
@@ -88,7 +87,6 @@ export default function HomePage({ navigation }) {
           })
           }
         }
-        console.log(stockData.id)
       }
       else if (pressed === "Cryptocurrency from exchanges") {
         var cryptoExchangeData = baseData["Cryptocurrency from exchanges"][index]

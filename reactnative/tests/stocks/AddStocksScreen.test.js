@@ -4,7 +4,9 @@ import PlaidComponent from "../../screens/stocks/AddStocksScreen";
 import { PlaidEnvironments, Configuration, PlaidApi,  } from 'plaid';
 import { describe } from "@jest/globals";
 
-
+/**
+ * Tests for the Plaid SDK
+ */
 const configuration = new Configuration({
   basePath: PlaidEnvironments.sandbox,
   baseOptions: {
@@ -35,16 +37,6 @@ describe('<PlaidComponent />', () => {
             return Promise.resolve({
                 status: 200, json: () => ({ link_token: request.data.link_token })
             })
-            }
-            else if(url.includes('get_access_token')){
-                return Promise.resolve({
-                    status: 200, json: () => 'access-sandbox-c314b575-cc3d-4897-ae93-c792eb4c2d7c'
-                })
-            }
-            else if(url.includes('get_balance')){
-                return Promise.resolve({
-                    status: 200, json: () => '200.00'
-                })
             }
         })
       })
