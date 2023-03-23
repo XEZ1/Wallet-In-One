@@ -260,8 +260,6 @@ exports[`<CryptoWalletDetail /> fetch fail test 1`] = `
 </View>
 `;
 
-exports[`<CryptoWalletDetail /> fetch fail test 2`] = `null`;
-
 exports[`<CryptoWalletDetail /> snapshot test 1`] = `
 <View
   style={

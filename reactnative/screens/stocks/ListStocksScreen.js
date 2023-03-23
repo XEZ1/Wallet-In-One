@@ -24,6 +24,8 @@ import { ConvertTransactionsToGraphCompatibleData } from '../helper';
 
 import LineChartScreen from '../charts/LineChart';
 
+// Define a component that takes in a route and other props to display list of user accounts.
+
 const SuccessComponent = ({ route, ...props }) => {
     const [list, setList] = useState()
     const isFocused = useIsFocused()
@@ -61,11 +63,13 @@ const SuccessComponent = ({ route, ...props }) => {
       },
     });
 
+      // Use useEffect hook to fetch the list of accounts and transactions
       useEffect(() => {
         const listAccounts = async () => {
           const response = await auth_get('/stocks/list_accounts/')
           const accountList = response.body;
           if(accountList){
+            // For each account, get the corresponding transactions
           accountList.forEach((account) => {
             getTransactions(account.account_id);
           });
@@ -73,12 +77,13 @@ const SuccessComponent = ({ route, ...props }) => {
           setLoading(false)
           setList(accountList);
         }
-        
+        // Call the listAccounts function only when the screen is focused
         if (useIsFocused) {
           listAccounts();
         }        
       }, [isFocused])
 
+      // Define a function to get transactions for a given account ID
       const getTransactions = useCallback(async (accountID) => {
         try {
           const response = await auth_get(`/stocks/list_transactions/${accountID}/`)
@@ -92,10 +97,12 @@ const SuccessComponent = ({ route, ...props }) => {
         }
       }, []);
 
+    // If the data is still loading, display a loading screen
     if(loading){
       return(<Loading/>)
     }
     else{
+      // Otherwise, render the list of accounts
     return (
         <View style={{ ...styles(dark, colors),paddingTop:8, paddingBottom: 8 }}>
           <View>

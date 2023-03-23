@@ -17,9 +17,8 @@ import Loading from '../banking/Loading';
 import { ConvertTransactionsToGraphCompatibleData } from '../helper';
 
 
+// Define a component that takes in a route and navigator to display information about a chosen account
 export default function StockAsset({ route, navigation, }){
-  // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
-  // console.log(route.params.security_id);
   const [stocks, setStocks] = useState()
   const {dark, colors, setScheme } = useTheme();
   const [loading, setLoading] = useState(true);
@@ -98,7 +97,7 @@ export default function StockAsset({ route, navigation, }){
   });
 
   
-
+// Define a function called getStocks that takes an account ID parameter.
   const getStocks = useCallback(async (accountID) => {
       try {
         const res = await fetch(api_url + `/stocks/list_stocks/${accountID}/`, {
@@ -108,33 +107,35 @@ export default function StockAsset({ route, navigation, }){
             Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
           },
         });
+        // If the response status is 200 OK, set the stocks state variable to the response data and setLoading to false.
         if(res.status == 200){
+          
           const data = await res.json();
           setStocks(data);
-          setLoading(false)
+          setLoading(false);
         }
 
       } catch (error) {
         console.error(error);
       }
-  }, []);
-  
+  });
+  // Use the useEffect hook to call getStocks whenever the screen is focused and the account ID parameter changes.
   useEffect(() => {
-    if (isFocused ) {
+    if (useIsFocused ) {
       getStocks(route.params.accountID);
     }
-  }, [isFocused, getStocks]);
+  }, [isFocused]);
 
-  // console.log(route.params.accountID)
 
   const isFocused = useIsFocused();
   const [transactions, setTransactions] = useState(route.params.transactions);
-  // const [stocks, setStocks] = useState()
 
   const deleteAccount = async () => {
     await auth_delete(`/stocks/delete_account/${route.params.accountID}/`)
   }
     
+// Define a variable called transaction_table_data that will be an array of arrays,
+// where each inner array contains the ID, amount, date, quantity, and fees for a single transaction.
   const transaction_table_data = transactions
     ? transactions.map((item) => [
         item.id,
@@ -144,7 +145,7 @@ export default function StockAsset({ route, navigation, }){
         item.fees,
       ])
     : null;
-
+  // Define an object called tableData that is used to display table data
   const tableData = {
     tableHead: ['ID','Amount', 'Date', 'Quantity','Fees'],
     tableData : transaction_table_data
@@ -157,11 +158,11 @@ export default function StockAsset({ route, navigation, }){
   
   const {width: SIZE} = Dimensions.get('window');
 
-  
+  // Define a function called toggleTable that is used to toggle table from view.
   const toggleTable = () => {
-      setShowTable(!showTable);
+    setShowTable(!showTable);
   };
-  
+  // Define a function called toggleStocksView that is used to toggle stock list from view.
   const toggleStocksView = () => {
     setShowStocks(!showStocks);
   };
@@ -169,9 +170,12 @@ export default function StockAsset({ route, navigation, }){
   const filter_transactions = (time) => {
     const currentDate = new Date();
     const currentDateTime = currentDate.getTime();
+
+     // Calculate the date and time of the last transaction based on the time parameter.
     const lastTransactionDate = new Date(currentDate.setDate(currentDate.getDate() - time));
     const lastTransactionDateTime = lastTransactionDate.getTime();
   
+    // Filter the transaction data to include only transactions that occurred within the last "time" frame.
     let updated_data = route.params.transactions.filter(transaction => {
       const transactionDateTime = new Date(transaction.date).getTime();
 
@@ -181,6 +185,7 @@ export default function StockAsset({ route, navigation, }){
       return false;
     })
 
+    // Format the updated transaction data in a table compatible format.
     let updated_table_data = updated_data.map((item) => [
         item.id,
         (item.amount).toFixed(2), 
@@ -189,45 +194,44 @@ export default function StockAsset({ route, navigation, }){
         item.fees,
     ]);
 
+    // Update the state variables for tableData and transactions with the updated data.
     setTableData({
         tableHead: ['ID','Amount', 'Date', 'Quantity','Fees'],
         tableData : updated_table_data,
     });
-
     setTransactions(updated_data);
   }
 
   const last_week = () => {
-      filter_transactions(7);
+    filter_transactions(7);
   }
 
   const last_month = () => {
-      filter_transactions(30);
+    filter_transactions(30);
   }
 
   const last_year = () => {
-      filter_transactions(365);
+    filter_transactions(365);
   }
 
   const all_time = () => {
     setTransactions(route.params.transactions);
     setTableData(tableData);
   }
-  
-  const ItemSeparator = () => <View style={stylesInternal.separator} />;
 
   const [graphVersion,setGraphVersion] = React.useState(1);
   const [modalVisible, setModalVisible] = useState(false);
 
-
+  // Define a useEffect hook that is triggered whenever the value of the "transactions" prop changes.
    useEffect(() => {
-        let transformedData = ConvertTransactionsToGraphCompatibleData(transactions, route.params.balance);
-
-        setGraph(transformedData);
+      // Map transaction data into an array of {timestamp, value} format so that it can be used to feed the line chart with data.
+      let transformedData = ConvertTransactionsToGraphCompatibleData(transactions, route.params.balance);
+      
+      // Set the state variable "graph" to the transformed data.
+      setGraph(transformedData);
     }, [transactions]);
-console.log(stocks);
 
-  if(1 == 2){
+  if(loading){
     return(<Loading/>)
   }
   else{
@@ -274,7 +278,6 @@ console.log(stocks);
             <SwitchSelector
               initial={0}
               onPress={value => setGraphVersion(value)}
-              // textColor="#7a44cf"
               selectedColor="#fff"
               buttonColor="#7a44cf"
               borderColor="#7a44cf"
@@ -283,7 +286,6 @@ console.log(stocks);
                 { label: "Line Chart", value: 1},  
                 { label: "Candlestick Chart", value: 3} 
               ]}
-              // imageStyle={{ width: 20, height: 20 }}
               textStyle={{ fontWeight: 'bold' }}
             />
           </View>
