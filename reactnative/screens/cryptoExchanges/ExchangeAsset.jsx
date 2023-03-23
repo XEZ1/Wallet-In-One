@@ -14,10 +14,9 @@ import { api_url } from "../../authentication";
 import * as SecureStore from 'expo-secure-store';
 
 export default function ExchangeAsset(props) {
-  
-  //const [cryptoValue, setCryptoValue] = useState(0); {/* Display `-` if not retrievable */}
+  // Dark mode variables
   const {dark, colors, setScheme} = useTheme();
-  
+
   const styles = StyleSheet.create({
     exchangeAsset: {
       padding: 10,
@@ -36,8 +35,9 @@ export default function ExchangeAsset(props) {
   });
     
   
-  
+    // Render script
     return (
+        // Navigate to ExchangeTransactions on press
       <TouchableWithoutFeedback
         onPress={() =>
           props.navigation.navigate("ExchangeTransactions",
@@ -53,6 +53,7 @@ export default function ExchangeAsset(props) {
               paddingRight: 10,
             }}
           >
+              {/*Load crypto exchange logo*/}
             <Image
               style={styles.exchangeAssetImage}
               source={getCryptoIcon(props.item.crypto_exchange_name)}
@@ -66,11 +67,12 @@ export default function ExchangeAsset(props) {
               justifyContent: "space-between",
             }}
           >
+              {/*Write the name on the asset card*/}
             <View style={{}}>
               <Text style={{ fontSize: 25, fontWeight: "700", color: colors.text }}>
                 {props.item.crypto_exchange_name}
               </Text>
-  
+                {/*Show loading on Total balance if empty, else show the actual balance*/}
               {props.balances.length == 0 ? (
                 <Text style={[styles.exchangeAssetTitle, {color: colors.text}]}>Total Balance: £Loading...</Text>
               ) : (
