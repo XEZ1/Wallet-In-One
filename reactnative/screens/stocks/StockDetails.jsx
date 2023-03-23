@@ -12,11 +12,11 @@ import { auth_get } from '../../authentication';
 
 import { ConvertTransactionsToGraphCompatibleData } from '../helper';
 
+// Define the StockDetails component that is used to display stock information
 export default function StockDetails({ route, navigation }){
 
   const [stockTransactions, setStockTransactions] = useState();
   const stock = route.params.stock;
-  console.log(stock)
   const {dark, colors, setScheme } = useTheme();
   let current_balance = null;
 
@@ -24,25 +24,34 @@ export default function StockDetails({ route, navigation }){
 
   const {width: SIZE} = Dimensions.get('window');
 
+  // Define a function to get the stock transactions from the server and update the state variables
   let getStockTransactions = useCallback(async (stock) => {
     try {
       const response = await auth_get(`/stocks/list_transactions/${stock}/`)
       let data = await response.body;
+
+      // Filter the transactions to only include those related to the current stock
       data = data.filter(item => item.security_id === route.params.stock.security_id);
+      // Set the state variables for the stock transactions and transformed graph data
       setStockTransactions(data);
+      // Calculate the current balance of the stock transactions
       current_balance = data.map(item => item.amount).reduce((acc, current) => acc + current, 0);
+      // Transform the transaction data into a format that is compatible with line graphs
       setTransformedData(ConvertTransactionsToGraphCompatibleData(data, current_balance));
     } catch (error) {
     }
   }, []);
 
+  // Define a useEffect hook that is triggered when the stock or getStockTransactions function changes
   useEffect(() => {
+    // Call the getStockTransactions function with the current stock if it exists
     if (stock) {
       getStockTransactions(stock.stockAccount);
     }
 
   }, [stock, getStockTransactions]);
 
+  // Format the transaction data in a table compatible format.
   const data = {
     tableHead: ['ID', 'Amount', 'Date', 'Quantity', 'Fees'],
     tableData: stockTransactions?.map(item => [
@@ -84,8 +93,6 @@ export default function StockDetails({ route, navigation }){
   });
     return (
       <ScrollView style={[styles(dark, colors).container]}>
-        {/* <Text style={[styles(dark, colors).textBold, {color: colors.primary}]}>Stock Data{"\n"}</Text> */}
-
         {stock ? (
           <View style={{padding: 20}}>
             <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Name</Text>

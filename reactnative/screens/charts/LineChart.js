@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
 
-
+// Display a LineChartScreen component which takes in several props to configure the chart to the needs of the user.
 export default function LineChartScreen({graph_version, height, width, current_balance, data})
 {
     const {dark, colors, setScheme } = useTheme();
@@ -15,11 +15,13 @@ export default function LineChartScreen({graph_version, height, width, current_b
     let percentageChange = null;
     let priceChange = null;
     
+    // Define a function to calculate the percentage and price change between the current_balance and the previous balance stored in the data array.
     function calculateChange(new_value, old_value) {
         if (old_value != 0){
             percentageChange = (((new_value - old_value) / Math.abs(old_value)) * 100).toFixed(2);
         }
         else{
+            // If the old balance is equal to zero, set the percentageChange to '0 ERR' as division by 0 is not possible.
             percentageChange = '0 ERR';
         }
         
@@ -34,6 +36,7 @@ export default function LineChartScreen({graph_version, height, width, current_b
     }
     calculateChange(current_balance, data[0]?.value);
 
+    // Set colour of the line graph based on the balace fluctuation.
     let color1 = '';
     
     if (data && data.length > 0) {
@@ -47,11 +50,15 @@ export default function LineChartScreen({graph_version, height, width, current_b
 
     let candlestickData = null;
 
+    // Check if the graph version is equal to 3. If so, map the list of line graph data ({timestamp,value})
+    // into data that is compatible with the candlestick chart ({timestamp,open,close,high,low})
     if(graph_version == 3){
+        // Use the reduce function to transform the data array into an object with data grouped by month.
         const transformedData = data.reduce((acc, transaction) => {
             const date = new Date(transaction.timestamp);
             const month = `${date.getFullYear()}-${date.getMonth() + 1}`;
 
+            // If the month doesn't exist in the accumulator object, create a new object with the transaction's value for all fields.
             if (!acc[month]) {
                 acc[month] = {
                     high: transaction.value,
@@ -61,6 +68,7 @@ export default function LineChartScreen({graph_version, height, width, current_b
                 };
             } 
             else {
+                // If the month already exists in the accumulator object, update the high, low, and close values.
                 if (transaction.value > acc[month].high) {
                     acc[month].high = transaction.value;
                 }
@@ -75,6 +83,7 @@ export default function LineChartScreen({graph_version, height, width, current_b
             return acc;
         }, {});
         
+        // Use Object.keys to get an array of the keys (month-year strings) and map them to candlestick compatible data.
         candlestickData = Object.keys(transformedData).map((key) => {
             const [year, month] = key.split('-');
             return {

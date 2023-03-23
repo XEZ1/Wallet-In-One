@@ -10,6 +10,7 @@ import { styles } from "reactnative/screens/All_Styles.style.js";
 import Loading from '../banking/Loading';
 import { auth_get } from '../../authentication';
 
+// Define the TransactionData component that is used to display transaction information
 export default function TransactionData({ route }){
     const isFocused = useIsFocused()
     const [data, setTransactions] = useState()
@@ -48,12 +49,14 @@ export default function TransactionData({ route }){
   useEffect(() => {
     const getTransaction = async (id) => {
       response = await auth_get(`/stocks/get_transaction/${id}/`)
+      // if the request is successful then update the state with the retrieved transactions and remove the loading screen
       if(response.status == 200){
         setTransactions(await response.body)
         setLoading(false)
       }
     };
     if (isFocused != false) {
+      // if the screen is currently focused call the getTransaction function with the transaction ID from the route params
       getTransaction(route.params.id);
     }
   }, [isFocused]);
@@ -72,9 +75,6 @@ export default function TransactionData({ route }){
 
             <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Transaction ID</Text>
             <Text style={styles(dark, colors).text}>{data.investment_transaction_id}{"\n"}</Text>
-
-            {/* <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Stock ID</Text>
-            <Text style={styles(dark, colors).text}>{data.stock}{"\n"}</Text> */}
 
             <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Amount</Text>
             <Text style={styles(dark, colors).text}>£ {data.amount.toFixed(2)}{"\n"}</Text>
