@@ -4,6 +4,8 @@ import { Button, FlatList, Table, Row, Cell } from 'react-native';
 import StockAsset from '../../screens/stocks/StockAsset';
 import stockAssetData from './fixtures/stockAsset.json';
 import stockAssetList from './fixtures/StockAssetList.json';
+
+jest.useFakeTimers();
 describe('<StockAsset />', () => {
 
     const params = {
@@ -219,19 +221,19 @@ describe('<StockAsset />', () => {
         expect(navigate).toHaveBeenCalledWith("StockDetails", navigationData );
     })
 
-    // it('test remove account', async () => {
-    //     const snapshot = render(<StockAsset {...params} />);
+    it('test remove account', async () => {
+        const snapshot = render(<StockAsset {...params} />);
     
-    //     await waitFor( () => {
-    //         const loading = screen.UNSAFE_queryByType('ActivityIndicator');
-    //         expect(loading).toBeNull();
-    //     })
+        await waitFor( () => {
+            const loading = screen.UNSAFE_queryByType('ActivityIndicator');
+            expect(loading).toBeNull();
+        })
     
-    //     await act(async () => {
-    //         fireEvent.press(await screen.getByText('REMOVE'));
-    //         fireEvent.press(await screen.getByText('Yes'));
-    //     });
-    // });
+        await act(async () => {
+            fireEvent.press(await screen.getByText('REMOVE'));
+            fireEvent.press(await screen.getByText('Yes'));
+        });
+    });
     
     
     it('test cancel remove account', async () => {
