@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, act, waitFor} from '@testing-library/react-native';
 import HomePage from '../../screens/charts/HomePage';
-
+jest.useFakeTimers();
 var data = {
     "Banks": [
         {
