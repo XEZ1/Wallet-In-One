@@ -18,6 +18,8 @@ import { ConvertTransactionsToGraphCompatibleData } from '../helper';
 
 
 export default function StockAsset({ route, navigation, }){
+  // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
+  // console.log(route.params.security_id);
   const [stocks, setStocks] = useState()
   const {dark, colors, setScheme } = useTheme();
   const [loading, setLoading] = useState(true);
@@ -122,6 +124,8 @@ export default function StockAsset({ route, navigation, }){
       getStocks(route.params.accountID);
     }
   }, [isFocused, getStocks]);
+
+  // console.log(route.params.accountID)
 
   const isFocused = useIsFocused();
   const [transactions, setTransactions] = useState(route.params.transactions);
@@ -241,9 +245,9 @@ export default function StockAsset({ route, navigation, }){
         //     setGraph(data);
         // }
     }, [transactions]);
+console.log(stocks);
 
-
-  if(loading){
+  if(1 == 2){
     return(<Loading/>)
   }
   else{
@@ -350,7 +354,7 @@ export default function StockAsset({ route, navigation, }){
 
                       </View>
                     ) : (
-                      <Text style={[{textAlign: 'center', alignSelf: 'center', color: colors.text}]}>No data available</Text>
+                      <Text style={[{textAlign: 'center', alignSelf: 'center', color: colors.text}]}>{'\n'}No transaction data available.</Text>
                     )}
                 </View>
             )}
@@ -361,7 +365,7 @@ export default function StockAsset({ route, navigation, }){
               color="#fcd34d"
             />
             
-            {showStocks && stocks &&  (
+            {showStocks &&  (
               <FlatList 
                 data={stocks} 
                 style={{paddingVertical: 5, paddingHorizontal: 10}}
@@ -376,7 +380,7 @@ export default function StockAsset({ route, navigation, }){
                   </TouchableOpacity>
                   )
                 }}
-                ListEmptyComponent={<Text>{'\nYou have no stocks listed.\n'}</Text>}
+                ListEmptyComponent={<Text style={[{textAlign: 'center', alignSelf: 'center', color: colors.text}]}>{'\n'}No stock data available.</Text>}
                 />)
               }
 

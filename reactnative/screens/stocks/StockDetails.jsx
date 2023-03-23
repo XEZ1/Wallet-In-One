@@ -16,6 +16,7 @@ export default function StockDetails({ route, navigation }){
 
   const [stockTransactions, setStockTransactions] = useState();
   const stock = route.params.stock;
+  console.log(stock)
   const {dark, colors, setScheme } = useTheme();
   let current_balance = null;
 
