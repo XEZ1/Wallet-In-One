@@ -14,7 +14,10 @@ import {styles} from '../All_Styles.style.js';
 import blockchains from "./blockchains.json";
 import getCryptoIcon from "./icons/icon";
 
-
+/**
+ * Component that displays a list of cryptocurrency wallets and exchanges that can be added, which is defined in the
+ * blockchains and exchanges json files.
+ */
 export default function CryptoConnector(props) {
 
   const {connectWallet} = useCryptoWallet();
@@ -84,6 +87,8 @@ export default function CryptoConnector(props) {
             </View>
           </TouchableOpacity>)
       }
+      <View style={{paddingBottom:20}}>
+      </View>
 
     </ScrollView>
   );

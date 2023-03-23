@@ -35,7 +35,6 @@ export default function HomePage({ navigation }) {
   useEffect(() => {
     const fetchData = async () => {
       const response = await auth_get("/graph_data/");
-      console.log("fetch graph data", response.status);
       if (response.status == 200) {
         setBaseData(response.body);
         setNewData(response.body.all);
@@ -75,6 +74,7 @@ export default function HomePage({ navigation }) {
           var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
           const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
           setColors(originalColours)
+          if(response.status == 200 && res.status == 200){
           navigation.navigate("Stock Account Transactions", {
             accountID: stockData.id, 
             accessToken: response.body.access_token, 
@@ -85,8 +85,8 @@ export default function HomePage({ navigation }) {
             account_name: response.body.name,
             balance_currency: 'GBP'
           })
+          }
         }
-        console.log(stockData.id)
       }
       else if (pressed === "Cryptocurrency from exchanges") {
         var cryptoExchangeData = baseData["Cryptocurrency from exchanges"][index]
@@ -158,16 +158,18 @@ export default function HomePage({ navigation }) {
         if (stockData.id) {
           var response = await auth_get(`/stocks/get_account/${stockData.id}/`)
           const res = await auth_get(`/stocks/list_transactions/${stockData.id}/`)
-          navigation.navigate("Stock Account Transactions", {
-            accountID: stockData.id, 
-            accessToken: response.body.access_token, 
-            transactions: res.body,
-            logo: response.body.logo,
-            balance: response.body.balance,
-            name: response.body.institution_name,
-            account_name: response.body.name,
-            balance_currency: response.body.balance_currency
-          })
+          if(response.status == 200 && res.status == 200){
+            navigation.navigate("Stock Account Transactions", {
+              accountID: stockData.id, 
+              accessToken: response.body.access_token, 
+              transactions: res.body,
+              logo: response.body.logo,
+              balance: response.body.balance,
+              name: response.body.institution_name,
+              account_name: response.body.name,
+              balance_currency: 'GBP'
+            })
+            }
         }
       }
       else if (pressed === "Cryptocurrency from exchanges") {
@@ -244,7 +246,7 @@ export default function HomePage({ navigation }) {
 
         {chartType == "pie" ? 
           <>
-            <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30}]}>{pressed}</Text>
+            <Text style={[styles(dark, colors).largeTextBold, {fontSize: 30, textAlign: 'center', paddingTop:20 }]}>{pressed}</Text>
             <PieChart colours={colorScheme} data={data} handlePressIn={handlePressIn} labelCount={4} assetSize={17} numSize={27}/>
             {BarChart(colorScheme, list, data, spacing, handlePressIn, colors)}
             {pressed ? (

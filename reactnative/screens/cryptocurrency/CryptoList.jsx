@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {
   TouchableOpacity,
   SafeAreaView,
@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Alert,
+  Alert, ActivityIndicator,
 } from "react-native";
 import useCryptoWallet from "../crypto_wallet/useCryptoWallet";
 import useCryptoExchange from "../cryptoExchanges/useCryptoExchange";
@@ -14,18 +14,21 @@ import CryptoListWalletItem from "../crypto_wallet/CryptoListWalletItem";
 import useCryptoExchangeBalances from "../cryptoExchanges/useCryptoExchangeBalances";
 import ExchangeAsset from "../cryptoExchanges/ExchangeAsset";
 import { useTheme } from '../../src/theme/ThemeProvider'
-import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
 import { api_url } from '../../authentication';
 import {useIsFocused} from "@react-navigation/native";
 
-
+/**
+ * Component that displays a list of users crypto wallet and exchanges, with navigation paths to insights, and a crypto
+ * connector, along with an update button, to refresh the values of the crypto assets..
+ */
 export default function CryptoList(props) {
   const { wallets, listWallets, connectWallet, removeWallet } = useCryptoWallet();
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
   const { balances, fetchBalances } = useCryptoExchangeBalances();
   const {dark, colors, setScheme} = useTheme();
   const isFocused = useIsFocused();
+  const [loading, setLoading] = useState(false);
 
   const styles = StyleSheet.create({
     cryptoWalletTitle: {
@@ -47,7 +50,8 @@ export default function CryptoList(props) {
     button: {
       padding: 10,
       borderRadius: 10,
-      marginVertical: 10,
+      marginVertical: 4,
+      marginHorizontal: 8,
       backgroundColor: colors.primary,
       alignSelf: 'center',
     },
@@ -73,7 +77,30 @@ export default function CryptoList(props) {
     fetchBalances();
   }, [isFocused]);
 
+  /**
+   * Function that handles the submission of the update button, which will call the backend to update the values of both
+   * the cryptocurrency wallets and the exchanges.
+   */
   const handleSubmit = async () => {
+
+    setLoading(true)
+
+    try {
+      const response = await fetch(api_url + '/crypto_wallets/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${await SecureStore.getItemAsync("token")}`,
+        },
+        body: JSON.stringify({ }),
+      });
+      const statusCode = response.status;
+      if (statusCode === 200) {
+        await listWallets();
+      }
+    } catch (error) {
+      console.error(error);
+    }
 
     try {
       const response = await fetch(api_url + '/crypto-exchanges/update', {
@@ -86,8 +113,8 @@ export default function CryptoList(props) {
       });
       const data = await response.json();
       const statusCode = response.status;
-      if (statusCode == 200) {
-        Alert.alert('Success', 'updated account data successfully!');
+      if (statusCode === 200) {
+        Alert.alert('Success', 'Updated account data successfully!');
       } else {
         Alert.alert('Error', data["error"]);
       }
@@ -95,35 +122,40 @@ export default function CryptoList(props) {
       console.error(error);
       Alert.alert('Error', 'An error occurred while updating account info.');
     }
+
+    setLoading(false)
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView>
 
-        <TouchableOpacity onPress={handleSubmit} style={styles.refreshButton}>
-          <Ionicons name="refresh-outline" size={25} color="white" />
-        </TouchableOpacity>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "column",
-              justifyContent: "center",
-            }}
+        <View style={{flexDirection:'row', justifyContent: 'center'}}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => props.navigation.navigate("Crypto Wallet Insights")}
           >
-            <View style={{ marginRight: 20 }}>
-              <Text style={[styles.cryptoWalletTitle, {color: colors.text}]}>Cryptocurrency</Text>
-            </View>
-          </View>
+            <Text style={styles.buttonText}>Insights</Text>
+          </TouchableOpacity>
+
+          {loading
+            ?
+            <TouchableOpacity
+              style={styles.button}
+            >
+              <ActivityIndicator color={colors.text}/>
+            </TouchableOpacity>
+            :
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleSubmit()}
+            >
+              <Text style={styles.buttonText}>Update</Text>
+            </TouchableOpacity>
+          }
+
+
         </View>
-        
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => props.navigation.navigate("Crypto Wallet Insights")}
-        >
-          <Text style={styles.buttonText}>Insights</Text>
-        </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}

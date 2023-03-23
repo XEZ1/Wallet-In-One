@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 
-export default function ConditionalModal({ headerText, bodyText, visible, onEvent, onClose, continueButtonName, cancelButtonName }) {
+export default function ConditionalModal({ headerText, bodyText, visible, onEvent, onClose, continueButtonName, cancelButtonName, oneButton }) {
     const {dark, colors, setScheme } = useTheme();
 
     const modalStyles = StyleSheet.create({
@@ -101,15 +101,25 @@ export default function ConditionalModal({ headerText, bodyText, visible, onEven
                 <Text style={modalStyles.bodyText}>{bodyText}</Text>
                 <View style={modalStyles.divider} />
 
-                <View style={modalStyles.buttonsContainer}>
-                    <Pressable style={[modalStyles.button, { backgroundColor: buttonColor }]} onPress={onEvent}>
-                        <Text style={modalStyles.buttonText}>{continueButtonLabel}</Text>
-                    </Pressable>
+                {!oneButton &&
+                  <View style={modalStyles.buttonsContainer}>
+                      <Pressable testID = "pressable1" style={[modalStyles.button, { backgroundColor: buttonColor }]} onPress={onEvent}>
+                          <Text style={modalStyles.buttonText}>{continueButtonLabel}</Text>
+                      </Pressable>
 
-                    <Pressable style={[modalStyles.button, { backgroundColor: '#1E90FF' }]} onPress={onClose}>
+                      <Pressable testID = "pressable2" style={[modalStyles.button, { backgroundColor: '#1E90FF' }]} onPress={onClose}>
+                          <Text style={modalStyles.buttonText}>{closeButtonLabel}</Text>
+                      </Pressable>
+                  </View>
+                }
+
+                {oneButton && 
+                  <View style={modalStyles.buttonsContainer}>
+                    <Pressable testID = "pressable3" style={[modalStyles.button, { backgroundColor: '#1E90FF' }]} onPress={onClose}>
                         <Text style={modalStyles.buttonText}>{closeButtonLabel}</Text>
                     </Pressable>
-                </View>
+                  </View>
+                }
             </View>
         </Modal>
     </View>

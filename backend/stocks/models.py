@@ -2,6 +2,7 @@ from django.db import models
 from accounts.models import User
 from djmoney.models.fields import MoneyField
 
+# Stock Account Model, using a user as a foreign key
 class StockAccount(models.Model):
     account_id = models.CharField(max_length=1024, primary_key=True, unique=True, blank=False)
     access_token = models.CharField(max_length=1024, blank=False)
@@ -12,7 +13,7 @@ class StockAccount(models.Model):
     balance = MoneyField(default_currency='GBP', decimal_places=2, max_digits=11)
     institution_logo = models.CharField(max_length=10000, null=True)
 
-
+# Stock Model, using a stock account as a foreign key, this is what a stock account holds
 class Stock(models.Model):
     stockAccount = models.ForeignKey(StockAccount, on_delete=models.CASCADE, blank=False)
     institution_price = MoneyField(default_currency='GBP', decimal_places=2, max_digits=11)
@@ -21,6 +22,7 @@ class Stock(models.Model):
     quantity = models.FloatField()
     security_id = models.CharField(max_length=100, blank=False, null=False)
 
+# Transaction Model, using a stock account as a foreign key
 class Transaction(models.Model):
     stock = models.ForeignKey(StockAccount, on_delete=models.CASCADE, blank=False)
     account_id = models.CharField(max_length=100, blank=False, null=False)
@@ -30,7 +32,6 @@ class Transaction(models.Model):
     fees = models.FloatField(blank=False,null=True) 
     latitude = models.FloatField(blank=False)
     longitude = models.FloatField(blank=False)
-    # cancel_transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)
     iso_currency_code = models.CharField(max_length=30, blank=False, null=True)
     # Always null if unofficial_currency_code is non-null.
     unofficial_currency_code = models.CharField(max_length=100, blank=False, null=True)
@@ -45,7 +46,7 @@ class Transaction(models.Model):
 
     pending_transaction_id = models.CharField(max_length=100, blank=True, null=True)
     account_owner = models.CharField(max_length=50, blank=True, null=True)
-    investment_transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)#transaction_id = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    investment_transaction_id = models.CharField(max_length=100, blank=False, null=False)
     security_id = models.CharField(max_length=100, blank=False, null=False)
     transaction_code = models.CharField(
         max_length=30,

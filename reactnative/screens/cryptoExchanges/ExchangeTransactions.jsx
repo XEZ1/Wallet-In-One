@@ -1,16 +1,16 @@
-import {Dimensions, Image, Pressable, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, View, ScrollView} from "react-native";
+import {Dimensions, Image, Pressable, StyleSheet, Text, View, ScrollView} from "react-native";
 import * as SecureStore from 'expo-secure-store';
 import React, {useEffect, useState, useCallback} from "react";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
-import { useTheme } from 'reactnative/src/theme/ThemeProvider'
-import { styles } from 'reactnative/screens/All_Styles.style.js';
+import { useTheme } from '../../src/theme/ThemeProvider'
+import { styles } from '../All_Styles.style.js';
 import { api_url } from '../../authentication';
 import {Table, Row, Cell} from 'react-native-table-component';
-import { VictoryPie, VictoryLabel, VictoryContainer } from "victory-native";
 import BarChart from "../charts/chartComponents/barChart";
 import ConditionalModal from "../Modal";
 import PieChart from "../charts/chartComponents/pieChart";
 import SwitchSelector from "react-native-switch-selector";
+
 export default function ExchangeTransactions(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const {dark, colors } = useTheme();
@@ -174,7 +174,7 @@ export default function ExchangeTransactions(props) {
           </View>
         </Pressable>
       </View>
-
+      <View testID={'conditional-modal'}>
       <ConditionalModal
         headerText={"Remove Your Exchange"}
         bodyText={"Are you sure you want to remove your crypto exchange?"}
@@ -182,10 +182,11 @@ export default function ExchangeTransactions(props) {
         onEvent={() => removeExchange(item.id).then(() => props.navigation.goBack())}
         onClose={() => setModalVisible(false)}
       />
+      </View>
 
       {/* Exchange logo, title and balance */}
       <View style={[stylesInternal.exchangeAsset, styles(dark, colors).container, {flexDirection: 'row'}]}>
-        <Image
+        <Image testID='exchange-image'
           style={stylesInternal.exchangeAssetImage}
           source={getCryptoIcon(item.crypto_exchange_name)}/>
         <View style={{marginLeft: 10}}>
@@ -195,28 +196,6 @@ export default function ExchangeTransactions(props) {
           </Text>
         </View>
       </View>
-
-      {/* Switch Menus Buttons */}
-      {/* <View style={{ flexDirection: "row", justifyContent: "space-around", width: "90%", backgroundColor: "antiquewhite", margin: 10, borderRadius: 30 }}>
-        <TouchableOpacity
-          style={[
-            styles(dark, colors).btn,
-            chartType === "pie" && { backgroundColor: 'aliceblue'},
-          ]}
-          onPress={() => handleChartTypeChange("pie")}
-        >
-        <Text>Coin Breakdown</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles(dark, colors).btn,
-            chartType === "transactions" && { backgroundColor: 'aliceblue'},
-          ]}
-          onPress={() => handleChartTypeChange("transactions")}
-        >
-        <Text>Transactions</Text>
-        </TouchableOpacity>
-      </View> */}
 
       <View style={{paddingHorizontal: 40}}>
         <SwitchSelector
@@ -235,14 +214,15 @@ export default function ExchangeTransactions(props) {
           textStyle={{ fontWeight: 'bold', fontSize: 15 }}
           buttonMargin={1}
           height={45}
+          testID='switchSelector'
         />
       </View>
 
       {/* Pie chart and transactions table */}    
-      {chartType == "pie" ?
+      {chartType === "pie" ?
         <View style={stylesInternal.container}>
           <Text style={stylesInternal.mediumBoldText}>Coin Breakdown</Text>
-          {exchangeTokens.length == 0 ? (
+          {exchangeTokens.length === 0 ? (
             <Text style={styles(dark, colors).text}>Loading...</Text>
           ) : exchangeTokens.length === 1 && exchangeTokens[0].x === "empty" ? (
             <Text style={styles(dark, colors).text}>No coins in this account</Text>
@@ -257,7 +237,7 @@ export default function ExchangeTransactions(props) {
         </View>  
        : <>
       <View style={stylesInternal.container}>
-        <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}}>Transactions</Text>
+        <Text style={{fontWeight:"800", fontSize:25, paddingTop: 10, color: colors.text}} testID={'transactionTitle'}>Transactions</Text>
       </View>
       {!data || data.length === 0 ? (
         <Text style={[styles(dark, colors).text, {textAlign: 'center', alignSelf: 'center'}]}>Loading...</Text>
@@ -276,7 +256,7 @@ export default function ExchangeTransactions(props) {
               />
               {data.tableData.map((rowData, rowIndex) => (
                 <Row key={rowIndex} data={rowData.map((cellData, cellIndex) => (<Cell key={cellIndex} data={cellData} textStyle={{color: colors.text}} />))} 
-                  style={{ ...stylesInternal.row, backgroundColor: rowData[2] == "sell" ? dark ? "#8b0000" : "#f87171" : rowData[2] == "buy" ? dark ? "#006400" : "#90ee90" : dark ? "#323232" : "#f3f3f3"}}
+                  style={{ ...stylesInternal.row, backgroundColor: rowData[2] === "sell" ? dark ? "#8b0000" : "#f87171" : rowData[2] === "buy" ? dark ? "#006400" : "#90ee90" : dark ? "#323232" : "#f3f3f3"}}
                 />
               ))}
             </Table>

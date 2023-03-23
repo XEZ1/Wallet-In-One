@@ -5,7 +5,9 @@ from accounts.models import User
 from rest_framework import status
 from stocks.models import StockAccount
 
-class InstitutionLogoPlaidViewTestCase(TestCase):
+
+""" Tests for Deleting a Stock Account """
+class DeleteStockAccountViewTestCase(TestCase):
     fixtures = [
         'stocks/tests/fixtures/user.json',
         'stocks/tests/fixtures/stocks.json'

@@ -6,6 +6,8 @@ from django.test import TestCase
 from djmoney.money import Money
 from rest_framework.exceptions import ErrorDetail
 
+
+""" Unit Tests for Stock Serializer """
 class StockSerializerTestCase(TestCase):
     fixtures = [
         'stocks/tests/fixtures/stocks.json',

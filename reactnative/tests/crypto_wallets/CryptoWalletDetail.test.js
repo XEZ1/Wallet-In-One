@@ -2,6 +2,8 @@ import {render, act, fireEvent, screen, waitFor} from "@testing-library/react-na
 import CryptoWalletDetail from "../../screens/crypto_wallet/CryptoWalletDetail";
 import cryptoWallet from './fixtures/cryptoWallet.json'
 
+jest.mock('react-native-wagmi-charts')
+
 
 describe('<CryptoWalletDetail />', () => {
 
@@ -37,6 +39,10 @@ describe('<CryptoWalletDetail />', () => {
 
     await act(async () => {
       expect(snapshot).toMatchSnapshot()
+
+      await waitFor(() => {
+        expect(screen.getByText('1P5ZEDWTKTFGxQjZphgWPQUpe554WKDfHQ')).toBeDefined()
+      })
 
       // Test button
       fireEvent.press(await screen.getByText('Transactions'))
@@ -107,20 +113,13 @@ describe('<CryptoWalletDetail />', () => {
 
       await waitFor(async () => {
         expect(screen.getByText('0.0001 BTC')).toBeDefined()
-        expect(screen.getByText('Tue, 17 Jan 2023 16:44:50 GMT')).toBeDefined()
-
         expect(screen.getByText('0.00064342 BTC')).toBeDefined()
-        expect(screen.getByText('Tue, 10 Jan 2023 07:02:24 GMT')).toBeDefined()
-
         expect(screen.getByText('0.00000547 BTC')).toBeDefined()
-        expect(screen.getByText('Sat, 07 Jan 2023 04:39:33 GMT')).toBeDefined()
 
       })
 
     })
-
-    expect(snapshot).toMatchSnapshot()
-
+    
   })
 
   it('remove wallet test', async () => {

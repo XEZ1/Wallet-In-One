@@ -1,9 +1,14 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
+
 from crypto_wallets.models import CryptoWallet, CryptoWalletTransaction
 from crypto_wallets.services import CryptoWalletService, get_timestamp, normalise_value
 
 
 class CryptoWalletTransactionSerializer(serializers.ModelSerializer):
+    """
+    Nested serializer that serializes crypto wallet transactions of a related crypto wallet.
+    """
 
     class Meta:
         model = CryptoWalletTransaction
@@ -11,6 +16,11 @@ class CryptoWalletTransactionSerializer(serializers.ModelSerializer):
 
 
 class CryptoWalletSerializer(serializers.ModelSerializer):
+    """
+    Serializer that both serializes a crypto wallet into a list or into a single detail, or can create a crypto wallet
+    using the cryptocurrency, symbol and address.
+    """
+
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     transactions = CryptoWalletTransactionSerializer(source='cryptowallettransaction_set', many=True, required=False)
 
@@ -22,14 +32,29 @@ class CryptoWalletSerializer(serializers.ModelSerializer):
                             spent={'required': False},
                             output_count={'required': False},
                             unspent_output_count={'required': False})
+        validators = [UniqueTogetherValidator(
+            queryset=CryptoWallet.objects.all(),
+            fields=['user', 'cryptocurrency', 'address'],
+            message="you have already added this address."
+        )]
 
     def get_fields(self):
+        """
+        Function that decides whether to omit the transactions field depending on the context, used by the crypto wallet
+        list view.
+        """
+
         fields = super().get_fields()
         if self.context.get('exclude_transactions', False):
             fields.pop('transactions')
         return fields
 
     def create(self, validated_data):
+        """
+        Function that can create a crypto wallet, using the crypto wallet service with the cryptocurrency, symbol and
+        address.
+        """
+
         cryptocurrency = validated_data['cryptocurrency']
         crypto_wallet_service = CryptoWalletService(cryptocurrency, validated_data['address'])
         if crypto_wallet_service.type is None:

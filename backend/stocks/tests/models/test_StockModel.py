@@ -6,6 +6,7 @@ from djmoney.models.fields import MoneyField
 from djmoney.money import Money
 from moneyed.classes import CurrencyDoesNotExist
 
+""" Unit Tests for the Stock Model """
 class StockModelTestCase(TestCase):
 
     fixtures = [
@@ -29,6 +30,8 @@ class StockModelTestCase(TestCase):
     def test_stock_is_valid(self):
         self._assert_stock_is_valid(self.stock)
 
+    # Tests for Stock Account Foreign Key Field
+
     def test_stock_account_foreign_key_field(self):
         field = Stock._meta.get_field('stockAccount')
         self.assertIsInstance(field, models.ForeignKey)
@@ -39,6 +42,8 @@ class StockModelTestCase(TestCase):
         stockAccount = StockAccount.objects.get(account_id="1")
         stockAccount.delete()
         self.assertFalse(Stock.objects.filter(pk=1).exists())
+
+    # Tests for Name field
 
     def test_name_field(self):
         field = Stock._meta.get_field('name')
@@ -74,6 +79,8 @@ class StockModelTestCase(TestCase):
         self.stock.name = '_@*&'
         self._assert_stock_is_valid(self.stock)
 
+    # Tests for Ticker Symbol field
+
     def test_ticker_symbol_field(self):
         field = Stock._meta.get_field('ticker_symbol')
         self.assertIsInstance(field, models.CharField)
@@ -108,6 +115,8 @@ class StockModelTestCase(TestCase):
         self.stock.ticker_symbol = '_@*&'
         self._assert_stock_is_valid(self.stock)
 
+    # Tests for Quantity field
+
     def test_quantity_field(self):
         field = Stock._meta.get_field('quantity')
         self.assertIsInstance(field, models.FloatField)
@@ -129,6 +138,8 @@ class StockModelTestCase(TestCase):
     def test_integer_quantity(self):
         self.stock.quantity = 1
         self._assert_stock_is_valid(self.stock)
+
+    # Tests for Institution Price field
 
     def test_institution_price_field(self):
         field = Stock._meta.get_field('institution_price')
@@ -170,6 +181,8 @@ class StockModelTestCase(TestCase):
         with self.assertRaises(CurrencyDoesNotExist):
             self.stock.institution_price = Money(100, 'Gold')
         self._assert_stock_is_valid(self.stock)
+
+    # Tests for Security ID field
 
     def test_security_id_field(self):
         field = Stock._meta.get_field('security_id')

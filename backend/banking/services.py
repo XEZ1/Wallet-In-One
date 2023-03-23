@@ -71,7 +71,7 @@ def get_access_token(force_regenerate=False):
 def auth_request(method, endpoint, headers = {}, body = {}):
     token = get_access_token()
     r = method(endpoint, headers | {'Authorization': f'Bearer {token}'}, body)
-    
+
     if isinstance(r,dict) and r.get('status_code') == 401 and r.get("detail") == "Token is invalid or expired":
         token = get_access_token(force_regenerate=True)
         r = method(endpoint, headers  | {'Authorization': f'Bearer {token}'}, body)
@@ -112,12 +112,6 @@ def get_requisitions(id=''):
 def delete_requisition(id):
     return auth_delete(f'/requisitions/{id}')
 
-def delete_all_requisitions():
-    r = get_requisitions()
-    for i in r['results']:
-        if i['status'] == 'UA' or i['status'] == 'GC':
-            delete_requisition(i['id'])
-
 # Account
 def get_account_data(id):
     return auth_get(f'/accounts/{id}')
@@ -142,11 +136,9 @@ def update_user_accounts(user):
                 update_account_transactions(i)
             except KeyError as e:
                 i.last_update = None
-                i.save()
-                print()
-                print("Error with bank data received")
+                #print("Error with bank data received")
                 if (get_account_data(i.id)['status'] == "SUSPENDED"):
-                    print('Account is suspended')
+                    #print('Account is suspended')
                     i.disabled = True
                     i.save()
 

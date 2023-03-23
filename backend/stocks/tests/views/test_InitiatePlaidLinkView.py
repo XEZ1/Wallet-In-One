@@ -8,6 +8,7 @@ from stocks.services import setUpClient
 from plaid.model.country_code import CountryCode
 from plaid.model.products import Products
 
+""" Tests for Plaid Link Token Endpoint """
 class InitiatePlaidLinkTestCase(TestCase):
     
     fixtures = [

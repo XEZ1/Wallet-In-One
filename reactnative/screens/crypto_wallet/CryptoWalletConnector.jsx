@@ -8,10 +8,14 @@ import {
   View,
 } from "react-native";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
-import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import { useTheme } from '../../src/theme/ThemeProvider';
 import {styles} from '../All_Styles.style.js';
 
 
+/**
+ * Component that allows a user to connect a crypto wallet by entering the address into the corresponding cryptocurrency
+ * connector screen.
+ */
 export default function CryptoWalletConnector(props) {
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
@@ -49,6 +53,8 @@ export default function CryptoWalletConnector(props) {
         </View>
 
         <TextInput
+          autoCapitalize='none'
+          autoCorrect={false}
           style={[styles(dark, colors).input, {color: colors.text}, {backgroundColor: colors.background}]}
           onChangeText={(text) => setAddress(text)}
           placeholderTextColor= {colors.text}

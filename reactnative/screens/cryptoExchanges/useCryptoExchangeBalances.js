@@ -19,5 +19,5 @@ export default function useCryptoExchangeBalances() {
           .catch((err) => console.log(err));
     }
   
-    return { balances, fetchBalances};
-  }
+    return { balances, setBalances, fetchBalances};
+}

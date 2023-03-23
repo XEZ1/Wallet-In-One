@@ -29,18 +29,11 @@ export default function ExchangeCredentials({ route, navigation }) {
       const data = await response.json();
       const statusCode = response.status;
       if (statusCode === 200) {
-        Alert.alert('Success', `${exchange} account data retrieved successfully!`, [
-          {
-            text: 'OK',
-            onPress: () => {
-              navigation.navigate('Crypto Wallets & Exchanges');
-            }}
-        ]);
+        navigation.navigate('Crypto Wallets & Exchanges');
       } else {
         Alert.alert('Error', data["error"]);
       }
     } catch (error) {
-      console.error(error);
       Alert.alert('Error', `An error occurred while retrieving ${exchange} account data.`);
     }
   };
@@ -77,16 +70,22 @@ export default function ExchangeCredentials({ route, navigation }) {
       </View>
       <Text style={{ fontSize: 20, marginBottom: 10, color: colors.text }}>API Key:</Text>
       <TextInput
+        autoCapitalize='none'
+        autoCorrect={false}
         value={apiKey}
         onChangeText={setApiKey}
         style={styles.input}
+        testID="apiKeyInput"
       />
       <Text style={{ fontSize: 20, marginBottom: 10, color: colors.text }}>Secret Key:</Text>
       <TextInput
+        autoCapitalize='none'
+        autoCorrect={false}
         value={secretKey}
         onChangeText={setSecretKey}
         secureTextEntry
         style={styles.input}
+        testID="secretKeyInput"
       />
       <Button
         title="Submit"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView, View, Dimensions, Button, TouchableHighlight, Alert,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 
 import data from "./chartData.json"
 import { LineChart, CandlestickChart } from 'react-native-wagmi-charts';
@@ -7,51 +7,48 @@ import {useEffect, useState} from "react";
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
 
-import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 
-export default function LineChartScreen({transactions, graph_version, height, width, current_balance, data})
+export default function LineChartScreen({graph_version, height, width, current_balance, data})
 {
-    const [ graphData, setGraphData ] = useState([{timestamp: 0, value: 0}, {timestamp: 0, value: 0}]);
     const {dark, colors, setScheme } = useTheme();
 
-    useEffect(() => {
-        if(data == null){
-            let graph_data = transactions.map((item) => [item.amount, item.date]);
-            graph_data = graph_data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
-
-            let points = [];
-            let balance = current_balance;
-
-            for (let i = 0; i < graph_data.length; i++) {
-                let point = {timestamp: new Date(graph_data[i][1]).getTime(), value: balance}
-                balance -= graph_data[i][0]
-                points = [point, ...points]
-            }
-            if (points.length > 0) {
-                points[points.length - 1].value = parseFloat(points[points.length - 1].value);
-            }
-            setGraphData(points)
-        } else{
-            setGraphData(data);
+    let percentageChange = null;
+    let priceChange = null;
+    
+    function calculateChange(new_value, old_value) {
+        if (old_value != 0){
+            percentageChange = (((new_value - old_value) / Math.abs(old_value)) * 100).toFixed(2);
         }
-    }, [transactions]);
+        else{
+            percentageChange = '0 ERR';
+        }
+        
+        if (percentageChange > 0) {
+            percentageChange = '+' + percentageChange;
+        }
+        
+        priceChange = (((new_value) - old_value)).toFixed(3);
+        if(priceChange > 0){
+            priceChange = '+' + priceChange;
+        }
+    }
+    calculateChange(current_balance, data[0]?.value);
 
     let color1 = '';
     
-    if (graphData && graphData.length > 0) {
-        if (graphData[0]?.value > graphData[graphData.length -1]?.value){
+    if (data && data.length > 0) {
+        if (data[0]?.value > data[data.length -1]?.value){
             color1 = 'red';
         } 
         else {
             color1 = 'green';
         }
     }
-    // console.log(graphData);
 
     let candlestickData = null;
 
     if(graph_version == 3){
-        const transformedData = graphData.reduce((acc, transaction) => {
+        const transformedData = data.reduce((acc, transaction) => {
             const date = new Date(transaction.timestamp);
             const month = `${date.getFullYear()}-${date.getMonth() + 1}`;
 
@@ -90,40 +87,9 @@ export default function LineChartScreen({transactions, graph_version, height, wi
         });
     }
 
-    let percentageChange = null;
-    let priceChange = null;
-    
-    function calculateChange(new_value, old_value) {
-        if (old_value != 0){
-            percentageChange = (((new_value - old_value) / Math.abs(old_value)) * 100).toFixed(2);
-        }
-        else{
-            percentageChange = '0 ERR';
-        }
-        
-        if (percentageChange > 0) {
-            percentageChange = '+' + percentageChange;
-        }
-        
-        priceChange = (((new_value) - old_value)).toFixed(3);
-        if(priceChange > 0){
-            priceChange = '+' + priceChange;
-        }
-    }
-
-    if(graph_version != 3){
-        calculateChange(current_balance, graphData[0]?.value);
-    }
-    else if (current_balance != null){
-        calculateChange(current_balance, candlestickData[0]?.open);
-    }
-    else{
-        calculateChange(candlestickData[candlestickData.length-1].close, candlestickData[0]?.open);
-    }
-
     return (
         <View >
-            {graphData && graphData.length > 1 ? (
+            {data && data.length > 1 ? (
                 <>
                     {/* Interactive graph */}
                     { graph_version == 1 && 
@@ -133,7 +99,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                             <Text style={{ color: color1, fontSize: 14, fontWeight: 'bold' }}> ({percentageChange}%)</Text>
                         </View>
 
-                        <LineChart.Provider data={graphData}>
+                        <LineChart.Provider data={data}>
                             <LineChart height={height} width={width}>
                                 <LineChart.Path color={color1}>
                                     <LineChart.Gradient />
@@ -161,7 +127,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                     {/* Static graph */}   
                     { graph_version == 2 &&
                     <><Text style={{ textAlign: 'right', marginLeft: 'auto', color: color1, fontSize: 11 }}>{percentageChange}%</Text>
-                    <LineChart.Provider data={graphData}>
+                    <LineChart.Provider data={data}>
                             <LineChart width={width} height={height}>
                                 <LineChart.Path color={color1}>
                                     <LineChart.Gradient />
@@ -213,6 +179,7 @@ export default function LineChartScreen({transactions, graph_version, height, wi
                             </View>
 
                         </CandlestickChart.Provider></>
+                        
                     }
 
                     {/* Interactive graph WalletAssetVersion */}

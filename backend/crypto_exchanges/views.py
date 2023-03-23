@@ -26,13 +26,12 @@ def unix_timestamp_to_datetime(unix_timestamp):
     return dt
 
 
-# Create your views here.
+# Views
 @api_view(['GET'])
 def get_insights(request):
     all_transactions = get_all_transactions(request)
     most_expensive_transaction = get_most_expensive_transaction(request)
     insights = {'all_transactions': all_transactions, 'most_expensive_transaction': most_expensive_transaction}
-    print(insights)
     return Response(insights)
 
 
@@ -76,23 +75,23 @@ class GenericCryptoExchanges(APIView):
         if self.fetcher == BinanceFetcher:
             if 'msg' in data:
                 # encountering an error while retrieving data
-                return Response({'error': data['msg']}, status=400)
+                return Response({'error': data['msg']}, status=status.HTTP_400_BAD_REQUEST)
         elif self.fetcher == GateioFetcher:
             if 'label' and 'message' in data:
                 # encountering an error while retrieving data
-                return Response({'error': data['message']}, status=400)
+                return Response({'error': data['message']}, status=status.HTTP_400_BAD_REQUEST)
         elif self.fetcher == CoinListFetcher:
             if 'status' in data and (data['status'] != 'ok' or data['status'] != '200'):
                 # encountering an error while retrieving data
-                return Response({'error': data['message']}, status=400)
+                return Response({'error': data['message']}, status=status.HTTP_400_BAD_REQUEST)
         elif self.fetcher == CoinBaseFetcher:
             if 'errors' in data:
                 # encountering an error while retrieving data
-                return Response({'error': data['errors'][0]['message']}, status=400)
+                return Response({'error': data['errors'][0]['message']}, status=status.HTTP_400_BAD_REQUEST)
         elif self.fetcher == KrakenFetcher:
             if 'error' in data and 'result' not in data:
                 # encountering an error while retrieving data
-                return Response({'error': data['error'][0]}, status=400)
+                return Response({'error': data['error'][0]}, status=status.HTTP_400_BAD_REQUEST)
 
     # Inner function for filtering data
     @abstractmethod
@@ -140,7 +139,7 @@ class GenericCryptoExchanges(APIView):
                                                      api_key=request.data['api_key'],
                                                      secret_key=request.data['secret_key'])):
             return Response({'error': f'This account from {self.crypto_exchange_name} has already been added'},
-                            status=400)
+                            status=status.HTTP_400_BAD_REQUEST)
 
         # Use the provided API key and secret key to connect to the Binance API
         service = self.fetcher(request.data['api_key'], request.data['secret_key'])
@@ -155,15 +154,11 @@ class GenericCryptoExchanges(APIView):
 
         # Save the binance account to the database
         saved_exchange_account_object = account.save()
-
         filtered_data = list(filter(self.filter_not_empty_balance, self.get_data_unified(data)))
-
         self.save_coins(filtered_data, request, saved_exchange_account_object)
-
         transactions = service.get_trading_history()
         self.save_transactions(transactions, request, saved_exchange_account_object)
-
-        return Response(filtered_data, status=200)
+        return Response(filtered_data, status=status.HTTP_200_OK)
 
     def delete(self, request):
         crypto_exchange_account = CryptoExchangeAccount.objects.get(id=request.data['id'])

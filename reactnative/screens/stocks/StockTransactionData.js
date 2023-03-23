@@ -63,7 +63,7 @@ export default function TransactionData({ route }){
   }
   else{
     return (
-      <View style={stylesInternal.screen}>
+      <View style={[stylesInternal.screen, styles(dark, colors).container]}>
         {/* <Text style={stylesInternal.text}>Transaction Data{"\n"}</Text> */}
 
           <View style={stylesInternal.screen}>
@@ -77,7 +77,7 @@ export default function TransactionData({ route }){
             <Text style={styles(dark, colors).text}>{data.stock}{"\n"}</Text> */}
 
             <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Amount</Text>
-            <Text style={styles(dark, colors).text}>£ {data.amount}{"\n"}</Text>
+            <Text style={styles(dark, colors).text}>£ {data.amount.toFixed(2)}{"\n"}</Text>
 
             <Text style={[styles(dark, colors).textBold, {color: colors.text}]}>Date</Text>
             <Text style={styles(dark, colors).text}>{data.date}{"\n"}</Text>
@@ -96,8 +96,6 @@ export default function TransactionData({ route }){
             </View>
             </View>
           </View>
-
-        {/* <Text>{JSON.stringify(data)}</Text> */}
       </View>
   );
   }

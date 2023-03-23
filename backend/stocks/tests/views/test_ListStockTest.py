@@ -5,6 +5,8 @@ from accounts.models import User
 from rest_framework.exceptions import ErrorDetail
 from stocks.models import Stock
 
+
+""" Tests for Listing all Stocks for a specified user """
 class ListStockViewTestCase(TestCase):
     fixtures = [
         'stocks/tests/fixtures/user.json',

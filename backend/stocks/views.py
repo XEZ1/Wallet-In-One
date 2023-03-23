@@ -16,7 +16,6 @@ from .models import StockAccount,Transaction, Stock
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
 from flask import jsonify
 from plaid.model.accounts_get_request import AccountsGetRequest
-from plaid.model.transactions_sync_request import TransactionsSyncRequest
 from .services import setUpClient, calculate_metrics
 from plaid.model.institutions_search_request import InstitutionsSearchRequest
 from plaid.model.institutions_search_request_options import InstitutionsSearchRequestOptions
@@ -35,22 +34,25 @@ from dateutil.relativedelta import relativedelta
 @api_view(['POST'])
 @csrf_exempt
 def initiate_plaid_link(request):
+    """
+    API call to receive a Temporary Link Token that will be used to open the Plaid Link SDK on the frontend.
+    """
+
     client = setUpClient()
-    prods = ['investments', 'transactions']
+    prods = ['investments', 'transactions'] # More Products can be added if desired
     products = []
     for product in prods:
         products.append(Products(product))
     
     request = LinkTokenCreateRequest(
         products=products,
-        client_name="KCL",
+        client_name="KCL",  # Name of the Plaid Account
         language='en',
-        country_codes=list(map(lambda x: CountryCode(x), ['US'])),
+        country_codes=list(map(lambda x: CountryCode(x), ['US'])), # UK does not have access to Investments Products
         user=LinkTokenCreateRequestUser(
             client_user_id=str(request.user.id)
         )
     )
-    # create link token
     response = client.link_token_create(request)
     link_token = response['link_token']
     return Response({'link_token': link_token})
@@ -59,7 +61,10 @@ def initiate_plaid_link(request):
 
 @api_view(['POST'])
 def get_access_token(request):
-    public_token = request.data.get('public_token')
+    """
+    API call to access the access token after the plaid SDK has been closed, this would then be used to access all details for the selected account.
+    """
+    public_token = request.data.get('public_token') # Temporary Public Token is used to exchange for the Access Token
     client = setUpClient()
     try:
         exchange_request = ItemPublicTokenExchangeRequest(
@@ -73,10 +78,13 @@ def get_access_token(request):
     
 @api_view(['POST'])
 def get_balance(request):
+    """
+    API call to get the balance of a specific stock account, specified via the access token provided in the body.
+    """
     client = setUpClient()
     try:
         request = AccountsGetRequest(
-            access_token=request.data.get('access_token')
+            access_token=request.data.get('access_token')   # Used to identify the stock account selected by the user
         )
         response = client.accounts_get(request)
         return Response(response.to_dict())
@@ -86,6 +94,9 @@ def get_balance(request):
 
 @api_view(['POST'])
 def get_logo(request):
+    """
+    API call to access the logo of the instiution of the stock account selected by the user, logo will be returned and stored with base64 encoding.
+    """
     client = setUpClient()
     options = InstitutionsSearchRequestOptions(include_optional_metadata=True)
     request = InstitutionsSearchRequest(
@@ -102,9 +113,12 @@ def get_logo(request):
 
 @api_view(['POST'])
 def get_stocks(request):
+    """
+    API call to access the stocks within the selected stock account.
+    """
     client = setUpClient()
     try:
-        request = InvestmentsHoldingsGetRequest(access_token=request.data.get('access_token'))
+        request = InvestmentsHoldingsGetRequest(access_token=request.data.get('access_token')) # Access Token used to identify the stock account selected
         response = client.investments_holdings_get(request)
         return Response(response.to_dict())
     except plaid.ApiException as e:
@@ -112,8 +126,11 @@ def get_stocks(request):
     
 @api_view(['POST'])
 def get_transactions(request):
+    """
+    API call to access the Investment Transactions for the specified stock account.
+    """
     client = setUpClient()
-    start_date = (datetime.datetime.now() - timedelta(days=(1000)))
+    start_date = (datetime.datetime.now() - timedelta(days=(1000))) # Access the transactions from the last 1000 days
     end_date = datetime.datetime.now()
     try:
         options = InvestmentsTransactionsGetRequestOptions()
@@ -130,40 +147,61 @@ def get_transactions(request):
 
 
 class addAccount(generics.CreateAPIView):
+    """
+    View that deals with adding a stock account to the database
+    """
     permission_classes = [permissions.AllowAny]
     serializer_class = AddStockAccount
     queryset = StockAccount.objects.all()
 
 class AddTransactions(generics.CreateAPIView):
+    """
+    View that deals with adding a transaction to the database
+    """
     permission_classes = [permissions.AllowAny]
     serializer_class = AddTransaction
     queryset = Transaction.objects.all()
 
 @api_view(['GET'])
 def listAccounts(request):
+    """
+    View that deals with accessing all stock accounts for the logged in user.
+    """
     accounts = StockAccount.objects.filter(user=request.user)
     serializer = AddStockAccount(accounts, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def listTransactions(request,stock):
+    """
+    View that deals with accessing all transactions for the logged in user.
+    """
     transactions = Transaction.objects.filter(stock=stock, stock__user=request.user)
     serializer = AddTransaction(transactions, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def listStocks(request, stockAccount):
+    """
+    View that deals with accessing all stocks for the logged in user and the specified stock account.
+    """
     stocks = Stock.objects.filter(stockAccount=stockAccount, stockAccount__user=request.user)
     serializer = AddStock(stocks, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def getTransaction(request, id):
+    """
+    View that deals with accessing a specified transaction
+    """
     transaction = Transaction.objects.get(id=id)
     serializer = AddTransaction(transaction, many=False)
     return Response(serializer.data)
 
 class addStock(generics.CreateAPIView):
+    """
+    View that deals with adding a stock to the database
+    """
     permission_classes = [permissions.AllowAny]
     serializer_class = AddStock
     queryset = Stock.objects.all()
@@ -171,6 +209,9 @@ class addStock(generics.CreateAPIView):
 
 @api_view(['DELETE'])
 def deleteAccount(request, stockAccount):
+    """
+    View that deletes a single, specified stock account that belongs to the user.
+    """
     if StockAccount.objects.filter(account_id=stockAccount).count() == 0:
         return Response(status=status.HTTP_400_BAD_REQUEST)
     stock_account = StockAccount.objects.get(account_id=stockAccount)
@@ -181,14 +222,17 @@ def deleteAccount(request, stockAccount):
     
 @api_view(['GET'])
 def getMetrics(request):
+    """
+    View that calculates and returns insights for the stock accounts for the current user.
+    """
     metrics = {}
-    # Start of current month
+    # Accesses the time frame for the insights
     start1month = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     start3month = start1month - relativedelta(months=3-1)
     start6month = start1month - relativedelta(months=6-1)
     start12month = start1month - relativedelta(months=12-1)
 
-    transactions = Transaction.objects.filter(stock__user = request.user)
+    transactions = Transaction.objects.filter(stock__user = request.user) # All transactions for the logged in user
     metrics['all'] = calculate_metrics(transactions)
     metrics['1 Month'] = calculate_metrics(transactions.filter(date__gte=start1month))
     metrics['3 Months'] = calculate_metrics(transactions.filter(date__gte=start3month))
@@ -199,5 +243,8 @@ def getMetrics(request):
 
 @api_view(['GET'])
 def getAccount(request, account_id):
+    """
+    View that deals with accessing a specified stock account
+    """
     account = StockAccount.objects.get(account_id=account_id)
     return Response({'access_token': account.access_token, 'logo': account.institution_logo, 'balance': account.balance.amount, 'institution_name': account.institution_name, 'name': account.name})

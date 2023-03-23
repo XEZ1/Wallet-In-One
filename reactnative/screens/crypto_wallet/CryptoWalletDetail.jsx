@@ -6,11 +6,11 @@ import {
   Text,
   View,
   ScrollView,
-  TouchableOpacity, FlatList
+  FlatList
 } from "react-native";
 import React, {useEffect, useState} from "react";
 import getCryptoIcon from "../cryptocurrency/icons/icon";
-import { useTheme } from 'reactnative/src/theme/ThemeProvider';
+import { useTheme } from '../../src/theme/ThemeProvider';
 import {styles} from '../All_Styles.style.js';
 import * as SecureStore from "expo-secure-store";
 import { BACKEND_URL } from "@env"
@@ -18,6 +18,10 @@ import LineChartScreen from "../charts/LineChart";
 import SwitchSelector from "react-native-switch-selector";
 import ConditionalModal from "../Modal";
 
+/**
+ * Component that display detailed data on a crypto wallet, displaying the address, its balance and spend/received
+ * count, along with a list of transactions and a line chart with a candlestick chart of its price fluctuations over time.
+ */
 export default function CryptoWalletDetail(props) {
 
   const {dark, colors, setScheme} = useTheme();
@@ -30,7 +34,9 @@ export default function CryptoWalletDetail(props) {
   const {width: SIZE} = Dimensions.get('window');
   const [graphVersion, setGraphVersion] = useState(4);
 
-
+  /**
+   * Function that retrieves the detailed wallet data from the backend using the id of the wallet.
+   */
   const retrieveWallet = async (id) => {
     await fetch(`${BACKEND_URL}/crypto_wallets/${id}/`, {
       method: "GET",
@@ -44,6 +50,10 @@ export default function CryptoWalletDetail(props) {
       .catch((err) => console.log(err));
   };
 
+  /**
+   * Function that converts the transaction data of a wallet using the timestamp and value into a form that can be used
+   * to display the balance history for the graphs.
+   */
   const convertData = () => {
     let points = [];
     let balance = walletData.balance;
@@ -56,6 +66,9 @@ export default function CryptoWalletDetail(props) {
     setGraphData(points)
   }
 
+  /**
+   * Function that handles the chart change from the options of a line chart or a candlestick chart.
+   */
   const handleChartTypeChange = (type) => {
     setChartType(type);
   };
@@ -103,7 +116,6 @@ export default function CryptoWalletDetail(props) {
         <SwitchSelector
           initial={0}
           onPress={value => handleChartTypeChange(value)}
-          // textColor="#7a44cf"
           selectedColor="#fff"
           buttonColor="#7a44cf"
           borderColor="#7a44cf"
@@ -112,7 +124,6 @@ export default function CryptoWalletDetail(props) {
             { label: "Breakdown", value: "breakdown"},  
             { label: "Transactions", value: "transactions"} 
           ]}
-          // imageStyle={{ width: 20, height: 20 }}
           textStyle={{ fontWeight: 'bold', fontSize: 15 }}
           buttonMargin={1}
           height={45}
@@ -138,7 +149,6 @@ export default function CryptoWalletDetail(props) {
               <Text style={{fontWeight: "700", color: colors.text}}>Value</Text>
               <Text style={{color: colors.text}}>£{value.toFixed(2)}</Text>
               <Text />
-              {/* ▲ 0.00% */}
 
               <Text style={{fontWeight: "700", color: colors.text}}>Received</Text>
               <Text style={{color: colors.text}}>{walletData.received} {walletData.symbol}</Text>
@@ -159,7 +169,6 @@ export default function CryptoWalletDetail(props) {
 
             <Pressable
               onPress={() => setModalVisible(true)}
-              // onPress={() => removeWallet(walletData.id).then(() => props.navigation.goBack())}
               style={{alignItems: "center", justifyContent: "center"}}>
               <View style={styles(dark, colors).smallButton}>
                 <Text style={{color: colors.text, fontWeight: "800"}}>Remove</Text>
@@ -186,7 +195,6 @@ export default function CryptoWalletDetail(props) {
                       <SwitchSelector
                         initial={0}
                         onPress={value => setGraphVersion(value)}
-                        // textColor="#7a44cf"
                         selectedColor="#fff"
                         buttonColor="#7a44cf"
                         borderColor="#7a44cf"
@@ -239,7 +247,10 @@ export default function CryptoWalletDetail(props) {
 
 }
 
-
+/**
+ * Component that displays a transaction from a list, showing the value of the transaction and the date that the
+ * transaction happened.
+ */
 function CryptoWalletTransaction(props) {
 
   const {dark, colors, setScheme} = useTheme();
@@ -252,7 +263,7 @@ function CryptoWalletTransaction(props) {
   };
 
   const raw_date = new Date(Number(props.transaction.item.time * 1000))
-  const formatted_date = raw_date.toUTCString()
+  const formatted_date = raw_date.toLocaleString("en-JP", date_options);
 
   return (
     <View style={styles.transaction}>

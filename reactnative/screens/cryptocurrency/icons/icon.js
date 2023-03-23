@@ -14,6 +14,9 @@ const images = {
   'Kraken': require('./Kraken.png'),
 }
 
+/**
+ * Function that returns the icon of a cryptocurrency wallet or exchange according to its symbol or name.
+ */
 export default function getCryptoIcon(symbol) {
   return images[symbol];
 }
