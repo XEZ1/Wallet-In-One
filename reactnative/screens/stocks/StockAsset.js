@@ -372,7 +372,7 @@ console.log(stocks);
                 headerText={"Remove Your Account"}
                 bodyText={"Are you sure you want to remove your account?"}
                 visible={modalVisible}
-                onEvent={async () => {await deleteAccount(), navigation.navigate('Stock Account List')}}
+                onEvent={async () => {await deleteAccount(), navigation.goBack()}}
                 onClose={() => setModalVisible(false)}
               />
 
