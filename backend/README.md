@@ -1,4 +1,4 @@
-# Wallet-In-One Django Frontend
+# Wallet-In-One Django Backend
 
 ## Team members
 The members of the team are:
