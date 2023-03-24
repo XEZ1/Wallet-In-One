@@ -1,8 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
-import { api_url } from '../../authentication';
 import Map from './Map';
 
 import { useTheme } from "reactnative/src/theme/ThemeProvider";

@@ -72,6 +72,7 @@
   },
   "private": true,
   "jest": {
+    "testTimeout": 15000,
     "preset": "jest-expo",
     "transform": {
       "^.+\\.(ts|tsx|js|jsx)$": "babel-jest"

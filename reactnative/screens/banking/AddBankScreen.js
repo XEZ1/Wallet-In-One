@@ -66,7 +66,7 @@ export default function AddBankScreen({ navigation }) {
     useEffect(() =>{
         const fetchData = async () => {
             console.log('fetching')
-            const response = await auth_get('/banking/bank_list')
+            const response = await auth_get('/banking/bank_list/')
             if (response.status == 200){
                 setData(response.body)
                 setbankData(response.body)
@@ -80,7 +80,7 @@ export default function AddBankScreen({ navigation }) {
 
         const getAuthURL = async (id) => {
             console.log('fetching url')
-            const response = await auth_get(`/banking/auth_page/${id}`)
+            const response = await auth_get(`/banking/auth_page/${id}/`)
             if (response.status == 200){
                 setbankAuthURL(response.body.url)
             }

@@ -1,9 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 
-import data from "./chartData.json"
 import { LineChart, CandlestickChart } from 'react-native-wagmi-charts';
-import {useEffect, useState} from "react";
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";
 

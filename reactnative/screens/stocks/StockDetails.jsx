@@ -1,9 +1,6 @@
 import { View, Text, TouchableOpacity,StyleSheet, Dimensions } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
-import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect, useCallback } from 'react';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import { api_url } from '../../authentication';
 import {Table, Row, Rows,TableWrapper,Cell} from 'react-native-table-component';
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { styles } from "reactnative/screens/All_Styles.style.js";

@@ -1,6 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { render, screen, fireEvent, act, waitFor, queryByText, queryByTestId, getByText } from '@testing-library/react-native';
-import { Button, FlatList, Table, Row, Cell } from 'react-native';
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react-native';
 import StockAsset from '../../screens/stocks/StockAsset';
 import stockAssetData from './fixtures/stockAsset.json';
 import stockAssetList from './fixtures/StockAssetList.json';

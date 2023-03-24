@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
-import { StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity, View, } from "react-native";
-import { VictoryPie, VictoryBar, VictoryLabel, VictoryContainer, VictoryStack } from "victory-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 import { useTheme } from "reactnative/src/theme/ThemeProvider";
 import { auth_get, auth_post } from "../../authentication";
@@ -31,7 +30,6 @@ export default function HomePage({ navigation }) {
   const [loading, setIsLoading] = useState(true)
   const { exchanges, fetchExchanges, removeExchange } = useCryptoExchange();
 
-  // Uncomment to show bank data from backend
   useEffect(() => {
     const fetchData = async () => {
       const response = await auth_get("/graph_data/");

@@ -2,7 +2,7 @@ import React from 'react';
 import PieChart from '../../screens/charts/chartComponents/pieChart';
 import renderer from 'react-test-renderer';
 
-
+jest.useFakeTimers();
 var data = {
     "all": [
         {

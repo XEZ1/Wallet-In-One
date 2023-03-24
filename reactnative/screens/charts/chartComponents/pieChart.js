@@ -4,9 +4,7 @@ import {
   Text,
   ScrollView,
   Dimensions,
-  TouchableOpacity,
 } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
 
 import {
   VictoryPie,
@@ -20,8 +18,6 @@ import { useTheme } from "reactnative/src/theme/ThemeProvider";
 export default function PieChart({colours, data, handlePressIn, labelCount, assetSize, numSize}) {
 
   const {dark, colors, setScheme} = useTheme();
-  const [pressed, setPressed ] = useState(false)
-  const isFocused = useIsFocused()
 
   if(!colours || !data || !handlePressIn || !labelCount || !assetSize || !numSize){ return null; }
 
@@ -71,10 +67,10 @@ export default function PieChart({colours, data, handlePressIn, labelCount, asse
               },
             },
           ]}
-          // animate={{
-          //   duration: 1000,
-          //   easing: "bounce"
-          // }}
+          animate={{
+            duration: 1000,
+            easing: "bounce"
+          }}
           colorScale={colours}
           standalone={false}
           height={300}
@@ -82,7 +78,6 @@ export default function PieChart({colours, data, handlePressIn, labelCount, asse
         <VictoryLabel
           textAnchor="middle"
           style={{ fontSize: assetSize, fill: colors.text }}
-          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.7}
           x={Dimensions.get("window").width / 2}
           y={assetLabel}
           text={"Assets"}
@@ -90,7 +85,6 @@ export default function PieChart({colours, data, handlePressIn, labelCount, asse
         <VictoryLabel
           textAnchor="middle"
           style={{ fontSize: numSize, fontWeight: "700", fill: colors.text }}
-          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/3.25}
           x={Dimensions.get("window").width / 2}
           y={numLabel}
           text={data.length}
@@ -100,7 +94,6 @@ export default function PieChart({colours, data, handlePressIn, labelCount, asse
         <VictoryLabel
           textAnchor="middle"
           style={{ fontSize: 17, fill: colors.text }}
-          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/5.5}
           x={Dimensions.get("window").width / 2}
           y={105}
           text={"Net Worth"}
@@ -108,7 +101,6 @@ export default function PieChart({colours, data, handlePressIn, labelCount, asse
         <VictoryLabel
           textAnchor="middle"
           style={{ fontSize: 27, fontWeight: "700", fill: colors.text }}
-          // x={Dimensions.get('window').width/2} y={Dimensions.get('window').height/4.5}
           x={Dimensions.get("window").width / 2}
           y={125}
           text={"£" + value}
