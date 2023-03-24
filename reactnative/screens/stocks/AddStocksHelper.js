@@ -63,7 +63,8 @@ export default function AddStocksHelper(){
           balance: balance,
           institution_logo: image,
         }
-        await auth_post('/stocks/add_stock_account/', account_data)
+        const response = await auth_post('/stocks/add_stock_account/', account_data);
+        return response.status;
     };
 
     /**
