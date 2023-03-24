@@ -113,6 +113,29 @@ describe('<StockAsset />', () => {
         expect(screen.queryByText("Fees")).toBeNull();
       });
 
+      // it('press filter data buttons',  async () => {
+      //   const { getByText, queryByTestId } = render(<StockAsset {...params} />);
+
+      //   await waitFor( () => {
+      //       const loading = screen.UNSAFE_queryByType('ActivityIndicator');
+      //       expect(loading).toBeNull();
+      //   })
+
+
+      //   const allTimeButton = getByText('ALL');
+      //   fireEvent.press(allTimeButton);
+        
+      //   const monthButton = getByText('M');
+      //   fireEvent.press(monthButton);
+
+      //   const weekButton = getByText('D');
+      //   fireEvent.press(weekButton);
+
+      //   const yearButton = getByText('Y');
+      //   fireEvent.press(yearButton);
+      // });
+      
+
     it("toggle table when transactions are empty",  async () => {
         const parameter = {
             route: {
