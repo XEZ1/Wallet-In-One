@@ -75,6 +75,7 @@ const PlaidComponent = ({ navigation }) => {
   if(useIsFocused){initiatePlaidLink()}
 }, [isFocused])
 
+
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState("Empty Modal");
   const scaleValue = useRef(new Animated.ValueXY({x: 0.5, y: 0.5})).current;
