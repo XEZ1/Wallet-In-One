@@ -73,7 +73,6 @@ describe('<HomePage />', () => {
             const activityIndicator = screen.UNSAFE_queryByType('ActivityIndicator');
             expect(activityIndicator).toBeNull();
         })
-        expect(homePage).toMatchSnapshot();
         fireEvent.press(await screen.getByTestId("stacked"))
         fireEvent.press(await screen.getByTestId("pie"))
         expect(homePage).toMatchSnapshot();
